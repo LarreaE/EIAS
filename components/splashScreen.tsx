@@ -1,10 +1,15 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet,Image} from 'react-native';
+
 
 const SplashScreen = (): React.JSX.Element => {
   return (
     <View style={styles.splashContainer}>
-      <Text style={styles.splashText}>EIAS </Text>
+      <Image
+        source={require('../assets/EIAS.png')} // Ruta de la imagen
+        style={styles.splashImage} // Aplicar estilos a la imagen
+        resizeMode="contain" // Ajuste de la imagen
+      />
     </View>
   );
 };
@@ -20,6 +25,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: '#000000',
+  },
+  splashImage: {
+    width: 200,  // Ajusta el ancho según sea necesario
+    height: 200, // Ajusta la altura según sea necesario
+    marginBottom: 20, // Espaciado entre la imagen y el texto
   },
 });
 
