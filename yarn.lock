@@ -1619,6 +1619,11 @@
     prompts "^2.4.2"
     semver "^7.5.2"
 
+"@react-native-google-signin/google-signin@^13.0.2":
+  version "13.0.2"
+  resolved "https://registry.npmjs.org/@react-native-google-signin/google-signin/-/google-signin-13.0.2.tgz"
+  integrity sha512-+RgRDBr+/cmdEeOSTBKTCdjs29Ex07hRM35co5kb89H3geXbSDMht8ZTtYqvIuy1XdnrBKQJL27abHwBYZWh1Q==
+
 "@react-native/assets-registry@0.75.3":
   version "0.75.3"
   resolved "https://registry.npmjs.org/@react-native/assets-registry/-/assets-registry-0.75.3.tgz"

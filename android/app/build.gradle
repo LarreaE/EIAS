@@ -58,6 +58,8 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:32.2.0') // Firebase BOM (Bill of Materials)
     implementation 'com.google.firebase:firebase-auth' // Firebase Authentication
     implementation 'com.google.android.gms:play-services-auth:20.7.0' // Google Sign-In
+        
+    implementation project(':@react-native-google-signin_google-signin')
 
     // Optional: Firebase Analytics, Crashlytics, and Performance Monitoring
     implementation 'com.google.firebase:firebase-analytics'
