@@ -1,6 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {SafeAreaView, Text, StyleSheet} from 'react-native';
-import SplashScreen from './components/splashScreen.tsx';  // Importar SplashScreen
+import {SafeAreaView, StyleSheet} from 'react-native';
+import SplashScreen from './components/splashScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import HomeScreen from './components/homeScreen';
+import ProfileScreen from './components/profileScreen';
+
+const Stack = createStackNavigator();
 
 function App(): React.JSX.Element {
   const [isSplashVisible, setIsSplashVisible] = useState(true);
@@ -19,7 +25,31 @@ function App(): React.JSX.Element {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Your main app content goes here.</Text>
+      <NavigationContainer>
+      <Stack.Navigator
+  initialRouteName="Home"
+  screenOptions={{
+    gestureEnabled: true,
+    cardStyleInterpolator: ({ current, layouts }) => ({
+      cardStyle: {
+        transform: [
+          {
+            translateX: current.progress.interpolate({
+              inputRange: [0, 1],
+              outputRange: [layouts.screen.width, 0],
+            }),
+          },
+        ],
+      },
+    }),
+    headerShown: false, // Oculta el encabezado para todas las pantallas
+  }}
+>
+  <Stack.Screen name="Home" component={HomeScreen} />
+  <Stack.Screen name="Profile" component={ProfileScreen} />
+</Stack.Navigator>
+
+      </NavigationContainer>
     </SafeAreaView>
   );
 }
@@ -27,8 +57,6 @@ function App(): React.JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 
