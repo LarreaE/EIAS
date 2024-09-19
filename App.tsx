@@ -6,10 +6,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './components/homeScreen';
 import ProfileScreen from './components/profileScreen';
-
-const Stack = createStackNavigator();
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
+const Stack = createStackNavigator();
 function App(): React.JSX.Element {
   const [isSplashVisible, setIsSplashVisible] = useState(true);
 
