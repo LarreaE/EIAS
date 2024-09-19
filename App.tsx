@@ -1,3 +1,4 @@
+import Config from 'react-native-config';
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView, Text, StyleSheet, View, Button, Alert} from 'react-native';
 import SplashScreen from './components/splashScreen.tsx';  // Importar SplashScreen
@@ -17,7 +18,7 @@ function App(): React.JSX.Element {
   //Google Sign in
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId: '1023780976448-99hcl1i028jvliu2kn32u62pvmshna11.apps.googleusercontent.com', // From Firebase Console (still required for Google Sign-In)
+      webClientId: Config.GOOGLE_WEB_CLIENT_ID, // From Firebase Console (still required for Google Sign-In)
     });
   }, []);
 
