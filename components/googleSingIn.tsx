@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Alert, ActivityIndicator } from 'react-native';
 import { GoogleSignin, User } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
-
 
 const GoogleSignInComponent: React.FC = () => {
   const [userInfo, setUserInfo] = useState<User | null>(null); // Store user info
   const [loggedIn, setLoggedIn] = useState(false); // Login status
   const [errorMessage, setErrorMessage] = useState(''); // Error message
+  const [loading, setLoading] = useState(false); // Loading spinner state
 
   useEffect(() => {
     // Configure Google Sign-In with the webClientId
@@ -18,6 +18,7 @@ const GoogleSignInComponent: React.FC = () => {
 
   // Sign in method
   const signIn = async () => {
+    setLoading(true); // Start showing the spinner
     try {
       const userInfo = await GoogleSignin.signIn(); 
       setUserInfo(userInfo.data!); // Set user info to state
@@ -26,6 +27,8 @@ const GoogleSignInComponent: React.FC = () => {
     } catch (error) {
       setErrorMessage('An unknown error occurred.');
       setLoggedIn(false);
+    } finally {
+      setLoading(false); // Stop showing the spinner
     }
   };
 
@@ -49,32 +52,32 @@ const GoogleSignInComponent: React.FC = () => {
     }
   };
 
-  // Sign out method
+  // Sign out method with confirmation
   const signOut = async () => {
     // Show confirmation dialog
     Alert.alert(
-      'Confirm Log Out', // Title
-      'Are you sure you want to log out?', // Message
+      'Confirm Log Out',
+      'Are you sure you want to log out?',
       [
         {
           text: 'Cancel',
           onPress: () => console.log('Log out cancelled'),
-          style: 'cancel', // Style of the button (iOS specific)
+          style: 'cancel',
         },
         {
           text: 'Log Out',
           onPress: async () => {
             try {
-              await GoogleSignin.signOut(); // Proceed with the actual sign-out
-              setUserInfo(null); // Clear user info
-              setLoggedIn(false); // Set logged in state to false
+              await GoogleSignin.signOut();
+              setUserInfo(null);
+              setLoggedIn(false);
             } catch (error) {
               setErrorMessage('Sign-out failed. Try again.');
             }
           },
         },
       ],
-      { cancelable: false } // Prevent dismissing the dialog by tapping outside
+      { cancelable: false }
     );
   };
 
@@ -84,7 +87,12 @@ const GoogleSignInComponent: React.FC = () => {
         <Text style={styles.title}>Sign In</Text>
       </View>
 
-      {loggedIn ? (
+      {loading ? (
+        // Loading Spinner with Overlay
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#4285F4" />
+        </View>
+      ) : loggedIn ? (
         <View style={styles.loggedInContainer}>
           <Text style={styles.welcomeText}>Welcome, {userInfo?.user.name}</Text>
           <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
@@ -171,6 +179,17 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     textAlign: 'center',
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    zIndex: 1, // Ensure overlay is above other components
   },
 });
 
