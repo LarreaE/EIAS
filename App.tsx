@@ -6,11 +6,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './components/homeScreen';
 import ProfileScreen from './components/profileScreen';
+import GoogleSingInComponent from './components/googleSingIn';
+
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const Stack = createStackNavigator();
 function App(): React.JSX.Element {
   const [isSplashVisible, setIsSplashVisible] = useState(true);
+  const [data, setData] = useState({});
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -27,27 +30,14 @@ function App(): React.JSX.Element {
     });
   }, []);
 
-   // Function to handle Google Sign-In
-   async function onGoogleButtonPress() {
-    try {
-      // Get the user's ID token
-      const userInfo = await GoogleSignin.signIn();
-      console.log('User Info', userInfo);
-      Alert.alert('Signed in!', `Welcome`);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-
   if (isSplashVisible) {
     return <SplashScreen />;
   }
 
   return (
     <SafeAreaView style={styles.container}>
+      <GoogleSingInComponent/>
       <NavigationContainer>
-      <Button title="Google Sign-In" onPress={onGoogleButtonPress} />
 
       <Stack.Navigator
   initialRouteName="Home"
