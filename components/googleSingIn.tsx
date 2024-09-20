@@ -4,7 +4,12 @@ import { GoogleSignin, User } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
 
 
-const GoogleSignInComponent: React.FC = () => {
+interface GoogleSignInProps {
+  onLoginSuccess: (userData: any) => void;
+}
+
+
+const GoogleSignInComponent: React.FC<GoogleSignInProps> = ({onLoginSuccess}) => {
   const [userInfo, setUserInfo] = useState<User | null>(null); // Store user info
   const [loggedIn, setLoggedIn] = useState(false); // Login status
   const [errorMessage, setErrorMessage] = useState(''); // Error message
@@ -40,12 +45,13 @@ const GoogleSignInComponent: React.FC = () => {
 
       if (response.ok) {
         const jsonResponse = await response.json();
+        onLoginSuccess(jsonResponse)
         Alert.alert('Success', `Welcome ${jsonResponse.data.nickname}`);
       } else {
         Alert.alert('Error', `Server responded with status code: ${response.status}`);
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to send data to server.');
+      Alert.alert('Error', 'Failed to receive data from server.');
     }
   };
 
