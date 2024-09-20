@@ -14,41 +14,27 @@ const GoogleSignInComponent = () => {
       webClientId: Config.GOOGLE_WEB_CLIENT_ID,
     });
 
-     // check if user is already signed in
-     checkIfUserIsSignedIn();
-
   }, []);
 
-
-    const checkIfUserIsSignedIn = async () => {
-    try {
-      const currentUser = await GoogleSignin.getCurrentUser();
-      if (currentUser) {
-        setUserInfo(currentUser);
-        setLoggedIn(true);
-      } else {
-        setLoggedIn(false);
-      }
-    } catch (error) {
-      console.error('Error checking sign-in status:', error);
-    }
-  };
 
     // Sing in 
     const signIn = async () => {
         try {
           const userInfo = await GoogleSignin.signIn(); 
+          console.log("UserInfo");
+          
           console.log(userInfo);
           
           setUserInfo(userInfo); // set user info to state
           setLoggedIn(true); 
+          await userRequest(userInfo.data!.user.email)
         } catch (error) {
             setErrorMessage('An unknown error occurred.');
             setLoggedIn(false);
         }
       };
 
-  // Function to send a fetch request with the user's email to your server
+  // Kaotika user request
   const userRequest = async (email: String) => {
     try {
         const url = `https://kaotika-server.fly.dev/players/email/${email}`
@@ -62,9 +48,12 @@ const GoogleSignInComponent = () => {
 
       if (response.ok) {
         const jsonResponse = await response.json();
-        console.log('Server response:');
-        // Handle the server response as needed (e.g., show a success message or process the data)
-        Alert.alert('Success', `Welcome ${response.body}`);
+        
+        console.log("Respuesta de API Kaotika");
+        
+        console.log(jsonResponse);
+        
+        Alert.alert('Success', `Welcome ${jsonResponse.data.nickname}`);
       } else {
         console.error('Server error:', response.status);
         Alert.alert('Error', `Server responded with status code: ${response.status}`);
@@ -75,10 +64,10 @@ const GoogleSignInComponent = () => {
     }
   };
 
-  // Function to sign out
+  //sign out
   const signOut = async () => {
     try {
-      await GoogleSignin.signOut(); // Clear the user's session from the device
+      await GoogleSignin.signOut();
       setUserInfo({});
       setLoggedIn(false);
     } catch (error) {
@@ -87,12 +76,10 @@ const GoogleSignInComponent = () => {
   };
 
   // Component JSX
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+  return (    
+    <View style={{justifyContent: 'center', alignItems: 'center' }}>
       {loggedIn ? (
         <>
-          <Text>Welcome, {userInfo.data.user.name}</Text>
-          <Text>Email: {userInfo.data.user.email}</Text>
           <Button title="Sign Out" onPress={signOut} />
         </>
       ) : (

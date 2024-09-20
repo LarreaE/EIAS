@@ -42,8 +42,8 @@ function App(): React.JSX.Element {
 
   return (
     <SafeAreaView style={styles.container}>
-      <GoogleSingInComponent/>
       <NavigationContainer>
+      <GoogleSingInComponent/>
 
         <Stack.Navigator
           initialRouteName="Home"
