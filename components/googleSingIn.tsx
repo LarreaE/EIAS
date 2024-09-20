@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from 'react-na
 import { GoogleSignin, User } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
 
+
 const GoogleSignInComponent: React.FC = () => {
   const [userInfo, setUserInfo] = useState<User | null>(null); // Store user info
   const [loggedIn, setLoggedIn] = useState(false); // Login status
@@ -21,13 +22,7 @@ const GoogleSignInComponent: React.FC = () => {
       const userInfo = await GoogleSignin.signIn(); 
       setUserInfo(userInfo.data!); // Set user info to state
       setLoggedIn(true); // Set logged in state to true
-      
-      // Use the correct path to the user's email
-      if (userInfo.data!.user.email) {
-        await userRequest(userInfo.data!.user.email); // Call Kaotika user request
-      } else {
-        setErrorMessage('Unable to retrieve user email.');
-      }
+      await userRequest(userInfo.data!.user.email); // Call Kaotika user request
     } catch (error) {
       setErrorMessage('An unknown error occurred.');
       setLoggedIn(false);
@@ -56,13 +51,31 @@ const GoogleSignInComponent: React.FC = () => {
 
   // Sign out method
   const signOut = async () => {
-    try {
-      await GoogleSignin.signOut();
-      setUserInfo(null); // Clear user info
-      setLoggedIn(false); // Set logged in state to false
-    } catch (error) {
-      setErrorMessage('Sign-out failed. Try again.');
-    }
+    // Show confirmation dialog
+    Alert.alert(
+      'Confirm Log Out', // Title
+      'Are you sure you want to log out?', // Message
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Log out cancelled'),
+          style: 'cancel', // Style of the button (iOS specific)
+        },
+        {
+          text: 'Log Out',
+          onPress: async () => {
+            try {
+              await GoogleSignin.signOut(); // Proceed with the actual sign-out
+              setUserInfo(null); // Clear user info
+              setLoggedIn(false); // Set logged in state to false
+            } catch (error) {
+              setErrorMessage('Sign-out failed. Try again.');
+            }
+          },
+        },
+      ],
+      { cancelable: false } // Prevent dismissing the dialog by tapping outside
+    );
   };
 
   return (
