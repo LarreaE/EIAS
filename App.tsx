@@ -1,12 +1,18 @@
 import Config from 'react-native-config';
-import React, {useState, useEffect} from 'react';
-import {SafeAreaView, StyleSheet, View, Button, Alert} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, StyleSheet, View, Button, Alert } from 'react-native';
 import SplashScreen from './components/splashScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './components/homeScreen';
 import ProfileScreen from './components/profileScreen';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
+// Simulación de datos JSON
+const userData = {
+  name: "John Doe",
+  email: "johndoe@example.com"
+};
 
 const Stack = createStackNavigator();
 function App(): React.JSX.Element {
@@ -27,8 +33,8 @@ function App(): React.JSX.Element {
     });
   }, []);
 
-   // Function to handle Google Sign-In
-   async function onGoogleButtonPress() {
+  // Function to handle Google Sign-In
+  async function onGoogleButtonPress() {
     try {
       // Get the user's ID token
       const userInfo = await GoogleSignin.signIn();
@@ -47,30 +53,32 @@ function App(): React.JSX.Element {
   return (
     <SafeAreaView style={styles.container}>
       <NavigationContainer>
-      <Button title="Google Sign-In" onPress={onGoogleButtonPress} />
+        <Button title="Google Sign-In" onPress={onGoogleButtonPress} />
 
-      <Stack.Navigator
-  initialRouteName="Home"
-  screenOptions={{
-    gestureEnabled: true,
-    cardStyleInterpolator: ({ current, layouts }) => ({
-      cardStyle: {
-        transform: [
-          {
-            translateX: current.progress.interpolate({
-              inputRange: [0, 1],
-              outputRange: [layouts.screen.width, 0],
+        <Stack.Navigator
+          initialRouteName="Home"
+          screenOptions={{
+            gestureEnabled: true,
+            cardStyleInterpolator: ({ current, layouts }) => ({
+              cardStyle: {
+                transform: [
+                  {
+                    translateX: current.progress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [layouts.screen.width, 0],
+                    }),
+                  },
+                ],
+              },
             }),
-          },
-        ],
-      },
-    }),
-    headerShown: false, // Oculta el encabezado para todas las pantallas
-  }}
->
-  <Stack.Screen name="Home" component={HomeScreen} />
-  <Stack.Screen name="Profile" component={ProfileScreen} />
-</Stack.Navigator>
+            headerShown: false, // Oculta el encabezado para todas las pantallas
+          }}
+        >
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Profile">
+            {props => <ProfileScreen {...props} user={userData} />}
+          </Stack.Screen>
+        </Stack.Navigator>
 
       </NavigationContainer>
     </SafeAreaView>

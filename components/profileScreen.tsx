@@ -9,9 +9,14 @@ type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Prof
 
 type Props = {
   navigation: ProfileScreenNavigationProp;
+  user: {
+    name: string;
+    email: string;
+  };
 };
 
-const ProfileScreen: React.FC<Props> = ({ navigation }) => {
+const ProfileScreen: React.FC<Props> = ({ navigation, user }) => {
+  // Maneja el gesto de deslizamiento
   const onGestureEvent = (event: any) => {
     if (event.nativeEvent.translationX > 100) { // Si se desliza a la derecha más de 100 px
       navigation.navigate('Home'); // Volver a la página de inicio
@@ -22,7 +27,9 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <PanGestureHandler onGestureEvent={onGestureEvent}>
         <View style={styles.container}>
-          <Text style={styles.text}>Another Screen</Text>
+          {/* Mostrar el nombre y el email del usuario desde las props */}
+          <Text style={styles.text}>User name: {user.name}</Text>
+          <Text style={styles.text}>Email: {user.email}</Text>
         </View>
       </PanGestureHandler>
     </GestureHandlerRootView>
