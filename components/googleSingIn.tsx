@@ -25,8 +25,11 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
   const signIn = async () => {
     try {
       setLoading(true); // Iniciar el loading
-      await GoogleSignin.signIn(); // Lógica de inicio de sesión
+      const userInfo = await GoogleSignin.signIn(); // Reemplaza esto con tu lógica de inicio de sesión
+      console.log('Usuario de Google:', userInfo);
       setIsLoged(true); // Actualiza el estado de autenticación
+      console.log();
+      
     } catch (error) {
       console.error(error);
     } finally {
