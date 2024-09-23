@@ -34,7 +34,7 @@ const GoogleSignInComponent: React.FC = () => {
           
           console.log(userInfo);
           
-          setUserInfo(userInfo); // set user info to state
+          
           setLoggedIn(true); 
           await userRequest(userInfo.data!.user.email)
         } catch (error) {
