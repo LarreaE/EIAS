@@ -54,7 +54,9 @@ function App() {
             headerShown: false,
           }}
         >
-          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Home">
+            {props => <HomeScreen {...props} setIsLoged={setIsLoged} />}
+          </Stack.Screen>
           <Stack.Screen name="Profile">
             {(props) => <ProfileScreen {...props} user={{ name: 'John Doe', email: 'johndoe@example.com' }} />}
           </Stack.Screen>
