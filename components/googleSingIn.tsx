@@ -9,12 +9,20 @@ const GoogleSignInComponent = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
+    const clientId = Config.GOOGLE_WEB_CLIENT_ID;
+    console.log("Google Web Client ID:", clientId);
     
-    GoogleSignin.configure({
-      webClientId: Config.GOOGLE_WEB_CLIENT_ID,
-    });
-
+    const configureGoogleSignIn = async () => {
+      await GoogleSignin.configure({
+        webClientId: clientId,
+        offlineAccess: true,
+      });
+    };
+    
+    configureGoogleSignIn();
   }, []);
+  
+  
 
 
     // Sing in 
@@ -30,6 +38,8 @@ const GoogleSignInComponent = () => {
           await userRequest(userInfo.data!.user.email)
         } catch (error) {
             setErrorMessage('An unknown error occurred.');
+            console.log(error);
+            
             setLoggedIn(false);
         }
       };
