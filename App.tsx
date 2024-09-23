@@ -1,50 +1,40 @@
-import Config from 'react-native-config';
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, View, Button, Alert } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import SplashScreen from './components/splashScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './components/homeScreen';
 import ProfileScreen from './components/profileScreen';
-import GoogleSingInComponent from './components/googleSingIn';
-
+import GoogleSignInComponent from './components/googleSingIn.tsx';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-
-// Simulación de datos JSON
-const userData = {
-  name: "John Doe",
-  email: "johndoe@example.com"
-};
+import Config from 'react-native-config';
 
 const Stack = createStackNavigator();
-function App(): React.JSX.Element {
-  const [isSplashVisible, setIsSplashVisible] = useState(true);
-  const [data, setData] = useState({});
+
+function App() {
+  const [isSplashVisible, setIsSplashVisible] = useState<boolean>(true);
+  const [isLoged, setIsLoged] = useState<boolean>(false); // Explicitly typing boolean
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsSplashVisible(false);
-    }, 3000); // 3 segundos
-
-    return () => clearTimeout(timer);
+    setIsSplashVisible(false);
   }, []);
 
-  //Google Sign in
+  // Configuración de Google Sign-In
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId: Config.GOOGLE_WEB_CLIENT_ID, // From Firebase Console (still required for Google Sign-In)
+      webClientId: Config.GOOGLE_WEB_CLIENT_ID,
     });
   }, []);
 
   if (isSplashVisible) {
     return <SplashScreen />;
+  } else if (!isLoged) {
+    return <GoogleSignInComponent setIsLoged={setIsLoged} />; // Passing setIsLoged as prop
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <NavigationContainer>
-      <GoogleSingInComponent/>
-
         <Stack.Navigator
           initialRouteName="Home"
           screenOptions={{
@@ -61,15 +51,14 @@ function App(): React.JSX.Element {
                 ],
               },
             }),
-            headerShown: false, // Oculta el encabezado para todas las pantallas
+            headerShown: false,
           }}
         >
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Profile">
-            {props => <ProfileScreen {...props} user={userData} />}
+            {(props) => <ProfileScreen {...props} user={{ name: 'John Doe', email: 'johndoe@example.com' }} />}
           </Stack.Screen>
         </Stack.Navigator>
-
       </NavigationContainer>
     </SafeAreaView>
   );
