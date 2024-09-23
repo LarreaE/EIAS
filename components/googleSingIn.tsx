@@ -17,11 +17,11 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
 
   return (
     <View style={styles.outerContainer}>
-      <View style={styles.container}>
       <TouchableOpacity onPress={signIn}>
+      <View style={styles.container}>
         <Text style={styles.text}>Sing in with google</Text>
-        </TouchableOpacity>
       </View>
+      </TouchableOpacity>
     </View>
   );
 };
