@@ -15,7 +15,7 @@ type Props = {
   };
 };
 
-const ProfileScreen: React.FC<Props> = ({ navigation, user }) => {
+const AcolythProfileScreen: React.FC<Props> = ({ navigation, user }) => {
   // Maneja el gesto de deslizamiento
   const onGestureEvent = (event: any) => {
     if (event.nativeEvent.translationX > 100) { // Si se desliza a la derecha más de 100 px
@@ -78,4 +78,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileScreen;
+export default AcolythProfileScreen;

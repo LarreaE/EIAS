@@ -3,8 +3,9 @@ import { SafeAreaView, StyleSheet } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from './components/homeScreen';
-import ProfileScreen from './components/profileScreen';
+import AcolythHomeScreen from './components/homeScreen';
+import AcolythProfileScreen from './components/profileScreen';
+import AcolythLaboratoryScreen from './components/acolythLaboratoryScreen.tsx';
 import GoogleSignInComponent from './components/googleSingIn.tsx';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
@@ -34,7 +35,7 @@ function App() {
     <SafeAreaView style={styles.container}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="Home"
+          initialRouteName="HomeAcolyth"
           screenOptions={{
             gestureEnabled: true,
             cardStyleInterpolator: ({ current, layouts }) => ({
@@ -43,7 +44,7 @@ function App() {
                   {
                     translateX: current.progress.interpolate({
                       inputRange: [0, 1],
-                      outputRange: [layouts.screen.width, 0],
+                      outputRange: [layouts.screen.width, 1],
                     }),
                   },
                 ],
@@ -52,11 +53,14 @@ function App() {
             headerShown: false,
           }}
         >
-          <Stack.Screen name="Home">
-            {props => <HomeScreen {...props} setIsLoged={setIsLoged} />}
+          <Stack.Screen name="HomeAcolyth">
+            {props => <AcolythHomeScreen {...props} setIsLoged={setIsLoged} />}
           </Stack.Screen>
-          <Stack.Screen name="Profile">
-            {(props) => <ProfileScreen {...props} user={{ name: 'John Doe', email: 'johndoe@example.com' }} />}
+          <Stack.Screen name="ProfileAcolyth">
+            {(props) => <AcolythProfileScreen {...props} user={{ name: 'John Doe', email: 'johndoe@example.com' }} />}
+          </Stack.Screen>
+          <Stack.Screen name="LaboratoryAcolyth">
+            {(props) => <AcolythLaboratoryScreen {...props}/>}
           </Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer>

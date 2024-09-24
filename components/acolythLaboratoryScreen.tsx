@@ -10,7 +10,8 @@ type LaboratoryScreenNavigationProp = StackNavigationProp<RootStackParamList, 'L
 type Props = {
     navigation: LaboratoryScreenNavigationProp;
     };
-const LaboratoryScreen: React.FC<Props> = ({ navigation }) => {
+
+const AcolythLaboratoryScreen: React.FC<Props> = ({ navigation }) => {
     // Maneja el gesto de deslizamiento
     const onGestureEvent = (event: any) => {
       if (event.nativeEvent.translationX < -100) { // Si se desliza a la izquierda más de 100 px
@@ -68,3 +69,5 @@ const LaboratoryScreen: React.FC<Props> = ({ navigation }) => {
       textAlign: 'center',
     },
   });
+
+  export default AcolythLaboratoryScreen;
