@@ -13,7 +13,7 @@ type Props = {
 const LaboratoryScreen: React.FC<Props> = ({ navigation }) => {
     // Maneja el gesto de deslizamiento
     const onGestureEvent = (event: any) => {
-      if (event.nativeEvent.translationX > 100) { // Si se desliza a la derecha más de 100 px
+      if (event.nativeEvent.translationX < -100) { // Si se desliza a la izquierda más de 100 px
         navigation.navigate('HomeAcolyth'); // Volver a la página de inicio
       }
     };
