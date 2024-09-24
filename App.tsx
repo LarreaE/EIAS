@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
-import SplashScreen from './components/splashScreen';
+import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './components/homeScreen';
@@ -16,7 +16,7 @@ function App() {
   const [isLoged, setIsLoged] = useState<boolean>(false); // Explicitly typing boolean
 
   useEffect(() => {
-    setIsSplashVisible(false);
+    SplashScreen.hide();
   }, []);
 
   // Configuración de Google Sign-In
@@ -26,9 +26,7 @@ function App() {
     });
   }, []);
 
-  if (isSplashVisible) {
-    return <SplashScreen />;
-  } else if (!isLoged) {
+   if (!isLoged) {
     return <GoogleSignInComponent setIsLoged={setIsLoged} />; // Passing setIsLoged as prop
   }
 
