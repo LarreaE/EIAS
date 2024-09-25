@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { PanGestureHandler, GestureHandlerRootView, State } from 'react-native-gesture-handler';
+import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { RootStackParamList } from '../types/types';
 
 // Definir el tipo para la prop navigation basado en RootStackParamList
@@ -9,22 +9,30 @@ type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
 type Props = {
   navigation: HomeScreenNavigationProp;
+  setIsLoged: (value: boolean) => void;
 };
 
-const HomeScreen: React.FC<Props> = ({ navigation }) => {
+const HomeScreen: React.FC<Props> = ({ navigation, setIsLoged }) => {
   const onGestureEvent = (event: any) => {
     if (event.nativeEvent.translationX < -100) { // Si se desliza más de 100 px hacia la izquierda
       navigation.navigate('Profile'); // Navegar a la página de perfil
     }
   };
 
+  const signOut = () => {
+    setIsLoged(false); // Cambiar el estado de inicio de sesión
+  };
+
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={styles.container}>
       <PanGestureHandler onGestureEvent={onGestureEvent}>
-        <View style={styles.container}>
+        <View style={styles.innerContainer}>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>Home Screen</Text>
           </View>
+          <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
+            <Text style={styles.signOutText}>Sign Out</Text>
+          </TouchableOpacity>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.roundButton}
@@ -48,9 +56,12 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'grey',
+  },
+  innerContainer: {
+    flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: 'grey',
   },
   titleContainer: {
     position: 'absolute',
@@ -67,6 +78,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '80%',
     marginBottom: 30,
+  },
+  signOutButton: {
+    position: 'absolute',
+    top: 20,                  // Espaciado desde la parte superior
+    right: 20,                // Espaciado desde la derecha
+    backgroundColor: 'red',   // Fondo rojo
+    padding: 10,
+    borderRadius: 5,
+  },
+  signOutText: {
+    color: 'white',           // Texto en color blanco
+    fontSize: 12,             // Tamaño de fuente pequeño
   },
   roundButton: {
     backgroundColor: '#007AFF',

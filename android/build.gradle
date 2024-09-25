@@ -6,21 +6,18 @@ buildscript {
         targetSdkVersion = 34
         ndkVersion = "26.1.10909125"
         kotlinVersion = "1.9.24"
-        googleServicesVersion = "4.4.2" // Add the version of Google services
+        googleServicesVersion = "4.4.2"
+        googlePlayServicesAuthVersion = "20.7.0"
     }
     repositories {
-        google() // Required for Firebase
+        google()
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle")
+        classpath("com.android.tools.build:gradle:7.4.0")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
-        
-        // Google Services classpath
         classpath("com.google.gms:google-services:$googleServicesVersion")
-        
-        // Firebase Crashlytics and Performance Monitoring (optional)
         classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.8")
     }
 }

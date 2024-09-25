@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
-import { GoogleSignin, User } from '@react-native-google-signin/google-signin';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import Spinner from './Spinner'; // Importa el Spinner
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
 
+interface Props {
+  setIsLoged: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 interface GoogleSignInProps {
   onLoginSuccess: (userData: any) => void;
@@ -15,13 +19,16 @@ const GoogleSignInComponent: React.FC<GoogleSignInProps> = ({onLoginSuccess}) =>
   const [errorMessage, setErrorMessage] = useState(''); // Error message
 
   useEffect(() => {
-    // Configure Google Sign-In with the webClientId
-    GoogleSignin.configure({
-      webClientId: Config.GOOGLE_WEB_CLIENT_ID,
-    });
+    const configureGoogleSignIn = async () => {
+      await GoogleSignin.configure({
+        webClientId: Config.GOOGLE_WEB_CLIENT_ID, // Asegúrate de tener esto configurado
+        offlineAccess: true,
+      });
+    };
+    
+    configureGoogleSignIn();
   }, []);
 
-  // Sign in method
   const signIn = async () => {
     try {
       const userInfo = await GoogleSignin.signIn(); 
@@ -85,98 +92,35 @@ const GoogleSignInComponent: React.FC<GoogleSignInProps> = ({onLoginSuccess}) =>
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>Sign In</Text>
+    <View style={styles.outerContainer}>
+    {loading && <Spinner />}
+    <TouchableOpacity onPress={signIn} disabled={loading}>
+      <View style={styles.container}>
+        <Text style={styles.text}>Sign in with Google</Text>
       </View>
-
-      {loggedIn ? (
-        <View style={styles.loggedInContainer}>
-          <Text style={styles.welcomeText}>Welcome, {userInfo?.user.name}</Text>
-          <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
-            <Text style={styles.buttonText}>Sign Out</Text>
-          </TouchableOpacity>
-        </View>
-      ) : (
-        <View style={styles.buttonContainer}>
-          <Text style={styles.errorMessage}>{errorMessage || 'You are not logged in.'}</Text>
-          <TouchableOpacity style={styles.googleButton} onPress={signIn}>
-            <Image
-              source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png' }}
-              style={styles.googleLogo}
-            />
-            <Text style={styles.buttonText}>Sign In with Google</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
+    </TouchableOpacity>
+  </View>
   );
 };
 
-// Styles
 const styles = StyleSheet.create({
+  outerContainer: {
+    flex: 1,                       // Ocupar todo el espacio disponible
+    justifyContent: 'center',       // Centrar verticalmente
+    alignItems: 'center',           // Centrar horizontalmente
+    backgroundColor: '#f0f0f0',     // Fondo claro (opcional para contraste)
+  },
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'grey',
+    backgroundColor: 'blue',        // Fondo azul
+    width: 200,                     // Ancho de 200 unidades
+    height: 100,                    // Alto de 100 unidades
+    justifyContent: 'center',       // Centrar contenido verticalmente
+    alignItems: 'center',           // Centrar contenido horizontalmente
+    borderRadius: 20,               // Esquinas redondeadas
   },
-  titleContainer: {
-    position: 'absolute',
-    top: 50,
-    width: '100%',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    color: 'white',
-  },
-  loggedInContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  welcomeText: {
-    fontSize: 18,
-    color: 'white',
-    marginBottom: 20,
-  },
-  buttonContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  errorMessage: {
-    color: 'red',
-    marginBottom: 20,
-  },
-  googleButton: {
-    flexDirection: 'row',
-    backgroundColor: '#4285F4',
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 250,
-    height: 60,
-  },
-  googleLogo: {
-    width: 24,
-    height: 24,
-    marginRight: 10,
-  },
-  signOutButton: {
-    backgroundColor: '#d9534f',
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 250,
-    height: 60,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    textAlign: 'center',
+  text: {
+    color: 'white',                 // Texto en color blanco
+    fontSize: 18,                   // Tamaño de fuente
   },
 });
 

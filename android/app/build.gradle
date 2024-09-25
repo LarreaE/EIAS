@@ -1,12 +1,11 @@
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
-apply plugin: "com.google.gms.google-services" // Apply Google Services plugin
-apply plugin: "com.google.firebase.crashlytics" // Optional: For Crashlytics
+apply plugin: "com.google.gms.google-services"
+apply plugin: "com.google.firebase.crashlytics"
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
-
-// Define whether to enable Proguard for release builds
-def enableProguardInReleaseBuilds = false // Or true, if you want to enable it
+def enableProguardInReleaseBuilds = false // Cambia a true si habilitas Proguard
 
 android {
     ndkVersion rootProject.ext.ndkVersion
@@ -20,9 +19,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-
-        // Required for Firebase
-        multiDexEnabled true
+        multiDexEnabled true // Asegúrate de incluir multidex si es necesario
     }
     signingConfigs {
         debug {
@@ -31,13 +28,19 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+         release {
+            storeFile file('releasekey.keystore') // Cambia esto por el camino a tu keystore
+            storePassword 'ReleaseKeyPassword123' // Contraseña de keystore
+            keyAlias 'releasekey-alias' // Alias del keystore
+            keyPassword 'ReleaseAliasPassword456' // Contraseña del alias
+        }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
         release {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release // Usa la configuración de lanzamiento
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
@@ -45,7 +48,6 @@ android {
 }
 
 dependencies {
-    // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
     implementation project(':react-native-gesture-handler')
     implementation project(':react-native-safe-area-context')
@@ -62,20 +64,19 @@ dependencies {
     } else {
         implementation jscFlavor
     }
-
-    // Firebase and Google Sign-In dependencies
-    implementation platform('com.google.firebase:firebase-bom:32.2.0') // Firebase BOM (Bill of Materials)
-    implementation 'com.google.firebase:firebase-auth' // Firebase Authentication
-    implementation 'com.google.android.gms:play-services-auth:20.7.0' // Google Sign-In
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation platform('com.google.firebase:firebase-bom:32.3.1')
+    implementation 'com.google.firebase:firebase-auth' // Sin especificar versión, usa la del BOM
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
         
     implementation project(':@react-native-google-signin_google-signin')
     implementation project(':react-native-config')
 
-    // Optional: Firebase Analytics, Crashlytics, and Performance Monitoring
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-perf'
+    implementation 'com.google.firebase:firebase-firestore'
+    implementation 'androidx.multidex:multidex:2.0.1' // Agrega multidex si es necesario
+    implementation project(':react-native-splash-screen')
 
 }
-
-

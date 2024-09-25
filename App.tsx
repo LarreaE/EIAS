@@ -6,7 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './components/homeScreen';
 import ProfileScreen from './components/profileScreen';
-import GoogleSignInComponent from './components/googleSingIn';
+import GoogleSignInComponent from './components/googleSingIn.tsx';
 
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
@@ -19,18 +19,10 @@ const userInfo = {
 };
 
 const Stack = createStackNavigator();
-function App(): React.JSX.Element {
-  const [isSplashVisible, setIsSplashVisible] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track if the user is logged in
-  const [userData, setUserData] = useState(null); // Store user data from Google Sign-In
 
-
-  // handle successful login
-  const handleLoginSuccess = (userData:any) => {
-    setUserData(userData); // Save the user's info
-    setIsLoggedIn(true); // Set user as logged in
-    
-  };
+function App() {
+  const [isSplashVisible, setIsSplashVisible] = useState<boolean>(true);
+  const [isLoged, setIsLoged] = useState<boolean>(false); // Explicitly typing boolean
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -51,44 +43,38 @@ function App(): React.JSX.Element {
     return <SplashScreen />;
   }
 
-   //nott logged in
-   if (!isLoggedIn) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <GoogleSignInComponent onLoginSuccess={handleLoginSuccess} />
-      </SafeAreaView>
-    );
-  }
-    return (
-      <SafeAreaView style={styles.container}>
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="Home"
-            screenOptions={{
-              gestureEnabled: true,
-              cardStyleInterpolator: ({ current, layouts }) => ({
-                cardStyle: {
-                  transform: [
-                    {
-                      translateX: current.progress.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [layouts.screen.width, 0],
-                      }),
-                    },
-                  ],
-                },
-              }),
-              headerShown: false, // Hide the header for all screens
-            }}
-          >
-            <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="Profile">
-              {props => <ProfileScreen {...props} user={userInfo} />}
-            </Stack.Screen>
-          </Stack.Navigator>
-        </NavigationContainer>
-      </SafeAreaView>
-    );
+  return (
+    <SafeAreaView style={styles.container}>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Home"
+          screenOptions={{
+            gestureEnabled: true,
+            cardStyleInterpolator: ({ current, layouts }) => ({
+              cardStyle: {
+                transform: [
+                  {
+                    translateX: current.progress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [layouts.screen.width, 0],
+                    }),
+                  },
+                ],
+              },
+            }),
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name="Home">
+            {props => <HomeScreen {...props} setIsLoged={setIsLoged} />}
+          </Stack.Screen>
+          <Stack.Screen name="Profile">
+            {(props) => <ProfileScreen {...props} user={{ name: 'John Doe', email: 'johndoe@example.com' }} />}
+          </Stack.Screen>
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
