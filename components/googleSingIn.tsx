@@ -3,6 +3,9 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Spinner from './Spinner'; // Importa el Spinner
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
+import auth from '@react-native-firebase/auth';
+import axios from 'axios';
+
 
 interface Props {
   setIsLoged: React.Dispatch<React.SetStateAction<boolean>>;
@@ -18,7 +21,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
         offlineAccess: true,
       });
     };
-    
+
     configureGoogleSignIn();
   }, []);
 
@@ -27,9 +30,38 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
       setLoading(true); // Iniciar el loading
       const userInfo = await GoogleSignin.signIn(); // Reemplaza esto con tu lógica de inicio de sesión
       console.log('Usuario de Google:', userInfo);
-      setIsLoged(true); // Actualiza el estado de autenticación
-      console.log();
-      
+      const idToken = userInfo.data?.idToken;
+      const email = userInfo.data?.user.email;
+      if (!idToken) {
+        return console.error('idtoken null');
+      }
+      console.log(idToken);
+      // Create a Google credential with the token
+      const googleCredential = await auth.GoogleAuthProvider.credential(idToken);
+      console.log('GOOGLE CREDENTIAL');
+      console.log(googleCredential);
+
+      // Sign-in the user with the credential
+      const signInWithCredential = await auth().signInWithCredential(
+        googleCredential,
+    );
+    console.log('SIGN IN WITH CREDENTIAL');
+    console.log(signInWithCredential);
+
+    //Get the token from the current User
+    const idTokenResult = await auth().currentUser?.getIdTokenResult();
+    console.log('USER JWT');
+    console.log(idTokenResult);
+    setIsLoged(true); // Actualiza el estado de autenticación
+    axios.post('http://localhost:3000/verify-token', {
+      data: idTokenResult,
+      email: email,
+    })
+    .then((response) => {
+      console.log('JWT TOKEN FROM EXPRESS');
+      console.log(response.data);
+      //SAVE JWT ENCRIPTED
+    });
     } catch (error) {
       console.error(error);
     } finally {
