@@ -5,17 +5,20 @@ import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-
 import { RootStackParamList } from '../types/types';
 
 // Definir el tipo para la prop navigation basado en RootStackParamList
-type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
+type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'HomeAcolyth'>;
 
 type Props = {
   navigation: HomeScreenNavigationProp;
   setIsLoged: (value: boolean) => void;
 };
 
-const HomeScreen: React.FC<Props> = ({ navigation, setIsLoged }) => {
+const AcolythHomeScreen: React.FC<Props> = ({ navigation, setIsLoged }) => {
   const onGestureEvent = (event: any) => {
     if (event.nativeEvent.translationX < -100) { // Si se desliza más de 100 px hacia la izquierda
-      navigation.navigate('Profile'); // Navegar a la página de perfil
+      navigation.navigate('ProfileAcolyth'); // Navegar a la página de perfil
+    }
+    if (event.nativeEvent.translationX > 100) { // Si se desliza a la derecha más de 100 px
+      navigation.navigate('LaboratoryAcolyth'); // Volver a la página de laboratorio
     }
   };
 
@@ -34,17 +37,17 @@ const HomeScreen: React.FC<Props> = ({ navigation, setIsLoged }) => {
             <Text style={styles.signOutText}>Sign Out</Text>
           </TouchableOpacity>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity
+          <TouchableOpacity
               style={styles.roundButton}
-              onPress={() => navigation.navigate('Home')}
+              onPress={() => navigation.navigate('LaboratoryAcolyth')}
             >
-              <Text style={styles.buttonText}>Go to Home</Text>
+              <Text style={styles.buttonText}>Laboratory</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.roundButton}
-              onPress={() => navigation.navigate('Profile')}
+              onPress={() => navigation.navigate('ProfileAcolyth')}
             >
-              <Text style={styles.buttonText}>Go to Profile</Text>
+              <Text style={styles.buttonText}>Profile</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -107,4 +110,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default AcolythHomeScreen;

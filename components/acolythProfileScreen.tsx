@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { RootStackParamList } from '../types/types';
 
 // Definir el tipo para la prop navigation basado en RootStackParamList
-type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Profile'>;
+type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ProfileAcolyth'>;
 
 type Props = {
   navigation: ProfileScreenNavigationProp;
@@ -15,11 +15,11 @@ type Props = {
   };
 };
 
-const ProfileScreen: React.FC<Props> = ({ navigation, user }) => {
+const AcolythProfileScreen: React.FC<Props> = ({ navigation, user }) => {
   // Maneja el gesto de deslizamiento
   const onGestureEvent = (event: any) => {
     if (event.nativeEvent.translationX > 100) { // Si se desliza a la derecha más de 100 px
-      navigation.navigate('Home'); // Volver a la página de inicio
+      navigation.navigate('HomeAcolyth'); // Volver a la página de inicio
     }
   };
 
@@ -30,7 +30,16 @@ const ProfileScreen: React.FC<Props> = ({ navigation, user }) => {
           {/* Mostrar el nombre y el email del usuario desde las props */}
           <Text style={styles.text}>User name: {user.name}</Text>
           <Text style={styles.text}>Email: {user.email}</Text>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.roundButton}
+              onPress={() => navigation.navigate('HomeAcolyth')}
+            >
+              <Text style={styles.buttonText}>Home</Text>
+            </TouchableOpacity>
+          </View>
         </View>
+        
       </PanGestureHandler>
     </GestureHandlerRootView>
   );
@@ -47,6 +56,26 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: 'black',
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
+    marginBottom: 30,
+  },
+  roundButton: {
+    backgroundColor: '#007AFF',
+    padding: 15,
+    borderRadius: 10,
+    marginHorizontal: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 100,
+    height: 60,
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+  },
 });
 
-export default ProfileScreen;
+export default AcolythProfileScreen;
