@@ -12,6 +12,9 @@ import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.soloader.SoLoader
 import com.lugg.RNCConfig.RNCConfigPackage;
 import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
+import io.invertase.firebase.auth.ReactNativeFirebaseAuthPackage;
+
+
 
 class MainApplication : Application(), ReactApplication {
 

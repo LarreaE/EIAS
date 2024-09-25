@@ -55,6 +55,8 @@ dependencies {
 
     //firebase app    
     implementation project(path: ":@react-native-firebase_app")
+    implementation project(path: ":@react-native-firebase_auth")
+
 
 
 
