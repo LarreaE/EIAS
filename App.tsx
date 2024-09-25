@@ -1,46 +1,32 @@
-import Config from 'react-native-config';
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, View, Button, Alert } from 'react-native';
-import SplashScreen from './components/splashScreen';
+import { SafeAreaView, StyleSheet } from 'react-native';
+import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './components/homeScreen';
 import ProfileScreen from './components/profileScreen';
 import GoogleSignInComponent from './components/googleSingIn.tsx';
-
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-
-import { auth } from '@react-native-firebase/app';
-
-// Simulación de datos JSON
-const userInfo = {
-  name: "John Doe",
-  email: "johndoe@example.com"
-};
+import Config from 'react-native-config';
 
 const Stack = createStackNavigator();
 
 function App() {
-  const [isSplashVisible, setIsSplashVisible] = useState<boolean>(true);
   const [isLoged, setIsLoged] = useState<boolean>(false); // Explicitly typing boolean
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsSplashVisible(false);
-    }, 3000); // 3 segundos
-
-    return () => clearTimeout(timer);
+    SplashScreen.hide();
   }, []);
 
-  //Google Sign in
+  // Configuración de Google Sign-In
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId: Config.GOOGLE_WEB_CLIENT_ID, // From Firebase Console (still required for Google Sign-In)
+      webClientId: Config.GOOGLE_WEB_CLIENT_ID,
     });
   }, []);
 
-  if (isSplashVisible) {
-    return <SplashScreen />;
+   if (!isLoged) {
+    return <GoogleSignInComponent setIsLoged={setIsLoged} />; // Passing setIsLoged as prop
   }
 
   return (

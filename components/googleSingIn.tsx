@@ -8,15 +8,8 @@ interface Props {
   setIsLoged: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-interface GoogleSignInProps {
-  onLoginSuccess: (userData: any) => void;
-}
-
-
-const GoogleSignInComponent: React.FC<GoogleSignInProps> = ({onLoginSuccess}) => {
-  const [userInfo, setUserInfo] = useState<User | null>(null); // Store user info
-  const [loggedIn, setLoggedIn] = useState(false); // Login status
-  const [errorMessage, setErrorMessage] = useState(''); // Error message
+const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
+  const [loading, setLoading] = useState(false); // Estado para el loading
 
   useEffect(() => {
     const configureGoogleSignIn = async () => {
@@ -31,64 +24,17 @@ const GoogleSignInComponent: React.FC<GoogleSignInProps> = ({onLoginSuccess}) =>
 
   const signIn = async () => {
     try {
-      const userInfo = await GoogleSignin.signIn(); 
-      setUserInfo(userInfo.data!); // Set user info to state
-      setLoggedIn(true); // Set logged in state to true
-      await userRequest(userInfo.data!.user.email); // Call Kaotika user request
+      setLoading(true); // Iniciar el loading
+      const userInfo = await GoogleSignin.signIn(); // Reemplaza esto con tu lógica de inicio de sesión
+      console.log('Usuario de Google:', userInfo);
+      setIsLoged(true); // Actualiza el estado de autenticación
+      console.log();
+      
     } catch (error) {
-      setErrorMessage('An unknown error occurred.');
-      setLoggedIn(false);
+      console.error(error);
+    } finally {
+      setLoading(false); // Detener el loading
     }
-  };
-
-  // API request to Kaotika server
-  const userRequest = async (email: string) => {
-    try {
-      const url = `https://kaotika-server.fly.dev/players/email/${email}`;
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-
-      if (response.ok) {
-        const jsonResponse = await response.json();
-        onLoginSuccess(jsonResponse)
-        Alert.alert('Success', `Welcome ${jsonResponse.data.nickname}`);
-      } else {
-        Alert.alert('Error', `Server responded with status code: ${response.status}`);
-      }
-    } catch (error) {
-      Alert.alert('Error', 'Failed to receive data from server.');
-    }
-  };
-
-  // Sign out method
-  const signOut = async () => {
-    // Show confirmation dialog
-    Alert.alert(
-      'Confirm Log Out', // Title
-      'Are you sure you want to log out?', // Message
-      [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Log out cancelled'),
-          style: 'cancel', // Style of the button (iOS specific)
-        },
-        {
-          text: 'Log Out',
-          onPress: async () => {
-            try {
-              await GoogleSignin.signOut(); // Proceed with the actual sign-out
-              setUserInfo(null); // Clear user info
-              setLoggedIn(false); // Set logged in state to false
-            } catch (error) {
-              setErrorMessage('Sign-out failed. Try again.');
-            }
-          },
-        },
-      ],
-      { cancelable: false } // Prevent dismissing the dialog by tapping outside
-    );
   };
 
   return (
