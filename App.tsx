@@ -10,6 +10,8 @@ import GoogleSignInComponent from './components/googleSingIn';
 
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
+import { auth } from '@react-native-firebase/app';
+
 // Simulación de datos JSON
 const userInfo = {
   name: "John Doe",

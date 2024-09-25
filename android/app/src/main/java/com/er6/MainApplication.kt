@@ -11,6 +11,7 @@ import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.soloader.SoLoader
 import com.lugg.RNCConfig.RNCConfigPackage;
+import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 
 class MainApplication : Application(), ReactApplication {
 
