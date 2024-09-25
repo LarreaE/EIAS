@@ -35,11 +35,11 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
       if (!idToken) {
         return console.error('idtoken null');
       }
-      console.log(idToken);
+      //console.log(idToken);
       // Create a Google credential with the token
       const googleCredential = await auth.GoogleAuthProvider.credential(idToken);
       console.log('GOOGLE CREDENTIAL');
-      console.log(googleCredential);
+      //console.log(googleCredential);
 
       // Sign-in the user with the credential
       const signInWithCredential = await auth().signInWithCredential(
@@ -52,19 +52,21 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     const idTokenResult = await auth().currentUser?.getIdTokenResult();
     console.log('USER JWT');
     console.log(idTokenResult);
-    setIsLoged(true); // Actualiza el estado de autenticación
-    axios.post('http://localhost:3000/verify-token', {
-      data: idTokenResult,
+    axios.post('http://172.20.10.2:3000/verify-token', {
+      idToken: idTokenResult?.token,
       email: email,
     })
     .then((response) => {
       console.log('JWT TOKEN FROM EXPRESS');
       console.log(response.data);
       //SAVE JWT ENCRIPTED
+      setIsLoged(true);
     });
     } catch (error) {
       console.error(error);
+      console.log('error');
     } finally {
+      console.log('done');
       setLoading(false); // Detener el loading
     }
   };
