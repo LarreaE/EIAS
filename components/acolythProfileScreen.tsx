@@ -12,7 +12,7 @@ type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Prof
 
 type Props = {
   navigation: ProfileScreenNavigationProp;
-  user: User;
+  user: any;
 };
 
 const AcolythProfileScreen: React.FC<Props> = ({ navigation, user }) => {
