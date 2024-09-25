@@ -3,8 +3,8 @@ import { SafeAreaView, StyleSheet } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import AcolythHomeScreen from './components/homeScreen';
-import AcolythProfileScreen from './components/profileScreen';
+import AcolythHomeScreen from './components/acolythHomeScreen.tsx';
+import AcolythProfileScreen from './components/acolythProfileScreen.tsx';
 import AcolythLaboratoryScreen from './components/acolythLaboratoryScreen.tsx';
 import GoogleSignInComponent from './components/googleSingIn.tsx';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
@@ -44,7 +44,7 @@ function App() {
                   {
                     translateX: current.progress.interpolate({
                       inputRange: [0, 1],
-                      outputRange: [layouts.screen.width, 1],
+                      outputRange: [layouts.screen.width, 1]  ,
                     }),
                   },
                 ],
