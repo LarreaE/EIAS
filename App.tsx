@@ -14,6 +14,7 @@ const Stack = createStackNavigator();
 
 function App() {
   const [isLoged, setIsLoged] = useState<boolean>(false); // Explicitly typing boolean
+  const [UserData, setUserData] = useState<any>(null); // Explicitly typing boolean
 
   useEffect(() => {
     SplashScreen.hide();
@@ -27,7 +28,7 @@ function App() {
   }, []);
 
    if (!isLoged) {
-    return <GoogleSignInComponent setIsLoged={setIsLoged} />; // Passing setIsLoged as prop
+    return <GoogleSignInComponent setIsLoged={setIsLoged} setUserData={setUserData} />; // Passing setIsLoged as prop
   }
 
   return (
@@ -56,7 +57,7 @@ function App() {
             {props => <AcolythHomeScreen {...props} setIsLoged={setIsLoged} />}
           </Stack.Screen>
           <Stack.Screen name="ProfileAcolyth">
-            {(props) => <AcolythProfileScreen {...props} user={{ name: 'John Doe', email: 'johndoe@example.com' }} />}
+            {(props) => <AcolythProfileScreen {...props} user={UserData} />}
           </Stack.Screen>
           <Stack.Screen name="LaboratoryAcolyth">
             {(props) => <AcolythLaboratoryScreen {...props}/>}

@@ -9,9 +9,10 @@ import axios from 'axios';
 
 interface Props {
   setIsLoged: React.Dispatch<React.SetStateAction<boolean>>;
+  setUserData: React.Dispatch<React.SetStateAction<any>>;
 }
 
-const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
+const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
   const [loading, setLoading] = useState(false); // Estado para el loading
 
   useEffect(() => {
@@ -60,6 +61,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
       console.log('JWT TOKEN FROM EXPRESS');
       console.log(response.data);
       //SAVE JWT ENCRIPTED
+      setUserData(response.data);
       setIsLoged(true);
     });
     } catch (error) {

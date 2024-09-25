@@ -1,5 +1,6 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { RootStackParamList } from '../types/types';
@@ -7,15 +8,16 @@ import { RootStackParamList } from '../types/types';
 // Definir el tipo para la prop navigation basado en RootStackParamList
 type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ProfileAcolyth'>;
 
+
+
 type Props = {
   navigation: ProfileScreenNavigationProp;
-  user: {
-    name: string;
-    email: string;
-  };
+  user: User;
 };
 
 const AcolythProfileScreen: React.FC<Props> = ({ navigation, user }) => {
+  const userName = user?.decodedToken?.name || 'No name available';
+  const userEmail = user?.decodedToken?.email || 'No email available';
   // Maneja el gesto de deslizamiento
   const onGestureEvent = (event: any) => {
     if (event.nativeEvent.translationX > 100) { // Si se desliza a la derecha más de 100 px
@@ -28,18 +30,9 @@ const AcolythProfileScreen: React.FC<Props> = ({ navigation, user }) => {
       <PanGestureHandler onGestureEvent={onGestureEvent}>
         <View style={styles.container}>
           {/* Mostrar el nombre y el email del usuario desde las props */}
-          <Text style={styles.text}>User name: {user.name}</Text>
-          <Text style={styles.text}>Email: {user.email}</Text>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.roundButton}
-              onPress={() => navigation.navigate('HomeAcolyth')}
-            >
-              <Text style={styles.buttonText}>Home</Text>
-            </TouchableOpacity>
-          </View>
+          <Text style={styles.text}>User name: {userName}</Text>
+          <Text style={styles.text}>Email: {userEmail}</Text>
         </View>
-        
       </PanGestureHandler>
     </GestureHandlerRootView>
   );

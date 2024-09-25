@@ -14,11 +14,10 @@ type Props = {
 const AcolythLaboratoryScreen: React.FC<Props> = ({ navigation }) => {
     // Maneja el gesto de deslizamiento
     const onGestureEvent = (event: any) => {
-      if (event.nativeEvent.translationX < -100) { // Si se desliza a la izquierda más de 100 px
+      if (event.nativeEvent.translationX > -100) { // Si se desliza a la izquierda más de 100 px
         navigation.navigate('HomeAcolyth'); // Volver a la página de inicio
       }
     };
-  
     return (
       <GestureHandlerRootView style={{ flex: 1 }}>
         <PanGestureHandler onGestureEvent={onGestureEvent}>
@@ -32,7 +31,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-          
         </PanGestureHandler>
       </GestureHandlerRootView>
     );
