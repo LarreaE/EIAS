@@ -82,6 +82,9 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1' // Agrega multidex si es necesario
     implementation project(':react-native-splash-screen')
 
+    implementation project(':react-native-svg')
+
+
     // Use this dependency to bundle the model with your app
     implementation 'com.google.mlkit:barcode-scanning:17.3.0'
 

@@ -10,6 +10,7 @@ import GoogleSignInComponent from './components/googleSingIn.tsx';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
 import QRScanner from './components/QrScanner.tsx';
+import QRGenerator from './components/QrGenerator.tsx';
 
 const Stack = createStackNavigator();
 
@@ -59,7 +60,7 @@ function App() {
             headerShown: false,
           }}
         >
-          <Stack.Screen name="QR">
+          <Stack.Screen name="a">
             {props => <AcolythHomeScreen {...props} setIsLoged={setIsLoged} />}
           </Stack.Screen>
           <Stack.Screen name="ProfileAcolyth">
@@ -68,8 +69,11 @@ function App() {
           <Stack.Screen name="LaboratoryAcolyth">
             {(props) => <AcolythLaboratoryScreen {...props}/>}
           </Stack.Screen>
-          <Stack.Screen name="HomeAcolyth">
+          <Stack.Screen name="QRScanner">
             {(props) => <QRScanner {...props} onQRCodeScanned={handleQRCodeScanned}/>}
+          </Stack.Screen>
+          <Stack.Screen name="HomeAcolyth">
+            {() => <QRGenerator {...UserData}/>}
           </Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer>

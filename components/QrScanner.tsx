@@ -3,7 +3,6 @@ import { StyleSheet, View, Text } from 'react-native';
 import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-camera';
 
 
-
 const QRScanner = ({ onQRCodeScanned }) => {
   const [hasPermission, setHasPermission] = useState(false);
   const [scannedData, setScannedData] = useState(null);

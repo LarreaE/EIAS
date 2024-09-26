@@ -14,6 +14,8 @@ import com.lugg.RNCConfig.RNCConfigPackage;
 import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 import io.invertase.firebase.auth.ReactNativeFirebaseAuthPackage;
 import com.mrousavy.camera.react.CameraPackage
+import com.horcrux.svg.SvgPackage;
+
 
 class MainApplication : Application(), ReactApplication {
 
