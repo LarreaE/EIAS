@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import AcolythHomeScreen from './components/acolythHomeScreen.tsx';
 import AcolythProfileScreen from './components/acolythProfileScreen.tsx';
@@ -11,6 +12,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
 
 const Stack = createStackNavigator();
+const Tab = createMaterialTopTabNavigator();
 
 function App() {
   const [isLoged, setIsLoged] = useState<boolean>(false); // Explicitly typing boolean
@@ -31,41 +33,7 @@ function App() {
     return <GoogleSignInComponent setIsLoged={setIsLoged} setUserData={setUserData} />; // Passing setIsLoged as prop
   }
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="HomeAcolyth"
-          screenOptions={{
-            gestureEnabled: true,
-            cardStyleInterpolator: ({ current, layouts }) => ({
-              cardStyle: {
-                transform: [
-                  {
-                    translateX: current.progress.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [layouts.screen.width, 1]  ,
-                    }),
-                  },
-                ],
-              },
-            }),
-            headerShown: false,
-          }}
-        >
-          <Stack.Screen name="HomeAcolyth">
-            {props => <AcolythHomeScreen {...props} setIsLoged={setIsLoged} />}
-          </Stack.Screen>
-          <Stack.Screen name="ProfileAcolyth">
-            {(props) => <AcolythProfileScreen {...props} user={UserData} />}
-          </Stack.Screen>
-          <Stack.Screen name="LaboratoryAcolyth">
-            {(props) => <AcolythLaboratoryScreen {...props}/>}
-          </Stack.Screen>
-        </Stack.Navigator>
-      </NavigationContainer>
-    </SafeAreaView>
-  );
+  
 }
 
 const styles = StyleSheet.create({
