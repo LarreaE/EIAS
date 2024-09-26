@@ -59,7 +59,7 @@ function App() {
             headerShown: false,
           }}
         >
-          <Stack.Screen name="QRScanner">
+          <Stack.Screen name="QR">
             {props => <AcolythHomeScreen {...props} setIsLoged={setIsLoged} />}
           </Stack.Screen>
           <Stack.Screen name="ProfileAcolyth">

@@ -6,7 +6,9 @@ import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-cam
 
 const QRScanner = ({ onQRCodeScanned }) => {
   const [hasPermission, setHasPermission] = useState(false);
+  const [scannedData, setScannedData] = useState(null);
   const cameraRef = useRef(null);
+  const [scanning, setScanning] = useState(true);
 
   const device = useCameraDevice('back');
 
@@ -14,12 +16,28 @@ const QRScanner = ({ onQRCodeScanned }) => {
    const codeScanner = useCodeScanner({
     codeTypes: ['qr', 'ean-13'],
     onCodeScanned: (codes) => {
-      console.log(`Scanned ${codes.length} codes!`);
-      if (codes.length > 0 && onQRCodeScanned) {
+      console.log(`Scanned ${codes.length} codes`);
+      console.log(codes);
+      setScanning(false); // timeout
+
+      if (codes.length > 0 && onQRCodeScanned && scanning) {
         onQRCodeScanned(codes[0]);
       }
+      setTimeout(() => {
+        setScanning(true);
+      }, 3000);
     },
   });
+
+  // Handle QR code scanning result
+  const handleQRCodeScanned = (data:any) => {
+    if (data !== scannedData) {
+      setScannedData(data);
+      if (onQRCodeScanned) {
+        onQRCodeScanned(data); // Call the callback prop with the scanned data
+      }
+    }
+  };
 
   // request camera permissions
   useEffect(() => {
@@ -75,8 +93,13 @@ const QRScanner = ({ onQRCodeScanned }) => {
         style={StyleSheet.absoluteFill}
         device={device}
         isActive={true}
-        codeScanner={codeScanner}
+        codeScanner={scanning ? codeScanner : undefined}
       />
+       {/* Overlay to guide scanning */}
+       <View style={styles.overlay}>
+        <View style={styles.square} />
+        <Text style={styles.scanText}>Let's prove your might</Text>
+      </View>
     </View>
   );
 };
@@ -87,17 +110,64 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  permissionContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+  },
   overlay: {
     position: 'absolute',
-    bottom: 50,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    padding: 10,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1, // Ensure it sits on top of the camera view
+  },
+  square: {
+    width: 250,
+    height: 250,
+    borderWidth: 8,
+    borderColor: '#8B4513',  // Dark brown, reminiscent of wood
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',  // Semi-transparent background to give it a window-like feel
     borderRadius: 10,
+    position: 'relative',
+  },
+  medievalCorners: {
+    position: 'absolute',
+    width: 40,
+    height: 40,
+    backgroundColor: '#D4AF37',  // Gold color for the ornate corner
+    borderWidth: 3,
+    borderColor: '#8B4513',  // Dark brown to match the frame
+  },
+  topLeft: {
+    top: -8,
+    left: -8,
+  },
+  topRight: {
+    top: -8,
+    right: -8,
+  },
+  bottomLeft: {
+    bottom: -8,
+    left: -8,
+  },
+  bottomRight: {
+    bottom: -8,
+    right: -8,
   },
   scanText: {
     color: 'white',
     fontSize: 16,
+    marginTop: 20,
+    textAlign: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
   },
 });
-
 export default QRScanner;

@@ -4,5 +4,6 @@ export type RootStackParamList = {
     HomeAcolyth: undefined;
     ProfileAcolyth: undefined;
     LaboratoryAcolyth: undefined;
+    QRScanner: undefined;
+    QRGenerator: undefined;
   };
-  
