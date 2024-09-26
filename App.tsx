@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet, Alert } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -9,6 +9,7 @@ import AcolythLaboratoryScreen from './components/acolythLaboratoryScreen.tsx';
 import GoogleSignInComponent from './components/googleSingIn.tsx';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
+import QRScanner from './components/QrScanner.tsx';
 
 const Stack = createStackNavigator();
 
@@ -30,6 +31,11 @@ function App() {
    if (!isLoged) {
     return <GoogleSignInComponent setIsLoged={setIsLoged} setUserData={setUserData} />; // Passing setIsLoged as prop
   }
+
+  const handleQRCodeScanned = (data:any) => {
+    //display data
+    Alert.alert('QR Code Scanned', `Data: ${data}`);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -53,7 +59,7 @@ function App() {
             headerShown: false,
           }}
         >
-          <Stack.Screen name="HomeAcolyth">
+          <Stack.Screen name="QRScanner">
             {props => <AcolythHomeScreen {...props} setIsLoged={setIsLoged} />}
           </Stack.Screen>
           <Stack.Screen name="ProfileAcolyth">
@@ -61,6 +67,9 @@ function App() {
           </Stack.Screen>
           <Stack.Screen name="LaboratoryAcolyth">
             {(props) => <AcolythLaboratoryScreen {...props}/>}
+          </Stack.Screen>
+          <Stack.Screen name="HomeAcolyth">
+            {(props) => <QRScanner {...props} onQRCodeScanned={handleQRCodeScanned}/>}
           </Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer>
