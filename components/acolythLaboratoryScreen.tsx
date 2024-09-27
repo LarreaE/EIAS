@@ -6,7 +6,7 @@ type Props = {};
 const AcolythLaboratoryScreen: React.FC<Props> = () => {
   return (
     <ImageBackground
-      source={require('../assets/laboratory.png')}  // Ruta de la imagen de fondo
+      source={require('../assets/laboratory_dor.png')}  // Ruta de la imagen de fondo
       style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
       resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
     >

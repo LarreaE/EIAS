@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-handler';
 
 type Props = {
@@ -13,14 +13,18 @@ const AcolythHomeScreen: React.FC<Props> = ({ setIsLoged }) => {
 
   return (
     <GestureHandlerRootView style={styles.container}>
+      <ImageBackground
+      source={require('../assets/home.png')}  // Ruta de la imagen de fondo
+      style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
+      resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+    >
       <View style={styles.innerContainer}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Home Screen</Text>
-        </View>
         <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
           <Text style={styles.signOutText}>Sign Out</Text>
         </TouchableOpacity>
       </View>
+    </ImageBackground>
+      
     </GestureHandlerRootView>
   );
 };
@@ -48,7 +52,7 @@ const styles = StyleSheet.create({
   signOutButton: {
     position: 'absolute',
     top: 20,
-    right: 20,
+    right: -190,
     backgroundColor: 'red',
     padding: 10,
     borderRadius: 5,
@@ -56,6 +60,11 @@ const styles = StyleSheet.create({
   signOutText: {
     color: 'white',
     fontSize: 12,
+  },
+  background: {
+    flex: 1, // Hace que la imagen de fondo ocupe todo el espacio disponible
+    justifyContent: 'center', // Centra el contenido verticalmente
+    alignItems: 'center',     // Centra el contenido horizontalmente
   },
 });
 

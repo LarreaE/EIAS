@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   icon: {
-    marginBottom: 30,
+    marginBottom: 32,
     width: 96,  // Ajusta el ancho del icono
     height: 96, // Ajusta la altura del icono
   },
