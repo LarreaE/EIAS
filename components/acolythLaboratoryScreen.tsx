@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
+import {StyleSheet, ImageBackground } from 'react-native';
 
 type Props = {};
 

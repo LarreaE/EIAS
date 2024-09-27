@@ -1,26 +1,28 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-camera';
+import io from 'socket.io-client'; // Importar socket.io-client
 
 
 const QRScanner = ({ onQRCodeScanned }) => {
   const [hasPermission, setHasPermission] = useState(false);
-  const [scannedData, setScannedData] = useState(null);
   const cameraRef = useRef(null);
   const [scanning, setScanning] = useState(true);
 
   const device = useCameraDevice('back');
+  const socket = io('http://localhost:3000');
 
    // QR Scanner hook
    const codeScanner = useCodeScanner({
     codeTypes: ['qr', 'ean-13'],
     onCodeScanned: (codes) => {
       console.log(`Scanned ${codes.length} codes`);
-      console.log(codes);
+      console.log(codes[0]);
       setScanning(false); // timeout
+      sendQRScan(codes[0].value);
 
       if (codes.length > 0 && onQRCodeScanned && scanning) {
-        onQRCodeScanned(codes[0]);
+        onQRCodeScanned(codes[0].value);
       }
       setTimeout(() => {
         setScanning(true);
@@ -28,15 +30,11 @@ const QRScanner = ({ onQRCodeScanned }) => {
     },
   });
 
-  // Handle QR code scanning result
-  const handleQRCodeScanned = (data:any) => {
-    if (data !== scannedData) {
-      setScannedData(data);
-      if (onQRCodeScanned) {
-        onQRCodeScanned(data); // Call the callback prop with the scanned data
-      }
-    }
-  };
+    // Función para enviar la solicitud POST al servidor
+    const sendQRScan = async (data:any) => {
+      const scannedEmail = data; // Cambia esto según sea necesario
+      socket.emit('scan_acolyte', { scannedEmail }); // Enviar el email al servidor
+    };
 
   // request camera permissions
   useEffect(() => {

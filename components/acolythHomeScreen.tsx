@@ -30,11 +30,6 @@ const AcolythHomeScreen: React.FC<Props> = ({ setIsLoged }) => {
     socket.disconnect();
   };
 
-  // Función para enviar la solicitud POST al servidor
-  const sendQRScan = async () => {
-    const scannedEmail = 'jon.pazos@ikasle.aeg.eus'; // Cambia esto según sea necesario
-    socket.emit('scan_acolyte', { scannedEmail }); // Enviar el email al servidor
-  };
 
   return (
     <GestureHandlerRootView style={styles.container}>
