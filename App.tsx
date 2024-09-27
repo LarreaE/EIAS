@@ -43,14 +43,14 @@ function App() {
   console.log(UserData.playerData.role);
   
   switch (UserData.playerData.role) {
-    case "ISTVAN":
+    case 'ISTVAN':
       return (<SafeAreaView style={styles.container}>
         <QRScanner onQRCodeScanned={handleQRCodeScanned} />
-      </SafeAreaView>)
-    case "MORTIMER":
+      </SafeAreaView>);
+    case 'MORTIMER':
     
     break;
-    case "VILLAIN":
+    case 'VILLAIN':
       
     break;
     default:
