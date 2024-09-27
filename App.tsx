@@ -10,6 +10,9 @@ import GoogleSignInComponent from './components/googleSingIn.tsx';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
 import Spinner from './components/Spinner'; // Importa el Spinner
+import MortimerHomeScreen from './components/mortimerHomeScreen.tsx';
+import MortimerLaboratoryScreen from './components/mortimerLaboratoryScreen .tsx';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -91,6 +94,20 @@ function App() {
             }}
           >
             {props => <AcolythLaboratoryScreen/>}
+          </Tab.Screen>
+          <Tab.Screen
+            name="LaboratoryMortimer"
+            options={{
+              tabBarLabel: '', // Oculta el nombre
+              tabBarIcon: () => (
+                <Image
+                  source={require('./assets/laboratory_icon.png')} // Cambia esto por la ruta de tu icono
+                  style={styles.icon}
+                />
+              ),
+            }}
+          >
+            {props => <MortimerLaboratoryScreen/>}
           </Tab.Screen>
         </Tab.Navigator>
       </NavigationContainer>
