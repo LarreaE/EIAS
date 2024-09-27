@@ -44,8 +44,9 @@ function App() {
   
   switch (UserData.playerData.role) {
     case "ISTVAN":
-      
-      break;
+      return (<SafeAreaView style={styles.container}>
+        <QRScanner onQRCodeScanned={handleQRCodeScanned} />
+      </SafeAreaView>)
     case "MORTIMER":
     
     break;
