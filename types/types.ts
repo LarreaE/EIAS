@@ -6,4 +6,5 @@ export type RootStackParamList = {
     LaboratoryAcolyth: undefined;
     QRScanner: undefined;
     QRGenerator: undefined;
+    ProfileVillain: undefined;
   };

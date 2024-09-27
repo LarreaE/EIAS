@@ -1,6 +1,6 @@
 /* eslint-disable no-trailing-spaces */
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, Image, Alert } from 'react-native';
+import { SafeAreaView, StyleSheet, Image, Alert, SafeAreaViewComponent } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -13,6 +13,7 @@ import Config from 'react-native-config';
 import Spinner from './components/Spinner'; // Importa el Spinner
 import QRScanner from './components/QrScanner.tsx';
 import QRGenerator from './components/QrGenerator.tsx';
+import HomeVillain from './components/HomeVillain.tsx';
 
 const Tab = createBottomTabNavigator();
 
@@ -51,8 +52,41 @@ function App() {
     
     break;
     case 'VILLAIN':
-      
-    break;
+      return (
+        <SafeAreaView style={styles.container}>
+          <NavigationContainer>
+            <Tab.Navigator
+              initialRouteName="HomeVillain"
+              screenOptions={{
+                tabBarStyle: {
+                  backgroundColor: 'transparent', // Fondo transparente
+                  borderTopWidth: 0, // Eliminar la línea superior
+                  position: 'absolute', // Hacer la barra flotante
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                },
+                headerShown: false, // Oculta el encabezado en todas las pantallas
+              }}
+            >
+              <Tab.Screen
+                name="HomeVillain"
+                options={{
+                  tabBarLabel: '', // Oculta el nombre
+                  tabBarIcon: () => (
+                    <Image
+                      source={require('./assets/home_icon.png')} // Cambia esto por la ruta de tu icono
+                      style={styles.icon}
+                    />
+                  ),
+                }}
+              >
+                {props => <HomeVillain {...props} user={UserData} />}
+              </Tab.Screen>
+            </Tab.Navigator>
+          </NavigationContainer>
+        </SafeAreaView>
+      );
     default:
       return (
         <SafeAreaView style={styles.container}>
@@ -72,7 +106,7 @@ function App() {
               }}
             >
               <Tab.Screen
-                name="ProfileAcolyth"
+                name="ProfileVillain"
                 options={{
                   tabBarLabel: '', // Oculta el nombre
                   tabBarIcon: () => (
