@@ -67,9 +67,9 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
     } catch (error) {
       console.error(error);
       console.log('error');
-    } finally {
-      console.log('done');
       setLoading(false); // Detener el loading
+    } finally {
+      console.log('UserLoged');
     }
   };
 
