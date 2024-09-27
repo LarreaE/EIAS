@@ -1,3 +1,4 @@
+/* eslint-disable no-trailing-spaces */
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, Image, Alert } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
@@ -31,78 +32,92 @@ function App() {
     });
   }, []);
 
-  if (!isLoged) {
-    return <GoogleSignInComponent setIsLoged={setIsLoged} setUserData={setUserData} />;
-  }
-
   const handleQRCodeScanned = (data:any) => {
     //display data
     Alert.alert('QR Code Scanned', `Data: ${data}`);
   };
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <NavigationContainer>
-        <Tab.Navigator
-          initialRouteName="HomeAcolyth"
-          screenOptions={{
-            tabBarStyle: {
-              backgroundColor: 'transparent', // Fondo transparente
-              borderTopWidth: 0, // Eliminar la línea superior
-              position: 'absolute', // Hacer la barra flotante
-              left: 0,
-              right: 0,
-              bottom: 0,
-            },
-            headerShown: false, // Oculta el encabezado en todas las pantallas
-          }}
-        >
-          <Tab.Screen
-            name="ProfileAcolyth"
-            options={{
-              tabBarLabel: '', // Oculta el nombre
-              tabBarIcon: () => (
-                <Image
-                  source={require('./assets/profile_icon.png')} // Cambia esto por la ruta de tu icono
-                  style={styles.icon}
-                />
-              ),
-            }}
-          >
-            {props => <AcolythProfileScreen {...props} user={UserData} />}
-          </Tab.Screen>
-          <Tab.Screen
-            name="HomeAcolyth"
-            options={{
-              tabBarLabel: '', // Oculta el nombre
-              tabBarIcon: () => (
-                <Image
-                  source={require('./assets/home_icon.png')} // Cambia esto por la ruta de tu icono
-                  style={styles.icon}
-                />
-              ),
-            }}
-          >
-            {props => <AcolythHomeScreen {...props} setIsLoged={setIsLoged} />}
-          </Tab.Screen>
-          <Tab.Screen
-            name="LaboratoryAcolyth"
-            options={{
-              tabBarLabel: '', // Oculta el nombre
-              tabBarIcon: () => (
-                <Image
-                  source={require('./assets/laboratory_icon.png')} // Cambia esto por la ruta de tu icono
-                  style={styles.icon}
-                />
-              ),
-            }}
-          >
-            {props => <AcolythLaboratoryScreen/>}
-          </Tab.Screen>
-        </Tab.Navigator>
-      </NavigationContainer>
-    </SafeAreaView>
-  );
+  if (!isLoged) {
+    return <GoogleSignInComponent setIsLoged={setIsLoged} setUserData={setUserData} />;
+  }
+  console.log(UserData.playerData.role);
+  
+  switch (UserData.playerData.role) {
+    case "ISTVAN":
+      
+      break;
+    case "MORTIMER":
+    
+    break;
+    case "VILLAIN":
+      
+    break;
+    default:
+      return (
+        <SafeAreaView style={styles.container}>
+          <NavigationContainer>
+            <Tab.Navigator
+              initialRouteName="HomeAcolyth"
+              screenOptions={{
+                tabBarStyle: {
+                  backgroundColor: 'transparent', // Fondo transparente
+                  borderTopWidth: 0, // Eliminar la línea superior
+                  position: 'absolute', // Hacer la barra flotante
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                },
+                headerShown: false, // Oculta el encabezado en todas las pantallas
+              }}
+            >
+              <Tab.Screen
+                name="ProfileAcolyth"
+                options={{
+                  tabBarLabel: '', // Oculta el nombre
+                  tabBarIcon: () => (
+                    <Image
+                      source={require('./assets/profile_icon.png')} // Cambia esto por la ruta de tu icono
+                      style={styles.icon}
+                    />
+                  ),
+                }}
+              >
+                {props => <AcolythProfileScreen {...props} user={UserData} />}
+              </Tab.Screen>
+              <Tab.Screen
+                name="HomeAcolyth"
+                options={{
+                  tabBarLabel: '', // Oculta el nombre
+                  tabBarIcon: () => (
+                    <Image
+                      source={require('./assets/home_icon.png')} // Cambia esto por la ruta de tu icono
+                      style={styles.icon}
+                    />
+                  ),
+                }}
+              >
+                {props => <AcolythHomeScreen {...props} setIsLoged={setIsLoged} />}
+              </Tab.Screen>
+              <Tab.Screen
+                name="LaboratoryAcolyth"
+                options={{
+                  tabBarLabel: '', // Oculta el nombre
+                  tabBarIcon: () => (
+                    <Image
+                      source={require('./assets/laboratory_icon.png')} // Cambia esto por la ruta de tu icono
+                      style={styles.icon}
+                    />
+                  ),
+                }}
+              >
+                {props => <AcolythLaboratoryScreen/>}
+              </Tab.Screen>
+            </Tab.Navigator>
+          </NavigationContainer>
+        </SafeAreaView>
+      );
+  }
+ 
 }
 
 const styles = StyleSheet.create({

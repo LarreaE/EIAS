@@ -59,7 +59,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
     })
     .then((response) => {
       console.log('JWT TOKEN FROM EXPRESS');
-      console.log(response.data);
+      console.log(response.data.playerData.role);
       //SAVE JWT ENCRIPTED
       setUserData(response.data);
       setIsLoged(true);
