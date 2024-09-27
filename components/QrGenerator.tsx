@@ -3,12 +3,12 @@ import { View , StyleSheet} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
 const QRGenerator = (data:any) => {
-    console.log(data.decodedToken.email);
+    console.log(data.UserData.decodedToken.email);
 
     return (
         <View style={styles.container}>
             <QRCode
-            value={data.decodedToken.email}
+            value={data.UserData.decodedToken.email}
             />
         </View>
       );

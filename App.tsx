@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable no-trailing-spaces */
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, Image, Alert } from 'react-native';
@@ -12,7 +13,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
 import Spinner from './components/Spinner'; // Importa el Spinner
 import QRScanner from './components/QrScanner.tsx';
-import QRGenerator from './components/QrGenerator.tsx';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -97,7 +98,7 @@ function App() {
                   ),
                 }}
               >
-                {props => <AcolythHomeScreen {...props} setIsLoged={setIsLoged} />}
+                {props => <AcolythHomeScreen setIsLoged={setIsLoged} />}
               </Tab.Screen>
               <Tab.Screen
                 name="LaboratoryAcolyth"
@@ -111,7 +112,7 @@ function App() {
                   ),
                 }}
               >
-                {props => <AcolythLaboratoryScreen/>}
+                {props => <AcolythLaboratoryScreen {...props} UserData={UserData}/>}
               </Tab.Screen>
             </Tab.Navigator>
           </NavigationContainer>
