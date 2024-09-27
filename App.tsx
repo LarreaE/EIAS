@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet, Image } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -39,26 +39,56 @@ function App() {
         <Tab.Navigator
           initialRouteName="HomeAcolyth"
           screenOptions={{
-            tabBarActiveTintColor: '#e91e63',
-            tabBarLabelStyle: { fontSize: 12 },
-            tabBarStyle: { backgroundColor: 'powderblue' },
+            tabBarStyle: {
+              backgroundColor: 'transparent', // Fondo transparente
+              borderTopWidth: 0, // Eliminar la línea superior
+              position: 'absolute', // Hacer la barra flotante
+              left: 0,
+              right: 0,
+              bottom: 0,
+            },
+            headerShown: false, // Oculta el encabezado en todas las pantallas
           }}
         >
           <Tab.Screen
             name="ProfileAcolyth"
-            options={{ tabBarLabel: 'Perfil' }}
+            options={{
+              tabBarLabel: '', // Oculta el nombre
+              tabBarIcon: () => (
+                <Image
+                  source={require('./assets/profile_icon.png')} // Cambia esto por la ruta de tu icono
+                  style={styles.icon}
+                />
+              ),
+            }}
           >
             {props => <AcolythProfileScreen {...props} user={UserData} />}
           </Tab.Screen>
           <Tab.Screen
             name="HomeAcolyth"
-            options={{ tabBarLabel: 'Inicio' }}
+            options={{
+              tabBarLabel: '', // Oculta el nombre
+              tabBarIcon: () => (
+                <Image
+                  source={require('./assets/home_icon.png')} // Cambia esto por la ruta de tu icono
+                  style={styles.icon}
+                />
+              ),
+            }}
           >
             {props => <AcolythHomeScreen {...props} setIsLoged={setIsLoged} />}
           </Tab.Screen>
           <Tab.Screen
             name="LaboratoryAcolyth"
-            options={{ tabBarLabel: 'Laboratorio' }}
+            options={{
+              tabBarLabel: '', // Oculta el nombre
+              tabBarIcon: () => (
+                <Image
+                  source={require('./assets/laboratory_icon.png')} // Cambia esto por la ruta de tu icono
+                  style={styles.icon}
+                />
+              ),
+            }}
           >
             {props => <AcolythLaboratoryScreen/>}
           </Tab.Screen>
@@ -71,6 +101,11 @@ function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  icon: {
+    marginBottom: 32,
+    width: 96,  // Ajusta el ancho del icono
+    height: 96, // Ajusta la altura del icono
   },
 });
 

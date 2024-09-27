@@ -1,12 +1,8 @@
 import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { View, Text, TouchableOpacity, StyleSheet, ImageBackground , Alert } from 'react-native';
 import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { RootStackParamList } from '../types/types';
 import io from 'socket.io-client'; // Importar socket.io-client
-
-// Definir el tipo para la prop navigation basado en RootStackParamList
-type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'HomeAcolyth'>;
 
 type Props = {
   setIsLoged: (value: boolean) => void;
@@ -42,14 +38,18 @@ const AcolythHomeScreen: React.FC<Props> = ({ setIsLoged }) => {
 
   return (
     <GestureHandlerRootView style={styles.container}>
+      <ImageBackground
+      source={require('../assets/home.png')}  // Ruta de la imagen de fondo
+      style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
+      resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+    >
       <View style={styles.innerContainer}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Home Screen</Text>
-        </View>
         <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
           <Text style={styles.signOutText}>Sign Out</Text>
         </TouchableOpacity>
       </View>
+    </ImageBackground>
+      
     </GestureHandlerRootView>
   );
 };
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   signOutButton: {
     position: 'absolute',
     top: 20,
-    right: 20,
+    right: -190,
     backgroundColor: 'red',
     padding: 10,
     borderRadius: 5,
@@ -86,19 +86,10 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 12,
   },
-  roundButton: {
-    backgroundColor: '#007AFF',
-    padding: 15,
-    borderRadius: 10,
-    marginHorizontal: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 100,
-    height: 60,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 12,
+  background: {
+    flex: 1, // Hace que la imagen de fondo ocupe todo el espacio disponible
+    justifyContent: 'center', // Centra el contenido verticalmente
+    alignItems: 'center',     // Centra el contenido horizontalmente
   },
 });
 
