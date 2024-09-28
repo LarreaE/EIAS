@@ -11,8 +11,11 @@ import AcolythLaboratoryScreen from './components/acolythLaboratoryScreen.tsx';
 import GoogleSignInComponent from './components/googleSingIn.tsx';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
-import Spinner from './components/Spinner'; // Importa el Spinner
 import QRScanner from './components/QrScanner.tsx';
+// Importar los eventos de socket
+import { listenToServerEvents, clearServerEvents } from './sockets/listenEvents';
+import { sendQRScan } from './sockets/emitEvents';
+import socket from './sockets/socketConnection';
 
 
 const Tab = createBottomTabNavigator();
@@ -20,7 +23,6 @@ const Tab = createBottomTabNavigator();
 function App() {
   const [isLoged, setIsLoged] = useState<boolean>(false);
   const [UserData, setUserData] = useState<any>(null);
-  const [loading, setLoading] = useState(false); // Estado para el loading
 
   useEffect(() => {
     SplashScreen.hide();
@@ -33,6 +35,17 @@ function App() {
     });
   }, []);
 
+  useEffect(() => {
+    // Escuchar eventos del servidor
+    listenToServerEvents();
+
+    // Limpiar los eventos cuando el componente se desmonte
+    return () => {
+      clearServerEvents();
+      socket.disconnect(); // Desconectar el socket si es necesario
+    };
+  }, []);
+  
   const handleQRCodeScanned = (data:any) => {
     //display data
     Alert.alert('QR Code Scanned', `Data: ${data}`);
