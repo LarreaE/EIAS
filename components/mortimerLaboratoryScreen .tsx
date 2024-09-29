@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground, FlatList } from 'react-native';
+import AcolythCard from './acolythCard';
 
-
-// Define la interfaz para el tipo de datos de usuario
+// define la interfaz para el tipo de datos de usuario
 interface User {
   _id: string;
   name: string;
-  email: string;
+  is_active: boolean;
   avatar: string
 }
-type Props = {};
+
+// definir tipos de datos de props
+type Props = {
+  _id: string;
+  name: string;
+  is_active: boolean;
+  avatar: string
+};
 
 const MortimerLaboratoryScreen: React.FC<Props> = (setIsLoged) => {
 
@@ -21,9 +28,8 @@ const MortimerLaboratoryScreen: React.FC<Props> = (setIsLoged) => {
     const addUsers = async () => {
       try {
         const response = await fetch('http://localhost:3000/mortimer');
-        const data: User[] = await response.json(); // Define el tipo de datos esperados
+        const data: User[] = await response.json();
         setUsers(data);
-        console.log(users);
       } catch (error) {
         console.error('Error al obtener los datos:', error);
       }
@@ -33,26 +39,33 @@ const MortimerLaboratoryScreen: React.FC<Props> = (setIsLoged) => {
     addUsers();
   }, []);
 
-
   return (
     <ImageBackground
-      source={require('../assets/laboratory.png')}  // Ruta de la imagen de fondo
-      style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
-      resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+      source={require('../assets/laboratory.png')}
+      style={styles.background}
+      resizeMode="cover"
     >
+      <Text>
+        {/* mapear array users */}
+        {users.map((user) => (
+          <AcolythCard
+            key={user._id}
+            name={user.name}
+            is_active={user.is_active}
+            avatar={user.avatar}
+          />
 
-      <View>
-
-      </View>
+        ))}
+      </Text>
     </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   background: {
-    flex: 1, // Hace que la imagen de fondo ocupe todo el espacio disponible
-    justifyContent: 'center', // Centra el contenido verticalmente
-    alignItems: 'center',     // Centra el contenido horizontalmente
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
