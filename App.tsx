@@ -14,7 +14,6 @@ import Config from 'react-native-config';
 import QRScanner from './components/QrScanner.tsx';
 // Importar los eventos de socket
 import { listenToServerEvents, clearServerEvents } from './sockets/listenEvents';
-import { sendQRScan } from './sockets/emitEvents';
 import socket from './sockets/socketConnection';
 
 
