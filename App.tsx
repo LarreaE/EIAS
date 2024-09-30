@@ -63,7 +63,50 @@ function App() {
     case 'ISTVAN':
       return (
       <SafeAreaView style={styles.container}>
-        <QRScanner onQRCodeScanned={handleQRCodeScanned} setIsLoged={setIsLoged}/>
+        <NavigationContainer>
+          <Tab.Navigator
+            initialRouteName="Settings"
+            screenOptions={{
+              tabBarStyle: {
+                backgroundColor: 'transparent', // Fondo transparente
+                borderTopWidth: 0, // Eliminar la línea superior
+                position: 'absolute', // Hacer la barra flotante
+                left: 0,
+                right: 0,
+                bottom: 0,
+              },
+              headerShown: false, // Oculta el encabezado en todas las pantallas
+            }}>
+            <Tab.Screen
+                name="Settings"
+                options={{
+                  tabBarLabel: '', // Oculta el nombre
+                  tabBarIcon: () => (
+                    <Image
+                      source={require('./assets/home_icon.png')} // Cambia esto por la ruta de tu icono
+                      style={styles.icon}
+                    />
+                  ),
+                }}
+              >
+                {props => <HomeVillain {...props} setIsLoged={setIsLoged} user={UserData}/>}
+              </Tab.Screen>
+              <Tab.Screen
+                name="QRScanner"
+                options={{
+                  tabBarLabel: '', // Oculta el nombre
+                  tabBarIcon: () => (
+                    <Image
+                      source={require('./assets/home_icon.png')} // Cambia esto por la ruta de tu icono
+                      style={styles.icon}
+                    />
+                  ),
+                }}
+              >
+                {props => <QRScanner {...props} onQRCodeScanned={handleQRCodeScanned}/>}
+              </Tab.Screen>
+          </Tab.Navigator>
+        </NavigationContainer>
       </SafeAreaView>);
     case 'MORTIMER':
 

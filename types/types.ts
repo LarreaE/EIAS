@@ -7,4 +7,5 @@ export type RootStackParamList = {
     QRScanner: undefined;
     QRGenerator: undefined;
     ProfileVillain: undefined;
+    Settings: undefined;
   };
