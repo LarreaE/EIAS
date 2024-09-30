@@ -18,7 +18,7 @@ type Props = {
   avatar: string
 };
 
-const MortimerLaboratoryScreen: React.FC<Props> = (setIsLoged) => {
+const MortimerLaboratoryScreen: React.FC<Props> = () => {
 
   const [users, setUsers] = useState<User[]>([]);
 
