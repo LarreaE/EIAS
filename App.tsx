@@ -11,16 +11,13 @@ import AcolythLaboratoryScreen from './components/acolythLaboratoryScreen.tsx';
 import GoogleSignInComponent from './components/googleSingIn.tsx';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
-<<<<<<< HEAD
 import Spinner from './components/Spinner'; // Importa el Spinner
 import MortimerHomeScreen from './components/mortimerHomeScreen.tsx';
 import MortimerLaboratoryScreen from './components/mortimerLaboratoryScreen .tsx';
-=======
 import QRScanner from './components/QrScanner.tsx';
 // Importar los eventos de socket
 import { listenToServerEvents, clearServerEvents } from './sockets/listenEvents';
 import socket from './sockets/socketConnection';
->>>>>>> develop
 
 
 const Tab = createBottomTabNavigator();
@@ -59,86 +56,6 @@ function App() {
   if (!isLoged) {
     return <GoogleSignInComponent setIsLoged={setIsLoged} setUserData={setUserData} />;
   }
-<<<<<<< HEAD
-
-  return (
-    <SafeAreaView style={styles.container}>
-      <NavigationContainer>
-        <Tab.Navigator
-          initialRouteName="HomeAcolyth"
-          screenOptions={{
-            tabBarStyle: {
-              backgroundColor: 'transparent', // Fondo transparente
-              borderTopWidth: 0, // Eliminar la línea superior
-              position: 'absolute', // Hacer la barra flotante
-              left: 0,
-              right: 0,
-              bottom: 0,
-            },
-            headerShown: false, // Oculta el encabezado en todas las pantallas
-          }}
-        >
-          <Tab.Screen
-            name="ProfileAcolyth"
-            options={{
-              tabBarLabel: '', // Oculta el nombre
-              tabBarIcon: () => (
-                <Image
-                  source={require('./assets/profile_icon.png')} // Cambia esto por la ruta de tu icono
-                  style={styles.icon}
-                />
-              ),
-            }}
-          >
-            {props => <AcolythProfileScreen {...props} user={UserData} />}
-          </Tab.Screen>
-          <Tab.Screen
-            name="HomeAcolyth"
-            options={{
-              tabBarLabel: '', // Oculta el nombre
-              tabBarIcon: () => (
-                <Image
-                  source={require('./assets/home_icon.png')} // Cambia esto por la ruta de tu icono
-                  style={styles.icon}
-                />
-              ),
-            }}
-          >
-            {props => <AcolythHomeScreen {...props} setIsLoged={setIsLoged} />}
-          </Tab.Screen>
-          <Tab.Screen
-            name="LaboratoryAcolyth"
-            options={{
-              tabBarLabel: '', // Oculta el nombre
-              tabBarIcon: () => (
-                <Image
-                  source={require('./assets/laboratory_icon.png')} // Cambia esto por la ruta de tu icono
-                  style={styles.icon}
-                />
-              ),
-            }}
-          >
-            {props => <AcolythLaboratoryScreen/>}
-          </Tab.Screen>
-          <Tab.Screen
-            name="LaboratoryMortimer"
-            options={{
-              tabBarLabel: '', // Oculta el nombre
-              tabBarIcon: () => (
-                <Image
-                  source={require('./assets/laboratory_icon.png')} // Cambia esto por la ruta de tu icono
-                  style={styles.icon}
-                />
-              ),
-            }}
-          >
-            {props => <MortimerLaboratoryScreen/>}
-          </Tab.Screen>
-        </Tab.Navigator>
-      </NavigationContainer>
-    </SafeAreaView>
-  );
-=======
   console.log(UserData.playerData.role);
   
   switch (UserData.playerData.role) {
@@ -218,7 +135,6 @@ function App() {
       );
   }
  
->>>>>>> develop
 }
 
 const styles = StyleSheet.create({
