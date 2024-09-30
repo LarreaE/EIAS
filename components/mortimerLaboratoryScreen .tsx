@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground, FlatList } from 'react-native';
 import AcolythCard from './acolythCard';
+import { listenToServerEvents } from '../sockets/listenEvents.tsx';
 
 // define la interfaz para el tipo de datos de usuario
 interface User {
@@ -23,7 +24,7 @@ const MortimerLaboratoryScreen: React.FC<Props> = () => {
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-
+    listenToServerEvents();
     // peticion a base de datos
     const addUsers = async () => {
       try {

@@ -30,8 +30,8 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
 
   useEffect(() => {
     // Cuando el socket se conecta, guarda el ID en el estado
-    socket.on('connect', () => {
-      setSocketId(socket.id || null); // Guarda el socket ID en el estado
+    socket.on('connect', () => {  
+      setSocketId(socket.id || null || null); // Guarda el socket ID en el estado
       console.log('Socket conectado, ID:', socket.id);
     });
 
@@ -68,7 +68,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
     const idTokenResult = await auth().currentUser?.getIdTokenResult();
     console.log('USER JWT');
     console.log(idTokenResult);
-    axios.post('https://eiasserver.onrender.com/verify-token', {
+    axios.post('http://127.0.0.1:3000/verify-token', {
       idToken: idTokenResult?.token,
       email: email,
       socketId: socketId,
