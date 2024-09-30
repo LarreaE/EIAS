@@ -5,6 +5,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
 import auth from '@react-native-firebase/auth';
 import axios from 'axios';
+import { Socket } from 'socket.io-client';
 import socket from '../sockets/socketConnection';
 
 
@@ -31,7 +32,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
   useEffect(() => {
     // Cuando el socket se conecta, guarda el ID en el estado
     socket.on('connect', () => {  
-      setSocketId(socket.id || null || null); // Guarda el socket ID en el estado
+      setSocketId(socket.id || null); // Guarda el socket ID en el estado
       console.log('Socket conectado, ID:', socket.id);
     });
 
@@ -68,7 +69,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
     const idTokenResult = await auth().currentUser?.getIdTokenResult();
     console.log('USER JWT');
     console.log(idTokenResult);
-    axios.post('http://127.0.0.1:3000/verify-token', {
+    axios.post('http://10.70.0.11:3000/verify-token', {
       idToken: idTokenResult?.token,
       email: email,
       socketId: socketId,

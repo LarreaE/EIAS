@@ -20,5 +20,5 @@ export const listenToServerEvents = (): void => {
 export const clearServerEvents = (): void => {
   socket.off('response');
   socket.off('alert');
-  socket.off('all_players')
+  socket.off('all_players');
 };
