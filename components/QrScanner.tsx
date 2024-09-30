@@ -10,7 +10,7 @@ const QRScanner = ({ onQRCodeScanned }) => {
   const [scanning, setScanning] = useState(true);
 
   const device = useCameraDevice('back');
-  const socket = io('http://localhost:3000');
+  const socket = io('https://eiasserver.onrender.com');
 
    // QR Scanner hook
    const codeScanner = useCodeScanner({
