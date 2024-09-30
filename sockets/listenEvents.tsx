@@ -10,10 +10,15 @@ export const listenToServerEvents = (): void => {
   socket.on('alert', (data: { message: string }) => {
     Alert.alert('Server Alert', data.message);
   });
+
+  socket.on('all_players', (data: { players: string }) => {
+    Alert.alert('Server Alert', data.players);
+  });
 };
 
 // Función para limpiar los eventos cuando el componente se desmonte
 export const clearServerEvents = (): void => {
   socket.off('response');
   socket.off('alert');
+  socket.off('all_players')
 };
