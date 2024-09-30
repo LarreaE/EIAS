@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-camera';
-import io from 'socket.io-client'; // Importar socket.io-client
+import socket from '../sockets/socketConnection';
 
 
 const QRScanner = ({ onQRCodeScanned }) => {
@@ -10,8 +10,6 @@ const QRScanner = ({ onQRCodeScanned }) => {
   const [scanning, setScanning] = useState(true);
 
   const device = useCameraDevice('back');
-  const socket = io('http://localhost:3000');
-
    // QR Scanner hook
    const codeScanner = useCodeScanner({
     codeTypes: ['qr', 'ean-13'],
