@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground, FlatList } from 'react-native';
 import AcolythCard from './acolythCard';
-import { listenToServerEventsMortimer } from '../sockets/listenEvents.tsx';
+import { listenToServerEventsMortimer, clearServerEvents } from '../sockets/listenEvents.tsx';
 
 // define la interfaz para el tipo de datos de usuario
 interface User {
@@ -24,20 +24,26 @@ const MortimerLaboratoryScreen: React.FC<Props> = () => {
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    listenToServerEventsMortimer();
-    // peticion a base de datos
+    // Escuchar eventos del servidor y actualizar el estado de users
+    listenToServerEventsMortimer(setUsers);
+
+    // Petición a la base de datos para obtener los usuarios iniciales
     const addUsers = async () => {
       try {
-        const response = await fetch('https://eiasserver.onrender.com/mortimer');
+        const response = await fetch('http://127.0.0.1:3000/mortimer');
         const data: User[] = await response.json();
         setUsers(data);
       } catch (error) {
         console.error('Error al obtener los datos:', error);
       }
-
     };
 
     addUsers();
+
+    // Limpiar eventos cuando el componente se desmonte
+    return () => {
+      clearServerEvents();
+    };
   }, []);
 
   return (
@@ -55,7 +61,6 @@ const MortimerLaboratoryScreen: React.FC<Props> = () => {
             is_active={user.is_active}
             avatar={user.avatar}
           />
-
         ))}
       </Text>
     </ImageBackground>
