@@ -148,7 +148,7 @@ function App() {
                   ),
                 }}
               >
-                {props => <HomeVillain {...props} user={UserData} />}
+                {props => <HomeVillain {...props} setIsLoged={setIsLoged} user={UserData}/>}
               </Tab.Screen>
             </Tab.Navigator>
           </NavigationContainer>
