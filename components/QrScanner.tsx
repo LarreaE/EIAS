@@ -106,9 +106,6 @@ const QRScanner: React.FC<Props> = ({ onQRCodeScanned ,setIsLoged}) => {
        <View style={styles.overlay}>
         <View style={styles.square} />
         <Text style={styles.scanText}>Let's prove your might</Text>
-        <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
-          <Text style={styles.signOutText}>Sign Out</Text>
-      </TouchableOpacity>
       </View>
     </View>
   );
@@ -139,9 +136,9 @@ const styles = StyleSheet.create({
   square: {
     width: 250,
     height: 250,
-    borderWidth: 8,
+    borderWidth: 3,
     borderColor: '#8B4513',  // Dark brown, reminiscent of wood
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',  // Semi-transparent background to give it a window-like feel
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',  // Semi-transparent background to give it a window-like feel
     borderRadius: 10,
     position: 'relative',
   },
