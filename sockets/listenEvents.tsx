@@ -10,11 +10,16 @@ export const listenToServerEvents = (): void => {
   socket.on('alert', (data: { message: string }) => {
     Alert.alert('Server Alert', data.message);
   });
+};
 
-  socket.on('all_players', (data: { players: string }) => {
-    Alert.alert('Server Alert', data.players);
+// Función para escuchar eventos del servidor y actualizar el estado de los jugadores
+export const listenToServerEventsMortimer = (updatePlayers: (players: any) => void): void => {
+  socket.on('all_players', (data: { players: any }) => {
+    console.log('Jugadores recibidos del servidor:', data.players);
+    updatePlayers(data.players); // Llamamos a la función de actualización con los jugadores
   });
 };
+
 
 // Función para limpiar los eventos cuando el componente se desmonte
 export const clearServerEvents = (): void => {
