@@ -61,8 +61,9 @@ function App() {
 
   switch (UserData.playerData.role) {
     case 'ISTVAN':
-      return (<SafeAreaView style={styles.container}>
-        <QRScanner onQRCodeScanned={handleQRCodeScanned} />
+      return (
+      <SafeAreaView style={styles.container}>
+        <QRScanner onQRCodeScanned={handleQRCodeScanned} setIsLoged={setIsLoged}/>
       </SafeAreaView>);
     case 'MORTIMER':
 
@@ -149,7 +150,7 @@ function App() {
                   ),
                 }}
               >
-                {props => <HomeVillain {...props} user={UserData} />}
+                {props => <HomeVillain {...props} setIsLoged={setIsLoged} user={UserData}/>}
               </Tab.Screen>
             </Tab.Navigator>
           </NavigationContainer>

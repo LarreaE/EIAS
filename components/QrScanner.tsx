@@ -1,15 +1,26 @@
+import { Value } from 'firebase-admin/remote-config';
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-camera';
 import socket from '../sockets/socketConnection';
 
+type Props = {
+  onQRCodeScanned: () => void;
+  setIsLoged: (value: boolean) => void;
+};
 
-const QRScanner = ({ onQRCodeScanned }) => {
+const QRScanner: React.FC<Props> = ({ onQRCodeScanned ,setIsLoged}) => {
+
   const [hasPermission, setHasPermission] = useState(false);
   const cameraRef = useRef(null);
   const [scanning, setScanning] = useState(true);
 
   const device = useCameraDevice('back');
+
+  const signOut = () => {
+    setIsLoged(false); // Cambiar el estado de inicio de sesión
+    socket.disconnect();
+  };
 
    // QR Scanner hook
    const codeScanner = useCodeScanner({
@@ -95,6 +106,9 @@ const QRScanner = ({ onQRCodeScanned }) => {
        <View style={styles.overlay}>
         <View style={styles.square} />
         <Text style={styles.scanText}>Let's prove your might</Text>
+        <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
+          <Text style={styles.signOutText}>Sign Out</Text>
+      </TouchableOpacity>
       </View>
     </View>
   );
@@ -164,6 +178,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 5,
+  },
+  signOutButton: {
+    position: 'absolute',
+    top: 0,
+    left: 5,
+    backgroundColor: 'red',
+    padding: 0,
+    borderRadius: 5,
+  },
+  signOutText: {
+    color: 'white',
+    fontSize: 12,
   },
 });
 export default QRScanner;
