@@ -2,7 +2,7 @@ import { Value } from 'firebase-admin/remote-config';
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-camera';
-import io from 'socket.io-client'; // Importar socket.io-client
+import socket from '../sockets/socketConnection';
 
 type Props = {
   onQRCodeScanned: () => void;
@@ -16,7 +16,7 @@ const QRScanner: React.FC<Props> = ({ onQRCodeScanned ,setIsLoged}) => {
   const [scanning, setScanning] = useState(true);
 
   const device = useCameraDevice('back');
-  const socket = io('http://localhost:3000');
+  const socket = io('https://eiasserver.onrender.com');
 
   const signOut = () => {
     setIsLoged(false); // Cambiar el estado de inicio de sesión

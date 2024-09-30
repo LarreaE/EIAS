@@ -20,6 +20,7 @@ import { listenToServerEvents, clearServerEvents } from './sockets/listenEvents'
 import socket from './sockets/socketConnection';
 
 
+
 const Tab = createBottomTabNavigator();
 
 function App() {
