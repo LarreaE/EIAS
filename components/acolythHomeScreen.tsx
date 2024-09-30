@@ -1,40 +1,19 @@
-import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ImageBackground , Alert } from 'react-native';
-import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-handler';
-import { RootStackParamList } from '../types/types';
-import io from 'socket.io-client'; // Importar socket.io-client
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import socket from '../sockets/socketConnection';
 
 type Props = {
   setIsLoged: (value: boolean) => void;
 };
-//socket
-const socket = io('http://localhost:3000');
 
 const AcolythHomeScreen: React.FC<Props> = ({ setIsLoged }) => {
-  useEffect(() => {
-    // Escuchar eventos del servidor
-    socket.on('response', (data) => {
-      Alert.alert('Server Response', data.message);
-    });
-    socket.on('alert', (data) => {
-      Alert.alert('Server Response', data.message); // Muestra una alerta en el cliente
-  });
-    // Limpieza del efecto
-    return () => {
-      socket.off('response'); // Desconectar el evento cuando el componente se desmonte
-      socket.disconnect(); // Desconectar el socket si es necesario
-    };
-  }, []);
+
   const signOut = () => {
     setIsLoged(false); // Cambiar el estado de inicio de sesión
     socket.disconnect();
   };
 
-  // Función para enviar la solicitud POST al servidor
-  const sendQRScan = async () => {
-    const scannedEmail = 'jon.pazos@ikasle.aeg.eus'; // Cambia esto según sea necesario
-    socket.emit('scan_acolyte', { scannedEmail }); // Enviar el email al servidor
-  };
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -49,7 +28,6 @@ const AcolythHomeScreen: React.FC<Props> = ({ setIsLoged }) => {
         </TouchableOpacity>
       </View>
     </ImageBackground>
-      
     </GestureHandlerRootView>
   );
 };

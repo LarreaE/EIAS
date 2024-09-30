@@ -5,6 +5,8 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
 import auth from '@react-native-firebase/auth';
 import axios from 'axios';
+import { Socket } from 'socket.io-client';
+import socket from '../sockets/socketConnection';
 
 
 interface Props {
@@ -14,6 +16,7 @@ interface Props {
 
 const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
   const [loading, setLoading] = useState(false); // Estado para el loading
+  const [socketId, setSocketId] = useState<string | null>(null); // Estado para almacenar el socket ID
 
   useEffect(() => {
     const configureGoogleSignIn = async () => {
@@ -24,6 +27,19 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
     };
 
     configureGoogleSignIn();
+  }, []);
+
+  useEffect(() => {
+    // Cuando el socket se conecta, guarda el ID en el estado
+    socket.on('connect', () => {
+      setSocketId(socket.id); // Guarda el socket ID en el estado
+      console.log('Socket conectado, ID:', socket.id);
+    });
+
+    // Limpiar el evento al desmontar el componente
+    return () => {
+      socket.off('connect');
+    };
   }, []);
 
   const signIn = async () => {
@@ -56,10 +72,11 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
     axios.post('http://127.0.0.1:3000/verify-token', {
       idToken: idTokenResult?.token,
       email: email,
+      socketId: socketId,
     })
     .then((response) => {
       console.log('JWT TOKEN FROM EXPRESS');
-      console.log(response.data);
+      console.log(response.data.playerData.role);
       //SAVE JWT ENCRIPTED
       setUserData(response.data);
       setIsLoged(true);
