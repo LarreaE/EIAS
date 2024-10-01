@@ -12,6 +12,7 @@ const QRGenerator = (data:any) => {
               size={200}
               color="#4b3621"
               backgroundColor="blue"
+              logo={require('../assets/profile_icon.png')}
               />
           </View>
       );
@@ -25,6 +26,7 @@ const QRGenerator = (data:any) => {
               size={200}
               color="#4b3621"
               backgroundColor="#f5f3e7"
+              logo={require('../assets/laboratory_icon.png')}
               />
           </View>
           <Text style={styles.qrText}>Scan to Enter the Laboratory</Text>
