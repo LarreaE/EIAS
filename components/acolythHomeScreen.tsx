@@ -7,12 +7,7 @@ type Props = {
   setIsLoged: (value: boolean) => void;
 };
 
-const AcolythHomeScreen: React.FC<Props> = ({ setIsLoged }) => {
-
-  const signOut = () => {
-    setIsLoged(false); // Cambiar el estado de inicio de sesión
-    socket.disconnect();
-  };
+const AcolythHomeScreen: React.FC<Props> = ({ }) => {
 
 
   return (
@@ -22,11 +17,6 @@ const AcolythHomeScreen: React.FC<Props> = ({ setIsLoged }) => {
       style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
       resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
     >
-      <View style={styles.innerContainer}>
-        <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
-          <Text style={styles.signOutText}>Sign Out</Text>
-        </TouchableOpacity>
-      </View>
     </ImageBackground>
     </GestureHandlerRootView>
   );
