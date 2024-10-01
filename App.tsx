@@ -84,7 +84,7 @@ function App() {
                   tabBarLabel: '', // Oculta el nombre
                   tabBarIcon: () => (
                     <Image
-                      source={require('./assets/home_icon.png')} // Cambia esto por la ruta de tu icono
+                      source={require('./assets/profile_icon.png')} // Cambia esto por la ruta de tu icono
                       style={styles.icon}
                     />
                   ),
@@ -98,7 +98,7 @@ function App() {
                   tabBarLabel: '', // Oculta el nombre
                   tabBarIcon: () => (
                     <Image
-                      source={require('./assets/home_icon.png')} // Cambia esto por la ruta de tu icono
+                      source={require('./assets/laboratory_icon.png')} // Cambia esto por la ruta de tu icono
                       style={styles.icon}
                     />
                   ),
@@ -135,7 +135,7 @@ function App() {
                 tabBarLabel: '', // Oculta el nombre
                 tabBarIcon: () => (
                   <Image
-                    source={require('./assets/home_icon.png')} // Cambia esto por la ruta de tu icono
+                    source={require('./assets/profile_icon.png')} // Cambia esto por la ruta de tu icono
                     style={styles.icon}
                   />
                 ),
@@ -219,7 +219,7 @@ function App() {
               }}
             >
               <Tab.Screen
-                name="ProfileVillain"
+                name="Settings"
                 options={{
                   tabBarLabel: '', // Oculta el nombre
                   tabBarIcon: () => (
@@ -230,7 +230,7 @@ function App() {
                   ),
                 }}
               >
-                {props => <AcolythProfileScreen {...props} user={UserData} />}
+                {props => <ProfileScreen {...props} user={UserData} setIsLoged={setIsLoged}/>}
               </Tab.Screen>
               <Tab.Screen
                 name="HomeAcolyth"
