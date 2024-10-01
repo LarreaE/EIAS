@@ -3,9 +3,21 @@ import { View , StyleSheet, Text} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
 const QRGenerator = (data:any) => {
-    console.log(data.UserData.decodedToken.email);
 
-    return (
+    if (data.UserData.playerData.is_active) {
+      return (
+          <View style={styles.containerInside}>
+            <QRCode
+              value={data.UserData.decodedToken.email}
+              size={200}
+              color="#4b3621"
+              backgroundColor="blue"
+              />
+          </View>
+      );
+    }
+    else {
+      return (
         <View style={styles.container}>
           <View style={styles.container}>
             <QRCode
@@ -18,6 +30,7 @@ const QRGenerator = (data:any) => {
           <Text style={styles.qrText}>Scan to Enter the Laboratory</Text>
         </View>
       );
+    }
 };
 
 const styles = StyleSheet.create({
@@ -27,6 +40,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#e2d3b9', // Parchment-style background
     padding: 20,
+  },
+  containerInside: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#e2d3b2', // Parchment-style background
+    padding: 20,
+    borderRadius: 20,
+    margin:10,
   },
   qrContainer: {
     padding: 15,
