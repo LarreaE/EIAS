@@ -115,7 +115,7 @@ function App() {
       <SafeAreaView style={styles.container}>
         <NavigationContainer>
           <Tab.Navigator
-            initialRouteName="HomeAcolyth"
+            initialRouteName="Settings"
             screenOptions={{
               tabBarStyle: {
                 backgroundColor: 'transparent', // Fondo transparente
@@ -130,7 +130,7 @@ function App() {
           >
 
             <Tab.Screen
-              name="HomeAcolyth"
+              name="Settings"
               options={{
                 tabBarLabel: '', // Oculta el nombre
                 tabBarIcon: () => (
@@ -141,7 +141,7 @@ function App() {
                 ),
               }}
             >
-              {props => <AcolythHomeScreen {...props} setIsLoged={setIsLoged} />}
+              {props => <ProfileScreen {...props} user={UserData} setIsLoged={setIsLoged}/>}
             </Tab.Screen>
 
             <Tab.Screen
