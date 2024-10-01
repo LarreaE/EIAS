@@ -1,6 +1,5 @@
-import { Value } from 'firebase-admin/remote-config';
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-camera';
 import socket from '../sockets/socketConnection';
 
@@ -9,18 +8,13 @@ type Props = {
   setIsLoged: (value: boolean) => void;
 };
 
-const QRScanner: React.FC<Props> = ({ onQRCodeScanned ,setIsLoged}) => {
+const QRScanner: React.FC<Props> = ({ onQRCodeScanned }) => {
 
   const [hasPermission, setHasPermission] = useState(false);
   const cameraRef = useRef(null);
   const [scanning, setScanning] = useState(true);
 
   const device = useCameraDevice('back');
-
-  const signOut = () => {
-    setIsLoged(false); // Cambiar el estado de inicio de sesión
-    socket.disconnect();
-  };
 
    // QR Scanner hook
    const codeScanner = useCodeScanner({
