@@ -87,22 +87,32 @@ const QRScanner: React.FC<Props> = ({ onQRCodeScanned }) => {
 
 
    // render camera
-   return (
+  return (
     <View style={styles.container}>
       <Camera
         ref={cameraRef}
-        style={StyleSheet.absoluteFill}
+        style={styles.camera}
         device={device}
         isActive={true}
         codeScanner={scanning ? codeScanner : undefined}
       />
-       {/* Overlay to guide scanning */}
        <View style={styles.overlay}>
-        <View style={styles.square} />
-        <Text style={styles.scanText}>Let's prove your might</Text>
-      </View>
+          {/* Top Transparent Overlay */}
+          <View style={styles.topOverlay} />
+
+          {/* Center Overlay with transparent square */}
+          <View style={styles.centerOverlay}>
+            <View style={styles.sideOverlay} />
+            <View style={styles.focusedSquare} />
+            <View style={styles.sideOverlay} />
+          </View>
+
+          {/* Bottom Transparent Overlay */}
+          <View style={styles.bottomOverlay} />
+        </View>
     </View>
   );
+
 };
 
 const styles = StyleSheet.create({
@@ -117,70 +127,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'black',
   },
+  camera: {
+    flex: 1,
+    width: '100%',
+  },
   overlay: {
     position: 'absolute',
     top: 0,
+    bottom: 0,
     left: 0,
     right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1, // Ensure it sits on top of the camera view
   },
-  square: {
-    width: 250,
-    height: 250,
-    borderWidth: 3,
-    borderColor: '#8B4513',  // Dark brown, reminiscent of wood
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',  // Semi-transparent background to give it a window-like feel
-    borderRadius: 10,
-    position: 'relative',
+  topOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Top opaque area
   },
-  medievalCorners: {
-    position: 'absolute',
-    width: 40,
-    height: 40,
-    backgroundColor: '#D4AF37',  // Gold color for the ornate corner
-    borderWidth: 3,
-    borderColor: '#8B4513',  // Dark brown to match the frame
+  centerOverlay: {
+    flexDirection: 'row',
   },
-  topLeft: {
-    top: -8,
-    left: -8,
+  sideOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Left and right opaque areas
   },
-  topRight: {
-    top: -8,
-    right: -8,
+  focusedSquare: {
+    width: 250, // Width of the square
+    height: 250, // Height of the square
+    borderWidth: 2,
+    borderColor: '#8B4513', // White border for the square
+    backgroundColor: 'transparent', // Center transparent area
   },
-  bottomLeft: {
-    bottom: -8,
-    left: -8,
-  },
-  bottomRight: {
-    bottom: -8,
-    right: -8,
-  },
-  scanText: {
-    color: 'white',
-    fontSize: 16,
-    marginTop: 20,
-    textAlign: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 5,
-  },
-  signOutButton: {
-    position: 'absolute',
-    top: 0,
-    left: 5,
-    backgroundColor: 'red',
-    padding: 0,
-    borderRadius: 5,
-  },
-  signOutText: {
-    color: 'white',
-    fontSize: 12,
+  bottomOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Bottom opaque area
   },
 });
 export default QRScanner;
