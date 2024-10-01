@@ -8,8 +8,9 @@ type Props = {
 };
 
 const ProfileScreen: React.FC<Props> = ({ user, setIsLoged }) => {
-  const userName = user?.decodedToken?.name || 'No name available';
-  const userEmail = user?.decodedToken?.email || 'No email available';
+  const role = user?.playerData.role || 'No name available';
+  const userName = user?.playerData?.nickname || 'No name available';
+  const userLvl = user?.playerData?.level || 'No email available';
 
   const signOut = () => {
     setIsLoged(false); // Cambiar el estado de inicio de sesión
@@ -21,8 +22,10 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLoged }) => {
        <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
           <Text style={styles.signOutText}>Sign Out</Text>
       </TouchableOpacity>
-      <Text style={styles.text}>User name: {userName}</Text>
-      <Text style={styles.text}>Email: {userEmail}</Text>
+      <Text style={styles.text}>{role}</Text>
+      <Text style={styles.text}>User name:</Text>
+      <Text style={styles.text}>{userName}</Text>
+      <Text style={styles.text}>Level: {userLvl}</Text>
     </View>
   );
 };

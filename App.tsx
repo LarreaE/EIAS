@@ -18,6 +18,7 @@ import HomeVillain from './components/HomeVillain.tsx';
 // Importar los eventos de socket
 import { listenToServerEvents, clearServerEvents } from './sockets/listenEvents';
 import socket from './sockets/socketConnection';
+import ProfileScreen from './components/ProfileScreen.tsx';
 
 
 
@@ -89,7 +90,7 @@ function App() {
                   ),
                 }}
               >
-                {props => <HomeVillain {...props} setIsLoged={setIsLoged} user={UserData}/>}
+                {props => <ProfileScreen {...props} user={UserData} setIsLoged={setIsLoged}/>}
               </Tab.Screen>
               <Tab.Screen
                 name="QRScanner"
