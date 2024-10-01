@@ -4,7 +4,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import socket from '../sockets/socketConnection';
 
 type Props = {
-  setIsLoged: (value: boolean) => void;
+
 };
 
 const AcolythHomeScreen: React.FC<Props> = ({ }) => {
