@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import QRGenerator from './QrGenerator.tsx';
 import { ImageBackground, Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native';
+import { clearServerEvents, listenToServerEventsScanAcolyte } from '../sockets/listenEvents.tsx';
 
 type Props = {UserData:any};
 
@@ -12,8 +13,43 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData:any) => {
   const player = UserData.UserData.playerData;
 
   useEffect(() => {
-    setIsInside(player.is_active);
-  }, [player.is_active]);
+
+    listenToServerEventsScanAcolyte(setIsInside);
+
+     const updateIsInside = async () => {
+      try {
+        await fetch('http://127.0.0.1:3000/isInside', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: player.email }),
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Server response:', data);
+
+          setIsInside(data.is_active);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+      } catch (error) {
+        console.error('Caught error:', error);
+      }
+
+    };
+
+    updateIsInside();
+    return () => {
+      clearServerEvents();
+    };
+  }, [player.is_active, player.email]);
 
   return (
     <View style={styles.container}>

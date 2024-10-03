@@ -20,6 +20,15 @@ export const listenToServerEventsMortimer = (updatePlayers: (players: any) => vo
   });
 };
 
+// Función para escuchar eventos del servidor y actualizar el estado de los jugadores
+export const listenToServerEventsScanAcolyte = (updateIsInside: (is_active: any) => void): void => {
+  socket.on('change_isInside', (data: { is_active: any }) => {
+    console.log('Valor de is_active:', data.data);
+    console.log(data);
+    updateIsInside(data.is_active); // Llamamos a la función de actualización con los jugadores
+  });
+};
+
 
 // Función para limpiar los eventos cuando el componente se desmonte
 export const clearServerEvents = (): void => {

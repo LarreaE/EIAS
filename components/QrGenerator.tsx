@@ -11,7 +11,7 @@ const QRGenerator = (data:any) => {
               value={data.UserData.decodedToken.email}
               size={200}
               color="#4b3621"
-              backgroundColor="blue"
+              backgroundColor="#f5f3e7"
               logo={require('../assets/profile_icon.png')}
               />
           </View>
