@@ -19,6 +19,7 @@ import HomeVillain from './components/HomeVillain.tsx';
 import { listenToServerEvents, clearServerEvents } from './sockets/listenEvents';
 import socket from './sockets/socketConnection';
 import ProfileScreen from './components/ProfileScreen.tsx';
+import { sendUserEMail } from './sockets/emitEvents.tsx';
 
 
 
@@ -27,6 +28,21 @@ const Tab = createBottomTabNavigator();
 function App() {
   const [isLoged, setIsLoged] = useState<boolean>(false);
   const [UserData, setUserData] = useState<any>(null);
+
+  useEffect(() => {
+    socket.on('request_email', () => {
+      console.log('El servidor ha solicitado el correo electrónico');
+      if (isLoged) {
+        sendUserEMail(UserData.playerData.email);
+        socket.on('reconnect', () => {
+          console.log('Socket reconectado con ID:', socket.id);
+        });
+      }
+    });
+    return () => {
+      socket.off('request_email');
+    };
+  }, [isLoged, UserData]);
 
   useEffect(() => {
     SplashScreen.hide();
@@ -52,12 +68,15 @@ function App() {
 
   const handleQRCodeScanned = (data: any) => {
     //display data
+    
     Alert.alert('QR Code Scanned', `Data: ${data}`);
   };
 
   if (!isLoged) {
+    socket.connect();
     return <GoogleSignInComponent setIsLoged={setIsLoged} setUserData={setUserData} />;
   }
+  
   console.log(UserData.playerData.role);
 
   switch (UserData.playerData.role) {

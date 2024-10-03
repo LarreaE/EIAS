@@ -1,5 +1,6 @@
 import { Alert } from 'react-native';
 import socket from './socketConnection';
+import { sendUserEMail } from './emitEvents.tsx';
 
 // Función para escuchar eventos del servidor
 export const listenToServerEvents = (): void => {
@@ -19,7 +20,6 @@ export const listenToServerEventsMortimer = (updatePlayers: (players: any) => vo
     updatePlayers(data.players); // Llamamos a la función de actualización con los jugadores
   });
 };
-
 
 // Función para limpiar los eventos cuando el componente se desmonte
 export const clearServerEvents = (): void => {
