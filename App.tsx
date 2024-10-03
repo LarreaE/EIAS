@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, Image, Alert } from 'react-native';
+import { SafeAreaView, StyleSheet, Image, Alert, Modal, TouchableOpacity, Text, View } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'; 
@@ -21,6 +21,7 @@ const Tab = createMaterialTopTabNavigator();
 function App() {
   const [isLoged, setIsLoged] = useState<boolean>(false);
   const [UserData, setUserData] = useState<any>(null);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false); // Estado para controlar la visibilidad del modal
 
   useEffect(() => {
     SplashScreen.hide();
@@ -42,6 +43,7 @@ function App() {
 
   const handleQRCodeScanned = (data: any) => {
     Alert.alert('QR Code Scanned', `Data: ${data}`);
+    setIsModalVisible(false); // Cerrar el modal después de escanear
   };
 
   if (!isLoged) {
@@ -50,23 +52,23 @@ function App() {
 
   const screenOptions = {
     tabBarStyle: {
-      backgroundColor: 'transparbent',
+      backgroundColor: 'transparent',
       borderTopWidth: 0,
       position: 'absolute',
       left: 0,
       right: 0,
       bottom: 0,
-      paddingBottom: 0, // Agregar padding en la parte inferior
-      height:80,
-      elevation: 0, // Para Android
+      paddingBottom: 0,
+      height: 80,
+      elevation: 0,
     },
     headerShown: false,
     swipeEnabled: true,
     tabBarScrollEnabled: false,
     shadowOpacity: 0,
     shadowRadius: 0,
-
   };
+
   const renderTabs = () => {
     switch (UserData.playerData.role) {
       case 'ISTVAN':
@@ -92,7 +94,25 @@ function App() {
                 ),
               }}
             >
-              {props => <QRScanner {...props} onQRCodeScanned={handleQRCodeScanned} />}
+              {props => (
+                <>
+                  <TouchableOpacity onPress={() => setIsModalVisible(true)} style={styles.openModalButton}>
+                    <Text style={styles.buttonText}>Open QR Scanner</Text>
+                  </TouchableOpacity>
+                  <View style={styles.modalView}>
+                  <Modal
+                    animationType="slide"
+                    visible={isModalVisible}
+                  >
+                   
+                      <QRScanner {...props} onQRCodeScanned = {handleQRCodeScanned} />
+                      <TouchableOpacity onPress={() => setIsModalVisible(false)} style={styles.closeButton}>
+                        <Text style={styles.buttonText}>Close</Text>
+                      </TouchableOpacity>
+                  </Modal>
+                  </View>
+                </>
+              )}
             </Tab.Screen>
           </>
         );
@@ -207,19 +227,39 @@ function App() {
   );
 }
 
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   icon: {
-    marginBottom: 0, // Aumenta este valor para elevar los íconos
+    marginBottom: 0,
     width: 66,
     height: 66,
-    right:20,
+    right: 20,
+  },
+  openModalButton: {
+    backgroundColor: '#F194FF',
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    margin: 10,
+  },
+  closeButton: {
+    backgroundColor: '#F194FF',
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    margin: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  modalView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
-
 
 export default App;
