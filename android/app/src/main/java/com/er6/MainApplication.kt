@@ -15,6 +15,8 @@ import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 import io.invertase.firebase.auth.ReactNativeFirebaseAuthPackage;
 import com.mrousavy.camera.react.CameraPackage
 import com.horcrux.svg.SvgPackage;
+import com.swmansion.reanimated.ReanimatedPackage;
+import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
 
 
 class MainApplication : Application(), ReactApplication {
@@ -25,6 +27,9 @@ class MainApplication : Application(), ReactApplication {
             PackageList(this).packages.apply {
               // Packages that cannot be autolinked yet can be added manually here, for example:
               // add(MyReactNativePackage())
+              ReanimatedPackage()
+              RNCViewPagerPackage()
+              
             }
 
         override fun getJSMainModuleName(): String = "index"
