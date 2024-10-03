@@ -30,7 +30,7 @@ const MortimerLaboratoryScreen: React.FC<Props> = () => {
     // Petición a la base de datos para obtener los usuarios iniciales
     const addUsers = async () => {
       try {
-        const response = await fetch('http://10.70.0.11:3000/mortimer');
+        const response = await fetch('http://192.168.147.191:3000/mortimer');
         const data: User[] = await response.json();
         setUsers(data);
       } catch (error) {

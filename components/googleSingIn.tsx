@@ -69,7 +69,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
     const idTokenResult = await auth().currentUser?.getIdTokenResult();
     console.log('USER JWT');
     console.log(idTokenResult);
-    axios.post('http://10.70.0.11:3000/verify-token', {
+    axios.post('http://192.168.147.191:3000/verify-token', {
       idToken: idTokenResult?.token,
       email: email,
       socketId: socketId,
