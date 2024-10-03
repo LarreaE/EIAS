@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import QRGenerator from './QrGenerator.tsx';
 import { ImageBackground, Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native';
@@ -8,21 +8,26 @@ type Props = {UserData:any};
 const AcolythLaboratoryScreen: React.FC<Props> = (UserData:any) => {
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [isInside, setIsInside] = useState(UserData.UserData.playerData.is_active);
   const player = UserData.UserData.playerData;
 
-  if (player.is_active) {
-    return (
-      <View style={styles.container}>
+  useEffect(() => {
+    setIsInside(player.is_active);
+  }, [player.is_active]);
+
+  return (
+    <View style={styles.container}>
+      {isInside ? (
         <ImageBackground
-        source={require('../assets/laboratory.png')}  // Ruta de la imagen de fondo
-        style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
-        resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+          source={require('../assets/laboratory.png')}  // Ruta de la imagen
+          style={styles.background}  //Aplicar estilos al contenedor
+          resizeMode="cover"         // Ajuste de la imagen
         >
           <TouchableOpacity
             style={styles.openButton}
             onPress={() => setModalVisible(true)}
           >
-          <Text style={styles.textStyle}>Show QR</Text>
+            <Text style={styles.textStyle}>Show QR</Text>
           </TouchableOpacity>
           <Modal
             animationType="slide"
@@ -34,7 +39,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData:any) => {
           >
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
-                <QRGenerator {...UserData}/>
+                <QRGenerator {...UserData} />
                 <TouchableOpacity
                   style={styles.closeButton}
                   onPress={() => setModalVisible(!modalVisible)}
@@ -44,15 +49,12 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData:any) => {
               </View>
             </View>
           </Modal>
-      </ImageBackground>
-      </View>
-    );
-  }
-  else {
-    return (
-      <QRGenerator {...UserData}/>
-        );
-  }
+        </ImageBackground>
+      ) : (
+        <QRGenerator {...UserData} />
+      )}
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
