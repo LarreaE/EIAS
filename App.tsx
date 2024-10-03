@@ -1,28 +1,22 @@
-/* eslint-disable react/no-unstable-nested-components */
-/* eslint-disable no-trailing-spaces */
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, Image, Alert } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import AcolythHomeScreen from './components/acolythHomeScreen.tsx';
-import AcolythProfileScreen from './components/acolythProfileScreen.tsx';
-import AcolythLaboratoryScreen from './components/acolythLaboratoryScreen.tsx';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'; 
 import GoogleSignInComponent from './components/googleSingIn.tsx';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
-import Spinner from './components/Spinner'; // Importa el Spinner
-import MortimerLaboratoryScreen from './components/mortimerLaboratoryScreen .tsx';
 import QRScanner from './components/QrScanner.tsx';
+import ProfileScreen from './components/ProfileScreen.tsx';
+import AcolythHomeScreen from './components/acolythHomeScreen.tsx';
+import AcolythLaboratoryScreen from './components/acolythLaboratoryScreen.tsx';
+import MortimerLaboratoryScreen from './components/mortimerLaboratoryScreen .tsx';
 import HomeVillain from './components/HomeVillain.tsx';
-// Importar los eventos de socket
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { listenToServerEvents, clearServerEvents } from './sockets/listenEvents';
 import socket from './sockets/socketConnection';
-import ProfileScreen from './components/ProfileScreen.tsx';
 
-
-
-const Tab = createBottomTabNavigator();
+const Tab = createMaterialTopTabNavigator();
 
 function App() {
   const [isLoged, setIsLoged] = useState<boolean>(false);
@@ -32,7 +26,6 @@ function App() {
     SplashScreen.hide();
   }, []);
 
-  // Configuración de Google Sign-In
   useEffect(() => {
     GoogleSignin.configure({
       webClientId: Config.GOOGLE_WEB_CLIENT_ID,
@@ -40,257 +33,193 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // Escuchar eventos del servidor
     listenToServerEvents();
-
-    // Limpiar los eventos cuando el componente se desmonte
     return () => {
       clearServerEvents();
-      socket.disconnect(); // Desconectar el socket si es necesario
+      socket.disconnect();
     };
   }, []);
 
   const handleQRCodeScanned = (data: any) => {
-    //display data
     Alert.alert('QR Code Scanned', `Data: ${data}`);
   };
 
   if (!isLoged) {
     return <GoogleSignInComponent setIsLoged={setIsLoged} setUserData={setUserData} />;
   }
-  console.log(UserData.playerData.role);
 
-  switch (UserData.playerData.role) {
-    case 'ISTVAN':
-      return (
-      <SafeAreaView style={styles.container}>
-        <NavigationContainer>
-          <Tab.Navigator
-            initialRouteName="Settings"
-            screenOptions={{
-              tabBarStyle: {
-                backgroundColor: 'transparent', // Fondo transparente
-                borderTopWidth: 0, // Eliminar la línea superior
-                position: 'absolute', // Hacer la barra flotante
-                left: 0,
-                right: 0,
-                bottom: 0,
-              },
-              headerShown: false, // Oculta el encabezado en todas las pantallas
-            }}>
-            <Tab.Screen
-                name="Settings"
-                options={{
-                  tabBarLabel: '', // Oculta el nombre
-                  tabBarIcon: () => (
-                    <Image
-                      source={require('./assets/profile_icon.png')} // Cambia esto por la ruta de tu icono
-                      style={styles.icon}
-                    />
-                  ),
-                }}
-              >
-                {props => <ProfileScreen {...props} user={UserData} setIsLoged={setIsLoged}/>}
-              </Tab.Screen>
-              <Tab.Screen
-                name="QRScanner"
-                options={{
-                  tabBarLabel: '', // Oculta el nombre
-                  tabBarIcon: () => (
-                    <Image
-                      source={require('./assets/laboratory_icon.png')} // Cambia esto por la ruta de tu icono
-                      style={styles.icon}
-                    />
-                  ),
-                }}
-              >
-                {props => <QRScanner {...props} onQRCodeScanned={handleQRCodeScanned}/>}
-              </Tab.Screen>
-          </Tab.Navigator>
-        </NavigationContainer>
-      </SafeAreaView>);
-    case 'MORTIMER':
+  const screenOptions = {
+    tabBarStyle: {
+      backgroundColor: 'transparbent',
+      borderTopWidth: 0,
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 0,
+      paddingBottom: 0, // Agregar padding en la parte inferior
+      height:80,
+      elevation: 0, // Para Android
+    },
+    headerShown: false,
+    swipeEnabled: true,
+    tabBarScrollEnabled: false,
+    shadowOpacity: 0,
+    shadowRadius: 0,
 
-    return (
-      <SafeAreaView style={styles.container}>
-        <NavigationContainer>
-          <Tab.Navigator
-            initialRouteName="Settings"
-            screenOptions={{
-              tabBarStyle: {
-                backgroundColor: 'transparent', // Fondo transparente
-                borderTopWidth: 0, // Eliminar la línea superior
-                position: 'absolute', // Hacer la barra flotante
-                left: 0,
-                right: 0,
-                bottom: 0,
-              },
-              headerShown: false, // Oculta el encabezado en todas las pantallas
-            }}
-          >
-
+  };
+  const renderTabs = () => {
+    switch (UserData.playerData.role) {
+      case 'ISTVAN':
+        return (
+          <>
             <Tab.Screen
               name="Settings"
               options={{
-                tabBarLabel: '', // Oculta el nombre
+                tabBarLabel: '',
                 tabBarIcon: () => (
-                  <Image
-                    source={require('./assets/profile_icon.png')} // Cambia esto por la ruta de tu icono
-                    style={styles.icon}
-                  />
+                  <Image source={require('./assets/profile_icon.png')} style={styles.icon} />
                 ),
               }}
             >
-              {props => <ProfileScreen {...props} user={UserData} setIsLoged={setIsLoged}/>}
+              {props => <ProfileScreen {...props} user={UserData} setIsLoged={setIsLoged} />}
             </Tab.Screen>
+            <Tab.Screen
+              name="QRScanner"
+              options={{
+                tabBarLabel: '',
+                tabBarIcon: () => (
+                  <Image source={require('./assets/laboratory_icon.png')} style={styles.icon} />
+                ),
+              }}
+            >
+              {props => <QRScanner {...props} onQRCodeScanned={handleQRCodeScanned} />}
+            </Tab.Screen>
+          </>
+        );
 
+      case 'MORTIMER':
+        return (
+          <>
+            <Tab.Screen
+              name="Settings"
+              options={{
+                tabBarLabel: '',
+                tabBarIcon: () => (
+                  <Image source={require('./assets/profile_icon.png')} style={styles.icon} />
+                ),
+              }}
+            >
+              {props => <ProfileScreen {...props} user={UserData} setIsLoged={setIsLoged} />}
+            </Tab.Screen>
             <Tab.Screen
               name="LaboratoryMortimer"
               options={{
-                tabBarLabel: '', // Oculta el nombre
+                tabBarLabel: '',
                 tabBarIcon: () => (
-                  <Image
-                    source={require('./assets/laboratory_icon.png')} // Cambia esto por la ruta de tu icono
-                    style={styles.icon}
-                  />
+                  <Image source={require('./assets/laboratory_icon.png')} style={styles.icon} />
                 ),
               }}
             >
-              {props => <MortimerLaboratoryScreen/>}
+              {props => <MortimerLaboratoryScreen {...props} />}
             </Tab.Screen>
+          </>
+        );
+
+      case 'VILLAIN':
+        return (
+          <>
+            <Tab.Screen
+              name="Settings"
+              options={{
+                tabBarLabel: '',
+                tabBarIcon: () => (
+                  <Image source={require('./assets/profile_icon.png')} style={styles.icon} />
+                ),
+              }}
+            >
+              {props => <ProfileScreen {...props} setIsLoged={setIsLoged} user={UserData} />}
+            </Tab.Screen>
+            <Tab.Screen
+              name="HomeVillain"
+              options={{
+                tabBarLabel: '',
+                tabBarIcon: () => (
+                  <Image source={require('./assets/home_icon.png')} style={styles.icon} />
+                ),
+              }}
+            >
+              {props => <HomeVillain {...props} user={UserData} />}
+            </Tab.Screen>
+          </>
+        );
+
+      default:
+        return (
+          <>
+            <Tab.Screen
+              name="Settings"
+              options={{
+                tabBarLabel: '',
+                tabBarIcon: () => (
+                  <Image source={require('./assets/profile_icon.png')} style={styles.icon} />
+                ),
+              }}
+            >
+              {props => <ProfileScreen {...props} user={UserData} setIsLoged={setIsLoged} />}
+            </Tab.Screen>
+            <Tab.Screen
+              name="HomeAcolyth"
+              options={{
+                tabBarLabel: '',
+                tabBarIcon: () => (
+                  <Image source={require('./assets/home_icon.png')} style={styles.icon} />
+                ),
+              }}
+            >
+              {props => <AcolythHomeScreen {...props} />}
+            </Tab.Screen>
+            <Tab.Screen
+              name="LaboratoryAcolyth"
+              options={{
+                tabBarLabel: '',
+                tabBarIcon: () => (
+                  <Image source={require('./assets/laboratory_icon.png')} style={styles.icon} />
+                ),
+              }}
+            >
+              {props => <AcolythLaboratoryScreen {...props} UserData={UserData} />}
+            </Tab.Screen>
+          </>
+        );
+    }
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <GestureHandlerRootView style={styles.container}>
+        <NavigationContainer>
+          <Tab.Navigator initialRouteName="Settings" screenOptions={screenOptions}>
+            {renderTabs()}
           </Tab.Navigator>
         </NavigationContainer>
-      </SafeAreaView>
-    );
-
-
-    case 'VILLAIN':
-      return (
-        <SafeAreaView style={styles.container}>
-          <NavigationContainer>
-            <Tab.Navigator
-              initialRouteName="HomeVillain"
-              screenOptions={{
-                tabBarStyle: {
-                  backgroundColor: 'transparent', // Fondo transparente
-                  borderTopWidth: 0, // Eliminar la línea superior
-                  position: 'absolute', // Hacer la barra flotante
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                },
-                headerShown: false, // Oculta el encabezado en todas las pantallas
-              }}
-            >
-              <Tab.Screen
-                name="Settings"
-                options={{
-                  tabBarLabel: '', // Oculta el nombre
-                  tabBarIcon: () => (
-                    <Image
-                      source={require('./assets/profile_icon.png')} // Cambia esto por la ruta de tu icono
-                      style={styles.icon}
-                    />
-                  ),
-                }}
-              >
-                {props => <ProfileScreen {...props} setIsLoged={setIsLoged} user={UserData}/>}
-              </Tab.Screen>
-              <Tab.Screen
-                name="HomeVillain"
-                options={{
-                  tabBarLabel: '', // Oculta el nombre
-                  tabBarIcon: () => (
-                    <Image
-                      source={require('./assets/home_icon.png')} // Cambia esto por la ruta de tu icono
-                      style={styles.icon}
-                    />
-                  ),
-                }}
-              >
-                {props => <HomeVillain {...props} user={UserData}/>}
-              </Tab.Screen>
-            </Tab.Navigator>
-          </NavigationContainer>
-        </SafeAreaView>
-      );
-    default:
-      return (
-        <SafeAreaView style={styles.container}>
-          <NavigationContainer>
-            <Tab.Navigator
-              initialRouteName="HomeAcolyth"
-              screenOptions={{
-                tabBarStyle: {
-                  backgroundColor: 'transparent', // Fondo transparente
-                  borderTopWidth: 0, // Eliminar la línea superior
-                  position: 'absolute', // Hacer la barra flotante
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                },
-                headerShown: false, // Oculta el encabezado en todas las pantallas
-              }}
-            >
-              <Tab.Screen
-                name="Settings"
-                options={{
-                  tabBarLabel: '', // Oculta el nombre
-                  tabBarIcon: () => (
-                    <Image
-                      source={require('./assets/profile_icon.png')} // Cambia esto por la ruta de tu icono
-                      style={styles.icon}
-                    />
-                  ),
-                }}
-              >
-                {props => <ProfileScreen {...props} user={UserData} setIsLoged={setIsLoged}/>}
-              </Tab.Screen>
-              <Tab.Screen
-                name="HomeAcolyth"
-                options={{
-                  tabBarLabel: '', // Oculta el nombre
-                  tabBarIcon: () => (
-                    <Image
-                      source={require('./assets/home_icon.png')} // Cambia esto por la ruta de tu icono
-                      style={styles.icon}
-                    />
-                  ),
-                }}
-              >
-                {props => <AcolythHomeScreen/>}
-              </Tab.Screen>
-              <Tab.Screen
-                name="LaboratoryAcolyth"
-                options={{
-                  tabBarLabel: '', // Oculta el nombre
-                  tabBarIcon: () => (
-                    <Image
-                      source={require('./assets/laboratory_icon.png')} // Cambia esto por la ruta de tu icono
-                      style={styles.icon}
-                    />
-                  ),
-                }}
-              >
-                {props => <AcolythLaboratoryScreen {...props} UserData={UserData} />}
-              </Tab.Screen>
-            </Tab.Navigator>
-          </NavigationContainer>
-        </SafeAreaView>
-      );
-  }
-
+      </GestureHandlerRootView>
+    </SafeAreaView>
+  );
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   icon: {
-    marginBottom: 32,
-    width: 96,  // Ajusta el ancho del icono
-    height: 96, // Ajusta la altura del icono
+    marginBottom: 0, // Aumenta este valor para elevar los íconos
+    width: 66,
+    height: 66,
+    right:20,
   },
 });
+
 
 export default App;

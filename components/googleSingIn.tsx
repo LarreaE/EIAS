@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import Spinner from './Spinner'; // Importa el Spinner
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
@@ -88,6 +88,37 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
       console.log('UserLoged');
     }
   };
+
+  useEffect(() => {
+    const verificarTokenCaducado = async () => {
+      try {
+        const idTokenResult = await auth().currentUser?.getIdTokenResult();
+        const expirationTime = idTokenResult?.expirationTime;
+
+        if (expirationTime) {
+          const now = new Date().getTime();
+          const expirationTimeMs = new Date(expirationTime).getTime();
+
+          // Si el token ya expiró
+          if (now > expirationTimeMs) {
+            console.log('El token ha caducado');
+            Alert.alert('Sesión caducada', 'Tu sesión ha expirado. Por favor, inicia sesión de nuevo.');
+            await auth().signOut(); // Cierra la sesión si ha caducado
+          } else {
+            console.log('El token sigue siendo válido');
+          }
+        }
+      } catch (error) {
+        console.error('Error al verificar el token:', error);
+      }
+    };
+
+    // Verifica cada 10 minutos
+    const interval = setInterval(verificarTokenCaducado, 600000);
+
+    // Limpia el intervalo al desmontar el componente
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <View style={styles.outerContainer}>
