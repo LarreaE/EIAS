@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     width: 200,
-    height: 100
+    height: 100,
   },
   signOutText: {
     color: 'white',
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     marginVertical: 4,     // Space between each attribute
   },
   attrContainer: {
-    backgroundColor: 'rgba(200, 255, 200, 0.8)',  // White with 80% opacity
+    backgroundColor: 'rgba(100, 155, 150, 0.8)',  // White with 80% opacity
     borderRadius: 10,
     padding: 20,  // Padding for content inside the container
     shadowColor: '#000',
