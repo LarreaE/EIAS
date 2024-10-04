@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, ImageBackground } from 'react-native';
 import Spinner from './Spinner'; // Importa el Spinner
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
@@ -69,7 +69,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
     const idTokenResult = await auth().currentUser?.getIdTokenResult();
     console.log('USER JWT');
     console.log(idTokenResult);
-    axios.post('http://192.168.147.191:3000/verify-token', {
+    axios.post('https://eiasserver.onrender.com/verify-token', {
       idToken: idTokenResult?.token,
       email: email,
       socketId: socketId,
@@ -122,14 +122,24 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
   }, []);
 
   return (
-    <View style={styles.outerContainer}>
+    <ImageBackground
+      source={require('../assets/home_door.png')}
+      style={styles.background}
+      resizeMode="cover"
+    >
+    <ImageBackground
+      source={require('../assets/boton.png')}
+      style={styles.container}
+      resizeMode="cover"
+    >
     {loading && <Spinner />}
     <TouchableOpacity onPress={signIn} disabled={loading}>
-      <View style={styles.container}>
+      <View>
         <Text style={styles.text}>Sign in with Google</Text>
       </View>
     </TouchableOpacity>
-  </View>
+    </ImageBackground>
+  </ImageBackground>
   );
 };
 
@@ -140,13 +150,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',           // Centrar horizontalmente
     backgroundColor: '#f0f0f0',     // Fondo claro (opcional para contraste)
   },
+  background: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
-    backgroundColor: 'blue',        // Fondo azul
-    width: 200,                     // Ancho de 200 unidades
-    height: 100,                    // Alto de 100 unidades
+    width: 300,                     // Ancho de 200 unidades
+    height: 150,                    // Alto de 100 unidades
     justifyContent: 'center',       // Centrar contenido verticalmente
     alignItems: 'center',           // Centrar contenido horizontalmente
     borderRadius: 20,               // Esquinas redondeadas
+    marginTop: 200,
   },
   text: {
     color: 'white',                 // Texto en color blanco

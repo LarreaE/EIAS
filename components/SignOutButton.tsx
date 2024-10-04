@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, ImageBackground } from 'react-native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 type Props = {
@@ -25,7 +25,6 @@ const SignOutButton: React.FC<Props> = ({ setIsLoged }) => {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#d9534f', // Color rojo para el botón
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
