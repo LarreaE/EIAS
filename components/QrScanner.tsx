@@ -68,23 +68,6 @@ const QRScanner: React.FC<Props> = ({ onQRCodeScanned }) => {
   }
 
 
-  // permision not granted
-  if (!hasPermission) {
-    return (
-      <View style={styles.container}>
-        <Text>No camera permission. Please grant camera access in settings.</Text>
-      </View>
-    );
-  }
-
-  if (device == null) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading camera...</Text>
-      </View>
-    );
-  }
-
 
    // render camera
   return (

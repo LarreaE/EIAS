@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, Image, Alert, Modal, TouchableOpacity, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Image, Alert, Modal, TouchableOpacity, Text, View, ImageBackground } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'; 
@@ -113,18 +113,31 @@ function App() {
             >
               {props => (
                 <>
-                  <TouchableOpacity onPress={() => setIsModalVisible(true)} style={styles.openModalButton}>
-                    <Text style={styles.buttonText}>Open QR Scanner</Text>
-                  </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+                        <ImageBackground
+                          source={require('./assets/boton.png')}  // Ruta de la imagen de fondo
+                          style={styles.openModalButton}  // Aplicar estilos al contenedor de la imagen de fondo
+                          resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+                          >
+                          <Text style={styles.buttonText}>Open QR Scanner</Text>
+                        </ImageBackground>
+                        </TouchableOpacity>
                   <View style={styles.modalView}>
                   <Modal
                     animationType="slide"
                     visible={isModalVisible}
                   >
-                   
                       <QRScanner {...props} onQRCodeScanned = {handleQRCodeScanned} />
-                      <TouchableOpacity onPress={() => setIsModalVisible(false)} style={styles.closeButton}>
+
+                      <TouchableOpacity onPress={() => setIsModalVisible(false)}>
+                      <ImageBackground
+                      source={require('./assets/boton.png')}  // Ruta de la imagen de fondo
+                      style={styles.modalButton}  // Aplicar estilos al contenedor de la imagen de fondo
+                      resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+                      >
                         <Text style={styles.buttonText}>Close</Text>
+                      </ImageBackground>
+
                       </TouchableOpacity>
                   </Modal>
                   </View>
@@ -255,11 +268,9 @@ const styles = StyleSheet.create({
     right: 20,
   },
   openModalButton: {
-    backgroundColor: '#F194FF',
-    padding: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-    margin: 10,
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: 150,
   },
   closeButton: {
     backgroundColor: '#F194FF',
@@ -271,6 +282,14 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  modalButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 150,
+    position: 'absolute',
+    bottom: 0,           // Position at the bottom
+    width: '100%',        // Full width for the button
   },
   modalView: {
     flex: 1,

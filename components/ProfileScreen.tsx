@@ -46,7 +46,6 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLoged }) => {
         <Text style={styles.text}>User name:</Text>
         <Text style={styles.text}>{userName}</Text>
         <Text style={styles.text}>Level: {userLvl}</Text>
-      
 
         <Text style={styles.attributeText}>Charisma: {charisma}</Text>
         <Text style={styles.attributeText}>Constitution: {constitution}</Text>
