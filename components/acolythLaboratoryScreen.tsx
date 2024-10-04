@@ -18,7 +18,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData:any) => {
 
      const updateIsInside = async () => {
       try {
-        await fetch('http://192.168.147.191:3000/isInside', {
+        await fetch('https://eiasserver.onrender.com/isInside', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
