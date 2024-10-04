@@ -94,5 +94,5 @@ dependencies {
     implementation "com.facebook.react:react-native:+"
     implementation project(':react-native-reanimated')
 
-    implementation project(':@react-native-community_viewpager')
+    implementation project(':react-native-pager-view')
 }

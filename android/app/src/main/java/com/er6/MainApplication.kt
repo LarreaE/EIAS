@@ -16,8 +16,7 @@ import io.invertase.firebase.auth.ReactNativeFirebaseAuthPackage;
 import com.mrousavy.camera.react.CameraPackage
 import com.horcrux.svg.SvgPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
-import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
-
+import com.reactnativepagerview.PagerViewPackage; // Nueva importación
 
 class MainApplication : Application(), ReactApplication {
 
@@ -28,7 +27,7 @@ class MainApplication : Application(), ReactApplication {
               // Packages that cannot be autolinked yet can be added manually here, for example:
               // add(MyReactNativePackage())
               ReanimatedPackage()
-              RNCViewPagerPackage()
+              PagerViewPackage() // Reemplazo de la referencia
               
             }
 
