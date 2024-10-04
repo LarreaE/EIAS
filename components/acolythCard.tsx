@@ -1,22 +1,26 @@
 import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ImageBackground, Alert } from 'react-native';
+import { Image, View, Text, TouchableOpacity, StyleSheet, ImageBackground, Alert } from 'react-native';
 import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { RootStackParamList } from '../types/types';
 import io from 'socket.io-client';
 
 // definir tipo de datos de props
 type Props = {
-  name: string;
+  nickname: string;
   is_active: boolean;
   avatar: string;
 };
 
-const AcolythCard: React.FC<Props> = ({ name, is_active, avatar }) => {
+const AcolythCard: React.FC<Props> = ({ nickname, is_active, avatar }) => {
   return (
     <View>
       <View style={styles.container}>
-        <Text style={[styles.text]}>{name}</Text>
-        <Text style={[styles.text, is_active && styles.activeText]}>
+      <Image
+          source={{ uri: avatar }}
+          style={styles.image}
+        />
+        <Text style={[styles.text]}>{nickname}</Text>
+        <Text style={[styles.outText, is_active && styles.inText]}>
           {is_active ? ' Dentro' : ' Fuera'}
         </Text>
       </View>
@@ -39,8 +43,17 @@ const styles = StyleSheet.create({
   text: {
     color: 'black',
   },
-  activeText: {
+  inText: {
+    color: 'green',
+  },
+  outText: {
     color: 'red',
+  },
+  image: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 10,
   },
 });
 
