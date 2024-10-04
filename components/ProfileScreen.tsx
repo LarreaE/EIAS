@@ -30,17 +30,19 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLoged }) => {
        <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
           <Text style={styles.signOutText}>Sign Out</Text>
       </TouchableOpacity>
-      <Text style={styles.text}>{role}</Text>
-      <Text style={styles.text}>User name:</Text>
-      <Text style={styles.text}>{userName}</Text>
-      <Text style={styles.text}>Level: {userLvl}</Text>
+      <View  style={styles.attrContainer}>
+        <Text style={styles.text}>{role}</Text>
+        <Text style={styles.text}>User name:</Text>
+        <Text style={styles.text}>{userName}</Text>
+        <Text style={styles.text}>Level: {userLvl}</Text>
 
-      <Text style={styles.attributeText}>Charisma: {charisma}</Text>
-      <Text style={styles.attributeText}>Constitution: {constitution}</Text>
-      <Text style={styles.attributeText}>Insanity: {insanity}</Text>
-      <Text style={styles.attributeText}>Dexterity: {dexterity}</Text>
-      <Text style={styles.attributeText}>Intelligence: {intelligence}</Text>
-      <Text style={styles.attributeText}>Strength: {strength}</Text>
+        <Text style={styles.attributeText}>Charisma: {charisma}</Text>
+        <Text style={styles.attributeText}>Constitution: {constitution}</Text>
+        <Text style={styles.attributeText}>Insanity: {insanity}</Text>
+        <Text style={styles.attributeText}>Dexterity: {dexterity}</Text>
+        <Text style={styles.attributeText}>Intelligence: {intelligence}</Text>
+        <Text style={styles.attributeText}>Strength: {strength}</Text>
+      </View>
     </View>
   );
 };
@@ -72,6 +74,16 @@ const styles = StyleSheet.create({
     color: '#555',         // Darker gray for attributes
     fontStyle: 'italic',   // Adds emphasis
     marginVertical: 4,     // Space between each attribute
+  },
+  attrContainer: {
+    backgroundColor: 'rgba(200, 255, 200, 0.8)',  // White with 80% opacity
+    borderRadius: 10,
+    padding: 20,  // Padding for content inside the container
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
   },
 });
 
