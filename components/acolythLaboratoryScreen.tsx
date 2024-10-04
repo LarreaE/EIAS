@@ -55,16 +55,21 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData:any) => {
     <View style={styles.container}>
       {isInside ? (
         <ImageBackground
-          source={require('../assets/laboratory_dor.png')}  // Ruta de la imagen
+          source={require('../assets/laboratory.png')}  // Ruta de la imagen
           style={styles.background}  //Aplicar estilos al contenedor
           resizeMode="cover"         // Ajuste de la imagen
         >
-          <TouchableOpacity
-            style={styles.openButton}
-            onPress={() => setModalVisible(true)}
-          >
-            <Text style={styles.textStyle}>Show QR</Text>
-          </TouchableOpacity>
+          <ImageBackground
+          source={require('../assets/boton.png')}  // Ruta de la imagen
+          style={styles.openButton}  //Aplicar estilos al contenedor
+          resizeMode="cover"         // Ajuste de la imagen
+        >
+            <TouchableOpacity
+              onPress={() => setModalVisible(true)}
+            >
+              <Text style={styles.textStyle}>Show QR</Text>
+            </TouchableOpacity>
+          </ImageBackground>
           <Modal
             animationType="slide"
             transparent={true}
@@ -103,9 +108,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',     // Centra el contenido horizontalmente
   },
   openButton: {
-    backgroundColor: '#F194FF',
     padding: 10,
     borderRadius: 10,
+    width:100,
   },
   textStyle: {
     color: 'white',

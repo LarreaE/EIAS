@@ -6,7 +6,7 @@ import { listenToServerEventsMortimer, clearServerEvents } from '../sockets/list
 // define la interfaz para el tipo de datos de usuario
 interface User {
   _id: string;
-  name: string;
+  nickname: string;
   is_active: boolean;
   avatar: string
 }
@@ -14,7 +14,7 @@ interface User {
 // definir tipos de datos de props
 type Props = {
   _id: string;
-  name: string;
+  nickname: string;
   is_active: boolean;
   avatar: string
 };
@@ -57,7 +57,7 @@ const MortimerLaboratoryScreen: React.FC<Props> = () => {
         {users.map((user) => (
           <AcolythCard
             key={user._id}
-            name={user.name}
+            nickname={user.nickname}
             is_active={user.is_active}
             avatar={user.avatar}
           />
