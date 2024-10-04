@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 24,
-    color: 'black',
+    color: 'white',
   },
   signOutButton: {
     justifyContent: 'center',
