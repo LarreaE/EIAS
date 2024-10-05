@@ -28,7 +28,7 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
-         release {
+        release {
             storeFile file('releasekey.keystore') // Cambia esto por el camino a tu keystore
             storePassword 'ReleaseKeyPassword123' // Contraseña de keystore
             keyAlias 'releasekey-alias' // Alias del keystore
@@ -53,13 +53,29 @@ dependencies {
     implementation project(':react-native-safe-area-context')
     implementation project(':react-native-screens')
 
-    //firebase app    
+    // Firebase dependencies using BOM
+    implementation platform('com.google.firebase:firebase-bom:32.3.1')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-perf'
+    implementation 'com.google.firebase:firebase-firestore'
+
+    // Other dependencies
     implementation project(path: ":@react-native-firebase_app")
     implementation project(path: ":@react-native-firebase_auth")
-
-    //vision
     implementation project(path: ":react-native-vision-camera")
-
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
+    implementation project(':@react-native-google-signin_google-signin')
+    implementation project(':react-native-config')
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation project(':react-native-splash-screen')
+    implementation project(':react-native-svg')
+    implementation 'com.google.mlkit:barcode-scanning:17.3.0'
+    implementation 'com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.1'
+    implementation "com.facebook.react:react-native:+"
+    implementation project(':react-native-reanimated')
+    implementation project(':react-native-pager-view')
 
     // Hermes or JavaScriptCore
     if (hermesEnabled.toBoolean()) {
@@ -67,32 +83,12 @@ dependencies {
     } else {
         implementation jscFlavor
     }
-    implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation platform('com.google.firebase:firebase-bom:32.3.1')
-    implementation 'com.google.firebase:firebase-auth' // Sin especificar versión, usa la del BOM
-    implementation 'com.google.android.gms:play-services-auth:20.7.0'
-        
-    implementation project(':@react-native-google-signin_google-signin')
-    implementation project(':react-native-config')
+}
 
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-crashlytics'
-    implementation 'com.google.firebase:firebase-perf'
-    implementation 'com.google.firebase:firebase-firestore'
-    implementation 'androidx.multidex:multidex:2.0.1' // Agrega multidex si es necesario
-    implementation project(':react-native-splash-screen')
-
-    implementation project(':react-native-svg')
-
-
-    // Use this dependency to bundle the model with your app
-    implementation 'com.google.mlkit:barcode-scanning:17.3.0'
-
-    // Use this dependency to use the dynamically downloaded model in Google Play Services
-    implementation 'com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.1'
-
-    implementation "com.facebook.react:react-native:+"
-    implementation project(':react-native-reanimated')
-
-    implementation project(':react-native-pager-view')
+afterEvaluate {
+    tasks.matching { it.name == ':@react-native-firebase_app:stripDebugDebugSymbols' }.all { stripTask ->
+        tasks.matching { it.name == ':react-native-firebase_app:copyDebugJniLibsProjectAndLocalJars' }.all { copyTask ->
+            copyTask.dependsOn(stripTask)
+        }
+    }
 }
