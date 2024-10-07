@@ -32,15 +32,17 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLoged }) => {
       resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
     >
     <View style={styles.container}>
-      <ImageBackground
+      
+        <TouchableOpacity  onPress={signOut}>
+        <ImageBackground
         source={require('../assets/boton.png')}  // Ruta de la imagen de fondo
         style={styles.signOutButton}  // Aplicar estilos al contenedor de la imagen de fondo
         resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
       >
-        <TouchableOpacity  onPress={signOut}>
             <Text style={styles.signOutText}>Sign Out</Text>
+          </ImageBackground>
         </TouchableOpacity>
-      </ImageBackground>
+      
       <View  style={styles.attrContainer}>
         <Text style={styles.text}>{role}</Text>
         <Text style={styles.text}>User name:</Text>
