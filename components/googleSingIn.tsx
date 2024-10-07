@@ -134,9 +134,9 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
       style={styles.container}
       resizeMode="cover"
     >
-      <View>
+   
         <Text style={styles.text}>Sign in with Google</Text>
-      </View>
+      
       </ImageBackground>
     </TouchableOpacity>
     

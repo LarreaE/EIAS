@@ -25,7 +25,6 @@ export const listenToServerEventsMortimer = (updatePlayers: (players: any) => vo
 export const listenToServerEventsScanAcolyte = (setIsInside: (is_active: any) => void): void => {
   socket.on('change_isInside', (data: { data: any }) => {
     console.log('Valor de is_active:', data);
-    console.log(data);
     setIsInside(data.data); // Llamamos a la función de actualización con los jugadores
   });
 };

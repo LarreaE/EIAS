@@ -82,8 +82,8 @@ const styles = StyleSheet.create({
   signOutButton: {
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'absolute',
-    top: 20,
+    position: 'relative',
+    top: -40,
     padding: 10,
     borderRadius: 5,
     width: 200,
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   },
   attributeText: {
     fontSize: 16,          // Slightly smaller for attributes
-    color: '#555',         // Darker gray for attributes
+    color: 'white',         // Darker gray for attributes
     fontStyle: 'italic',   // Adds emphasis
     marginVertical: 4,     // Space between each attribute
   },

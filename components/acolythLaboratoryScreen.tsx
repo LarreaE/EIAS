@@ -12,8 +12,12 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData:any) => {
   const [isInside, setIsInside] = useState(UserData.UserData.playerData.is_active);
   const player = UserData.UserData.playerData;
 
-  useEffect(() => {
 
+  useEffect(()=> {
+    console.log('modalVisible: ');
+    setModalVisible(false);
+  },[isInside]);
+  useEffect(() => {
     listenToServerEventsScanAcolyte(setIsInside);
 
      const updateIsInside = async () => {
@@ -33,7 +37,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData:any) => {
         })
         .then(data => {
           console.log('Server response:', data);
-
           setIsInside(data.is_active);
         })
         .catch(error => {
@@ -70,13 +73,12 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData:any) => {
               <Text style={styles.textStyle}>Show QR</Text>
               </ImageBackground>
             </TouchableOpacity>
-          
           <Modal
             animationType="slide"
             transparent={true}
             visible={modalVisible}
             onRequestClose={() => {
-              setModalVisible(!modalVisible);
+              setModalVisible(true);
             }}
           >
             <View style={styles.centeredView}>
@@ -84,7 +86,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData:any) => {
                 <QRGenerator {...UserData} />
                 <TouchableOpacity
                   style={styles.closeButton}
-                  onPress={() => setModalVisible(!modalVisible)}
+                  onPress={() => setModalVisible(false)}
                 >
                   <Text>Close</Text>
                 </TouchableOpacity>
