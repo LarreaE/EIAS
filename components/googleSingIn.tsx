@@ -128,18 +128,18 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
       resizeMode="cover"
     >
     {loading && <Spinner />}
+    <TouchableOpacity onPress={signIn} disabled={loading}>
     <ImageBackground
       source={require('../assets/boton.png')}
       style={styles.container}
       resizeMode="cover"
     >
-    
-    <TouchableOpacity onPress={signIn} disabled={loading}>
       <View>
         <Text style={styles.text}>Sign in with Google</Text>
       </View>
+      </ImageBackground>
     </TouchableOpacity>
-    </ImageBackground>
+    
   </ImageBackground>
   );
 };

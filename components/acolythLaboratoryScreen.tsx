@@ -59,17 +59,18 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData:any) => {
           style={styles.background}  //Aplicar estilos al contenedor
           resizeMode="cover"         // Ajuste de la imagen
         >
-          <ImageBackground
+            <TouchableOpacity
+              onPress={() => setModalVisible(true)}
+            >
+              <ImageBackground
           source={require('../assets/boton.png')}  // Ruta de la imagen
           style={styles.openButton}  //Aplicar estilos al contenedor
           resizeMode="cover"         // Ajuste de la imagen
         >
-            <TouchableOpacity
-              onPress={() => setModalVisible(true)}
-            >
               <Text style={styles.textStyle}>Show QR</Text>
+              </ImageBackground>
             </TouchableOpacity>
-          </ImageBackground>
+          
           <Modal
             animationType="slide"
             transparent={true}
