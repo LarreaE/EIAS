@@ -1,56 +1,79 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Dimensions } from 'react-native';
 import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-camera';
 import socket from '../sockets/socketConnection';
 
-type Props = {
-  onQRCodeScanned: () => void;
-  setIsLoged: (value: boolean) => void;
+const { width, height } = Dimensions.get('window');
+
+// Define los límites del QR directamente como constantes
+const qrBounds = {
+  x: (width - 250) / 2,  // Posición centrada horizontalmente
+  y: (height - 250) / 2, // Posición centrada verticalmente
+  width: 250,            // Tamaño del área de enfoque
+  height: 250,           // Tamaño del área de enfoque
 };
 
-const QRScanner: React.FC<Props> = ({ onQRCodeScanned }) => {
-
+const QRScanner: React.FC<{ onQRCodeScanned: (value: string) => void }> = ({ onQRCodeScanned }) => {
   const [hasPermission, setHasPermission] = useState(false);
   const cameraRef = useRef(null);
   const [scanning, setScanning] = useState(true);
 
   const device = useCameraDevice('back');
 
-   // QR Scanner hook
-   const codeScanner = useCodeScanner({
+  // QR Scanner hook
+  const codeScanner = useCodeScanner({
     codeTypes: ['qr', 'ean-13'],
     onCodeScanned: (codes) => {
-      console.log(`Scanned ${codes.length} codes`);
-      console.log(codes[0]);
-      setScanning(false); // timeout
-      sendQRScan(codes[0].value);
+      if (codes.length > 0 && scanning) {
+        const code = codes[0];
+        console.log('Escaneando:', code);
 
-      if (codes.length > 0 && onQRCodeScanned && scanning) {
-        onQRCodeScanned(codes[0].value);
+        // Obtener las coordenadas del marco del código QR
+        const frame = code.frame; // { height, width, x, y }
+        // Log de coordenadas del QR
+        console.log('Coordenadas del marco del QR:', frame);
+
+        // Verifica si el QR está dentro de los límites definidos
+        const isWithinSquare =
+          frame.x >= qrBounds.x &&
+          frame.x + frame.width <= qrBounds.x + qrBounds.width &&
+          frame.y >= qrBounds.y &&
+          frame.y + frame.height <= qrBounds.y + qrBounds.height;
+
+        console.log('Está dentro del área enfocada:', isWithinSquare);
+
+        if (isWithinSquare) {
+          console.log('QR dentro del área enfocada: ', code.value);
+          setScanning(false);
+          sendQRScan(code.value);
+          onQRCodeScanned(code.value);
+          setTimeout(() => {
+            setScanning(true);
+          }, 3000);
+        } else {
+          console.log('QR fuera del área enfocada');
+        }
       }
-      setTimeout(() => {
-        setScanning(true);
-      }, 3000);
     },
   });
 
-    // Función para enviar la solicitud POST al servidor
-    const sendQRScan = async (data:any) => {
-      const scannedEmail = data; // Cambia esto según sea necesario
-      socket.emit('scan_acolyte', { scannedEmail }); // Enviar el email al servidor
-    };
+  // Función para enviar la solicitud al servidor
+  const sendQRScan = async (data: string) => {
+    const scannedEmail = data;
+    socket.emit('scan_acolyte', { scannedEmail }); // Enviar el email al servidor
+  };
 
-  // request camera permissions
+  // Pedir permisos para la cámara
   useEffect(() => {
     const requestCameraPermission = async () => {
-        await Camera.requestCameraPermission();
-        setHasPermission(true);
+      await Camera.requestCameraPermission();
+      setHasPermission(true);
     };
 
     requestCameraPermission();
   }, []);
 
-  // permission not given
+  // Verificación de permisos
   if (!hasPermission) {
     return (
       <View style={styles.container}>
@@ -59,6 +82,7 @@ const QRScanner: React.FC<Props> = ({ onQRCodeScanned }) => {
     );
   }
 
+  // Verificación del dispositivo
   if (device == null) {
     return (
       <View style={styles.container}>
@@ -67,9 +91,7 @@ const QRScanner: React.FC<Props> = ({ onQRCodeScanned }) => {
     );
   }
 
-
-
-   // render camera
+  // Renderizar la cámara
   return (
     <View style={styles.container}>
       <Camera
@@ -79,23 +101,22 @@ const QRScanner: React.FC<Props> = ({ onQRCodeScanned }) => {
         isActive={true}
         codeScanner={scanning ? codeScanner : undefined}
       />
-       <View style={styles.overlay}>
-          {/* Top Transparent Overlay */}
-          <View style={styles.topOverlay} />
+      <View style={styles.overlay}>
+        {/* Overlay superior */}
+        <View style={styles.topOverlay} />
 
-          {/* Center Overlay with transparent square */}
-          <View style={styles.centerOverlay}>
-            <View style={styles.sideOverlay} />
-            <View style={styles.focusedSquare} />
-            <View style={styles.sideOverlay} />
-          </View>
-
-          {/* Bottom Transparent Overlay */}
-          <View style={styles.bottomOverlay} />
+        {/* Área central con el cuadro de enfoque */}
+        <View style={styles.centerOverlay}>
+          <View style={styles.sideOverlay} />
+          <View style={styles.focusedSquare} />
+          <View style={styles.sideOverlay} />
         </View>
+
+        {/* Overlay inferior */}
+        <View style={styles.bottomOverlay} />
+      </View>
     </View>
   );
-
 };
 
 const styles = StyleSheet.create({
@@ -103,7 +124,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    overflow:'hidden',
+    overflow: 'hidden',
   },
   permissionContainer: {
     flex: 1,
@@ -124,25 +145,26 @@ const styles = StyleSheet.create({
   },
   topOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Top opaque area
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Área opaca superior
   },
   centerOverlay: {
     flexDirection: 'row',
   },
   sideOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Left and right opaque areas
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Áreas opacas laterales
   },
   focusedSquare: {
-    width: 250, // Width of the square
-    height: 250, // Height of the square
+    width: 250,
+    height: 250,
     borderWidth: 2,
-    borderColor: '#8B4513', // White border for the square
-    backgroundColor: 'transparent', // Center transparent area
+    borderColor: '#8B4513', // Borde para el cuadro
+    backgroundColor: 'transparent', // Área transparente
   },
   bottomOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Bottom opaque area
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Área opaca inferior
   },
 });
+
 export default QRScanner;
