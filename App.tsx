@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, Image, Alert, Modal, TouchableOpacity, Text, View, ImageBackground } from 'react-native';
+import { SafeAreaView, StyleSheet, Image, Modal, TouchableOpacity, Text, View, ImageBackground } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'; 
@@ -58,8 +58,7 @@ function App() {
     };
   }, []);
 
-  const handleQRCodeScanned = (data: any) => {
-    Alert.alert('QR Code Scanned', `Data: ${data}`);
+  const handleQRCodeScanned = () => {
     setIsModalVisible(false); // Cerrar el modal después de escanear
   };
 
