@@ -1,4 +1,4 @@
-import { } from 'react-native';
+import { Alert } from 'react-native';
 import socket from './socketConnection';
 import { sendUserEMail } from './emitEvents.tsx';
 
