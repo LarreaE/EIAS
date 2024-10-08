@@ -16,6 +16,7 @@ interface Props {
 const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
   const [loading, setLoading] = useState(false); // Estado para el loading
   const [socketId, setSocketId] = useState<string | null>(null); // Estado para almacenar el socket ID
+  const [spinnerMessage, setSpinnerMessage] = useState('Connecting...');
 
   useEffect(() => {
     const configureGoogleSignIn = async () => {
@@ -49,7 +50,10 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
       console.log('Usuario de Google:', userInfo);
       const idToken = userInfo.data?.idToken;
       const email = userInfo.data?.user.email;
+      setSpinnerMessage('Signing in with Google...');
+
       if (!idToken) {
+        setSpinnerMessage('idToken null');
         return console.error('idtoken null');
       }
       //console.log(idToken);
@@ -57,14 +61,13 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
       const googleCredential = await auth.GoogleAuthProvider.credential(idToken);
       console.log('GOOGLE CREDENTIAL');
       //console.log(googleCredential);
-
       // Sign-in the user with the credential
       const signInWithCredential = await auth().signInWithCredential(
         googleCredential,
     );
     console.log('SIGN IN WITH CREDENTIAL');
     console.log(signInWithCredential);
-
+    setSpinnerMessage('Verifying credentials...');
     //Get the token from the current User
     const idTokenResult = await auth().currentUser?.getIdTokenResult();
     console.log('USER JWT');
@@ -80,6 +83,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
       //SAVE JWT ENCRIPTED
       setUserData(response.data);
       setIsLoged(true);
+      setSpinnerMessage('Connection established...');
     });
     } catch (error) {
       console.error(error);
@@ -127,19 +131,16 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
       style={styles.background}
       resizeMode="cover"
     >
-    {loading && <Spinner />}
+    {loading && <Spinner message={spinnerMessage} />}
     <TouchableOpacity onPress={signIn} disabled={loading}>
-    <ImageBackground
-      source={require('../assets/boton.png')}
-      style={styles.container}
-      resizeMode="cover"
-    >
-   
+      <ImageBackground
+        source={require('../assets/boton.png')}
+        style={styles.container}
+        resizeMode="cover"
+      >
         <Text style={styles.text}>Sign in with Google</Text>
-      
       </ImageBackground>
     </TouchableOpacity>
-    
   </ImageBackground>
   );
 };
