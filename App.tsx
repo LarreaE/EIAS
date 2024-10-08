@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, Image, Alert, Modal, TouchableOpacity, Text, View, ImageBackground } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
