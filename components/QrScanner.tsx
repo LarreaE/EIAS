@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Vibration } from 'react-native';
 import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-camera';
 import socket from '../sockets/socketConnection';
 
@@ -13,6 +13,7 @@ const QRScanner: React.FC<Props> = ({ onQRCodeScanned }) => {
   const [hasPermission, setHasPermission] = useState(false);
   const cameraRef = useRef(null);
   const [scanning, setScanning] = useState(true);
+  const vibrationDuration = 1000;
 
   const device = useCameraDevice('back');
 
@@ -27,6 +28,7 @@ const QRScanner: React.FC<Props> = ({ onQRCodeScanned }) => {
 
       if (codes.length > 0 && onQRCodeScanned && scanning) {
         onQRCodeScanned(codes[0].value);
+        Vibration.vibrate(vibrationDuration);
       }
       setTimeout(() => {
         setScanning(true);
@@ -77,7 +79,8 @@ const QRScanner: React.FC<Props> = ({ onQRCodeScanned }) => {
         style={styles.camera}
         device={device}
         isActive={true}
-        codeScanner={scanning ? codeScanner : undefined}
+        codeScanner={scanning ? codeScanner : undefined}        
+
       />
        <View style={styles.overlay}>
           {/* Top Transparent Overlay */}

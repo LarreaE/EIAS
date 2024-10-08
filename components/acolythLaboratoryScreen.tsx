@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import QRGenerator from './QrGenerator.tsx';
-import { ImageBackground, Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ImageBackground, Modal, StyleSheet, TouchableOpacity, View, Vibration } from 'react-native';
 import { Text } from 'react-native';
 import { clearServerEvents, listenToServerEventsScanAcolyte } from '../sockets/listenEvents.tsx';
 
@@ -11,6 +11,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData:any) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isInside, setIsInside] = useState(UserData.UserData.playerData.is_active);
   const player = UserData.UserData.playerData;
+  const vibrationDuration = 1000;
 
 
   useEffect(()=> {
@@ -83,7 +84,8 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData:any) => {
           >
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
-                <QRGenerator {...UserData} />
+                <QRGenerator {...UserData}
+                 onCodeScanned = {() => Vibration.vibrate(1 * vibrationDuration)} />
                 <TouchableOpacity
                   style={styles.closeButton}
                   onPress={() => setModalVisible(false)}
@@ -95,7 +97,8 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData:any) => {
           </Modal>
         </ImageBackground>
       ) : (
-        <QRGenerator {...UserData} />
+        <QRGenerator {...UserData}
+        onCodeScanned = {() => Vibration.vibrate(1 * vibrationDuration)} />
       )}
     </View>
   );
