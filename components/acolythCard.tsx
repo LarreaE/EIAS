@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Image, View, Text, TouchableOpacity, StyleSheet, ImageBackground, Alert } from 'react-native';
+import { Image, View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { RootStackParamList } from '../types/types';
 import io from 'socket.io-client';
