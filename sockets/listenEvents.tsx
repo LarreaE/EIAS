@@ -25,11 +25,8 @@ export const listenToServerEventsMortimer = (updatePlayers: (players: any) => vo
 export const listenToServerEventsScanAcolyte = (setIsInside: (is_active: any) => void): void => {
   socket.on('change_isInside', (data: { data: any }) => {
     console.log('Valor de is_active:', data);
+    Vibration.vibrate(1000); 
     setIsInside(data.data); // Llamamos a la función de actualización con los jugadores
-  });
-
-  socket.on('qr_scanned', (data: { message: string, is_active: boolean }) => {
-    Vibration.vibrate(1000);  // Vibrar por 1 segundo
   });
 };
 
