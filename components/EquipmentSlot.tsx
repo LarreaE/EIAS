@@ -8,10 +8,13 @@ interface Slot {
 
 const EquipmentSlot: React.FC<Slot> = ({imagePath , size}) => {
 
+    console.log(imagePath);
     return (
         <View style={[styles.container, { width: size, height: size }]}>
             <Image
-            source={imagePath}  // Ruta de la imagen de fondo
+            source={{
+                uri: imagePath,
+            }}  // Ruta de la imagen de fondo
             resizeMode="cover"
             style={styles.image}
             />
@@ -23,7 +26,7 @@ const EquipmentSlot: React.FC<Slot> = ({imagePath , size}) => {
 const styles = StyleSheet.create({
     container: {
       borderWidth: 2,
-      borderColor: 'yellow',
+      borderColor: 'rgb(205, 168, 130)',
       backgroundColor: 'transparent',
       justifyContent: 'center',
       alignItems: 'center',
@@ -32,6 +35,7 @@ const styles = StyleSheet.create({
     image: {
       width: '100%',
       height: '100%',
+      color: 'black',
     },
   });
 
