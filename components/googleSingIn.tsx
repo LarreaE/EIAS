@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert, ImageBackground } from 'react-native';
 import Spinner from './Spinner'; // Importa el Spinner
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
@@ -6,18 +6,18 @@ import Config from 'react-native-config';
 import auth from '@react-native-firebase/auth';
 import axios from 'axios';
 import socket from '../sockets/socketConnection';
+import { UserContext } from '../context/UserContext'; // Importa el contexto
 
 
 interface Props {
   setIsLoged: React.Dispatch<React.SetStateAction<boolean>>;
-  setUserData: React.Dispatch<React.SetStateAction<any>>;
 }
 
-const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged,setUserData }) => {
+const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
   const [loading, setLoading] = useState(false); // Estado para el loading
   const [socketId, setSocketId] = useState<string | null>(null); // Estado para almacenar el socket ID
   const [spinnerMessage, setSpinnerMessage] = useState('Connecting...');
-
+  const { setUserData } = useContext(UserContext);
   useEffect(() => {
     const configureGoogleSignIn = async () => {
       await GoogleSignin.configure({
