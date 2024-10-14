@@ -15,6 +15,9 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
+    <!--vibration permisions-->
+    <uses-permission-sdk-23 android:name="android.permission.VIBRATE"/>
+
 
     <application
         android:name=".MainApplication"

@@ -1,4 +1,4 @@
-import { Alert } from 'react-native';
+import { Alert, Vibration } from 'react-native';
 import socket from './socketConnection';
 import { sendUserEMail } from './emitEvents.tsx';
 
@@ -25,6 +25,7 @@ export const listenToServerEventsMortimer = (updatePlayers: (players: any) => vo
 export const listenToServerEventsScanAcolyte = (setIsInside: (is_active: any) => void): void => {
   socket.on('change_isInside', (data: { data: any }) => {
     console.log('Valor de is_active:', data);
+    Vibration.vibrate(1000); 
     setIsInside(data.data); // Llamamos a la función de actualización con los jugadores
   });
 };
@@ -36,4 +37,5 @@ export const clearServerEvents = (): void => {
   socket.off('alert');
   socket.off('all_players');
   socket.off('change_isInside');
+  socket.off('qr_scanned'); 
 };
