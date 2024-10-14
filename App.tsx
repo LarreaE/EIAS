@@ -17,6 +17,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { listenToServerEvents, clearServerEvents } from './sockets/listenEvents';
 import socket from './sockets/socketConnection';
 import { sendUserEMail } from './sockets/emitEvents.tsx';
+import AcolythEquipmentScreen from './screens/AcolythEquipmentScreen.tsx';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -227,6 +228,17 @@ function App() {
               }}
             >
               {props => <AcolythHomeScreen {...props} />}
+            </Tab.Screen>
+            <Tab.Screen
+              name="EquipmentAcolyth"
+              options={{
+                tabBarLabel: '',
+                tabBarIcon: () => (
+                  <Image source={require('./assets/home_icon.png')} style={styles.icon} />
+                ),
+              }}
+            >
+              {props => <AcolythEquipmentScreen {...props} />}
             </Tab.Screen>
             <Tab.Screen
               name="LaboratoryAcolyth"
