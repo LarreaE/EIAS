@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, Image, Alert, Modal, TouchableOpacity, Text, View, ImageBackground } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'; 
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import GoogleSignInComponent from './components/googleSingIn.tsx';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
