@@ -238,7 +238,7 @@ function App() {
                 ),
               }}
             >
-              {props => <AcolythEquipmentScreen {...props} />}
+              {props => <AcolythEquipmentScreen {...props} user={UserData} />}
             </Tab.Screen>
             <Tab.Screen
               name="LaboratoryAcolyth"

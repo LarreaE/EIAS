@@ -1,26 +1,38 @@
-import { Text, View, Image } from "react-native";
+import React from "react";
+import { Text, View, Image, StyleSheet } from "react-native";
 
 interface Slot {
     imagePath: String;
-    height: number;
-    width: number;
-    postionX: number;
-    positionY: number;
+    size: number;
 }
 
-const EquipmentSlot: React.FC<Slot> = ({imagePath}) => {
+const EquipmentSlot: React.FC<Slot> = ({imagePath , size}) => {
 
     return (
-        <View>
+        <View style={[styles.container, { width: size, height: size }]}>
             <Image
             source={imagePath}  // Ruta de la imagen de fondo
-            resizeMode="cover"     
-            >
-                
-            </Image>
+            resizeMode="cover"
+            style={styles.image}
+            />
         </View>
     );
 
 };
+
+const styles = StyleSheet.create({
+    container: {
+      borderWidth: 2,
+      borderColor: 'yellow',
+      backgroundColor: 'transparent',
+      justifyContent: 'center',
+      alignItems: 'center',
+      overflow: 'hidden', // Ensure the image doesn't overflow the border
+    },
+    image: {
+      width: '100%',
+      height: '100%',
+    },
+  });
 
 export default EquipmentSlot;
