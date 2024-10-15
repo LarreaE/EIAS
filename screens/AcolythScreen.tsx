@@ -33,18 +33,23 @@ const AcolythScreen: React.FC<Props> = ({user}) => {
 
   return (
         <Stack.Navigator
-        initialRouteName="AcolythStats"
+        initialRouteName="AcolythEquipment"
         >
           <>
           <Stack.Screen
-            name="AcolythEquipment"
+            name="Equipment"
           >
             {props => <EquipmentScreen {...props} user={user} />}
           </Stack.Screen>
           <Stack.Screen
-            name="AcolythStats"
+            name="Stats"
           >
             {props => <StatsScreen {...props} user={user} />}
+          </Stack.Screen>
+          <Stack.Screen
+            name="Inventory"
+          >
+            {props => <InventoryScreen {...props} user={user} />}
           </Stack.Screen>
           </>
         </Stack.Navigator>

@@ -251,7 +251,7 @@ console.log(UserData);
               {props => <AcolythHomeScreen {...props} />}
             </Tab.Screen>
             <Tab.Screen
-              name="EquipmentAcolyth"
+              name="Info"
               options={{
                 tabBarLabel: '',
                 tabBarIcon: () => (
