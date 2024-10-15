@@ -11,16 +11,16 @@ const EquipmentScreen: React.FC<Props> = ({ user }) => {
 
     // Sample data for images (you can replace this with dynamic data)
     const elements = [
-      { id: 1, url: `https://kaotika.vercel.app${player.equipment.weapon.image}` },
-      { id: 2, url: `https://kaotika.vercel.app${player.equipment.artifact.image}` },
-      { id: 3, url: `https://kaotika.vercel.app${player.equipment.healing_potion.image}` },
-      { id: 4, url: `https://kaotika.vercel.app${player.equipment.helmet.image}` },
-      { id: 5, url: `https://kaotika.vercel.app${player.equipment.armor.image}` },
-      { id: 6, url: `https://kaotika.vercel.app${player.equipment.boot.image}` },
-      { id: 7, url: `https://kaotika.vercel.app${player.equipment.antidote_potion.image}` },
-      { id: 8, url: `https://kaotika.vercel.app${player.equipment.shield.image}` },
-      { id: 9, url: `https://kaotika.vercel.app${player.equipment.ring.image}` },
-      { id: 10, url: `https://kaotika.vercel.app${player.equipment.enhancer_potion.image}` },
+      { id: 1, url: `${player.equipment.weapon.image}` },
+      { id: 2, url: `${player.equipment.artifact.image}` },
+      { id: 3, url: `${player.equipment.healing_potion.image}` },
+      { id: 4, url: `${player.equipment.helmet.image}` },
+      { id: 5, url: `${player.equipment.armor.image}` },
+      { id: 6, url: `${player.equipment.boot.image}` },
+      { id: 7, url: `${player.equipment.antidote_potion.image}` },
+      { id: 8, url: `${player.equipment.shield.image}` },
+      { id: 9, url: `${player.equipment.ring.image}` },
+      { id: 10, url: `${player.equipment.enhancer_potion.image}` },
     ];
 
     return (

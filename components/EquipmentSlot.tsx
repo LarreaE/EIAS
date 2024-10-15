@@ -13,7 +13,7 @@ const EquipmentSlot: React.FC<Slot> = ({imagePath , size}) => {
           {imagePath ? (
             <Image
             source={{
-                uri: imagePath,
+                uri: `https://kaotika.vercel.app${imagePath}`,
             }}  // Ruta de la imagen de fondo
             resizeMode="cover"
             style={styles.image}

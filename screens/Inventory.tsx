@@ -6,17 +6,31 @@ type Props = {
   user: any;
 };
 
+const createInvetory = (inventory:any) => {
+    let newInventory = [];
+    for (const key in inventory) {
+        for (let i = 0; i < inventory[key].length; i++) {
+            newInventory.push(inventory[key][i]);
+        }
+    }
+    return newInventory;
+};
+
 const Inventory: React.FC<Props> = ({user}) => {
     const player = user?.playerData || 'No player available';
     const inventory = player.inventory;
     console.log(inventory);
-
-    const slots = Array.from({length: 64});
-
+    const newInventory = createInvetory(inventory);
+    const slots = Array.from({length: 88});
+    slots.length -= newInventory.length;
+    console.log(newInventory[0]);
     return (
     <View style={styles.container}>
+        {newInventory.map((_,index) => (
+        <EquipmentSlot imagePath={ `${newInventory[index].image}` } size={45} />
+      ))}
       {slots.map(() => (
-        <EquipmentSlot imagePath={ null } size={70} />
+        <EquipmentSlot imagePath={ null } size={45} />
       ))}
     </View>
     );
