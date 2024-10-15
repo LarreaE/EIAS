@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet, Text, SafeAreaView, Image } from 'react-native';
 import EquipmentScreen from './Equipment';
 import { createStackNavigator } from '@react-navigation/stack';
 import StatsScreen from './Stats';
+import Inventory from './Inventory';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 type Props = {
   user: any;
@@ -10,49 +11,40 @@ type Props = {
 
 const screenOptions = {
   tabBarStyle: {
-    backgroundColor: 'transparent',
-    borderTopWidth: 0,
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    paddingBottom: 0,
-    height: 80,
-    elevation: 0,
+    backgroundColor: 'blue',
+    position: 'relative',
   },
-  headerShown: false,
-  swipeEnabled: true,
-  tabBarScrollEnabled: false,
-  shadowOpacity: 0,
-  shadowRadius: 0,
+  headerShown: true,
+  swipeEnabled: false,
 };
 
-const Stack = createStackNavigator();
+const TopTab = createMaterialTopTabNavigator();
 
 const AcolythScreen: React.FC<Props> = ({user}) => {
 
   return (
-        <Stack.Navigator
+        <TopTab.Navigator
         initialRouteName="AcolythEquipment"
+        screenOptions={screenOptions}
         >
           <>
-          <Stack.Screen
+          <TopTab.Screen
             name="Equipment"
           >
             {props => <EquipmentScreen {...props} user={user} />}
-          </Stack.Screen>
-          <Stack.Screen
+          </TopTab.Screen>
+          <TopTab.Screen
             name="Stats"
           >
             {props => <StatsScreen {...props} user={user} />}
-          </Stack.Screen>
-          <Stack.Screen
+          </TopTab.Screen>
+          <TopTab.Screen
             name="Inventory"
           >
-            {props => <InventoryScreen {...props} user={user} />}
-          </Stack.Screen>
+            {props => <Inventory {...props} user={user} />}
+          </TopTab.Screen>
           </>
-        </Stack.Navigator>
+        </TopTab.Navigator>
   );
 };
 
