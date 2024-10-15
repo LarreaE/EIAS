@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet, Text, SafeAreaView, Image } from 'react-native';
-import EquipmentScreen from './EquipmentScreen';
+import EquipmentScreen from './Equipment';
 import { createStackNavigator } from '@react-navigation/stack';
-import StatsScreen from './StatsScreen';
+import StatsScreen from './Stats';
 
 type Props = {
   user: any;

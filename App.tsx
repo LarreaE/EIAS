@@ -19,7 +19,7 @@ import socket from './sockets/socketConnection';
 import { sendUserEMail } from './sockets/emitEvents.tsx';
 import { UserProvider } from './context/UserContext'; // Importa el proveedor
 import { UserContext } from './context/UserContext'; // Importa el contexto
-import AcolythScreen from './screens/AcolythScreen.tsx';
+import AcolythScreen from './screens/Info.tsx';
 
 const Tab = createMaterialTopTabNavigator();
 
