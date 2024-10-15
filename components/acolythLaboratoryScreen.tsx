@@ -3,6 +3,7 @@ import QRGenerator from './QrGenerator.tsx';
 import { ImageBackground, Modal, StyleSheet, TouchableOpacity, View, Vibration } from 'react-native';
 import { Text } from 'react-native';
 import { clearServerEvents, listenToServerEventsScanAcolyte } from '../sockets/listenEvents.tsx';
+import IngredientSelector from './ingredientSelector.tsx';
 
 type Props = {UserData:any};
 
@@ -57,6 +58,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData:any) => {
 
   return (
     <View style={styles.container}>
+    <IngredientSelector />
       {isInside ? (
         <ImageBackground
           source={require('../assets/laboratory.png')}  // Ruta de la imagen
