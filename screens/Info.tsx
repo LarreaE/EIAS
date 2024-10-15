@@ -15,7 +15,7 @@ const screenOptions = {
     position: 'relative',
   },
   headerShown: true,
-  swipeEnabled: false,
+  swipeEnabled: true,
 };
 
 const TopTab = createMaterialTopTabNavigator();

@@ -25,32 +25,31 @@ const EquipmentScreen: React.FC<Props> = ({user}) => {
 
     return (
         <View>
-        <View style={styles.content}>
-              <Text style={styles.text}>Class</Text>
-              <Text style={styles.text}>Lvl</Text>
+            <View style={styles.content}>
+              <Text style={styles.text}>Class: {player.profile.name}      </Text>
+              <Text style={styles.text}>Level: {player.level}</Text>
             </View>
               <View style={styles.column}>
               <EquipmentSlot imagePath={elements[0].url} size={70} />
-              <EquipmentSlot imagePath={elements[1].url} size={70}/>
+              <EquipmentSlot imagePath={elements[3].url} size={70}/>
               <EquipmentSlot imagePath={elements[2].url} size={70}/>
             </View>
 
             <View style={styles.column}>
-              <EquipmentSlot imagePath={elements[3].url} size={70} />
+              <EquipmentSlot imagePath={elements[1].url} size={70} />
               <EquipmentSlot imagePath={elements[4].url} size={70}/>
-              <EquipmentSlot imagePath={elements[5].url} size={70}/>
+              <EquipmentSlot imagePath={elements[8].url} size={70}/>
               <EquipmentSlot imagePath={elements[6].url} size={70}/>
             </View>
 
             <View style={styles.column}>
               <EquipmentSlot imagePath={elements[7].url} size={70}/>
-              <EquipmentSlot imagePath={elements[8].url} size={70}/>
+              <EquipmentSlot imagePath={elements[5].url} size={70}/>
               <EquipmentSlot imagePath={elements[9].url} size={70}/>
             </View>
             <View style={styles.content}>
-              <Text style={styles.text}>Exp</Text>
-              <Text style={styles.text}>Exp to next Lvl</Text>
-              <Text style={styles.text}>Gold</Text>
+              <Text style={styles.text}>Exp: {player.experience}        </Text>
+              <Text style={styles.text}>Gold: {player.gold}</Text>
             </View>
         </View>
     );
@@ -59,33 +58,33 @@ const EquipmentScreen: React.FC<Props> = ({user}) => {
 const styles = StyleSheet.create({
     container: {
       backgroundColor: '#1a202c',
-      flexDirection: 'row', // Display columns side by side
       justifyContent: 'space-evenly', // Even spacing between columns
-      paddingVertical: 140,
       alignItems: 'center',
       flex: 1,
     },
     column: {
-      flexDirection: 'column', // Stack elements vertically
+      flexDirection: 'row', // Stack elements vertically
       justifyContent: 'space-between', // Space between items
       alignItems: 'center', // Center each column
+      margin: 15,
       marginHorizontal: 10, // Space between columns
       position: 'relative',
-      backgroundColor: 'gray',
     },
     content: {
-      width: '30%',
-      backgroundColor: 'lightyellow',
+      flexDirection: 'row',
+      width: '100%',
       justifyContent: 'center',
       alignItems: 'center',
-      height: '10%',
+      height: '18%',
       position: 'relative',
+      display: 'flex',
+      textAlign: 'left',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
     },
     text: {
       color: 'rgba(253, 224, 71, 0.7)',
     },
     item: {
-      backgroundColor: 'lightblue',
       padding: 0,
       borderRadius: 10,
       marginVertical: 10,

@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet } from "react-native";
 
 interface Slot {
     imagePath: String;
@@ -27,10 +27,11 @@ const styles = StyleSheet.create({
     container: {
       borderWidth: 2,
       borderColor: 'rgb(205, 168, 130)',
-      backgroundColor: 'transparent',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
       justifyContent: 'center',
       alignItems: 'center',
       overflow: 'hidden', // Ensure the image doesn't overflow the border
+
     },
     image: {
       width: '100%',
