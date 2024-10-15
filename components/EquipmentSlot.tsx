@@ -2,18 +2,18 @@ import React from "react";
 import { View, Image, StyleSheet } from "react-native";
 
 interface Slot {
-    imagePath: String | null;
+    item: any | null;
     size: number;
 }
 
-const EquipmentSlot: React.FC<Slot> = ({imagePath , size}) => {
+const EquipmentSlot: React.FC<Slot> = ({item , size}) => {
 
   return (
         <View style={[styles.container, { width: size, height: size }]}>
-          {imagePath ? (
+          {item ? (
             <Image
             source={{
-                uri: `https://kaotika.vercel.app${imagePath}`,
+                uri: `https://kaotika.vercel.app${item.image}`,
             }}  // Ruta de la imagen de fondo
             resizeMode="cover"
             style={styles.image}

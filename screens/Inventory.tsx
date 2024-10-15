@@ -27,10 +27,10 @@ const Inventory: React.FC<Props> = ({user}) => {
     return (
     <View style={styles.container}>
         {newInventory.map((_,index) => (
-        <EquipmentSlot imagePath={ `${newInventory[index].image}` } size={45} />
+        <EquipmentSlot item={ newInventory[index] } size={45} />
       ))}
       {slots.map(() => (
-        <EquipmentSlot imagePath={ null } size={45} />
+        <EquipmentSlot item={ null } size={45} />
       ))}
     </View>
     );
