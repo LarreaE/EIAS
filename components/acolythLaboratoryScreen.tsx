@@ -12,6 +12,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isInside, setIsInside] = useState(UserData.UserData.playerData.is_active);
   const [ingredients, setIngredients] = useState([]);
+  const [potions, setPotions] = useState([]);
   const player = UserData.UserData.playerData;
   const vibrationDuration = 250;
 
@@ -24,28 +25,54 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
     const fetchIngredients = async () => {
       try {
         console.log('Fetching ingredients...');
-        const response = await fetch('https://eiasserver.onrender.com/get-ingredients');
+        const response = await fetch('https://eiasserver.onrender.com/ingredients');
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
           const data = await response.json();
-          console.log('Respuesta del servidor (JSON):', data);
+          
           if (data.success === true && Array.isArray(data.ingredientsData) && data.ingredientsData.length > 0) {
-            setIngredients(data.ingredientsData);
-            console.log('Ingredientes obtenidos:', data.ingredientsData);
+            setIngredients(data.ingredientsData);            
           } else {
-            console.error('No se encontraron ingredientes o el estado no es OK.');
+            console.error('No ingredients found or status is not OK.');
           }
         } else {
           const text = await response.text();
-          console.error('Respuesta no es JSON:', text);
+          console.error('Response is not JSON:', text);
         }
       } catch (error) {
-        console.error('Error al obtener los ingredientes:', error);
+        console.error('Error getting ingredients:', error);
       }
     };
     fetchIngredients();
   }, []);
-
+  
+  useEffect(() => {
+    const fetchPotions = async () => {
+      try {
+        console.log('Fetching potions...');
+        const response = await fetch('https://eiasserver.onrender.com/potions');
+        const contentType = response.headers.get('content-type');
+  
+        if (contentType && contentType.includes('application/json')) {
+          const data = await response.json();
+          
+          if (data.success === true && Array.isArray(data.potionsData) && data.potionsData.length > 0) {
+            setIngredients(data.potionsData);
+            console.log('Getted potions:', data.potionsData[31]);
+          } else {
+            console.error('No potions found or status is not OK.');
+          }
+        } else {
+          const text = await response.text();
+          console.error('Response is not JSON:', text);
+        }
+      } catch (error) {
+        console.error('Error getting potions:', error);
+      }
+    };
+  
+    fetchPotions();
+  }, []);
 
   useEffect(() => {
     listenToServerEventsScanAcolyte(setIsInside);
