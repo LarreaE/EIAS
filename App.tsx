@@ -27,6 +27,7 @@ function App() {
   const [isLoged, setIsLoged] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
+
   return (
     <UserProvider>
       <AppContent
