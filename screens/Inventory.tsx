@@ -10,7 +10,7 @@ const Inventory: React.FC<Props> = ({user}) => {
     const player = user?.playerData || 'No player available';
     const inventory = player.inventory;
     console.log(inventory);
-    
+
 
     return (
         <View style={styles.container}>

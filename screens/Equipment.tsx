@@ -38,18 +38,18 @@ const EquipmentScreen: React.FC<Props> = ({ user }) => {
             <View style={styles.equipmentContainer}>
                 <View style={styles.column}>
                   <EquipmentSlot imagePath={elements[0].url} size={70} />
-                  <EquipmentSlot imagePath={elements[3].url} size={70} />
+                  <EquipmentSlot imagePath={elements[1].url} size={70} />
                   <EquipmentSlot imagePath={elements[2].url} size={70} />
                 </View>
                 <View style={styles.column}>
-                  <EquipmentSlot imagePath={elements[1].url} size={70} />
+                  <EquipmentSlot imagePath={elements[3].url} size={70} />
                   <EquipmentSlot imagePath={elements[4].url} size={70} />
-                  <EquipmentSlot imagePath={elements[8].url} size={70} />
+                  <EquipmentSlot imagePath={elements[5].url} size={70} />
                   <EquipmentSlot imagePath={elements[6].url} size={70} />
                 </View>
                 <View style={styles.column}>
                   <EquipmentSlot imagePath={elements[7].url} size={70} />
-                  <EquipmentSlot imagePath={elements[5].url} size={70} />
+                  <EquipmentSlot imagePath={elements[8].url} size={70} />
                   <EquipmentSlot imagePath={elements[9].url} size={70} />
                 </View>
             </View>
