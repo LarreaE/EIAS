@@ -9,4 +9,6 @@ export type RootStackParamList = {
     ProfileVillain: undefined;
     Settings: undefined;
     EquipmentAcolyth: undefined;
+    AcolythEquipment: undefined;
+    AcolythStats: undefined;
   };
