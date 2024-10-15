@@ -41,7 +41,6 @@ const MapScreen: React.FC = () => {
           />
         </View>
 
-
       </ImageBackground>
     </GestureHandlerRootView>
   );
