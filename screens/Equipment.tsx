@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet, Text, SafeAreaView, Image } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import EquipmentSlot from '../components/EquipmentSlot';
 
 type Props = {
@@ -24,31 +24,46 @@ const EquipmentScreen: React.FC<Props> = ({user}) => {
     ];
 
     return (
-        <View>
-            <View style={styles.content}>
-              <Text style={styles.text}>Class: {player.profile.name}      </Text>
+        <View style={styles.container}>
+            {/* Class - Top Left */}
+            <View style={styles.classContainer}>
+              <Text style={styles.text}>Class: {player.profile.name}</Text>
+            </View>
+            
+            {/* Level - Top Right */}
+            <View style={styles.levelContainer}>
               <Text style={styles.text}>Level: {player.level}</Text>
             </View>
-              <View style={styles.column}>
-              <EquipmentSlot imagePath={elements[0].url} size={70} />
-              <EquipmentSlot imagePath={elements[3].url} size={70}/>
-              <EquipmentSlot imagePath={elements[2].url} size={70}/>
+
+            {/* Equipment columns */}
+            <View style={styles.equipmentContainer}>
+                <View style={styles.column}>
+                  <EquipmentSlot imagePath={elements[0].url} size={70} />
+                  <EquipmentSlot imagePath={elements[1].url} size={70}/>
+                  <EquipmentSlot imagePath={elements[2].url} size={70}/>
+                </View>
+
+                <View style={styles.column}>
+                  <EquipmentSlot imagePath={elements[3].url} size={70} />
+                  <EquipmentSlot imagePath={elements[4].url} size={70}/>
+                  <EquipmentSlot imagePath={elements[5].url} size={70}/>
+                  <EquipmentSlot imagePath={elements[6].url} size={70}/>
+                </View>
+
+                <View style={styles.column}>
+                  <EquipmentSlot imagePath={elements[7].url} size={70}/>
+                  <EquipmentSlot imagePath={elements[8].url} size={70}/>
+                  <EquipmentSlot imagePath={elements[9].url} size={70}/>
+                </View>
             </View>
 
-            <View style={styles.column}>
-              <EquipmentSlot imagePath={elements[1].url} size={70} />
-              <EquipmentSlot imagePath={elements[4].url} size={70}/>
-              <EquipmentSlot imagePath={elements[8].url} size={70}/>
-              <EquipmentSlot imagePath={elements[6].url} size={70}/>
+            {/* Exp - Bottom Left */}
+            <View style={styles.expContainer}>
+              <Text style={styles.text}>Exp: {player.experience}</Text>
             </View>
 
-            <View style={styles.column}>
-              <EquipmentSlot imagePath={elements[7].url} size={70}/>
-              <EquipmentSlot imagePath={elements[5].url} size={70}/>
-              <EquipmentSlot imagePath={elements[9].url} size={70}/>
-            </View>
-            <View style={styles.content}>
-              <Text style={styles.text}>Exp: {player.experience}        </Text>
+            {/* Gold - Bottom Right */}
+            <View style={styles.goldContainer}>
               <Text style={styles.text}>Gold: {player.gold}</Text>
             </View>
         </View>
@@ -57,40 +72,51 @@ const EquipmentScreen: React.FC<Props> = ({user}) => {
 
 const styles = StyleSheet.create({
     container: {
-      backgroundColor: '#1a202c',
-      justifyContent: 'space-evenly', // Even spacing between columns
-      alignItems: 'center',
       flex: 1,
-    },
-    column: {
-      flexDirection: 'row', // Stack elements vertically
-      justifyContent: 'space-between', // Space between items
-      alignItems: 'center', // Center each column
-      margin: 15,
-      marginHorizontal: 10, // Space between columns
-      position: 'relative',
-    },
-    content: {
-      flexDirection: 'row',
-      width: '100%',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '18%',
-      position: 'relative',
-      display: 'flex',
-      textAlign: 'left',
       backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      position: 'relative', // Allows the use of absolute positioning for child components
+    },
+    // Class at top-left
+    classContainer: {
+      position: 'absolute',
+      top: 10,
+      left: 10,
+    },
+    // Level at top-right
+    levelContainer: {
+      position: 'absolute',
+      top: 10,
+      right: 10,
+    },
+    // Exp at bottom-left
+    expContainer: {
+      position: 'absolute',
+      bottom: 10,
+      left: 10,
+    },
+    // Gold at bottom-right
+    goldContainer: {
+      position: 'absolute',
+      bottom: 10,
+      right: 10,
     },
     text: {
       color: 'rgba(253, 224, 71, 0.7)',
     },
-    item: {
-      padding: 0,
-      borderRadius: 10,
-      marginVertical: 10,
-      justifyContent: 'center',
+    equipmentContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-evenly', // Even space between columns
       alignItems: 'center',
+      flex: 1, // Ensures the equipment columns take up the available space
+      paddingTop: 50, // Adds space to avoid overlapping with top info
+      paddingBottom: 50, // Adds space to avoid overlapping with bottom info
+    },
+    column: {
+      flexDirection: 'column', // Stack elements vertically
+      justifyContent: 'space-between', // Space between items vertically
+      alignItems: 'center',
+      marginHorizontal: 10,
     },
   });
 
-  export default EquipmentScreen
+export default EquipmentScreen;
