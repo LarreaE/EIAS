@@ -8,50 +8,68 @@ type Props = {
 
 const Inventory: React.FC<Props> = ({user}) => {
     const player = user?.playerData || 'No player available';
-
+    const inventory = player.inventory;
+    console.log(inventory);
+    
 
     return (
-        <View>
-            <Text>Inventory</Text>
+        <View style={styles.container}>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-      backgroundColor: '#1a202c',
-      flexDirection: 'row', // Display columns side by side
-      justifyContent: 'space-evenly', // Even spacing between columns
-      paddingVertical: 140,
-      alignItems: 'center',
       flex: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      position: 'relative', 
     },
-    column: {
-      flexDirection: 'column', // Stack elements vertically
-      justifyContent: 'space-between', // Space between items
-      alignItems: 'center', // Center each column
-      marginHorizontal: 10, // Space between columns
-      position: 'relative',
-      backgroundColor: 'gray',
+    classContainer: {
+      position: 'absolute',
+      top: 10,
+      left: 10,
     },
-    content: {
-      width: '30%',
-      backgroundColor: 'lightyellow',
-      justifyContent: 'center',
+    levelContainer: {
+      position: 'absolute',
+      top: 10,
+      right: 10,
+    },
+    expContainer: {
+      position: 'absolute',
+      bottom: 100,
+      left: 10,
+    },
+    goldContainer: {
+      position: 'absolute',
+      bottom: 100,
+      right: 10,
+    },
+    cornerSquare: {
+      backgroundColor: 'transparent',
+      borderWidth: 2,
+      borderColor: 'rgba(253, 224, 71, 1)',
+      padding: 10,
+      borderRadius: 5,
+      minWidth: 100,
       alignItems: 'center',
-      height: '10%',
-      position: 'relative',
     },
     text: {
-      color: 'rgba(253, 224, 71, 0.7)',
+      color: 'black',
+      fontWeight: 'bold',
     },
-    item: {
-      backgroundColor: 'lightblue',
-      padding: 0,
-      borderRadius: 10,
-      marginVertical: 10,
-      justifyContent: 'center',
+    equipmentContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-evenly',
       alignItems: 'center',
+      flex: 1,
+      paddingTop: 50,
+      paddingBottom: 50,
+    },
+    column: {
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginHorizontal: 10,
     },
   });
 
