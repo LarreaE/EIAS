@@ -31,7 +31,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
           const data = await response.json();
           
           if (data.success === true && Array.isArray(data.ingredientsData) && data.ingredientsData.length > 0) {
-            setIngredients(data.ingredientsData);
+            setIngredients(data.ingredientsData);            
           } else {
             console.error('No ingredients found or status is not OK.');
           }
@@ -59,7 +59,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
           
           if (data.success === true && Array.isArray(data.potionsData) && data.potionsData.length > 0) {
             setIngredients(data.potionsData);
-            console.log('Ingredientes obtenidos:', data.potionsData);
+            console.log('Getted potions:', data.potionsData[31]);
           } else {
             console.error('No potions found or status is not OK.');
           }
