@@ -20,6 +20,7 @@ import { sendUserEMail } from './sockets/emitEvents.tsx';
 import { UserProvider } from './context/UserContext'; // Importa el proveedor
 import { UserContext } from './context/UserContext'; // Importa el contexto
 import AcolythScreen from './screens/Info.tsx';
+import MapScreen from './screens/Map.tsx';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -240,6 +241,7 @@ console.log(UserData);
             >
               {props => <ProfileScreen {...props} user={UserData} setIsLoged={setIsLoged} />}
             </Tab.Screen>
+
             <Tab.Screen
               name="HomeAcolyth"
               options={{
@@ -251,6 +253,7 @@ console.log(UserData);
             >
               {props => <AcolythHomeScreen {...props} />}
             </Tab.Screen>
+
             <Tab.Screen
               name="Info"
               options={{
@@ -262,6 +265,7 @@ console.log(UserData);
             >
               {props => <AcolythScreen {...props} user={UserData} />}
             </Tab.Screen>
+
             <Tab.Screen
               name="LaboratoryAcolyth"
               options={{
@@ -273,6 +277,19 @@ console.log(UserData);
             >
               {props => <AcolythLaboratoryScreen {...props} UserData={UserData} />}
             </Tab.Screen>
+
+            <Tab.Screen
+              name="Map"
+              options={{
+                tabBarLabel: '',
+                tabBarIcon: () => (
+                  <Image source={require('./assets/home_icon.png')} style={styles.icon} />
+                ),
+              }}
+            >
+              {props => <MapScreen {...props} />}
+            </Tab.Screen>
+            
           </>
         );
     }
