@@ -26,11 +26,9 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
         console.log('Fetching ingredients...');
         const response = await fetch('https://eiasserver.onrender.com/get-ingredients');
         const contentType = response.headers.get('content-type');
-  
         if (contentType && contentType.includes('application/json')) {
           const data = await response.json();
           console.log('Respuesta del servidor (JSON):', data);
-          
           if (data.success === true && Array.isArray(data.ingredientsData) && data.ingredientsData.length > 0) {
             setIngredients(data.ingredientsData);
             console.log('Ingredientes obtenidos:', data.ingredientsData);
@@ -45,11 +43,9 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
         console.error('Error al obtener los ingredientes:', error);
       }
     };
-  
     fetchIngredients();
   }, []);
-  
-  
+
 
   useEffect(() => {
     listenToServerEventsScanAcolyte(setIsInside);
@@ -89,7 +85,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
   return (
     <View style={styles.container}>
-    <IngredientSelector />
       {isInside ? (
         <ImageBackground
           source={require('../assets/laboratory.png')}  // Ruta de la imagen
@@ -107,6 +102,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
               <Text style={styles.textStyle}>Show QR</Text>
             </ImageBackground>
           </TouchableOpacity>
+          <IngredientSelector onSelectionChange={undefined} />
 
           <Modal
             animationType="slide"

@@ -39,8 +39,7 @@ function App() {
 }
 
 function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) {
-  const { userData: UserData, setUserData } = useContext(UserContext); // Usamos useContext para UserData
-console.log(UserData);
+  const { userData: UserData, setUserData } = useContext(UserContext); // Usamos useContext para UserData;
 
   useEffect(() => {
     socket.on('request_email', () => {

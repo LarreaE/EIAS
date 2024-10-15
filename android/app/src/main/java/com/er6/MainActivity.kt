@@ -12,6 +12,7 @@ import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
 
 
 
+
 class MainActivity : ReactActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
