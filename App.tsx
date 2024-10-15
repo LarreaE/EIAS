@@ -1,9 +1,9 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { SafeAreaView, StyleSheet, Image, Modal, TouchableOpacity, Text, View, ImageBackground } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'; 
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import GoogleSignInComponent from './components/googleSingIn.tsx';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
@@ -17,19 +17,36 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { listenToServerEvents, clearServerEvents } from './sockets/listenEvents';
 import socket from './sockets/socketConnection';
 import { sendUserEMail } from './sockets/emitEvents.tsx';
+import { UserProvider } from './context/UserContext'; // Importa el proveedor
+import { UserContext } from './context/UserContext'; // Importa el contexto
 import AcolythScreen from './screens/AcolythScreen.tsx';
 
 const Tab = createMaterialTopTabNavigator();
 
 function App() {
   const [isLoged, setIsLoged] = useState<boolean>(false);
-  const [UserData, setUserData] = useState<any>(null);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
+  return (
+    <UserProvider>
+      <AppContent
+        isLoged={isLoged}
+        setIsLoged={setIsLoged}
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+      />
+    </UserProvider>
+  );
+}
+
+function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) {
+  const { userData: UserData, setUserData } = useContext(UserContext); // Usamos useContext para UserData
+console.log(UserData);
 
   useEffect(() => {
     socket.on('request_email', () => {
       console.log('El servidor ha solicitado el correo electrónico');
-      if (isLoged) {
+      if (isLoged && UserData?.playerData?.email) {
         sendUserEMail(UserData.playerData.email);
         socket.on('reconnect', () => {
           console.log('Socket reconectado con ID:', socket.id);
@@ -88,6 +105,10 @@ function App() {
   };
 
   const renderTabs = () => {
+    if (!UserData || !UserData.playerData || !UserData.playerData.role) {
+      return null;
+    }
+
     switch (UserData.playerData.role) {
       case 'ISTVAN':
         return (
@@ -114,33 +135,33 @@ function App() {
             >
               {props => (
                 <>
-                        <TouchableOpacity onPress={() => setIsModalVisible(true)}>
-                        <ImageBackground
-                          source={require('./assets/boton.png')}  // Ruta de la imagen de fondo
-                          style={styles.openModalButton}  // Aplicar estilos al contenedor de la imagen de fondo
-                          resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
-                          >
-                          <Text style={styles.buttonText}>Open QR Scanner</Text>
-                        </ImageBackground>
-                        </TouchableOpacity>
+                  <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+                    <ImageBackground
+                      source={require('./assets/boton.png')}  // Ruta de la imagen de fondo
+                      style={styles.openModalButton}  // Aplicar estilos al contenedor de la imagen de fondo
+                      resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+                    >
+                      <Text style={styles.buttonText}>Open QR Scanner</Text>
+                    </ImageBackground>
+                  </TouchableOpacity>
                   <View style={styles.modalView}>
-                  <Modal
-                    animationType="slide"
-                    visible={isModalVisible}
-                  >
-                      <QRScanner {...props} onQRCodeScanned = {handleQRCodeScanned} />
+                    <Modal
+                      animationType="slide"
+                      visible={isModalVisible}
+                    >
+                      <QRScanner {...props} onQRCodeScanned={handleQRCodeScanned} />
 
                       <TouchableOpacity onPress={() => setIsModalVisible(false)}>
-                      <ImageBackground
-                      source={require('./assets/boton.png')}  // Ruta de la imagen de fondo
-                      style={styles.modalButton}  // Aplicar estilos al contenedor de la imagen de fondo
-                      resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
-                      >
-                        <Text style={styles.buttonText}>Close</Text>
-                      </ImageBackground>
+                        <ImageBackground
+                          source={require('./assets/boton.png')}  // Ruta de la imagen de fondo
+                          style={styles.modalButton}  // Aplicar estilos al contenedor de la imagen de fondo
+                          resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+                        >
+                          <Text style={styles.buttonText}>Close</Text>
+                        </ImageBackground>
 
                       </TouchableOpacity>
-                  </Modal>
+                    </Modal>
                   </View>
                 </>
               )}
@@ -280,9 +301,9 @@ const styles = StyleSheet.create({
     right: 20,
   },
   openModalButton: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: 150,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 150,
   },
   closeButton: {
     backgroundColor: '#F194FF',
@@ -300,8 +321,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 150,
     position: 'absolute',
-    bottom: 0,           // Position at the bottom
-    width: '100%',        // Full width for the button
+    bottom: 0,           // Posicionado en la parte inferior
+    width: '100%',       // Ancho completo para el botón
   },
   modalView: {
     flex: 1,

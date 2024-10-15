@@ -4,24 +4,81 @@ import { ImageBackground, Modal, StyleSheet, TouchableOpacity, View, Vibration }
 import { Text } from 'react-native';
 import { clearServerEvents, listenToServerEventsScanAcolyte } from '../sockets/listenEvents.tsx';
 
-type Props = {UserData:any};
+type Props = { UserData: any };
 
-const AcolythLaboratoryScreen: React.FC<Props> = (UserData:any) => {
+const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [isInside, setIsInside] = useState(UserData.UserData.playerData.is_active);
+  const [ingredients, setIngredients] = useState([]);
+  const [potions, setPotions] = useState([]);
   const player = UserData.UserData.playerData;
   const vibrationDuration = 250;
 
-
-  useEffect(()=> {
+  useEffect(() => {
     console.log('modalVisible: ');
     setModalVisible(false);
-  },[isInside]);
+  }, [isInside]);
+
+  useEffect(() => {
+    const fetchIngredients = async () => {
+      try {
+        console.log('Fetching ingredients...');
+        const response = await fetch('https://eiasserver.onrender.com/ingredients');
+        const contentType = response.headers.get('content-type');
+  
+        if (contentType && contentType.includes('application/json')) {
+          const data = await response.json();
+          
+          if (data.success === true && Array.isArray(data.ingredientsData) && data.ingredientsData.length > 0) {
+            setIngredients(data.ingredientsData);
+          } else {
+            console.error('No ingredients found or status is not OK.');
+          }
+        } else {
+          const text = await response.text();
+          console.error('Response is not JSON:', text);
+        }
+      } catch (error) {
+        console.error('Error getting ingredients:', error);
+      }
+    };
+  
+    fetchIngredients();
+  }, []);
+  
+  useEffect(() => {
+    const fetchPotions = async () => {
+      try {
+        console.log('Fetching potions...');
+        const response = await fetch('https://eiasserver.onrender.com/potions');
+        const contentType = response.headers.get('content-type');
+  
+        if (contentType && contentType.includes('application/json')) {
+          const data = await response.json();
+          
+          if (data.success === true && Array.isArray(data.potionsData) && data.potionsData.length > 0) {
+            setIngredients(data.potionsData);
+            console.log('Ingredientes obtenidos:', data.potionsData);
+          } else {
+            console.error('No potions found or status is not OK.');
+          }
+        } else {
+          const text = await response.text();
+          console.error('Response is not JSON:', text);
+        }
+      } catch (error) {
+        console.error('Error getting potions:', error);
+      }
+    };
+  
+    fetchPotions();
+  }, []);
+
   useEffect(() => {
     listenToServerEventsScanAcolyte(setIsInside);
 
-     const updateIsInside = async () => {
+    const updateIsInside = async () => {
       try {
         await fetch('https://eiasserver.onrender.com/isInside', {
           method: 'POST',
@@ -46,7 +103,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData:any) => {
       } catch (error) {
         console.error('Caught error:', error);
       }
-
     };
 
     updateIsInside();
@@ -63,17 +119,18 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData:any) => {
           style={styles.background}  //Aplicar estilos al contenedor
           resizeMode="cover"         // Ajuste de la imagen
         >
-            <TouchableOpacity
-              onPress={() => setModalVisible(true)}
+          <TouchableOpacity
+            onPress={() => setModalVisible(true)}
+          >
+            <ImageBackground
+              source={require('../assets/boton.png')}  // Ruta de la imagen
+              style={styles.openButton}  //Aplicar estilos al contenedor
+              resizeMode="cover"         // Ajuste de la imagen
             >
-              <ImageBackground
-          source={require('../assets/boton.png')}  // Ruta de la imagen
-          style={styles.openButton}  //Aplicar estilos al contenedor
-          resizeMode="cover"         // Ajuste de la imagen
-        >
               <Text style={styles.textStyle}>Show QR</Text>
-              </ImageBackground>
-            </TouchableOpacity>
+            </ImageBackground>
+          </TouchableOpacity>
+
           <Modal
             animationType="slide"
             transparent={true}
@@ -85,7 +142,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData:any) => {
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
                 <QRGenerator {...UserData}
-                 onCodeScanned = {() => Vibration.vibrate(1 * vibrationDuration)} />
+                  onCodeScanned={() => Vibration.vibrate(1 * vibrationDuration)} />
                 <TouchableOpacity
                   style={styles.closeButton}
                   onPress={() => setModalVisible(false)}
@@ -98,7 +155,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData:any) => {
         </ImageBackground>
       ) : (
         <QRGenerator {...UserData}
-        onCodeScanned = {() => Vibration.vibrate(1 * vibrationDuration)} />
+          onCodeScanned={() => Vibration.vibrate(1 * vibrationDuration)} />
       )}
     </View>
   );
@@ -109,14 +166,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   background: {
-    flex: 1, // Hace que la imagen de fondo ocupe todo el espacio disponible
-    justifyContent: 'center', // Centra el contenido verticalmente
-    alignItems: 'center',     // Centra el contenido horizontalmente
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   openButton: {
     padding: 10,
     borderRadius: 10,
-    width:100,
+    width: 100,
   },
   textStyle: {
     color: 'white',
@@ -127,7 +184,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalView: {
     width: 300,
