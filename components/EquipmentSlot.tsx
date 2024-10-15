@@ -2,15 +2,15 @@ import React from "react";
 import { View, Image, StyleSheet } from "react-native";
 
 interface Slot {
-    imagePath: String;
+    imagePath: String | null;
     size: number;
 }
 
 const EquipmentSlot: React.FC<Slot> = ({imagePath , size}) => {
 
-    console.log(imagePath);
-    return (
+  return (
         <View style={[styles.container, { width: size, height: size }]}>
+          {imagePath ? (
             <Image
             source={{
                 uri: imagePath,
@@ -18,6 +18,7 @@ const EquipmentSlot: React.FC<Slot> = ({imagePath , size}) => {
             resizeMode="cover"
             style={styles.image}
             />
+          ) : <View style={styles.container}/>}
         </View>
     );
 

@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: 'rgba(0, 0, 0, 0.7)',
-      position: 'relative', 
+      position: 'relative',
     },
     classContainer: {
       position: 'absolute',

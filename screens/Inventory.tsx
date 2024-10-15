@@ -11,66 +11,24 @@ const Inventory: React.FC<Props> = ({user}) => {
     const inventory = player.inventory;
     console.log(inventory);
 
+    const slots = Array.from({length: 64});
 
     return (
-        <View style={styles.container}>
-        </View>
+    <View style={styles.container}>
+      {slots.map(() => (
+        <EquipmentSlot imagePath={ null } size={70} />
+      ))}
+    </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
-      position: 'relative', 
-    },
-    classContainer: {
-      position: 'absolute',
-      top: 10,
-      left: 10,
-    },
-    levelContainer: {
-      position: 'absolute',
-      top: 10,
-      right: 10,
-    },
-    expContainer: {
-      position: 'absolute',
-      bottom: 100,
-      left: 10,
-    },
-    goldContainer: {
-      position: 'absolute',
-      bottom: 100,
-      right: 10,
-    },
-    cornerSquare: {
-      backgroundColor: 'transparent',
-      borderWidth: 2,
-      borderColor: 'rgba(253, 224, 71, 1)',
-      padding: 10,
-      borderRadius: 5,
-      minWidth: 100,
-      alignItems: 'center',
-    },
-    text: {
-      color: 'black',
-      fontWeight: 'bold',
-    },
-    equipmentContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-evenly',
-      alignItems: 'center',
-      flex: 1,
-      paddingTop: 50,
-      paddingBottom: 50,
-    },
-    column: {
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginHorizontal: 10,
-    },
+        flexDirection: 'row',
+        flexWrap: 'wrap', // This will allow the slots to wrap to the next row
+        justifyContent: 'center', // Center the equipment slots
+        alignItems: 'center',
+      },
   });
 
-  export default Inventory
+  export default Inventory;
