@@ -22,6 +22,8 @@ import { UserContext } from './context/UserContext'; // Importa el contexto
 import AcolythScreen from './screens/Info.tsx';
 import { Player } from './interfaces/Player.tsx';
 import MapScreen from './screens/Map.tsx';
+import { createStackNavigator } from '@react-navigation/stack';
+
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -84,7 +86,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
 
   if (!isLoged) {
     socket.connect();
-    return <GoogleSignInComponent setIsLoged={setIsLoged}/>;
+    return <GoogleSignInComponent setIsLoged={setIsLoged} />;
   }
 
   const screenOptions = {
@@ -110,6 +112,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
     if (!UserData || !UserData.playerData || !UserData.playerData.role) {
       return null;
     }
+
 
     switch (UserData.playerData.role) {
       case 'ISTVAN':
@@ -267,19 +270,6 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
             </Tab.Screen>
 
             <Tab.Screen
-              name="LaboratoryAcolyth"
-              options={{
-                tabBarLabel: '',
-                tabBarIcon: () => (
-                  <Image source={require('./assets/laboratory_icon.png')} style={styles.icon} />
-                ),
-              }}
-            >
-              {props => <AcolythLaboratoryScreen {...props} UserData={UserData} />}
-            </Tab.Screen>
-
-
-            <Tab.Screen
               name="Map"
               options={{
                 tabBarLabel: '',
@@ -298,13 +288,31 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
     }
   };
 
+  const Stack = createStackNavigator();
+
+
   return (
     <SafeAreaView style={styles.container}>
       <GestureHandlerRootView style={styles.container}>
         <NavigationContainer>
-          <Tab.Navigator initialRouteName="Settings" screenOptions={screenOptions}>
-            {renderTabs()}
-          </Tab.Navigator>
+          <Stack.Navigator>
+            {/* Aquí se incluyen las tabs como parte de una pantalla del stack */}
+            <Stack.Screen name="MainTabs" options={{ headerShown: false }}>
+              {() => (
+                <Tab.Navigator initialRouteName="Settings" screenOptions={screenOptions}>
+                  {renderTabs()}
+                </Tab.Navigator>
+              )}
+            </Stack.Screen>
+
+            {/* Agrega la pantalla LaboratoryAcolyth fuera del Tab.Navigator */}
+            <Stack.Screen
+              name="LaboratoryAcolyth"
+              options={{ headerShown: false }}
+            >
+              {props => <AcolythLaboratoryScreen {...props} UserData={UserData} />}
+            </Stack.Screen>
+          </Stack.Navigator>
         </NavigationContainer>
       </GestureHandlerRootView>
     </SafeAreaView>

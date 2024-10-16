@@ -27,10 +27,17 @@ const MapScreen: React.FC = () => {
         resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
       >
 
-        <View style={styles.buttonContainer}>
+        <View style={styles.buttonLaboratory}>
           <MapButton
             title="Laboratorio"
             onPress={goToLaboratory}
+          />
+        </View>
+
+        <View style={styles.buttonHome}>
+          <MapButton
+            title="Escuela"
+            onPress={goToHome}
           />
         </View>
 
@@ -49,12 +56,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center', // Centra el contenido verticalmente
     alignItems: 'center',     // Centra el contenido horizontalmente
   },
-  buttonContainer: {
+  buttonLaboratory: {
     position: 'absolute',
-    bottom: 200, 
+    bottom: 200,
     alignSelf: 'center',
   },
-  buttonSchool: {
+  buttonHome: {
     position: 'absolute',
     bottom: 300,
     alignSelf: 'center',
