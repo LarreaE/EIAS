@@ -22,18 +22,20 @@ const Inventory: React.FC<Props> = ({user}) => {
     const inventory = player.inventory;
     console.log(inventory);
     const newInventory = createInvetory(inventory);
-    const slots = Array.from({length: 88});
+    const slots = Array.from({length: 200});
     slots.length -= newInventory.length;
     console.log(newInventory[0]);
     return (
-    <View style={styles.container}>
-        {newInventory.map((_,index) => (
-        <EquipmentSlot key={index} item={ newInventory[index] } size={45} />
-      ))}
-      {slots.map((_,index) => (
-        <EquipmentSlot key={index} item={ null } size={45} />
-      ))}
-    </View>
+      <ScrollView>
+        <View style={styles.container}>
+          {newInventory.map((_,index) => (
+          <EquipmentSlot key={index} item={ newInventory[index] } size={70} />
+        ))}
+        {slots.map((_,index) => (
+          <EquipmentSlot key={index} item={ null } size={70} />
+        ))}
+        </View>
+      </ScrollView>
     );
 };
 
