@@ -29,14 +29,14 @@ const MapScreen: React.FC = () => {
 
         <View style={styles.buttonLaboratory}>
           <MapButton
-            title="Laboratorio"
+            title="Laboratory"
             onPress={goToLaboratory}
           />
         </View>
 
         <View style={styles.buttonHome}>
           <MapButton
-            title="Escuela"
+            title="Home"
             onPress={goToHome}
           />
         </View>
