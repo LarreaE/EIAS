@@ -4,6 +4,7 @@ apply plugin: "com.facebook.react"
 apply plugin: "com.google.gms.google-services"
 apply plugin: "com.google.firebase.crashlytics"
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+apply plugin: 'kotlin-android'
 
 def enableProguardInReleaseBuilds = false // Cambia a true si habilitas Proguard
 

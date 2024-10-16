@@ -20,12 +20,14 @@ import { sendUserEMail } from './sockets/emitEvents.tsx';
 import { UserProvider } from './context/UserContext'; // Importa el proveedor
 import { UserContext } from './context/UserContext'; // Importa el contexto
 import AcolythScreen from './screens/Info.tsx';
+import { Player } from './interfaces/Player.tsx';
 
 const Tab = createMaterialTopTabNavigator();
 
 function App() {
   const [isLoged, setIsLoged] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
 
   return (
     <UserProvider>
@@ -40,8 +42,7 @@ function App() {
 }
 
 function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) {
-  const { userData: UserData, setUserData } = useContext(UserContext); // Usamos useContext para UserData
-console.log(UserData);
+  const { userData: UserData, setUserData } = useContext(UserContext); // Usamos useContext para UserData;
 
   useEffect(() => {
     socket.on('request_email', () => {
@@ -82,7 +83,7 @@ console.log(UserData);
 
   if (!isLoged) {
     socket.connect();
-    return <GoogleSignInComponent setIsLoged={setIsLoged} setUserData={setUserData} />;
+    return <GoogleSignInComponent setIsLoged={setIsLoged}/>;
   }
 
   const screenOptions = {
