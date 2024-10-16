@@ -89,7 +89,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
     return <GoogleSignInComponent setIsLoged={setIsLoged} />;
   }
 
-  const screenOptions = {
+  const screenOptions = ({ route }) => ({
     tabBarStyle: {
       backgroundColor: 'transparent',
       borderTopWidth: 0,
@@ -102,11 +102,11 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
       elevation: 0,
     },
     headerShown: false,
-    swipeEnabled: true,
+    swipeEnabled: route.name !== 'LaboratoryAcolyth',
     tabBarScrollEnabled: false,
     shadowOpacity: 0,
     shadowRadius: 0,
-  };
+  });
 
   const renderTabs = () => {
     if (!UserData || !UserData.playerData || !UserData.playerData.role) {
