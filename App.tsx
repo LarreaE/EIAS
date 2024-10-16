@@ -43,7 +43,7 @@ function App() {
 
 function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) {
   const { userData: UserData, setUserData } = useContext(UserContext); // Usamos useContext para UserData
-console.log(UserData);
+  console.log(UserData);
 
   useEffect(() => {
     socket.on('request_email', () => {
@@ -278,6 +278,7 @@ console.log(UserData);
               {props => <AcolythLaboratoryScreen {...props} UserData={UserData} />}
             </Tab.Screen>
 
+
             <Tab.Screen
               name="Map"
               options={{
@@ -285,11 +286,13 @@ console.log(UserData);
                 tabBarIcon: () => (
                   <Image source={require('./assets/home_icon.png')} style={styles.icon} />
                 ),
+                tabBarStyle: { display: 'none' }, // Esto oculta el tab completamente
+
               }}
             >
               {props => <MapScreen {...props} />}
             </Tab.Screen>
-            
+
           </>
         );
     }

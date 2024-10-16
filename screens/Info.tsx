@@ -20,31 +20,33 @@ const screenOptions = {
 
 const TopTab = createMaterialTopTabNavigator();
 
-const AcolythScreen: React.FC<Props> = ({user}) => {
+const AcolythScreen: React.FC<Props> = ({ user }) => {
 
   return (
-        <TopTab.Navigator
-        initialRouteName="AcolythEquipment"
-        screenOptions={screenOptions}
+    <TopTab.Navigator
+      initialRouteName="AcolythEquipment"
+      screenOptions={screenOptions}
+    >
+      <>
+        <TopTab.Screen
+          name="Equipment"
         >
-          <>
-          <TopTab.Screen
-            name="Equipment"
-          >
-            {props => <EquipmentScreen {...props} user={user} />}
-          </TopTab.Screen>
-          <TopTab.Screen
-            name="Stats"
-          >
-            {props => <StatsScreen {...props} user={user} />}
-          </TopTab.Screen>
-          <TopTab.Screen
-            name="Inventory"
-          >
-            {props => <Inventory {...props} user={user} />}
-          </TopTab.Screen>
-          </>
-        </TopTab.Navigator>
+          {props => <EquipmentScreen {...props} user={user} />}
+        </TopTab.Screen>
+
+        <TopTab.Screen
+          name="Stats"
+        >
+          {props => <StatsScreen {...props} user={user} />}
+        </TopTab.Screen>
+
+        <TopTab.Screen
+          name="Inventory"
+        >
+          {props => <Inventory {...props} user={user} />}
+        </TopTab.Screen>
+      </>
+    </TopTab.Navigator>
   );
 };
 

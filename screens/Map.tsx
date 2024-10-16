@@ -27,13 +27,6 @@ const MapScreen: React.FC = () => {
         resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
       >
 
-        <View style={styles.buttonSchool}>
-          <MapButton
-            title="Escuela"
-            onPress={goToHome}
-          />
-        </View>
-
         <View style={styles.buttonContainer}>
           <MapButton
             title="Laboratorio"
