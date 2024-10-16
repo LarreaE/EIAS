@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet, Text, SafeAreaView, Image } from 'react-native';
-import EquipmentSlot from '../components/EquipmentSlot';
+import EquipmentSlot from '../components/Slot';
+import { ZoomInEasyDown } from 'react-native-reanimated';
 
 type Props = {
   user: any;
@@ -27,10 +28,10 @@ const Inventory: React.FC<Props> = ({user}) => {
     return (
     <View style={styles.container}>
         {newInventory.map((_,index) => (
-        <EquipmentSlot item={ newInventory[index] } size={45} />
+        <EquipmentSlot key={index} item={ newInventory[index] } size={45} />
       ))}
-      {slots.map(() => (
-        <EquipmentSlot item={ null } size={45} />
+      {slots.map((_,index) => (
+        <EquipmentSlot key={index} item={ null } size={45} />
       ))}
     </View>
     );

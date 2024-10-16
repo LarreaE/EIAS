@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet, Text, SafeAreaView, Image } from 'react-native';
-import EquipmentSlot from '../components/EquipmentSlot';
+import EquipmentSlot from '../components/Slot';
 
 type Props = {
   user: any;
