@@ -99,13 +99,14 @@ const StatBar: React.FC<{ label: string, value: number }> = ({ label, value }) =
   return (
     <View style={styles.statRow}>
       <Text style={styles.statLabel}>{label}</Text>
-      <Progress.Bar 
-        progress={value / 1000} 
-        width={200}
+      <Progress.Bar
+        progress={value / 1000}
+        width={150}
         color="#fcd34d"
         unfilledColor="#4b5563"
         borderWidth={1}
         borderColor="#fcd34d"
+        style={styles.progressBar}  // Añadido estilo para margen
       />
       <Text style={styles.statValue}>{value}</Text>
     </View>
@@ -135,17 +136,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
-    width: '100%'
+    width: '100%',
+    justifyContent: 'space-between',
   },
   statLabel: {
     color: '#fcd34d',
     fontSize: 16,
-    width: 120,
+    width: '30%',  // Ancho fijo para asegurar que las etiquetas estén alineadas
   },
   statValue: {
     color: '#fcd34d',
     fontSize: 16,
-    marginLeft: 10,
+    width: 50,  // Ancho fijo para asegurar que los números tengan el mismo espacio
+    textAlign: 'right',  // Alineación a la derecha para que siempre estén alineados
+  },
+  progressBar: {
+    marginHorizontal: 10,  // Añadir margen horizontal entre la barra y el número
   },
 });
 
