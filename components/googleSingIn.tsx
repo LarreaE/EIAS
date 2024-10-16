@@ -71,7 +71,6 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     //Get the token from the current User
     const idTokenResult = await auth().currentUser?.getIdTokenResult();
     console.log('USER JWT');
-    console.log(idTokenResult);
     axios.post('https://eiasserver.onrender.com/verify-token', {
       idToken: idTokenResult?.token,
       email: email,
@@ -79,7 +78,6 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     })
     .then((response) => {
       console.log('JWT TOKEN FROM EXPRESS');
-      console.log(response.data.playerData.role);
       //SAVE JWT ENCRIPTED
       setUserData(response.data);
       setIsLoged(true);

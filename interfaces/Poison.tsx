@@ -1,7 +1,7 @@
 import { Modifier } from "./Modifier";
 
-export interface EnhancerPotion {
-	_id: string,
+export interface Poison {
+    _id: string,
 	name: string,
 	description: string,
 	image: string,

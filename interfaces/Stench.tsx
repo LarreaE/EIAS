@@ -1,7 +1,7 @@
 import { Modifier } from "./Modifier";
 
-export interface AntidotePotion {
-	_id: string,
+export interface Stench {
+    _id: string,
 	name: string,
 	description: string,
 	image: string,

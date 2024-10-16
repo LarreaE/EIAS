@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import EquipmentSlot from '../components/EquipmentSlot';
+import EquipmentSlot from '../components/Slot';
 
 type Props = {
   user: any;
@@ -11,16 +11,16 @@ const EquipmentScreen: React.FC<Props> = ({ user }) => {
 
     // Sample data for images (you can replace this with dynamic data)
     const elements = [
-      { id: 1, url: `https://kaotika.vercel.app${player.equipment.weapon.image}` },
-      { id: 2, url: `https://kaotika.vercel.app${player.equipment.artifact.image}` },
-      { id: 3, url: `https://kaotika.vercel.app${player.equipment.healing_potion.image}` },
-      { id: 4, url: `https://kaotika.vercel.app${player.equipment.helmet.image}` },
-      { id: 5, url: `https://kaotika.vercel.app${player.equipment.armor.image}` },
-      { id: 6, url: `https://kaotika.vercel.app${player.equipment.boot.image}` },
-      { id: 7, url: `https://kaotika.vercel.app${player.equipment.antidote_potion.image}` },
-      { id: 8, url: `https://kaotika.vercel.app${player.equipment.shield.image}` },
-      { id: 9, url: `https://kaotika.vercel.app${player.equipment.ring.image}` },
-      { id: 10, url: `https://kaotika.vercel.app${player.equipment.enhancer_potion.image}` },
+      { id: 1, url: player.equipment.weapon },
+      { id: 2, url: player.equipment.artifact },
+      { id: 3, url: player.equipment.healing_potion },
+      { id: 4, url: player.equipment.helmet },
+      { id: 5, url: player.equipment.armor },
+      { id: 6, url: player.equipment.boot },
+      { id: 7, url: player.equipment.antidote_potion },
+      { id: 8, url: player.equipment.shield },
+      { id: 9, url: player.equipment.ring },
+      { id: 10, url: player.equipment.enhancer_potion },
     ];
 
     return (
@@ -37,20 +37,20 @@ const EquipmentScreen: React.FC<Props> = ({ user }) => {
             </View>
             <View style={styles.equipmentContainer}>
                 <View style={styles.column}>
-                  <EquipmentSlot imagePath={elements[0].url} size={70} />
-                  <EquipmentSlot imagePath={elements[1].url} size={70} />
-                  <EquipmentSlot imagePath={elements[2].url} size={70} />
+                  <EquipmentSlot item={elements[0].url} size={70} />
+                  <EquipmentSlot item={elements[1].url} size={70} />
+                  <EquipmentSlot item={elements[2].url} size={70} />
                 </View>
                 <View style={styles.column}>
-                  <EquipmentSlot imagePath={elements[3].url} size={70} />
-                  <EquipmentSlot imagePath={elements[4].url} size={70} />
-                  <EquipmentSlot imagePath={elements[5].url} size={70} />
-                  <EquipmentSlot imagePath={elements[6].url} size={70} />
+                  <EquipmentSlot item={elements[3].url} size={70} />
+                  <EquipmentSlot item={elements[4].url} size={70} />
+                  <EquipmentSlot item={elements[5].url} size={70} />
+                  <EquipmentSlot item={elements[6].url} size={70} />
                 </View>
                 <View style={styles.column}>
-                  <EquipmentSlot imagePath={elements[7].url} size={70} />
-                  <EquipmentSlot imagePath={elements[8].url} size={70} />
-                  <EquipmentSlot imagePath={elements[9].url} size={70} />
+                  <EquipmentSlot item={elements[7].url} size={70} />
+                  <EquipmentSlot item={elements[8].url} size={70} />
+                  <EquipmentSlot item={elements[9].url} size={70} />
                 </View>
             </View>
             <View style={styles.expContainer}>
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: 'rgba(0, 0, 0, 0.7)',
-      position: 'relative', 
+      position: 'relative',
     },
     classContainer: {
       position: 'absolute',

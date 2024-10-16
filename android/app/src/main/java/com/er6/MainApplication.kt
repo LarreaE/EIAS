@@ -18,6 +18,7 @@ import com.horcrux.svg.SvgPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
 import com.reactnativepagerview.PagerViewPackage; // Nueva importación
 
+
 class MainApplication : Application(), ReactApplication {
 
   override val reactNativeHost: ReactNativeHost =
@@ -27,8 +28,7 @@ class MainApplication : Application(), ReactApplication {
               // Packages that cannot be autolinked yet can be added manually here, for example:
               // add(MyReactNativePackage())
               ReanimatedPackage()
-              PagerViewPackage() // Reemplazo de la referencia
-              
+              PagerViewPackage()  
             }
 
         override fun getJSMainModuleName(): String = "index"

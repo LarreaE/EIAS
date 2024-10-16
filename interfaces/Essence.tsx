@@ -1,6 +1,6 @@
 import { Modifier } from "./Modifier";
 
-export interface HealingPotion {
+export interface Essence {
 	_id: string,
 	name: string,
 	description: string,

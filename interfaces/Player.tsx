@@ -2,9 +2,9 @@ import { Modifier } from "./Modifier.tsx";
 import { Armor } from "./Armor.tsx";
 import { Weapon } from "./Weapon.tsx";
 import { Jewelry } from "./Jewelry.tsx";
-import { AntidotePotion } from "./AntidotePotion.tsx";
-import { HealingPotion } from "./HealingPotion.tsx";
-import { EnhancerPotion } from "./EnhancerPotion.tsx";
+import { Antidote } from "./Antidote.tsx";
+import { Essence } from "./Essence.tsx";
+import { Elixir } from "./Elixir.tsx";
 import { Profile } from "./Profile.tsx";
 import { Task } from "./Task.tsx";
 
@@ -27,9 +27,9 @@ export interface Player{
       weapon: Weapon,
       armor: Armor,
       artifact: Jewelry,
-      antidote_potion: AntidotePotion,
-      healing_potion: HealingPotion,
-      enhancer_potion: EnhancerPotion,
+      antidote_potion: Antidote,
+      healing_potion: Essence,
+      enhancer_potion: Elixir,
       helmet: Armor,
       shield: Armor,
       boot: Armor,
@@ -43,9 +43,9 @@ export interface Player{
       artifacts: Jewelry[],
       boots: Armor[],
       rings: Jewelry[],
-      healing_potions: HealingPotion[],
-      antidote_potions: AntidotePotion[],
-      enhancer_potions: EnhancerPotion[],
+      healing_potions: Essence[],
+      antidote_potions: Antidote[],
+      enhancer_potions: Elixir[],
     },
     profile: Profile,
     tasks: [Task]
