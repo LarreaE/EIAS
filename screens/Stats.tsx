@@ -1,71 +1,152 @@
-import React from 'react';
-import { View, ScrollView, StyleSheet, Text, SafeAreaView, Image } from 'react-native';
-import EquipmentSlot from '../components/EquipmentSlot';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import * as Progress from 'react-native-progress';  // Importar la librería de progreso
+
+import { Modifier } from '../interfaces/Modifier';
 
 type Props = {
   user: any;
 };
 
-const StatsScreen: React.FC<Props> = ({user}) => {
-    const player = user?.playerData || 'No player available';
+const StatsScreen: React.FC<Props> = ({ user }) => {
+  const player = user?.playerData || 'No player available';
+  const [currentAttributes, setCurrentAttributes] = useState<Modifier>();
 
-    // Sample data for images (you can replace this with dynamic data)
-    const elements = [
-      { id: 1, url: `https://kaotika.vercel.app${player.equipment.weapon.image}` },
-      { id: 2, url: `https://kaotika.vercel.app${player.equipment.artifact.image}` },
-      { id: 3, url: `https://kaotika.vercel.app${player.equipment.healing_potion.image}` },
-      { id: 4, url: `https://kaotika.vercel.app${player.equipment.helmet.image}` },
-      { id: 5, url: `https://kaotika.vercel.app${player.equipment.armor.image}` },
-      { id: 6, url: `https://kaotika.vercel.app${player.equipment.boot.image}` },
-      { id: 7, url: `https://kaotika.vercel.app${player.equipment.antidote_potion.image}` },
-      { id: 8, url: `https://kaotika.vercel.app${player.equipment.shield.image}` },
-      { id: 9, url: `https://kaotika.vercel.app${player.equipment.ring.image}` },
-      { id: 10, url: `https://kaotika.vercel.app${player.equipment.enhancer_potion.image}` },
-    ];
+  useEffect(() => {
+    if (player) calculateAllAttributes();
+  }, [player]);
 
-    return (
-        <View>
-            <Text>Stats</Text>
+  const calculateAllAttributes = () => {
+    if(player) {
+      const charisma =  
+        player.attributes?.charisma + 
+        player.equipment.helmet?.modifiers.charisma! + 
+        player.equipment.weapon.modifiers.charisma + 
+        player.equipment.armor.modifiers.charisma + 
+        player.equipment.shield?.modifiers.charisma! + 
+        player.equipment.artifact.modifiers.charisma + 
+        player.equipment.boot?.modifiers.charisma! + 
+        player.equipment.ring?.modifiers.charisma!;
+      const constitution =  
+        player.attributes?.constitution + 
+        player.equipment.helmet?.modifiers.constitution! + 
+        player.equipment.weapon.modifiers.constitution + 
+        player.equipment.armor.modifiers.constitution + 
+        player.equipment.shield?.modifiers.constitution! + 
+        player.equipment.artifact.modifiers.constitution + 
+        player.equipment.boot?.modifiers.constitution! + 
+        player.equipment.ring?.modifiers.constitution!;
+      const dexterity =  
+        player.attributes?.constitution + 
+        player.equipment.helmet?.modifiers.dexterity! + 
+        player.equipment.weapon.modifiers.dexterity + 
+        player.equipment.armor.modifiers.dexterity + 
+        player.equipment.shield?.modifiers.dexterity! + 
+        player.equipment.artifact.modifiers.dexterity + 
+        player.equipment.boot?.modifiers.dexterity! + 
+        player.equipment.ring?.modifiers.dexterity!;
+      const insanity =  
+        player.attributes?.constitution + 
+        player.equipment.helmet?.modifiers.insanity! + 
+        player.equipment.weapon.modifiers.insanity + 
+        player.equipment.armor.modifiers.insanity + 
+        player.equipment.shield?.modifiers.insanity! + 
+        player.equipment.artifact.modifiers.insanity + 
+        player.equipment.boot?.modifiers.insanity! + 
+        player.equipment.ring?.modifiers.insanity!;
+      const intelligence =  
+        player.attributes?.constitution + 
+        player.equipment.helmet?.modifiers.intelligence! + 
+        player.equipment.weapon.modifiers.intelligence + 
+        player.equipment.armor.modifiers.intelligence + 
+        player.equipment.shield?.modifiers.intelligence! + 
+        player.equipment.artifact.modifiers.intelligence + 
+        player.equipment.boot?.modifiers.intelligence! + 
+        player.equipment.ring?.modifiers.intelligence!;
+      const strength =  
+        player.attributes?.constitution + 
+        player.equipment.helmet?.modifiers.strength! + 
+        player.equipment.weapon.modifiers.strength + 
+        player.equipment.armor.modifiers.strength + 
+        player.equipment.shield?.modifiers.strength! + 
+        player.equipment.artifact.modifiers.strength + 
+        player.equipment.boot?.modifiers.strength! + 
+        player.equipment.ring?.modifiers.strength!;
+      setCurrentAttributes({constitution, charisma, dexterity, intelligence, strength, insanity })
+    }
+  }
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.header}>Player Stats</Text>
+      {currentAttributes ? (
+        <View style={styles.statsContainer}>
+          <StatBar label="Charisma" value={currentAttributes.charisma} />
+          <StatBar label="Constitution" value={currentAttributes.constitution} />
+          <StatBar label="Dexterity" value={currentAttributes.dexterity} />
+          <StatBar label="Insanity" value={currentAttributes.insanity} />
+          <StatBar label="Intelligence" value={currentAttributes.intelligence} />
+          <StatBar label="Strength" value={currentAttributes.strength} />
         </View>
-    );
+      ) : (
+        <Text style={styles.statLabel}>No stats available</Text>
+      )}
+    </View>
+  );
+};
+
+const StatBar: React.FC<{ label: string, value: number }> = ({ label, value }) => {
+  return (
+    <View style={styles.statRow}>
+      <Text style={styles.statLabel}>{label}</Text>
+      <Progress.Bar 
+        progress={value / 1000} 
+        width={200}
+        color="#fcd34d"
+        unfilledColor="#4b5563"
+        borderWidth={1}
+        borderColor="#fcd34d"
+      />
+      <Text style={styles.statValue}>{value}</Text>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-      backgroundColor: '#1a202c',
-      flexDirection: 'row', // Display columns side by side
-      justifyContent: 'space-evenly', // Even spacing between columns
-      paddingVertical: 140,
-      alignItems: 'center',
-      flex: 1,
-    },
-    column: {
-      flexDirection: 'column', // Stack elements vertically
-      justifyContent: 'space-between', // Space between items
-      alignItems: 'center', // Center each column
-      marginHorizontal: 10, // Space between columns
-      position: 'relative',
-      backgroundColor: 'gray',
-    },
-    content: {
-      width: '30%',
-      backgroundColor: 'lightyellow',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '10%',
-      position: 'relative',
-    },
-    text: {
-      color: 'rgba(253, 224, 71, 0.7)',
-    },
-    item: {
-      backgroundColor: 'lightblue',
-      padding: 0,
-      borderRadius: 10,
-      marginVertical: 10,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-  });
+  container: {
+    padding: 20,
+    backgroundColor: '#1a202c',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fcd34d',
+    marginBottom: 20,
+  },
+  statsContainer: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  statRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+    width: '100%'
+  },
+  statLabel: {
+    color: '#fcd34d',
+    fontSize: 16,
+    width: 120,
+  },
+  statValue: {
+    color: '#fcd34d',
+    fontSize: 16,
+    marginLeft: 10,
+  },
+});
 
-  export default StatsScreen
+export default StatsScreen;

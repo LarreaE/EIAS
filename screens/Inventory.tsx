@@ -1,76 +1,49 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet, Text, SafeAreaView, Image } from 'react-native';
-import EquipmentSlot from '../components/EquipmentSlot';
+import EquipmentSlot from '../components/Slot';
+import { ZoomInEasyDown } from 'react-native-reanimated';
 
 type Props = {
   user: any;
 };
 
+const createInvetory = (inventory:any) => {
+    let newInventory = [];
+    for (const key in inventory) {
+        for (let i = 0; i < inventory[key].length; i++) {
+            newInventory.push(inventory[key][i]);
+        }
+    }
+    return newInventory;
+};
+
 const Inventory: React.FC<Props> = ({user}) => {
     const player = user?.playerData || 'No player available';
     const inventory = player.inventory;
-    console.log(inventory);
-
-
+    const newInventory = createInvetory(inventory);
+    const slots = Array.from({length: 200});
+    slots.length -= newInventory.length;
     return (
+      <ScrollView>
         <View style={styles.container}>
+          {newInventory.map((_,index) => (
+          <EquipmentSlot key={index} item={ newInventory[index] } size={70} />
+        ))}
+        {slots.map((_,index) => (
+          <EquipmentSlot key={index} item={ null } size={70} />
+        ))}
         </View>
+      </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
-      position: 'relative', 
-    },
-    classContainer: {
-      position: 'absolute',
-      top: 10,
-      left: 10,
-    },
-    levelContainer: {
-      position: 'absolute',
-      top: 10,
-      right: 10,
-    },
-    expContainer: {
-      position: 'absolute',
-      bottom: 100,
-      left: 10,
-    },
-    goldContainer: {
-      position: 'absolute',
-      bottom: 100,
-      right: 10,
-    },
-    cornerSquare: {
-      backgroundColor: 'transparent',
-      borderWidth: 2,
-      borderColor: 'rgba(253, 224, 71, 1)',
-      padding: 10,
-      borderRadius: 5,
-      minWidth: 100,
-      alignItems: 'center',
-    },
-    text: {
-      color: 'black',
-      fontWeight: 'bold',
-    },
-    equipmentContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-evenly',
-      alignItems: 'center',
-      flex: 1,
-      paddingTop: 50,
-      paddingBottom: 50,
-    },
-    column: {
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginHorizontal: 10,
-    },
+        flexDirection: 'row',
+        flexWrap: 'wrap', // This will allow the slots to wrap to the next row
+        justifyContent: 'center', // Center the equipment slots
+        alignItems: 'center',
+      },
   });
 
-  export default Inventory
+  export default Inventory;

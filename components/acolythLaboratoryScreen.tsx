@@ -17,7 +17,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const vibrationDuration = 250;
 
   useEffect(() => {
-    console.log('modalVisible: ');
     setModalVisible(false);
   }, [isInside]);
 
