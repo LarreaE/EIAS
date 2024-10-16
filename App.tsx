@@ -19,6 +19,7 @@ import socket from './sockets/socketConnection';
 import { sendUserEMail } from './sockets/emitEvents.tsx';
 import { UserProvider } from './context/UserContext'; // Importa el proveedor
 import { UserContext } from './context/UserContext'; // Importa el contexto
+import { Player } from './interfaces/Player.tsx';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -82,7 +83,7 @@ console.log(UserData);
 
   if (!isLoged) {
     socket.connect();
-    return <GoogleSignInComponent setIsLoged={setIsLoged} setUserData={setUserData} />;
+    return <GoogleSignInComponent setIsLoged={setIsLoged}/>;
   }
 
   const screenOptions = {
