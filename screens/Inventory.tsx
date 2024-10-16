@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet, Text, SafeAreaView, Image } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, SafeAreaView, Image, ImageBackground } from 'react-native';
 import EquipmentSlot from '../components/Slot';
 import { ZoomInEasyDown } from 'react-native-reanimated';
 
@@ -26,6 +26,11 @@ const Inventory: React.FC<Props> = ({user}) => {
     slots.length -= newInventory.length;
     console.log(newInventory[0]);
     return (
+      <ImageBackground
+      source={require('../assets/profile.png')}
+      style={styles.background}
+      resizeMode="cover"
+    >
     <View style={styles.container}>
         {newInventory.map((_,index) => (
         <EquipmentSlot key={index} item={ newInventory[index] } size={45} />
@@ -34,6 +39,7 @@ const Inventory: React.FC<Props> = ({user}) => {
         <EquipmentSlot key={index} item={ null } size={45} />
       ))}
     </View>
+    </ImageBackground>
     );
 };
 
@@ -42,6 +48,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap', // This will allow the slots to wrap to the next row
         justifyContent: 'center', // Center the equipment slots
+        alignItems: 'center',
+      },
+      background: {
+        flex: 1,
+        justifyContent: 'center',
         alignItems: 'center',
       },
   });

@@ -8,15 +8,7 @@ type Props = {
 };
 
 const ProfileScreen: React.FC<Props> = ({ user, setIsLoged }) => {
-  const role = user?.playerData.role || 'No name available';
-  const userName = user?.playerData?.nickname || 'No name available';
-  const userLvl = user?.playerData?.level || 'No level available';
-  const charisma = user?.playerData?.attributes.charisma || 'No level available';
-  const constitution = user?.playerData?.attributes.constitution || 'No level available';
-  const insanity = user?.playerData?.attributes.insanity || 'No level available';
-  const dexterity = user?.playerData?.attributes.dexterity || 'No level available';
-  const strength = user?.playerData?.attributes.strength || 'No level available';
-  const intelligence = user?.playerData?.attributes.intelligence || 'No level available';
+
 
 
 
@@ -26,11 +18,6 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLoged }) => {
   };
 
   return (
-    <ImageBackground
-      source={require('../assets/profile.png')}  // Ruta de la imagen de fondo
-      style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
-      resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
-    >
     <View style={styles.container}>
       
         <TouchableOpacity  onPress={signOut}>
@@ -42,22 +29,7 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLoged }) => {
             <Text style={styles.signOutText}>Sign Out</Text>
           </ImageBackground>
         </TouchableOpacity>
-      
-      <View  style={styles.attrContainer}>
-        <Text style={styles.text}>{role}</Text>
-        <Text style={styles.text}>User name:</Text>
-        <Text style={styles.text}>{userName}</Text>
-        <Text style={styles.text}>Level: {userLvl}</Text>
-
-        <Text style={styles.attributeText}>Charisma: {charisma}</Text>
-        <Text style={styles.attributeText}>Constitution: {constitution}</Text>
-        <Text style={styles.attributeText}>Insanity: {insanity}</Text>
-        <Text style={styles.attributeText}>Dexterity: {dexterity}</Text>
-        <Text style={styles.attributeText}>Intelligence: {intelligence}</Text>
-        <Text style={styles.attributeText}>Strength: {strength}</Text>
-      </View>
     </View>
-    </ImageBackground>
   );
 };
 
@@ -88,10 +60,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: 200,
     height: 100,
+    marginBottom: '160%'
   },
   signOutText: {
     color: 'white',
-    fontSize: 12,
+    fontSize: 22,
   },
   attributeText: {
     fontSize: 16,          // Slightly smaller for attributes

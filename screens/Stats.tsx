@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground } from 'react-native';
 import * as Progress from 'react-native-progress';  // Importar la librería de progreso
 
 import { Modifier } from '../interfaces/Modifier';
@@ -16,6 +16,8 @@ const StatsScreen: React.FC<Props> = ({ user }) => {
     if (player) calculateAllAttributes();
   }, [player]);
 
+  const role = user?.playerData.role || 'No name available';
+  const userName = user?.playerData?.nickname || 'No name available';
   const calculateAllAttributes = () => {
     if(player) {
       const charisma =  
@@ -77,8 +79,15 @@ const StatsScreen: React.FC<Props> = ({ user }) => {
   }
 
   return (
+    <ImageBackground
+      source={require('../assets/profile.png')}
+      style={styles.background}
+      resizeMode="cover"
+    >
     <View style={styles.container}>
-      <Text style={styles.header}>Player Stats</Text>
+      <Text style={styles.header}>{role}</Text>
+      <Text style={styles.header}>Name: {userName}</Text>
+      <Text style={styles.space}></Text>
       {currentAttributes ? (
         <View style={styles.statsContainer}>
           <StatBar label="Charisma" value={currentAttributes.charisma} />
@@ -92,6 +101,7 @@ const StatsScreen: React.FC<Props> = ({ user }) => {
         <Text style={styles.statLabel}>No stats available</Text>
       )}
     </View>
+    </ImageBackground>
   );
 };
 
@@ -116,7 +126,12 @@ const StatBar: React.FC<{ label: string, value: number }> = ({ label, value }) =
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: '#1a202c',
+    backgroundColor: '#1a202c60',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  background: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -132,10 +147,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  space: {
+    marginVertical: '10%'
+  },
   statRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 20,
     width: '100%',
     justifyContent: 'space-between',
   },

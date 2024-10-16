@@ -119,7 +119,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               options={{
                 tabBarLabel: '',
                 tabBarIcon: () => (
-                  <Image source={require('./assets/profile_icon.png')} style={styles.icon} />
+                  <Image source={require('./assets/setings_icon.png')} style={styles.icon} />
                 ),
               }}
             >
@@ -178,7 +178,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               options={{
                 tabBarLabel: '',
                 tabBarIcon: () => (
-                  <Image source={require('./assets/profile_icon.png')} style={styles.icon} />
+                  <Image source={require('./assets/setings_icon.png')} style={styles.icon} />
                 ),
               }}
             >
@@ -206,7 +206,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               options={{
                 tabBarLabel: '',
                 tabBarIcon: () => (
-                  <Image source={require('./assets/profile_icon.png')} style={styles.icon} />
+                  <Image source={require('./assets/setings_icon.png')} style={styles.icon} />
                 ),
               }}
             >
@@ -234,7 +234,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               options={{
                 tabBarLabel: '',
                 tabBarIcon: () => (
-                  <Image source={require('./assets/profile_icon.png')} style={styles.icon} />
+                  <Image source={require('./assets/setings_icon.png')} style={styles.icon} />
                 ),
               }}
             >
@@ -256,7 +256,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               options={{
                 tabBarLabel: '',
                 tabBarIcon: () => (
-                  <Image source={require('./assets/home_icon.png')} style={styles.icon} />
+                  <Image source={require('./assets/profile_icon.png')} style={styles.icon} />
                 ),
               }}
             >

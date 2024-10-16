@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, ImageBackground } from 'react-native';
 import EquipmentSlot from '../components/Slot';
 
 type Props = {
@@ -24,6 +24,11 @@ const EquipmentScreen: React.FC<Props> = ({ user }) => {
     ];
 
     return (
+      <ImageBackground
+      source={require('../assets/profile.png')}
+      style={styles.background}
+      resizeMode="cover"
+    >
         <View style={styles.container}>
             <View style={styles.classContainer}>
               <View style={styles.cornerSquare}>
@@ -64,13 +69,13 @@ const EquipmentScreen: React.FC<Props> = ({ user }) => {
               </View>
             </View>
         </View>
+        </ImageBackground>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
       position: 'relative',
     },
     classContainer: {
@@ -94,7 +99,7 @@ const styles = StyleSheet.create({
       right: 10,
     },
     cornerSquare: {
-      backgroundColor: 'transparent',
+      backgroundColor: '#1a202c60',
       borderWidth: 2,
       borderColor: 'rgba(253, 224, 71, 1)',
       padding: 10,
@@ -103,7 +108,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     text: {
-      color: 'black',
+      color: 'white',
       fontWeight: 'bold',
     },
     equipmentContainer: {
@@ -113,6 +118,11 @@ const styles = StyleSheet.create({
       flex: 1,
       paddingTop: 50,
       paddingBottom: 50,
+    },
+    background: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     column: {
       flexDirection: 'column',
