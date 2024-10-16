@@ -8,4 +8,8 @@ export type RootStackParamList = {
     QRGenerator: undefined;
     ProfileVillain: undefined;
     Settings: undefined;
+    Info: undefined;
+    Equipment: undefined;
+    Stats: undefined;
+    Inventory: undefined;
   };

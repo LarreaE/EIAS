@@ -19,6 +19,7 @@ import socket from './sockets/socketConnection';
 import { sendUserEMail } from './sockets/emitEvents.tsx';
 import { UserProvider } from './context/UserContext'; // Importa el proveedor
 import { UserContext } from './context/UserContext'; // Importa el contexto
+import AcolythScreen from './screens/Info.tsx';
 import { Player } from './interfaces/Player.tsx';
 
 const Tab = createMaterialTopTabNavigator();
@@ -41,8 +42,7 @@ function App() {
 }
 
 function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) {
-  const { userData: UserData, setUserData } = useContext(UserContext); // Usamos useContext para UserData
-console.log(UserData);
+  const { userData: UserData, setUserData } = useContext(UserContext); // Usamos useContext para UserData;
 
   useEffect(() => {
     socket.on('request_email', () => {
@@ -250,6 +250,17 @@ console.log(UserData);
               }}
             >
               {props => <AcolythHomeScreen {...props} />}
+            </Tab.Screen>
+            <Tab.Screen
+              name="Info"
+              options={{
+                tabBarLabel: '',
+                tabBarIcon: () => (
+                  <Image source={require('./assets/home_icon.png')} style={styles.icon} />
+                ),
+              }}
+            >
+              {props => <AcolythScreen {...props} user={UserData} />}
             </Tab.Screen>
             <Tab.Screen
               name="LaboratoryAcolyth"

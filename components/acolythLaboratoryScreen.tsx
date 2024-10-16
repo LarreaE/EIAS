@@ -3,6 +3,7 @@ import QRGenerator from './QrGenerator.tsx';
 import { ImageBackground, Modal, StyleSheet, TouchableOpacity, View, Vibration } from 'react-native';
 import { Text } from 'react-native';
 import { clearServerEvents, listenToServerEventsScanAcolyte } from '../sockets/listenEvents.tsx';
+import IngredientSelector from './ingredientSelector.tsx';
 
 type Props = { UserData: any };
 
@@ -26,7 +27,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
         console.log('Fetching ingredients...');
         const response = await fetch('https://eiasserver.onrender.com/ingredients');
         const contentType = response.headers.get('content-type');
-  
         if (contentType && contentType.includes('application/json')) {
           const data = await response.json();
           
@@ -43,7 +43,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
         console.error('Error getting ingredients:', error);
       }
     };
-  
     fetchIngredients();
   }, []);
   
@@ -130,6 +129,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
               <Text style={styles.textStyle}>Show QR</Text>
             </ImageBackground>
           </TouchableOpacity>
+          <IngredientSelector onSelectionChange={undefined} />
 
           <Modal
             animationType="slide"

@@ -12,6 +12,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven { url("$rootDir/../node_modules/react-native-linear-gradient/android") }
     }
     dependencies {
         classpath("com.android.tools.build:gradle:7.4.0")
