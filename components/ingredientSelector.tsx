@@ -32,7 +32,7 @@ const IngredientSelector = ({ onSelectionChange }) => {
   const pressTimer = useRef(null);
 
   // Dimensions
-  const ITEM_WIDTH = 150;
+  const ITEM_WIDTH = 200;
   const ITEM_MARGIN = 5;
   const ITEM_SIZE = ITEM_WIDTH + ITEM_MARGIN * 2;
   const { width: WIDTH } = Dimensions.get('window');
@@ -285,9 +285,9 @@ export default IngredientSelector;
 
 const styles = StyleSheet.create({
   ingredientItemContainer: {
-    width: 150,
+    width: 200,
     marginHorizontal: 5,
-    height: 200,
+    height: 250,
     marginTop: -150,
   },
   gradientBackground: {
@@ -301,7 +301,6 @@ const styles = StyleSheet.create({
   },
   selectedItem: {
     borderWidth: 0,
-    borderColor: '#cc9a52',
   },
   disabledItem: {
     opacity: 0.5,
@@ -311,14 +310,17 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 40,
     marginBottom: 10,
+    top:-20,
   },
   ingredientName: {
+    top:-20,
     fontSize: 16,
     fontWeight: 'bold',
     color: 'white',
     textAlign: 'center',
   },
   ingredientDescription: {
+    top:-20,
     fontSize: 12,
     color: 'white',
     textAlign: 'center',
