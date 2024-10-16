@@ -20,11 +20,9 @@ const createInvetory = (inventory:any) => {
 const Inventory: React.FC<Props> = ({user}) => {
     const player = user?.playerData || 'No player available';
     const inventory = player.inventory;
-    console.log(inventory);
     const newInventory = createInvetory(inventory);
     const slots = Array.from({length: 200});
     slots.length -= newInventory.length;
-    console.log(newInventory[0]);
     return (
       <ScrollView>
         <View style={styles.container}>
