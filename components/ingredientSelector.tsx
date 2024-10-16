@@ -364,13 +364,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContent: {
-    width: '100%',
-    height: '80%',
+    width: 350,
+    height: 340,
     borderRadius: 10,
     padding: 20,
     alignItems: 'center',
     overflow: 'hidden',
-    left: 20,
+    left: 0,
   },
   modalCloseButton: {
     position: 'absolute',
@@ -388,11 +388,9 @@ const styles = StyleSheet.create({
     borderRadius: 75,
     marginBottom: 15,
     top: 30,
-    right: 20,
   },
   modalTitle: {
     top: 30,
-    right: 20,
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
@@ -400,7 +398,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   modalDescription: {
-    right: 20,
     top: 30,
     fontSize: 16,
     color: '#fff',
