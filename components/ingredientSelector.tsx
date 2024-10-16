@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
   Animated,
   TouchableOpacity,
@@ -13,173 +14,212 @@ import {
   Vibration,
 } from 'react-native';
 
-// Importar datos de ingredientes
+// Import ingredient data and images
 import { ingredients } from '../assets/fakeIngredients';
 import LocalIngredientImage from '../assets/EIAS.png';
-
-// Importar las imágenes de gradiente y runa
-import gradientBackground from '../assets/gradiant.png';
-import runaBackground from '../assets/runa.png'; // Importar runa.png
+import runaBackground from '../assets/runa.png'; // Import runa.png
 
 const IngredientSelector = ({ onSelectionChange }) => {
+  // Main States
   const [selectedIngredients, setSelectedIngredients] = useState({});
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Estado para controlar la visibilidad del modal y el ingrediente seleccionado
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState(null);
+  const [scrollEnabled, setScrollEnabled] = useState(true);
 
-  // Crear una referencia animada para el desplazamiento horizontal
+  // References
   const scrollX = useRef(new Animated.Value(0)).current;
+  const pressTimer = useRef(null);
 
-  const toggleSelection = (ingredientId) => {
-    setSelectedIngredients((prevSelectedIngredients) => {
-      // Calcular el total actual de selecciones
-      const totalSelections = Object.values(prevSelectedIngredients).reduce(
-        (a, b) => a + b,
-        0
-      );
-
-      // Obtener el conteo actual del ingrediente
-      const currentCount = prevSelectedIngredients[ingredientId] || 0;
-
-      if (totalSelections < 4) {
-        // Incrementar el conteo del ingrediente
-        const updatedSelection = {
-          ...prevSelectedIngredients,
-          [ingredientId]: currentCount + 1,
-        };
-        if (onSelectionChange) {
-          onSelectionChange(updatedSelection);
-        }
-        return updatedSelection;
-      } else {
-        Alert.alert(
-          'Límite alcanzado',
-          'Solo puedes seleccionar hasta 4 ingredientes en total.'
-        );
-        return prevSelectedIngredients;
-      }
-    });
-  };
-
-  const decreaseSelection = (ingredientId) => {
-    setSelectedIngredients((prevSelectedIngredients) => {
-      const currentCount = prevSelectedIngredients[ingredientId] || 0;
-      if (currentCount > 0) {
-        const updatedSelection = {
-          ...prevSelectedIngredients,
-          [ingredientId]: currentCount - 1,
-        };
-        // Eliminar el ingrediente si el conteo es 0
-        if (updatedSelection[ingredientId] === 0) {
-          delete updatedSelection[ingredientId];
-        }
-        if (onSelectionChange) {
-          onSelectionChange(updatedSelection);
-        }
-        return updatedSelection;
-      } else {
-        return prevSelectedIngredients;
-      }
-    });
-  };
-
-  const renderIngredient = ({ item, index }) => {
-    const selectedCount = selectedIngredients[item.id] || 0;
-
-    // Definir el rango de entrada para la interpolación
-    const inputRange = [
-      (index - 1) * ITEM_SIZE,
-      index * ITEM_SIZE,
-      (index + 1) * ITEM_SIZE,
-    ];
-
-    // Interpolar el valor de translateY basado en scrollX
-    const translateY = scrollX.interpolate({
-      inputRange,
-      outputRange: [0, -50, 0],
-      extrapolate: 'clamp',
-    });
-
-    // Interpolar la opacidad basada en scrollX
-    const opacity = scrollX.interpolate({
-      inputRange,
-      outputRange: [0.8, 1, 0.8],
-      extrapolate: 'clamp',
-    });
-
-    const isCentered = index === currentIndex;
-
-    return (
-      <TouchableOpacity
-        onPress={() => toggleSelection(item.id)}
-        onLongPress={() => {
-          Vibration.vibrate(); // Hacer vibrar el dispositivo
-          setSelectedIngredient(item);
-          setModalVisible(true);
-        }}
-        activeOpacity={isCentered ? 0.9 : 1}
-        disabled={!isCentered}
-      >
-        <Animated.View
-          style={[
-            styles.ingredientItemContainer,
-            { transform: [{ translateY }], opacity },
-            !isCentered && styles.disabledItem,
-          ]}
-        >
-          <ImageBackground
-            source={runaBackground}
-            style={[
-              styles.gradientBackground,
-              selectedCount > 0 && styles.selectedItem,
-            ]}
-            imageStyle={{ borderRadius: 10 }}
-          >
-            {/* Botón para disminuir el conteo */}
-            {selectedCount > 0 && (
-              <TouchableOpacity
-                style={styles.decreaseButton}
-                onPress={() => decreaseSelection(item.id)}
-              >
-                <Text style={styles.decreaseButtonText}>-</Text>
-              </TouchableOpacity>
-            )}
-
-            {/* Mostrar el conteo si es mayor que 0 */}
-            {selectedCount > 0 && (
-              <View style={styles.countBadge}>
-                <Text style={styles.countText}>{selectedCount}</Text>
-              </View>
-            )}
-
-            <Image
-              source={LocalIngredientImage}
-              style={styles.ingredientImage}
-            />
-            <Text style={styles.ingredientName}>{item.name}</Text>
-            <Text style={styles.ingredientDescription} numberOfLines={2}>
-              {item.description}
-            </Text>
-          </ImageBackground>
-        </Animated.View>
-      </TouchableOpacity>
-    );
-  };
-
+  // Dimensions
   const ITEM_WIDTH = 150;
   const ITEM_MARGIN = 5;
   const ITEM_SIZE = ITEM_WIDTH + ITEM_MARGIN * 2;
-
-  // Obtener el ancho de la pantalla
   const { width: WIDTH } = Dimensions.get('window');
+
+  // Handle Press In: Disable FlatList scrolling and start a timer
+  const handlePressIn = useCallback(() => {
+    setScrollEnabled(false);
+    pressTimer.current = setTimeout(() => {
+    }, 1000);
+  }, []);
+
+  // Handle Press Out: Enable FlatList scrolling and clear the timer
+  const handlePressOut = useCallback(() => {
+    setScrollEnabled(true);
+    if (pressTimer.current) {
+      clearTimeout(pressTimer.current);
+      pressTimer.current = null;
+    }
+  }, []);
+
+  // Cleanup the timer when component unmounts
+  useEffect(() => {
+    return () => {
+      if (pressTimer.current) {
+        clearTimeout(pressTimer.current);
+      }
+    };
+  }, []);
+
+  // Function to toggle ingredient selection
+  const toggleSelection = useCallback(
+    (ingredientId) => {
+      setSelectedIngredients((prevSelectedIngredients) => {
+        // Calculate the total number of selections
+        const totalSelections = Object.values(prevSelectedIngredients).reduce(
+          (a, b) => a + b,
+          0
+        );
+
+        // Get the current count of the selected ingredient
+        const currentCount = prevSelectedIngredients[ingredientId] || 0;
+
+        if (totalSelections < 4) {
+          // Increment the count of the selected ingredient
+          const updatedSelection = {
+            ...prevSelectedIngredients,
+            [ingredientId]: currentCount + 1,
+          };
+          if (onSelectionChange) {
+            onSelectionChange(updatedSelection);
+          }
+          return updatedSelection;
+        } else {
+          Alert.alert(
+            'Limit Reached',
+            'You can only select up to 4 ingredients in total.'
+          );
+          return prevSelectedIngredients;
+        }
+      });
+    },
+    [onSelectionChange]
+  );
+
+  // Function to decrease ingredient selection
+  const decreaseSelection = useCallback(
+    (ingredientId) => {
+      setSelectedIngredients((prevSelectedIngredients) => {
+        const currentCount = prevSelectedIngredients[ingredientId] || 0;
+        if (currentCount > 0) {
+          const updatedSelection = {
+            ...prevSelectedIngredients,
+            [ingredientId]: currentCount - 1,
+          };
+          // Remove the ingredient if the count reaches 0
+          if (updatedSelection[ingredientId] === 0) {
+            delete updatedSelection[ingredientId];
+          }
+          if (onSelectionChange) {
+            onSelectionChange(updatedSelection);
+          }
+          return updatedSelection;
+        } else {
+          return prevSelectedIngredients;
+        }
+      });
+    },
+    [onSelectionChange]
+  );
+
+  // Function to render each ingredient item
+  const renderIngredient = useCallback(
+    ({ item, index }) => {
+      const selectedCount = selectedIngredients[item.id] || 0;
+
+      // Define input range for interpolation
+      const inputRange = [
+        (index - 1) * ITEM_SIZE,
+        index * ITEM_SIZE,
+        (index + 1) * ITEM_SIZE,
+      ];
+
+      // Interpolate translateY based on scrollX
+      const translateY = scrollX.interpolate({
+        inputRange,
+        outputRange: [0, -50, 0],
+        extrapolate: 'clamp',
+      });
+
+      // Interpolate opacity based on scrollX
+      const opacity = scrollX.interpolate({
+        inputRange,
+        outputRange: [0.8, 1, 0.8],
+        extrapolate: 'clamp',
+      });
+
+      const isCentered = index === currentIndex;
+
+      return (
+        <TouchableOpacity
+          onPressIn={handlePressIn} // Disable scroll on press
+          onPressOut={handlePressOut} // Enable scroll on release
+          onPress={() => toggleSelection(item.id)}
+          onLongPress={() => {
+            Vibration.vibrate(); // Vibrate the device
+            setSelectedIngredient(item);
+            setModalVisible(true);
+          }}
+          activeOpacity={isCentered ? 0.9 : 1}
+          disabled={!isCentered}
+          pressRetentionOffset={{ top: 40, left: 40, right: 40, bottom: 40 }} // Increase movement tolerance
+          delayLongPress={300} // Adjust long press delay
+        >
+          <Animated.View
+            style={[
+              styles.ingredientItemContainer,
+              { transform: [{ translateY }], opacity },
+              !isCentered && styles.disabledItem,
+            ]}
+          >
+            <ImageBackground
+              source={runaBackground} // Use runa.png as background
+              style={[
+                styles.gradientBackground,
+                selectedCount > 0 && styles.selectedItem,
+              ]}
+              imageStyle={{ borderRadius: 10 }}
+            >
+              {/* Button to decrease selection count */}
+              {selectedCount > 0 && (
+                <TouchableOpacity
+                  style={styles.decreaseButton}
+                  onPress={() => decreaseSelection(item.id)}
+                >
+                  <Text style={styles.decreaseButtonText}>-</Text>
+                </TouchableOpacity>
+              )}
+
+              {/* Display count badge if count > 0 */}
+              {selectedCount > 0 && (
+                <View style={styles.countBadge}>
+                  <Text style={styles.countText}>{selectedCount}</Text>
+                </View>
+              )}
+
+              <Image
+                source={LocalIngredientImage}
+                style={styles.ingredientImage}
+              />
+              <Text style={styles.ingredientName}>{item.name}</Text>
+              <Text style={styles.ingredientDescription} numberOfLines={2}>
+                {item.description}
+              </Text>
+            </ImageBackground>
+          </Animated.View>
+        </TouchableOpacity>
+      );
+    },
+    [selectedIngredients, ITEM_SIZE, scrollX, currentIndex, handlePressIn, handlePressOut, toggleSelection, decreaseSelection]
+  );
 
   return (
     <View style={{ flex: 1 }}>
       <Animated.FlatList
+        scrollEnabled={scrollEnabled}
         data={ingredients}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()} // Ensure unique and consistent keys
         renderItem={renderIngredient}
         horizontal
         contentContainerStyle={{
@@ -202,7 +242,7 @@ const IngredientSelector = ({ onSelectionChange }) => {
         }}
       />
 
-      {/* Modal para mostrar detalles del ingrediente */}
+      {/* Modal to display ingredient details */}
       {selectedIngredient && (
         <Modal
           visible={modalVisible}
@@ -212,11 +252,11 @@ const IngredientSelector = ({ onSelectionChange }) => {
         >
           <View style={styles.modalOverlay}>
             <ImageBackground
-              source={runaBackground} // Usar runa.png como fondo
+              source={runaBackground} // Use runa.png as background
               style={styles.modalContent}
               imageStyle={{ borderRadius: 10 }}
             >
-              {/* Botón de cierre */}
+              {/* Close button */}
               <TouchableOpacity
                 style={styles.modalCloseButton}
                 onPress={() => setModalVisible(false)}
@@ -224,7 +264,7 @@ const IngredientSelector = ({ onSelectionChange }) => {
                 <Text style={styles.modalCloseButtonText}>X</Text>
               </TouchableOpacity>
 
-              {/* Contenido del modal */}
+              {/* Modal content */}
               <Image
                 source={LocalIngredientImage}
                 style={styles.modalImage}
@@ -254,6 +294,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 15,
     alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 10,
     overflow: 'hidden',
     height: '100%',
@@ -315,10 +356,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     lineHeight: 18,
   },
-  // Estilos para el modal
+  // Modal Styles
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semitransparente
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -329,7 +370,7 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
     overflow: 'hidden',
-    left:20,
+    left: 20,
   },
   modalCloseButton: {
     position: 'absolute',
@@ -346,11 +387,11 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: 75,
     marginBottom: 15,
-    top:30,
+    top: 30,
     right: 20,
   },
   modalTitle: {
-    top:30,
+    top: 30,
     right: 20,
     fontSize: 20,
     fontWeight: 'bold',
@@ -360,7 +401,7 @@ const styles = StyleSheet.create({
   },
   modalDescription: {
     right: 20,
-    top:30,
+    top: 30,
     fontSize: 16,
     color: '#fff',
     textAlign: 'center',

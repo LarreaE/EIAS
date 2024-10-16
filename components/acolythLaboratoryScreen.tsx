@@ -52,10 +52,8 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
         console.log('Fetching potions...');
         const response = await fetch('https://eiasserver.onrender.com/potions');
         const contentType = response.headers.get('content-type');
-  
         if (contentType && contentType.includes('application/json')) {
           const data = await response.json();
-          
           if (data.success === true && Array.isArray(data.potionsData) && data.potionsData.length > 0) {
             setIngredients(data.potionsData);
             console.log('Getted potions:', data.potionsData[31]);
@@ -70,7 +68,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
         console.error('Error getting potions:', error);
       }
     };
-  
     fetchPotions();
   }, []);
 
