@@ -13,10 +13,12 @@ type Props = {
 const screenOptions = {
   tabBarStyle: {
     backgroundColor: 'transparent',  // Fondo transparente
-    elevation: 0, // Elimina sombra en Android
-    shadowOpacity: 0, // Elimina sombra en iOS
     borderBottomWidth: 0, // Elimina cualquier borde inferior
-    position: 'relative',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    elevation: 0,
   },
   headerShown: true,
   swipeEnabled: true,

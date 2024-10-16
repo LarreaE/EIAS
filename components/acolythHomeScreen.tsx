@@ -13,11 +13,11 @@ const AcolythHomeScreen: React.FC<Props> = ({ }) => {
   return (
     <GestureHandlerRootView style={styles.container}>
       <ImageBackground
-      source={require('../assets/home_stay.png')}  // Ruta de la imagen de fondo
-      style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
-      resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
-    >
-    </ImageBackground>
+        source={require('../assets/home_stay.png')}  // Ruta de la imagen de fondo
+        style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
+        resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+      >
+      </ImageBackground>
     </GestureHandlerRootView>
   );
 };

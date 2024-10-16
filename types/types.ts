@@ -12,4 +12,5 @@ export type RootStackParamList = {
     Equipment: undefined;
     Stats: undefined;
     Inventory: undefined;
+    Map: undefined;
   };

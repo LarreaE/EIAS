@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useContext } from 'react';
 import QRGenerator from './QrGenerator.tsx';
 import { ImageBackground, Modal, StyleSheet, TouchableOpacity, View, Vibration } from 'react-native';
 import { Text } from 'react-native';
 import { clearServerEvents, listenToServerEventsScanAcolyte } from '../sockets/listenEvents.tsx';
 import IngredientSelector from './ingredientSelector.tsx';
+import { UserContext } from '../context/UserContext'; // Importa el contexto
 
 type Props = { UserData: any };
 
@@ -11,13 +12,12 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [isInside, setIsInside] = useState(UserData.UserData.playerData.is_active);
-  const [ingredients, setIngredients] = useState([]);
+  const {ingredients, setIngredients } = useContext(UserContext);
   const [potions, setPotions] = useState([]);
   const player = UserData.UserData.playerData;
   const vibrationDuration = 250;
 
   useEffect(() => {
-    console.log('modalVisible: ');
     setModalVisible(false);
   }, [isInside]);
 
@@ -29,9 +29,8 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
           const data = await response.json();
-          
           if (data.success === true && Array.isArray(data.ingredientsData) && data.ingredientsData.length > 0) {
-            setIngredients(data.ingredientsData);            
+            setIngredients(data.ingredientsData);
           } else {
             console.error('No ingredients found or status is not OK.');
           }
@@ -44,18 +43,15 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
       }
     };
     fetchIngredients();
-  }, []);
-  
+  }, [setIngredients]);
   useEffect(() => {
     const fetchPotions = async () => {
       try {
         console.log('Fetching potions...');
         const response = await fetch('https://eiasserver.onrender.com/potions');
         const contentType = response.headers.get('content-type');
-  
         if (contentType && contentType.includes('application/json')) {
           const data = await response.json();
-          
           if (data.success === true && Array.isArray(data.potionsData) && data.potionsData.length > 0) {
             setIngredients(data.potionsData);
             console.log('Getted potions:', data.potionsData[31]);
@@ -70,9 +66,8 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
         console.error('Error getting potions:', error);
       }
     };
-  
     fetchPotions();
-  }, []);
+  }, [setIngredients]);
 
   useEffect(() => {
     listenToServerEventsScanAcolyte(setIsInside);

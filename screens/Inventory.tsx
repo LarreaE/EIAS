@@ -12,7 +12,7 @@ const createInvetory = (inventory:any) => {
     for (const key in inventory) {
         for (let i = 0; i < inventory[key].length; i++) {
             newInventory.push(inventory[key][i]);
-        }
+        }marginTop: 100
     }
     return newInventory;
 };
@@ -20,26 +20,27 @@ const createInvetory = (inventory:any) => {
 const Inventory: React.FC<Props> = ({user}) => {
     const player = user?.playerData || 'No player available';
     const inventory = player.inventory;
-    console.log(inventory);
     const newInventory = createInvetory(inventory);
-    const slots = Array.from({length: 88});
+    const slots = Array.from({length: 200});
     slots.length -= newInventory.length;
-    console.log(newInventory[0]);
     return (
-      <ImageBackground
+<ImageBackground
       source={require('../assets/profile.png')}
       style={styles.background}
       resizeMode="cover"
     >
-    <View style={styles.container}>
-        {newInventory.map((_,index) => (
-        <EquipmentSlot key={index} item={ newInventory[index] } size={45} />
-      ))}
-      {slots.map((_,index) => (
-        <EquipmentSlot key={index} item={ null } size={45} />
-      ))}
-    </View>
-    </ImageBackground>
+      <ScrollView>
+        <View style={styles.container}>
+          {newInventory.map((_,index) => (
+          <EquipmentSlot key={index} item={ newInventory[index] } size={70} />
+        ))}
+        {slots.map((_,index) => (
+          <EquipmentSlot key={index} item={ null } size={70} />
+        ))}
+        </View>
+      </ScrollView>
+      </ImageBackground>
+
     );
 };
 
@@ -49,6 +50,7 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap', // This will allow the slots to wrap to the next row
         justifyContent: 'center', // Center the equipment slots
         alignItems: 'center',
+        marginTop: 100
       },
       background: {
         flex: 1,

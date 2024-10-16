@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef,useContext } from 'react';
 import {
   Animated,
   TouchableOpacity,
@@ -12,27 +12,32 @@ import {
   Modal,
   Vibration,
 } from 'react-native';
+import { UserContext } from '../context/UserContext'; // Importa el contexto
+
 
 // Importar datos de ingredientes
-import { ingredients } from '../assets/fakeIngredients';
+import { Ingredients } from '../interfaces/Ingredients';
 import LocalIngredientImage from '../assets/EIAS.png';
 
 // Importar las imágenes de gradiente y runa
-import gradientBackground from '../assets/gradiant.png';
 import runaBackground from '../assets/runa.png'; // Importar runa.png
 
 const IngredientSelector = ({ onSelectionChange }) => {
   const [selectedIngredients, setSelectedIngredients] = useState({});
   const [currentIndex, setCurrentIndex] = useState(0);
-
+  const {ingredients } = useContext(UserContext);
+  console.log("ingredeints on selector");
+  console.log(ingredients);
+  
   // Estado para controlar la visibilidad del modal y el ingrediente seleccionado
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedIngredient, setSelectedIngredient] = useState(null);
+  const [selectedIngredient, setSelectedIngredient] = useState<Ingredients | null>(null);
+
 
   // Crear una referencia animada para el desplazamiento horizontal
   const scrollX = useRef(new Animated.Value(0)).current;
 
-  const toggleSelection = (ingredientId) => {
+  const toggleSelection = (Ingredients) => {
     setSelectedIngredients((prevSelectedIngredients) => {
       // Calcular el total actual de selecciones
       const totalSelections = Object.values(prevSelectedIngredients).reduce(
@@ -215,6 +220,7 @@ const IngredientSelector = ({ onSelectionChange }) => {
               source={runaBackground} // Usar runa.png como fondo
               style={styles.modalContent}
               imageStyle={{ borderRadius: 10 }}
+              resizeMode="stretch"
             >
               {/* Botón de cierre */}
               <TouchableOpacity
@@ -226,12 +232,21 @@ const IngredientSelector = ({ onSelectionChange }) => {
 
               {/* Contenido del modal */}
               <Image
-                source={LocalIngredientImage}
+                source={selectedIngredient.image}
                 style={styles.modalImage}
               />
               <Text style={styles.modalTitle}>{selectedIngredient.name}</Text>
+              <Text style={styles.modalAtribute}>DESCRIPTION:</Text>
               <Text style={styles.modalDescription}>
                 {selectedIngredient.description}
+              </Text>
+              <Text style={styles.modalAtribute}>VALUE:</Text>
+              <Text style={styles.modalDescription}>
+                {selectedIngredient.value}
+              </Text>
+              <Text style={styles.modalAtribute}>EFFECTS:</Text>
+              <Text style={styles.modalDescription}>
+                {selectedIngredient.effects}
               </Text>
             </ImageBackground>
           </View>
@@ -324,7 +339,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: '100%',
-    height: '80%',
+    height: '90%',
     borderRadius: 10,
     padding: 20,
     alignItems: 'center',
@@ -343,14 +358,14 @@ const styles = StyleSheet.create({
   },
   modalImage: {
     width: 120,
-    height: 120,
+    height: 100,
     borderRadius: 75,
     marginBottom: 15,
     top:30,
     right: 20,
   },
   modalTitle: {
-    top:30,
+    top:10,
     right: 20,
     fontSize: 20,
     fontWeight: 'bold',
@@ -360,9 +375,17 @@ const styles = StyleSheet.create({
   },
   modalDescription: {
     right: 20,
-    top:30,
+    top:10,
     fontSize: 16,
     color: '#fff',
+    textAlign: 'center',
+    maxWidth: 150,
+  },
+  modalAtribute: {
+    right: 20,
+    top:10,
+    fontSize: 16,
+    color: 'yellow',
     textAlign: 'center',
   },
 });

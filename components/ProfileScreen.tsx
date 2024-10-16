@@ -9,9 +9,6 @@ type Props = {
 
 const ProfileScreen: React.FC<Props> = ({ user, setIsLoged }) => {
 
-
-
-
   const signOut = () => {
     setIsLoged(false); // Cambiar el estado de inicio de sesión
     socket.disconnect();
