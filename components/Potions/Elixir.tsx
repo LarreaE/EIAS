@@ -1,14 +1,24 @@
 import { Modifier } from '../../interfaces/Modifier';
-import Potion from './Potion';
 import { Elixirs } from '../../interfaces/Elixir';
-class Elixir extends Potion implements Elixirs {
+class Elixir implements Elixirs {
 
+    _id: string;
+    description: string;
+    image: string;
+    type: string;
+    name: string;
+    value: number;
     modifiers: Modifier;
 
     constructor(
-        props: Elixirs
+       props: Elixirs
     ) {
-        super(props._id,props.name,props.description,props.image,props.type,props.value);
+        this._id = props._id;
+        this.description = props.description;
+        this.image = props.image;
+        this.type = props.type;
+        this.name = props.name;
+        this.value = props.value;
         this.modifiers = props.modifiers;
     }
 }
