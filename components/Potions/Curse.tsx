@@ -1,42 +1,40 @@
-import { Ingredients } from '../../interfaces/Ingredients';
+import { Curses } from '../../interfaces/Curse';
+import { Modifier } from '../../interfaces/Modifier';
 
-class Ingredient implements Ingredients {
+class Curse implements Curses {
     _id!: string;
     description!: string;
-    effects: string;
     image!: string;
     name: string;
     type!: string;
-    value: number;
+    antidote_effects: string[];
+    poison_effects: string[];
+    modifiers: Modifier;
 
     constructor(
-        _id: string,
-        name: string,
-        effects: string,
-        value: number,
-        type: string,
-        image: string,
-        description: string
+        props: Curses
     ) {
-        this._id = _id;
-        this.name = name;
-        this.effects = effects;
-        this.type = type;
-        this.image = image;
-        this.description = description;
-        this.value = value;
+        this._id = props._id;
+        this.name = props.name;
+        this.type = props.type;
+        this.image = props.image;
+        this.description = props.description;
+        this.antidote_effects = props.antidote_effects;
+        this.poison_effects = props.poison_effects;
+        this.modifiers = props.modifiers;
     }
 
-    static from(ingredient: Ingredients) {
-        return new Ingredient(
-            ingredient._id,
-            ingredient.name,
-            ingredient.effects,
-            ingredient.value,
-            ingredient.type,
-            ingredient.image,
-            ingredient.description,
-        );
+    static from(curse: Curses) {
+        return new Curse({
+            _id: curse._id,
+            name: curse.name,
+            type: curse.type,
+            image: curse.image,
+            description: curse.description,
+            antidote_effects: curse.antidote_effects,
+            poison_effects: curse.poison_effects,
+            modifiers: curse.modifiers,
+        });
     }
 
     hasName(name: string) {
@@ -44,4 +42,4 @@ class Ingredient implements Ingredients {
     }
 }
 
-export default Ingredient;
+export default Curse;
