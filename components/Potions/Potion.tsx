@@ -58,115 +58,137 @@ export default class Potion implements Potions{
         const lowerPotency = checkIngredientCompatibility(effectsArray);
         description = ingredients[0].description;
         if (lowerPotency) {
-            
+
         }
         let potion_name = '';
-        switch (effectsArray[0].effect) {
-            case 'increase':
-                potion_name = `Essence of ${lowerPotency} heal`;
-                console.log(potion_name);
-                type = 'Essence';
-                return new Essence({
-                    _id: id,
-                    name: potion_name,
-                    description: description,
-                    image: image,
-                    type: type,
-                    value: value,
-                });
-            case 'decrease':
-                potion_name = `Stench of ${lowerPotency} damage`;
-                type = 'Stench';
-                console.log(potion_name);
-                return new Stench({
-                    _id: id,
-                    name: potion_name,
-                    description: description,
-                    image: image,
-                    type: type,
-                    value: value,
-                });
-            case 'calm':
-                potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`; // calm elixir
-                console.log(potion_name);
 
-                return new Elixir({
-                    _id: id,
-                    name: potion_name,
-                    description: description,
-                    image: image,
-                    type: type,
-                    value: value,
-                    modifiers: modifiers,
-                });
-            case 'frenzy':
-                potion_name = `${lowerPotency} ${effectsArray[0].effect} venom`;
-                console.log(potion_name);
-                return new Venom({
-                    _id: id,
-                    name: potion_name,
-                    description: description,
-                    image: image,
-                    type: type,
-                    value: value,
-                    modifiers: modifiers,
-                });
+        //same effect
+        if ( effectsArray.every(element => element === effectsArray[0])) {
+            console.log("SAME EFFECT");
+            
+            switch (effectsArray[0].effect) {
+                case 'increase':
+                    potion_name = `Essence of ${lowerPotency} heal`;
+                    console.log(potion_name);
+                    type = 'Essence';
+                    return new Essence({
+                        _id: id,
+                        name: potion_name,
+                        description: description,
+                        image: image,
+                        type: type,
+                        value: value,
+                    });
+                case 'decrease':
+                    potion_name = `Stench of ${lowerPotency} damage`;
+                    type = 'Stench';
+                    console.log(potion_name);
+                    return new Stench({
+                        _id: id,
+                        name: potion_name,
+                        description: description,
+                        image: image,
+                        type: type,
+                        value: value,
+                    });
+                case 'calm':
+                    potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`; // calm elixir
+                    console.log(potion_name);
+                    type = 'Elixir';
+    
+                    return new Elixir({
+                        _id: id,
+                        name: potion_name,
+                        description: description,
+                        image: image,
+                        type: type,
+                        value: value,
+                        modifiers: modifiers,
+                    });
+                case 'frenzy':
+                    potion_name = `${lowerPotency} ${effectsArray[0].effect} venom`;
+                    console.log(potion_name);
+                    type = 'Venom';
+    
+                    return new Venom({
+                        _id: id,
+                        name: potion_name,
+                        description: description,
+                        image: image,
+                        type: type,
+                        value: value,
+                        modifiers: modifiers,
+                    });
+    
+                case 'boost':
+                    potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`;
+                    console.log(potion_name);
+                    type = 'Elixir';
+    
+                    return new Elixir({
+                        _id: id,
+                        name: potion_name,
+                        description: description,
+                        image: image,
+                        type: type,
+                        value: value,
+                        modifiers: modifiers,
+                    });
+                case 'setback':
+                    potion_name = `${lowerPotency} ${effectsArray[0].attribute} venom`;
+                    console.log(potion_name);
+                    type = 'Venom';
+    
+                    return new Venom({
+                        _id: id,
+                        name: potion_name,
+                        description: description,
+                        image: image,
+                        type: type,
+                        value: value,
+                        modifiers: modifiers,
+                    });
 
-            case 'boost':
-                potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`;
-                console.log(potion_name);
-                return new Elixir({
-                    _id: id,
-                    name: potion_name,
-                    description: description,
-                    image: image,
-                    type: type,
-                    value: value,
-                    modifiers: modifiers,
-                });
-            case 'setback':
-                potion_name = `${lowerPotency} ${effectsArray[0].attribute} venom`;
-                console.log(potion_name);
-                return new Venom({
-                    _id: id,
-                    name: potion_name,
-                    description: description,
-                    image: image,
-                    type: type,
-                    value: value,
-                    modifiers: modifiers,
-                });
-            case 'restore':
-                potion_name = `${lowerPotency} Antidote of ${curse?.name}`;
-                console.log(potion_name);
+                default:
+                    break;
+            }
+        } else {  //not same effect (check antidotes-poison)
+            console.log("NOT ther SAME EFFECT");
+            
+            switch (effectsArray[0].effect) {
+                case 'restore':
+                    potion_name = `${lowerPotency} Antidote of ${curse?.name}`;
+                    console.log(potion_name);
+                    type = 'Antidote';
 
-                return new Antidote({
-                    _id: id,
-                    name: potion_name,
-                    description: description,
-                    image: image,
-                    type: type,
-                    value: value,
-                    modifiers: modifiers,
-                });
-            case 'damage':
-                potion_name = `${lowerPotency} Poison of ${curse?.name}`;
-                console.log(potion_name);
-                return new Poison({
-                    _id: id,
-                    name: potion_name,
-                    description: description,
-                    image: image,
-                    type: type,
-                    value: value,
-                    modifiers: modifiers,
-                });
-            default:
-                break;
+                    return new Antidote({
+                        _id: id,
+                        name: potion_name,
+                        description: description,
+                        image: image,
+                        type: type,
+                        value: value,
+                        modifiers: modifiers,
+                    });
+                case 'damage':
+                    potion_name = `${lowerPotency} Poison of ${curse?.name}`;
+                    console.log(potion_name);
+                    type = 'Poison';
+
+                    return new Poison({
+                        _id: id,
+                        name: potion_name,
+                        description: description,
+                        image: image,
+                        type: type,
+                        value: value,
+                        modifiers: modifiers,
+                    });
+                default:
+                    break;
+            }
         }
-
     }
-
 }
 function calculateValue(ingredients: Ingredients[]) {
     let value = 0;
