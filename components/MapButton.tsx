@@ -1,18 +1,27 @@
 import React from 'react';
-import { View, Button, StyleSheet } from 'react-native';
+import { Text, View, Button, StyleSheet, TouchableOpacity, Image, ImageSourcePropType } from 'react-native';
 
 type Props = {
-  title: string;
+  title?: string;
   onPress: () => void;
+  iconImage?: ImageSourcePropType; // Añadimos la prop para la imagen del icono
 };
 
-const MapButton: React.FC<Props> = ({ title, onPress }) => {
+const MapButton: React.FC<Props> = ({ title, onPress, iconImage }) => {
   return (
     <View style={styles.buttonContainer}>
-      <Button 
-        title={title} 
-        onPress={onPress} 
-      />
+      {iconImage ? (
+        <TouchableOpacity onPress={onPress}>
+          <Image source={iconImage} style={styles.iconStyle} />
+          <Text style={styles.text}>{title}</Text>
+
+        </TouchableOpacity>
+      ) : (
+        <Button 
+          title={title || 'Click'} 
+          onPress={onPress} 
+        />
+      )}
     </View>
   );
 };
@@ -23,6 +32,18 @@ const styles = StyleSheet.create({
     bottom: 50,
     alignSelf: 'center',
   },
+  iconStyle: {
+    width: 66,  // Ajusta el tamaño de la imagen
+    height: 66,
+    alignSelf: 'center',
+
+  },
+  text: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
 });
 
 export default MapButton;
