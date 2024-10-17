@@ -7,11 +7,11 @@ import {
   Text,
   StyleSheet,
   Dimensions,
-  Alert,
   View,
   ImageBackground,
   Modal,
   Vibration,
+  ToastAndroid,
 } from 'react-native';
 import { UserContext } from '../context/UserContext';
 import { Ingredients } from '../interfaces/Ingredients';
@@ -28,6 +28,15 @@ const IngredientSelector = ({ onSelectionChange }) => {
   const [selectedIngredient, setSelectedIngredient] = useState<Ingredients | null>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
 
+  const showToastWithGravityAndOffset = () => {
+    ToastAndroid.showWithGravityAndOffset(
+      'You reach the maximun ingredients',
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      50,
+    );
+  };
   const toggleSelection = (ingredient) => {
     setSelectedIngredients((prevSelectedIngredients) => {
       const totalSelections = Object.values(prevSelectedIngredients).reduce((a, b) => a + b, 0);
@@ -43,7 +52,7 @@ const IngredientSelector = ({ onSelectionChange }) => {
         }
         return updatedSelection;
       } else {
-        Alert.alert('Limit reached', 'You can only select up to 4 ingredients in total.');
+        showToastWithGravityAndOffset();
         return prevSelectedIngredients;
       }
     });
