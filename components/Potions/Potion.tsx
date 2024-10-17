@@ -52,11 +52,13 @@ class Potion implements Potions{
         let potion_name = '';
         switch (effectsArray[0].effect) {
             case 'increase':
-                potion_name = `Essence of ${lowerPotency} ${effectsArray[0].effect}`;
+                console.log(effectsArray[0].effect);
+                
+                potion_name = `Essence of ${lowerPotency} heal`;
                 console.log(potion_name);
                 break;
             case 'decrease':
-                potion_name = `Stench of ${lowerPotency} ${effectsArray[0].effect}`;
+                potion_name = `Stench of ${lowerPotency} damage`;
                 console.log(potion_name);
                 break;
             case 'calm':
