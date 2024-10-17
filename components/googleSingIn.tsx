@@ -130,14 +130,10 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
       resizeMode="cover"
     >
     {loading && <Spinner message={spinnerMessage} />}
-    <TouchableOpacity onPress={signIn} disabled={loading}>
-      <ImageBackground
-        source={require('../assets/boton.png')}
-        style={styles.container}
-        resizeMode="cover"
-      >
-        <Text style={styles.text}>Sign in with Google</Text>
-      </ImageBackground>
+    <TouchableOpacity style={styles.container} onPress={signIn} disabled={loading}>
+      
+        
+      
     </TouchableOpacity>
   </ImageBackground>
   );
@@ -157,11 +153,13 @@ const styles = StyleSheet.create({
   },
   container: {
     width: 300,                     // Ancho de 200 unidades
-    height: 150,                    // Alto de 100 unidades
+    height: 650,              // Alto de 100 unidades
     justifyContent: 'center',       // Centrar contenido verticalmente
     alignItems: 'center',           // Centrar contenido horizontalmente
     borderRadius: 20,               // Esquinas redondeadas
-    marginTop: 200,
+    borderTopStartRadius: 150,
+    borderTopEndRadius: 150,
+    marginTop: 80,
   },
   text: {
     color: 'white',                 // Texto en color blanco
