@@ -6,16 +6,10 @@ class Antidote extends Potion implements Antidotes{
     modifiers!: Modifier;
 
     constructor(
-        _id: string,
-        name: string,
-        description: string,
-        image: string,
-        type: string,
-        value: number ,
-        modifiers: Modifier,
+       props: Antidotes
     ) {
-        super(_id,name,description,image,type,value);
-        this.modifiers = modifiers;
+        super(props._id,props.name,props.description,props.image,props.type,props.value);
+        this.modifiers = props.modifiers;
     }
 }
 

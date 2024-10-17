@@ -1,5 +1,4 @@
 import { Ingredients } from '../../interfaces/Ingredients';
-import { Modifier } from '../../interfaces/Modifier';
 import { Potions } from '../../interfaces/Potion';
 import Antidote from './Antidote';
 import Elixir from './Elixir';
@@ -8,7 +7,7 @@ import Poison from './Poison';
 import Stench from './Stench';
 import Venom from './Venom';
 
-class Potion implements Potions{
+export default class Potion implements Potions{
 
     _id!: string;
     name: string;
@@ -67,27 +66,33 @@ class Potion implements Potions{
             case 'calm':
                 potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`; // calm elixir
                 console.log(potion_name);
-                return new Elixir(id, potion_name, description, image, type , value , modifiers);
+                break;
+                //return new Elixir(id, potion_name, description, image, type , value , modifiers);
             case 'frenzy':
                 potion_name = `${lowerPotency} ${effectsArray[0].effect} venom`;
                 console.log(potion_name);
-                return new Venom(id, potion_name, description, image, type , value , modifiers);
+                //return new Venom(id, potion_name, description, image, type , value , modifiers);
+                break;
             case 'boost':
                 potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`;
                 console.log(potion_name);
-                return new Elixir(id, potion_name, description, image, type , value , modifiers);
+                break;
+                //return new Elixir(id, potion_name, description, image, type , value , modifiers);
             case 'setback':
                 potion_name = `${lowerPotency} ${effectsArray[0].attribute} venom`;
                 console.log(potion_name);
-                return new Venom(id, potion_name, description, image, type , value , modifiers);
+                break;
+                //return new Venom(id, potion_name, description, image, type , value , modifiers);
             case 'restore':
                 potion_name = `${lowerPotency} Antidote of "CURSE"`;
                 console.log(potion_name);
-                return new Antidote(id, potion_name, description, image, type , value , modifiers);
+                break;
+                //return new Antidote(id, potion_name, description, image, type , value , modifiers);
             case 'damage':
                 potion_name = `${lowerPotency} Poison of "CURSE"`;
                 console.log(potion_name);
-                return new Poison(id, potion_name, description, image, type , value , modifiers);
+                break;
+                //return new Poison(id, potion_name, description, image, type , value , modifiers);
 
             default:
                 break;
@@ -168,4 +173,3 @@ function checkIngredientCompatibility(effects: Array<EffectArray>) {
         }
     }
 }
-export default Potion;

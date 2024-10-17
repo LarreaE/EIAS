@@ -1,16 +1,11 @@
 import Potion from './Potion';
-
-class Essence extends Potion{
+import { Essences } from '../../interfaces/Essence';
+class Essence extends Potion implements Essences{
 
     constructor(
-        _id: string,
-        name: string,
-        description: string,
-        image: string,
-        type: string,
-        value: number ,
+        props: Essences
     ) {
-        super(_id,name,description,image,type,value);
+        super(props._id,props.name,props.description,props.image,props.type,props.value);
     }
 }
 

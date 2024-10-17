@@ -1,16 +1,11 @@
 import Potion from './Potion';
-
-class Stench extends Potion{
+import { Stenches } from '../../interfaces/Stench';
+class Stench extends Potion implements Stenches{
 
     constructor(
-        _id: string,
-        name: string,
-        description: string,
-        image: string,
-        type: string,
-        value: number ,
+        props: Stenches
     ) {
-        super(_id,name,description,image,type,value);
+        super(props._id,props.name,props.description,props.image,props.type,props.value);
     }
 }
 
