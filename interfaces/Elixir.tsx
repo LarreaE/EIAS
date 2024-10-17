@@ -1,6 +1,6 @@
 import { Modifier } from "./Modifier";
 
-export interface Elixir {
+export interface Elixirs {
 	_id: string,
 	name: string,
 	description: string,

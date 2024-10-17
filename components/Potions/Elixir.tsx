@@ -1,7 +1,9 @@
 import { Modifier } from '../../interfaces/Modifier';
 import Potion from './Potion';
+import { Elixirs } from '../../interfaces/Elixir';
+class Elixir extends Potion implements Elixirs {
 
-class Elixir extends Potion{
+    modifiers: Modifier;
 
     constructor(
         _id: string,
@@ -12,7 +14,14 @@ class Elixir extends Potion{
         value: number ,
         modifiers: Modifier,
     ) {
-        super(_id,name,description,image,type,value,modifiers);
+        super(_id,name,description,image,type,value);
+        this._id = _id;
+        this.description = description;
+        this.image = image;
+        this.type = type;
+        this.name = name;
+        this.value = value;
+        this.modifiers = modifiers;
     }
 }
 

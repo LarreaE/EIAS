@@ -1,6 +1,6 @@
 import { Modifier } from "./Modifier";
 
-export interface Venom {
+export interface Venoms {
     _id: string,
 	name: string,
 	description: string,
