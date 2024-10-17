@@ -15,6 +15,11 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLoged }) => {
   };
 
   return (
+    <ImageBackground
+    source={require('../assets/settings_background_04.png')}  // Ruta de la imagen de fondo
+    style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
+    resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+  >
     <View style={styles.container}>
       
         <TouchableOpacity  onPress={signOut}>
@@ -27,6 +32,7 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLoged }) => {
           </ImageBackground>
         </TouchableOpacity>
     </View>
+    </ImageBackground>
   );
 };
 
