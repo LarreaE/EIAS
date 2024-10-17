@@ -49,11 +49,11 @@ class Potion implements Potions{
         console.log(effectsArray);
         const lowerPotency = checkIngredientCompatibility(effectsArray);
         console.log(lowerPotency);
+        description = ingredients[0].description;
+
         let potion_name = '';
         switch (effectsArray[0].effect) {
             case 'increase':
-                console.log(effectsArray[0].effect);
-                
                 potion_name = `Essence of ${lowerPotency} heal`;
                 console.log(potion_name);
                 break;
@@ -89,9 +89,6 @@ class Potion implements Potions{
             default:
                 break;
         }
-
-        description = ingredients[0].description;
-
         return new Potion(id, potion_name, description, image, type , value , modifiers);
 
     }
