@@ -1,4 +1,3 @@
-// IngredientSelector.js
 import React, { useState, useRef, useContext } from 'react';
 import {
   Animated,
@@ -185,6 +184,11 @@ const IngredientSelector = ({ onSelectionChange }) => {
         onDeselection={deselectIngredient} // Pass the deselection function
       />
 
+      {/* Create Potion Button */}
+      <TouchableOpacity style={styles.createPotionButton} onPress={() => { /* Future functionality here */ }}>
+        <Text style={styles.createPotionButtonText}>Create Potion</Text>
+      </TouchableOpacity>
+
       {/* Modal to show ingredient details */}
       {selectedIngredient && (
         <Modal
@@ -362,5 +366,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'yellow',
     textAlign: 'center',
+  },
+  createPotionButton: {
+    backgroundColor: '#8A2BE2',
+    borderRadius: 25,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 20,
+    marginBottom: 150, // Reduce el espacio debajo del botón
+    marginTop: -200,
+    alignSelf: 'center',
+  },
+  
+  createPotionButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
