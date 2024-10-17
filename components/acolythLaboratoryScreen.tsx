@@ -1,20 +1,29 @@
-import React, { useEffect, useState,useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import QRGenerator from './QrGenerator.tsx';
 import { ImageBackground, Modal, StyleSheet, TouchableOpacity, View, Vibration } from 'react-native';
 import { Text } from 'react-native';
 import { clearServerEvents, listenToServerEventsScanAcolyte } from '../sockets/listenEvents.tsx';
 import IngredientSelector from './ingredientSelector.tsx';
 import { UserContext } from '../context/UserContext'; // Importa el contexto
+// import boton back to map
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../types/types';
+import MapButton from './MapButton.tsx';
+
+
 import Potion from './Potions/Potion.tsx';
 import Ingredient from './Potions/Ingredient.tsx';
 
 type Props = { UserData: any };
+type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
+
 
 const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [isInside, setIsInside] = useState(UserData.UserData.playerData.is_active);
-  const {ingredients, setIngredients } = useContext(UserContext);
+  const { ingredients, setIngredients } = useContext(UserContext);
   const [illness, setIllness] = useState([]);
   const [ingredientsRetrieved, setIngredientsRetrieved] = useState(false);
   const [potionCreated, setPotionCreated] = useState(false);
@@ -112,19 +121,19 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
           },
           body: JSON.stringify({ email: player.email }),
         })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then(data => {
-          console.log('Server response:', data);
-          setIsInside(data.is_active);
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log('Server response:', data);
+            setIsInside(data.is_active);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
       } catch (error) {
         console.error('Caught error:', error);
       }
@@ -135,6 +144,12 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
       clearServerEvents();
     };
   }, [player.is_active, player.email]);
+
+  const navigation = useNavigation<MapScreenNavigationProp>();
+
+  const goToMap = () => {
+    navigation.navigate('Map');
+  };
 
   return (
     <View style={styles.container}>
@@ -156,6 +171,15 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             </ImageBackground>
           </TouchableOpacity>
           <IngredientSelector onSelectionChange={undefined} />
+
+          <View style={styles.buttonMap}>
+            <MapButton
+              title="Back to map"
+              onPress={goToMap}
+              iconImage={require('../assets/map_icon.png')}
+              
+            />
+          </View>
 
           <Modal
             animationType="slide"
@@ -235,6 +259,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#2196F3',
     borderRadius: 10,
     padding: 10,
+  },
+  buttonMap: {
+    position: 'absolute',
+    bottom: 10,
+    right: 75,
+    alignSelf: 'center',
+    
   },
 });
 
