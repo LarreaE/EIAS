@@ -61,9 +61,10 @@ export default class Potion implements Potions{
 
         }
         let potion_name = '';
+        console.log(effectsArray);
 
         //same effect
-        if ( effectsArray.every(element => element === effectsArray[0])) {
+        if ( effectsArray.every(element => element.effect === effectsArray[0].effect)) {
             console.log('SAME EFFECT');
             switch (effectsArray[0].effect) {
                 case 'increase':
