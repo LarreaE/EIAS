@@ -1,39 +1,18 @@
-<<<<<<< HEAD
-// AcolythLaboratoryScreen.tsx
-
-=======
->>>>>>> develop
 import React, { useEffect, useState, useContext } from 'react';
 import QRGenerator from './QrGenerator.tsx';
 import { ImageBackground, Modal, StyleSheet, TouchableOpacity, View, Vibration, Text, ScrollView } from 'react-native';
 import { clearServerEvents, listenToServerEventsScanAcolyte } from '../sockets/listenEvents.tsx';
 import IngredientSelector from './ingredientSelector.tsx';
 import { UserContext } from '../context/UserContext'; // Importa el contexto
-<<<<<<< HEAD
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons.js'; // Importa Icon para los filtros
-
-type Ingredients = {
-  _id: string,
-  description: string,
-  effects: string[],
-  image: string,
-  name: string,
-  type: string,
-  value: number
-};
-=======
 // import boton back to map
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/types';
 import MapButton from './MapButton.tsx';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons.js'; // Importa Icon para los filtros
 
-
->>>>>>> develop
 
 type Props = { UserData: any };
-type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
-
 
 // Definir los efectos disponibles categorizados
 const GOOD_EFFECTS = [
@@ -132,17 +111,15 @@ const EFFECT_ICONS: { [key: string]: string } = {
   calm: 'sleep',
   frenzy:'emoticon-angry',
 };
+type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
+
 
 const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isInside, setIsInside] = useState(UserData.UserData.playerData.is_active);
   const { ingredients, setIngredients } = useContext(UserContext);
-<<<<<<< HEAD
   const [allIngredients, setAllIngredients] = useState<Ingredients[]>([]);
   const [potions, setPotions] = useState<Ingredients[]>([]);
-=======
-  const [potions, setPotions] = useState([]);
->>>>>>> develop
   const player = UserData.UserData.playerData;
   const vibrationDuration = 250;
 
@@ -246,7 +223,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
     };
   }, [player.is_active, player.email]);
 
-<<<<<<< HEAD
   // Función para manejar la selección de efectos
   const toggleEffect = (effect: string) => {
     setSelectedEffects(prevSelectedEffects => {
@@ -275,12 +251,12 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
       setIngredients(filtered); // Actualiza el contexto con ingredientes filtrados
     }
     setFilterModalVisible(false); // Cierra el modal de filtros
-=======
+  };
+
   const navigation = useNavigation<MapScreenNavigationProp>();
 
   const goToMap = () => {
     navigation.navigate('Map');
->>>>>>> develop
   };
 
   return (
@@ -292,6 +268,8 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
           resizeMode="cover"         // Ajuste de la imagen
         >
 
+          {/* Selector de Ingredientes Filtrados */}
+          <IngredientSelector onSelectionChange={undefined} />
           {/* Botón para mostrar el QR */}
           <TouchableOpacity
             onPress={() => setModalVisible(true)}
@@ -305,11 +283,14 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
               <Text style={styles.textStyle}>Show QR</Text>
             </ImageBackground>
           </TouchableOpacity>
+          <View style={styles.buttonMap}>
+            <MapButton
+              onPress={goToMap}
+              iconImage={require('../assets/map_icon.png')}
+              
+            />
+          </View>
 
-          {/* Selector de Ingredientes Filtrados */}
-          <IngredientSelector onSelectionChange={undefined} />
-
-<<<<<<< HEAD
           {/* Botón de Filtros */}
           <TouchableOpacity
             style={styles.filterButton}
@@ -319,16 +300,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
           </TouchableOpacity>
 
           {/* Modal para mostrar detalles del QR */}
-=======
-          <View style={styles.buttonMap}>
-            <MapButton
-              onPress={goToMap}
-              iconImage={require('../assets/map_icon.png')}
-              
-            />
-          </View>
-
->>>>>>> develop
           <Modal
             animationType="slide"
             transparent={true}
@@ -430,8 +401,9 @@ const styles = StyleSheet.create({
   },
   qrButton: {
     position: 'absolute',
-    bottom: 50,
+    //bottom: 70,
     alignSelf: 'center',
+    top:20,
   },
   openButton: {
     padding: 10,
