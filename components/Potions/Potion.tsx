@@ -16,7 +16,6 @@ class Potion implements Potions{
     image!: string;
     type!: string;
     value: number;
-    modifiers!: Modifier;
 
     constructor(
         _id: string,
@@ -25,13 +24,11 @@ class Potion implements Potions{
         image: string,
         type: string,
         value: number ,
-        modifiers: Modifier,
     ) {
         this._id = _id;
         this.description = description;
         this.image = image;
         this.type = type;
-        this.modifiers = modifiers;
         this.name = name;
         this.value = value;
     }

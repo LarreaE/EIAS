@@ -1,7 +1,9 @@
 import { Modifier } from '../../interfaces/Modifier';
 import Potion from './Potion';
+import { Antidotes } from '../../interfaces/Antidote';
+class Antidote extends Potion implements Antidotes{
 
-class Antidote extends Potion{
+    modifiers!: Modifier;
 
     constructor(
         _id: string,
@@ -12,7 +14,14 @@ class Antidote extends Potion{
         value: number ,
         modifiers: Modifier,
     ) {
-        super(_id,name,description,image,type,value,modifiers);
+        super(_id,name,description,image,type,value);
+        this._id = _id;
+        this.description = description;
+        this.image = image;
+        this.type = type;
+        this.name = name;
+        this.value = value;
+        this.modifiers = modifiers;
     }
 }
 

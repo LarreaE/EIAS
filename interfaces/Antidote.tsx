@@ -1,6 +1,6 @@
 import { Modifier } from "./Modifier";
 
-export interface Antidote {
+export interface Antidotes {
 	_id: string,
 	name: string,
 	description: string,

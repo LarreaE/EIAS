@@ -1,4 +1,3 @@
-import { Modifier } from './Modifier';
 
 export interface Potions {
 	_id: string,
@@ -7,5 +6,4 @@ export interface Potions {
 	image: string,
 	type: string,
 	value: number,
-	modifiers: Modifier
 }
