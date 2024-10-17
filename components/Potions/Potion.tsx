@@ -120,6 +120,7 @@ export default class Potion implements Potions{
                 case 'boost':
                     potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`;
                     console.log(potion_name);
+
                     type = 'Elixir';
                     return new Elixir({
                         _id: id,
