@@ -8,7 +8,7 @@ class Antidote implements Antidotes{
     type: string;
     name: string;
     value: number;
-    modifiers: Modifier;
+    modifiers: Modifier | undefined | null;
 
     constructor(
        props: Antidotes

@@ -41,11 +41,11 @@ export default class Potion implements Potions{
         let image = 'no images yet';
         let type = 'Potion';
         let curse = seekCurse(ingredients , curses);
-        let modifiers;
+        let modifiers = null;
         if (curse) {
             modifiers = curse.modifiers;
         }
-        console.log("MODIFIERS");
+        console.log('MODIFIERS');
         console.log(modifiers);
 
         let id = 'id';
@@ -64,8 +64,7 @@ export default class Potion implements Potions{
 
         //same effect
         if ( effectsArray.every(element => element === effectsArray[0])) {
-            console.log("SAME EFFECT");
-            
+            console.log('SAME EFFECT');
             switch (effectsArray[0].effect) {
                 case 'increase':
                     potion_name = `Essence of ${lowerPotency} heal`;
@@ -95,7 +94,6 @@ export default class Potion implements Potions{
                     potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`; // calm elixir
                     console.log(potion_name);
                     type = 'Elixir';
-    
                     return new Elixir({
                         _id: id,
                         name: potion_name,
@@ -109,7 +107,6 @@ export default class Potion implements Potions{
                     potion_name = `${lowerPotency} ${effectsArray[0].effect} venom`;
                     console.log(potion_name);
                     type = 'Venom';
-    
                     return new Venom({
                         _id: id,
                         name: potion_name,
@@ -119,12 +116,10 @@ export default class Potion implements Potions{
                         value: value,
                         modifiers: modifiers,
                     });
-    
                 case 'boost':
                     potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`;
                     console.log(potion_name);
                     type = 'Elixir';
-    
                     return new Elixir({
                         _id: id,
                         name: potion_name,
@@ -138,7 +133,6 @@ export default class Potion implements Potions{
                     potion_name = `${lowerPotency} ${effectsArray[0].attribute} venom`;
                     console.log(potion_name);
                     type = 'Venom';
-    
                     return new Venom({
                         _id: id,
                         name: potion_name,
@@ -153,8 +147,11 @@ export default class Potion implements Potions{
                     break;
             }
         } else {  //not same effect (check antidotes-poison)
-            console.log("NOT ther SAME EFFECT");
-            
+            console.log('NOT ther SAME EFFECT');
+            if (curse === null) {
+                console.log('FAILED POTION');
+                return -1;
+            }
             switch (effectsArray[0].effect) {
                 case 'restore':
                     potion_name = `${lowerPotency} Antidote of ${curse?.name}`;
@@ -206,7 +203,7 @@ function seekCurse(ingredients: Ingredients[], curses: Curses[]) {
             ingredientEffects.add(effect);
         });
     });
-    console.log("EFFECTS");
+    console.log('EFFECTS');
     console.log(ingredientEffects);
 
     // check for antidotes

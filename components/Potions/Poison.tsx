@@ -9,7 +9,7 @@ class Poison implements Poisons {
     type: string;
     name: string;
     value: number;
-    modifiers: Modifier;
+    modifiers: Modifier | undefined | null;
 
     constructor(
        props: Poisons

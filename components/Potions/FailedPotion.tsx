@@ -1,6 +1,7 @@
 import { Modifier } from '../../interfaces/Modifier';
-import { Venoms } from '../../interfaces/Venom';
-class Venom implements Venoms{
+import { Elixirs } from '../../interfaces/Elixir';
+import { Potions } from '../../interfaces/Potion';
+class FailedPotion implements Potions {
 
     _id: string;
     description: string;
@@ -11,7 +12,7 @@ class Venom implements Venoms{
     modifiers: Modifier | undefined | null;
 
     constructor(
-       props: Venoms
+       props: Elixirs
     ) {
         this._id = props._id;
         this.description = props.description;
@@ -23,4 +24,4 @@ class Venom implements Venoms{
     }
 }
 
-export default Venom;
+export default FailedPotion;
