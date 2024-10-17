@@ -7,6 +7,8 @@ import Poison from './Poison';
 import Stench from './Stench';
 import Venom from './Venom';
 import { Essences } from '../../interfaces/Essence';
+import Curse from './Curse';
+import { Curses } from '../../interfaces/Curse';
 export default class Potion implements Potions{
 
     _id!: string;
@@ -32,27 +34,32 @@ export default class Potion implements Potions{
         this.value = value;
     }
 
-    static create(ingredients: Ingredients[] , curses: Curse[]){
+    static create(ingredients: Ingredients[] , curses: Curses[]){
 
         let value = calculateValue(ingredients);
         let description;
         let image = 'no images yet';
         let type = 'Potion';
-        let modifiers = calculateModifiers(ingredients);
+        let curse = seekCurse(ingredients , curses);
+        let modifiers;
+        if (curse) {
+            modifiers = curse.modifiers;
+        }
+        console.log("MODIFIERS");
+        console.log(modifiers);
+
         let id = 'id';
         let effectsArray = [];
 
-        console.log("Ingreds");
-        console.log(ingredients);
         for (let i = 0; i < ingredients.length; i++) {
             const categorizedEffect = categorizeEffect(ingredients[i].effects[0]);
             effectsArray.push(categorizedEffect);
         }
-        console.log(effectsArray);
         const lowerPotency = checkIngredientCompatibility(effectsArray);
-        console.log(lowerPotency);
         description = ingredients[0].description;
-
+        if (lowerPotency) {
+            
+        }
         let potion_name = '';
         switch (effectsArray[0].effect) {
             case 'increase':
@@ -82,43 +89,78 @@ export default class Potion implements Potions{
             case 'calm':
                 potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`; // calm elixir
                 console.log(potion_name);
-                
-                break;
-                // return new Elixir({
-                //     _id: id,
-                //     name: potion_name,
-                //     description: description,
-                //     image: image,
-                //     type: type,
-                //     value: value,
-                //     modifiers: modifiers,
-                // });
+
+                return new Elixir({
+                    _id: id,
+                    name: potion_name,
+                    description: description,
+                    image: image,
+                    type: type,
+                    value: value,
+                    modifiers: modifiers,
+                });
             case 'frenzy':
                 potion_name = `${lowerPotency} ${effectsArray[0].effect} venom`;
                 console.log(potion_name);
-                //return new Venom(id, potion_name, description, image, type , value , modifiers);
-                break;
+                return new Venom({
+                    _id: id,
+                    name: potion_name,
+                    description: description,
+                    image: image,
+                    type: type,
+                    value: value,
+                    modifiers: modifiers,
+                });
+
             case 'boost':
                 potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`;
                 console.log(potion_name);
-                break;
-                //return new Elixir(id, potion_name, description, image, type , value , modifiers);
+                return new Elixir({
+                    _id: id,
+                    name: potion_name,
+                    description: description,
+                    image: image,
+                    type: type,
+                    value: value,
+                    modifiers: modifiers,
+                });
             case 'setback':
                 potion_name = `${lowerPotency} ${effectsArray[0].attribute} venom`;
                 console.log(potion_name);
-                break;
-                //return new Venom(id, potion_name, description, image, type , value , modifiers);
+                return new Venom({
+                    _id: id,
+                    name: potion_name,
+                    description: description,
+                    image: image,
+                    type: type,
+                    value: value,
+                    modifiers: modifiers,
+                });
             case 'restore':
-                potion_name = `${lowerPotency} Antidote of "CURSE"`;
+                potion_name = `${lowerPotency} Antidote of ${curse?.name}`;
                 console.log(potion_name);
-                break;
-                //return new Antidote(id, potion_name, description, image, type , value , modifiers);
-            case 'damage':
-                potion_name = `${lowerPotency} Poison of "CURSE"`;
-                console.log(potion_name);
-                break;
-                //return new Poison(id, potion_name, description, image, type , value , modifiers);
 
+                return new Antidote({
+                    _id: id,
+                    name: potion_name,
+                    description: description,
+                    image: image,
+                    type: type,
+                    value: value,
+                    modifiers: modifiers,
+                });
+            case 'damage':
+                potion_name = `${lowerPotency} Poison of ${curse?.name}`;
+                console.log(potion_name);
+                return new Poison({
+                    _id: id,
+                    name: potion_name,
+                    description: description,
+                    image: image,
+                    type: type,
+                    value: value,
+                    modifiers: modifiers,
+                });
             default:
                 break;
         }
@@ -133,11 +175,34 @@ function calculateValue(ingredients: Ingredients[]) {
     }
     return value;
 }
-function calculateModifiers(ingredients: Ingredients[]) {
-    let mods = 0;
-    for (let i = 0; i < ingredients.length; i++) {
+function seekCurse(ingredients: Ingredients[], curses: Curses[]) {
+
+    const ingredientEffects = new Set<string>();
+    // add ingredients
+    ingredients.forEach(ingredient => {
+        ingredient.effects.forEach((effect: string) => {
+            ingredientEffects.add(effect);
+        });
+    });
+    console.log("EFFECTS");
+    console.log(ingredientEffects);
+
+    // check for antidotes
+    for (let i = 0; i < curses.length; i++) {
+
+        for (const effect of curses[i].poison_effects) {
+            if (ingredientEffects.has(effect)) {
+                return curses[i];
+            }
+        }
+        for (const effect of curses[i].antidote_effects) {
+            if (ingredientEffects.has(effect)) {
+                return curses[i];
+            }
+        }
     }
-    return mods;
+
+    return null; // no match
 }
 function  categorizeEffect(str: string) {
 
@@ -187,14 +252,11 @@ function checkIngredientCompatibility(effects: Array<EffectArray>) {
           const effect1 = effects[i];
           const effect2 = effects[j];
 
-          if (effect1.effect === effect2.effect && effect1.attribute === effect2.attribute) {
-
             const lowerPotencyeffect = potencyTiers[effect1.potency] < potencyTiers[effect2.potency] ? effect1 : effect2;
             console.log(
               `Triggering action for effect: ${effect1.effect} and attribute: ${effect1.attribute}. Lower potency is: ${lowerPotencyeffect.potency}`
             );
             return lowerPotencyeffect.potency;
-          }
         }
     }
 }

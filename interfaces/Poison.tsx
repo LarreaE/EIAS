@@ -7,5 +7,5 @@ export interface Poisons {
 	image: string,
 	type: string,
 	value: number,
-	modifiers: Modifier
+	modifiers: Modifier | undefined | null
 }

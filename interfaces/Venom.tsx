@@ -7,5 +7,5 @@ export interface Venoms {
 	image: string,
 	type: string,
 	value: number,
-	modifiers: Modifier
+	modifiers: Modifier | null | undefined
 }

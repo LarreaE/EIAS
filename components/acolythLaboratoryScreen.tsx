@@ -14,6 +14,7 @@ import MapButton from './MapButton.tsx';
 
 import Potion from './Potions/Potion.tsx';
 import Ingredient from './Potions/Ingredient.tsx';
+import Curse from './Potions/Curse.tsx';
 
 type Props = { UserData: any };
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
@@ -24,7 +25,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isInside, setIsInside] = useState(UserData.UserData.playerData.is_active);
   const { ingredients, setIngredients } = useContext(UserContext);
-  const [illness, setIllness] = useState([]);
+  const [curses, setCurses] = useState([]);
   const [ingredientsRetrieved, setIngredientsRetrieved] = useState(false);
   const [potionCreated, setPotionCreated] = useState(false);
 
@@ -64,25 +65,28 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
   useEffect(() => {
     let newIngredients = [];
-    if (ingredientsRetrieved && !potionCreated && illness) {
+    let newCurses = [];
+
+    if (ingredientsRetrieved && !potionCreated && curses) {
       for (let i = 0; i < ingredients.length; i++) {
         newIngredients.push(Ingredient.from(ingredients[i]));
       }
-
+      for (let i = 0; i < curses.length; i++) {
+        newCurses.push(Curse.from(curses[i]));
+      }
+      setCurses(newCurses);
       setIngredients(newIngredients); // class ingredient
+      console.log(curses);
 
-      const potionIngredi = [newIngredients[0],newIngredients[1]];
-      console.log("potion iongredients");
+      const potionIngredi = [newIngredients[27],newIngredients[50]];
 
-      console.log(potionIngredi);
-      const potion = Potion.create(potionIngredi);
+      const potion = Potion.create(potionIngredi,curses);
 
-      console.log("Potion");
       console.log(potion);
       setPotionCreated(true);
 
     }
-  }, [ingredients, ingredientsRetrieved, setIngredients, potionCreated,setPotionCreated,illness]);
+  }, [ingredients, ingredientsRetrieved, setIngredients, potionCreated,setPotionCreated,curses]);
 
   useEffect(() => {
     const fetchPotions = async () => {
@@ -93,8 +97,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
         if (contentType && contentType.includes('application/json')) {
           const data = await response.json();
           if (data.success === true && Array.isArray(data.potionsData) && data.potionsData.length > 0) {
-            setIllness(data.potionsData);
-            console.log('Getted potions:', data.potionsData);
+            setCurses(data.potionsData);
           } else {
             console.error('No potions found or status is not OK.');
           }
@@ -107,7 +110,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
       }
     };
     fetchPotions();
-  }, [setIllness]);
+  }, [setCurses]);
 
   useEffect(() => {
     listenToServerEventsScanAcolyte(setIsInside);

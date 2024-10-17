@@ -7,5 +7,5 @@ export interface Elixirs {
 	image: string,
 	type: string,
 	value: number,
-	modifiers: Modifier
+	modifiers: Modifier | null | undefined
 }
