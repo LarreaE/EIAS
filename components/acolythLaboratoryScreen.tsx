@@ -143,7 +143,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
           <View style={styles.buttonMap}>
             <MapButton
-              title="Back to map"
               onPress={goToMap}
               iconImage={require('../assets/map_icon.png')}
               
@@ -231,10 +230,10 @@ const styles = StyleSheet.create({
   },
   buttonMap: {
     position: 'absolute',
-    bottom: 10,
-    right: 75,
+    bottom: -70,
     alignSelf: 'center',
-    
+    width: 66,
+    height: 66,
   },
 });
 

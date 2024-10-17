@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   iconStyle: {
-    width: 50,  // Ajusta el tamaño de la imagen
-    height: 50,
+    width: 66,  // Ajusta el tamaño de la imagen
+    height: 66,
     alignSelf: 'center',
 
   },
