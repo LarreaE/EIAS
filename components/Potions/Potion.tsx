@@ -6,7 +6,7 @@ import Essence from './Essence';
 import Poison from './Poison';
 import Stench from './Stench';
 import Venom from './Venom';
-
+import { Essences } from '../../interfaces/Essence';
 export default class Potion implements Potions{
 
     _id!: string;
@@ -32,7 +32,7 @@ export default class Potion implements Potions{
         this.value = value;
     }
 
-    static create(ingredients: Ingredients[]){
+    static create(ingredients: Ingredients[] , curses: Curse[]){
 
         let value = calculateValue(ingredients);
         let description;
@@ -58,16 +58,41 @@ export default class Potion implements Potions{
             case 'increase':
                 potion_name = `Essence of ${lowerPotency} heal`;
                 console.log(potion_name);
-                return new Essence(id, potion_name, description, image, type , value);
+                type = 'Essence';
+                return new Essence({
+                    _id: id,
+                    name: potion_name,
+                    description: description,
+                    image: image,
+                    type: type,
+                    value: value,
+                });
             case 'decrease':
                 potion_name = `Stench of ${lowerPotency} damage`;
+                type = 'Stench';
                 console.log(potion_name);
-                return new Stench(id, potion_name, description, image, type , value);
+                return new Stench({
+                    _id: id,
+                    name: potion_name,
+                    description: description,
+                    image: image,
+                    type: type,
+                    value: value,
+                });
             case 'calm':
                 potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`; // calm elixir
                 console.log(potion_name);
+                
                 break;
-                //return new Elixir(id, potion_name, description, image, type , value , modifiers);
+                // return new Elixir({
+                //     _id: id,
+                //     name: potion_name,
+                //     description: description,
+                //     image: image,
+                //     type: type,
+                //     value: value,
+                //     modifiers: modifiers,
+                // });
             case 'frenzy':
                 potion_name = `${lowerPotency} ${effectsArray[0].effect} venom`;
                 console.log(potion_name);

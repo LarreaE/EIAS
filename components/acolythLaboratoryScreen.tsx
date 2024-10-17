@@ -15,7 +15,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isInside, setIsInside] = useState(UserData.UserData.playerData.is_active);
   const {ingredients, setIngredients } = useContext(UserContext);
-  const [potions, setPotions] = useState([]);
+  const [illness, setIllness] = useState([]);
   const [ingredientsRetrieved, setIngredientsRetrieved] = useState(false);
   const [potionCreated, setPotionCreated] = useState(false);
 
@@ -55,7 +55,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
   useEffect(() => {
     let newIngredients = [];
-    if (ingredientsRetrieved && !potionCreated) {
+    if (ingredientsRetrieved && !potionCreated && illness) {
       for (let i = 0; i < ingredients.length; i++) {
         newIngredients.push(Ingredient.from(ingredients[i]));
       }
@@ -73,7 +73,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
       setPotionCreated(true);
 
     }
-  }, [ingredients, ingredientsRetrieved, setIngredients, potionCreated,setPotionCreated]);
+  }, [ingredients, ingredientsRetrieved, setIngredients, potionCreated,setPotionCreated,illness]);
 
   useEffect(() => {
     const fetchPotions = async () => {
@@ -84,8 +84,8 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
         if (contentType && contentType.includes('application/json')) {
           const data = await response.json();
           if (data.success === true && Array.isArray(data.potionsData) && data.potionsData.length > 0) {
-            setIngredients(data.potionsData);
-            console.log('Getted potions:', data.potionsData[31]);
+            setIllness(data.potionsData);
+            console.log('Getted potions:', data.potionsData);
           } else {
             console.error('No potions found or status is not OK.');
           }
@@ -98,7 +98,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
       }
     };
     fetchPotions();
-  }, [setIngredients]);
+  }, [setIllness]);
 
   useEffect(() => {
     listenToServerEventsScanAcolyte(setIsInside);
