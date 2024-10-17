@@ -42,20 +42,20 @@ const EquipmentScreen: React.FC<Props> = ({ user }) => {
             </View>
             <View style={styles.equipmentContainer}>
                 <View style={styles.column}>
-                  <EquipmentSlot item={elements[0].url} size={70} />
-                  <EquipmentSlot item={elements[1].url} size={70} />
-                  <EquipmentSlot item={elements[2].url} size={70} />
+                  <EquipmentSlot item={elements[0].url} size={100} />
+                  <EquipmentSlot item={elements[1].url} size={100} />
+                  <EquipmentSlot item={elements[2].url} size={100} />
                 </View>
                 <View style={styles.column}>
-                  <EquipmentSlot item={elements[3].url} size={70} />
-                  <EquipmentSlot item={elements[4].url} size={70} />
-                  <EquipmentSlot item={elements[5].url} size={70} />
-                  <EquipmentSlot item={elements[6].url} size={70} />
+                  <EquipmentSlot item={elements[3].url} size={100} />
+                  <EquipmentSlot item={elements[4].url} size={100} />
+                  <EquipmentSlot item={elements[5].url} size={100} />
+                  <EquipmentSlot item={elements[6].url} size={100} />
                 </View>
                 <View style={styles.column}>
-                  <EquipmentSlot item={elements[7].url} size={70} />
-                  <EquipmentSlot item={elements[8].url} size={70} />
-                  <EquipmentSlot item={elements[9].url} size={70} />
+                  <EquipmentSlot item={elements[7].url} size={100} />
+                  <EquipmentSlot item={elements[8].url} size={100} />
+                  <EquipmentSlot item={elements[9].url} size={100} />
                 </View>
             </View>
             <View style={styles.expContainer}>

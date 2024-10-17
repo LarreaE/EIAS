@@ -35,22 +35,22 @@ const IngredientSelector = ({ onSelectionChange }) => {
   // Crear una referencia animada para el desplazamiento horizontal
   const scrollX = useRef(new Animated.Value(0)).current;
 
-  const toggleSelection = (Ingredients) => {
+  const toggleSelection = (ingredient) => {
     setSelectedIngredients((prevSelectedIngredients) => {
       // Calcular el total actual de selecciones
       const totalSelections = Object.values(prevSelectedIngredients).reduce(
         (a, b) => a + b,
         0
       );
-
+  
       // Obtener el conteo actual del ingrediente
-      const currentCount = prevSelectedIngredients[ingredientId] || 0;
-
+      const currentCount = prevSelectedIngredients[ingredient._id] || 0;
+  
       if (totalSelections < 4) {
         // Incrementar el conteo del ingrediente
         const updatedSelection = {
           ...prevSelectedIngredients,
-          [ingredientId]: currentCount + 1,
+          [ingredient._id]: currentCount + 1,
         };
         if (onSelectionChange) {
           onSelectionChange(updatedSelection);
@@ -89,7 +89,7 @@ const IngredientSelector = ({ onSelectionChange }) => {
   };
 
   const renderIngredient = ({ item, index }) => {
-    const selectedCount = selectedIngredients[item.id] || 0;
+    const selectedCount = selectedIngredients[item._id] || 0;
 
     // Definir el rango de entrada para la interpolación
     const inputRange = [
@@ -116,7 +116,7 @@ const IngredientSelector = ({ onSelectionChange }) => {
 
     return (
       <TouchableOpacity
-        onPress={() => toggleSelection(item.id)}
+        onPress={() => toggleSelection(item)}
         onLongPress={() => {
           Vibration.vibrate(); // Hacer vibrar el dispositivo
           setSelectedIngredient(item);
@@ -144,7 +144,7 @@ const IngredientSelector = ({ onSelectionChange }) => {
             {selectedCount > 0 && (
               <TouchableOpacity
                 style={styles.decreaseButton}
-                onPress={() => decreaseSelection(item.id)}
+                onPress={() => decreaseSelection(item._id)}
               >
                 <Text style={styles.decreaseButtonText}>-</Text>
               </TouchableOpacity>
@@ -182,7 +182,7 @@ const IngredientSelector = ({ onSelectionChange }) => {
     <View style={{ flex: 1 }}>
       <Animated.FlatList
         data={ingredients}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item._id}
         renderItem={renderIngredient}
         horizontal
         contentContainerStyle={{
