@@ -6,11 +6,11 @@ import {
   Text,
   StyleSheet,
   Dimensions,
-  Alert,
   View,
   ImageBackground,
   Modal,
   Vibration,
+  ToastAndroid,
 } from 'react-native';
 import { UserContext } from '../context/UserContext';
 import { Ingredients } from '../interfaces/Ingredients';
@@ -21,11 +21,21 @@ import SelectedIngredientsDisplay from './selectedIngredientsDisplay'; // Asegú
 const IngredientSelector = ({ onSelectionChange }) => {
   const [selectedIngredients, setSelectedIngredients] = useState({});
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { ingredients } = useContext(UserContext);
+  const {ingredients } = useContext(UserContext);
+  // Estado para controlar la visibilidad del modal y el ingrediente seleccionado
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState<Ingredients | null>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
 
+  const showToastWithGravityAndOffset = () => {
+    ToastAndroid.showWithGravityAndOffset(
+      'You reach the maximun ingredients',
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      50,
+    );
+  };
   const toggleSelection = (ingredient) => {
     setSelectedIngredients((prevSelectedIngredients) => {
       const totalSelections = Object.values(prevSelectedIngredients).reduce((a, b) => a + b, 0);
@@ -41,7 +51,7 @@ const IngredientSelector = ({ onSelectionChange }) => {
         }
         return updatedSelection;
       } else {
-        Alert.alert('Limit reached', 'You can only select up to 4 ingredients in total.');
+        showToastWithGravityAndOffset();
         return prevSelectedIngredients;
       }
     });

@@ -17,6 +17,7 @@ import com.mrousavy.camera.react.CameraPackage
 import com.horcrux.svg.SvgPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
 import com.reactnativepagerview.PagerViewPackage; // Nueva importación
+import com.oblador.vectoricons.VectorIconsPackage;
 
 
 class MainApplication : Application(), ReactApplication {
@@ -28,7 +29,8 @@ class MainApplication : Application(), ReactApplication {
               // Packages that cannot be autolinked yet can be added manually here, for example:
               // add(MyReactNativePackage())
               ReanimatedPackage()
-              PagerViewPackage()  
+              PagerViewPackage()
+              VectorIconsPackage()  
             }
 
         override fun getJSMainModuleName(): String = "index"
