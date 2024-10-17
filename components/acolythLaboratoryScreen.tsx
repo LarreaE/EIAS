@@ -5,6 +5,8 @@ import { Text } from 'react-native';
 import { clearServerEvents, listenToServerEventsScanAcolyte } from '../sockets/listenEvents.tsx';
 import IngredientSelector from './ingredientSelector.tsx';
 import { UserContext } from '../context/UserContext'; // Importa el contexto
+import Potion from './Potions/Potion.tsx';
+import Ingredient from './Potions/Ingredient.tsx';
 
 type Props = { UserData: any };
 
@@ -14,6 +16,10 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const [isInside, setIsInside] = useState(UserData.UserData.playerData.is_active);
   const {ingredients, setIngredients } = useContext(UserContext);
   const [potions, setPotions] = useState([]);
+  const [ingredientsRetrieved, setIngredientsRetrieved] = useState(false);
+  const [potionCreated, setPotionCreated] = useState(false);
+
+
   const player = UserData.UserData.playerData;
   const vibrationDuration = 250;
 
@@ -40,10 +46,35 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
         }
       } catch (error) {
         console.error('Error getting ingredients:', error);
+      } finally {
+        setIngredientsRetrieved(true);
       }
     };
     fetchIngredients();
   }, [setIngredients]);
+
+  useEffect(() => {
+    let newIngredients = [];
+    if (ingredientsRetrieved && !potionCreated) {
+      for (let i = 0; i < ingredients.length; i++) {
+        newIngredients.push(Ingredient.from(ingredients[i]));
+      }
+
+      setIngredients(newIngredients); // class ingredient
+
+      const potionIngredi = [newIngredients[0],newIngredients[1]];
+      console.log("potion iongredients");
+
+      console.log(potionIngredi);
+      const potion = Potion.create(potionIngredi);
+
+      console.log("Potion");
+      console.log(potion);
+      setPotionCreated(true);
+
+    }
+  }, [ingredients, ingredientsRetrieved, setIngredients, potionCreated,setPotionCreated]);
+
   useEffect(() => {
     const fetchPotions = async () => {
       try {

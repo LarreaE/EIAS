@@ -26,9 +26,7 @@ const IngredientSelector = ({ onSelectionChange }) => {
   const [selectedIngredients, setSelectedIngredients] = useState({});
   const [currentIndex, setCurrentIndex] = useState(0);
   const {ingredients } = useContext(UserContext);
-  console.log("ingredeints on selector");
-  console.log(ingredients);
-  
+
   // Estado para controlar la visibilidad del modal y el ingrediente seleccionado
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState<Ingredients | null>(null);

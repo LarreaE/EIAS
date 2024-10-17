@@ -30,7 +30,7 @@ class Potion implements Potions{
         this.value = value;
     }
 
-    static create(ingredients: [Ingredients]){
+    static create(ingredients: Ingredients[]){
 
         let value;
         let description;
@@ -40,21 +40,31 @@ class Potion implements Potions{
 
         let effectsArray = [];
 
+        console.log("Ingreds");
+        
+        console.log(ingredients);
+        
         for (let i = 0; i < ingredients.length; i++) {
-            const categorizedEffect = categorizeEffect(ingredients[i].effects);
+            const categorizedEffect = categorizeEffect(ingredients[i].effects[0]);
             effectsArray.push(categorizedEffect);
         }
-
-        checkIngredientCompatibility(effectsArray);
+        console.log(effectsArray);
+        
+        const lowerPotency = checkIngredientCompatibility(effectsArray);
+        console.log(lowerPotency);
 
         const potion_name = `Potion of ${ingredients[0].effects}`;
-        return new Potion();
+        // return new Potion();
+        // console.log(potion_name);
+        
     }
 
 }
 
 function  categorizeEffect(str: string) {
 
+    console.log(str);
+    
     const parts = str.split('_');
     let potency = '';
     let effect = '';
@@ -64,6 +74,11 @@ function  categorizeEffect(str: string) {
         potency = parts[0];
         effect = parts[1];
         attribute = parts[2];
+    } else if (parts.length > 3) {
+        // hit_points have broken the algorithm
+        potency = parts[0];
+        effect = parts[1];
+        attribute = parts.slice(2).join('_'); // combine remaining parts as attribute
     } else if (parts.length === 2) {
         // no potency
         potency = 'nothing';
@@ -76,14 +91,22 @@ function  categorizeEffect(str: string) {
     return { potency, effect, attribute };
 }
 
-const potencyTiers = {
+type Potency = 'least' | 'lesser' | 'nothing' | 'greater' | string;
+
+const potencyTiers: Record<Potency,number> = {
     least: 0,
     lesser: 1,
     nothing: 2,
     greater: 3,
 };
 
-function checkIngredientCompatibility(effects: Array) {
+interface EffectArray {
+    potency: Potency,
+    effect: string,
+    attribute: string,
+}
+
+function checkIngredientCompatibility(effects: Array<EffectArray>) {
 
     for (let i = 0; i < effects.length; i++) {
         for (let j = i + 1; j < effects.length; j++) {
@@ -96,6 +119,7 @@ function checkIngredientCompatibility(effects: Array) {
             console.log(
               `Triggering action for effect: ${effect1.effect} and attribute: ${effect1.attribute}. Lower potency is: ${lowerPotencyeffect.potency}`
             );
+            return lowerPotencyeffect.potency;
           }
         }
     }
