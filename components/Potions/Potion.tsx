@@ -59,11 +59,11 @@ class Potion implements Potions{
             case 'increase':
                 potion_name = `Essence of ${lowerPotency} heal`;
                 console.log(potion_name);
-                return new Essence(id, potion_name, description, image, type , value , modifiers);
+                return new Essence(id, potion_name, description, image, type , value);
             case 'decrease':
                 potion_name = `Stench of ${lowerPotency} damage`;
                 console.log(potion_name);
-                return new Stench(id, potion_name, description, image, type , value , modifiers);
+                return new Stench(id, potion_name, description, image, type , value);
             case 'calm':
                 potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`; // calm elixir
                 console.log(potion_name);
