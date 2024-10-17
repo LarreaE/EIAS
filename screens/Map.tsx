@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Button, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../types/types'; // Asegúrate de que RootStackParamList incluya 'AcolythLaboratory'
+import { RootStackParamList } from '../types/types';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ImageBackground } from 'react-native';
 import MapButton from '../components/MapButton';
@@ -31,6 +31,7 @@ const MapScreen: React.FC = () => {
           <MapButton
             title="Laboratory"
             onPress={goToLaboratory}
+            iconImage={require('../assets/laboratory_icon.png')}
           />
         </View>
 
@@ -38,6 +39,7 @@ const MapScreen: React.FC = () => {
           <MapButton
             title="Home"
             onPress={goToHome}
+            iconImage={require('../assets/home_icon.png')}
           />
         </View>
 
@@ -58,12 +60,14 @@ const styles = StyleSheet.create({
   },
   buttonLaboratory: {
     position: 'absolute',
-    bottom: 200,
+    bottom: 160,
+    right: 165,
     alignSelf: 'center',
   },
   buttonHome: {
     position: 'absolute',
-    bottom: 300,
+    bottom: 100,
+    right: 75,
     alignSelf: 'center',
   },
 
