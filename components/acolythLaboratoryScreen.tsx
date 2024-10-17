@@ -292,11 +292,15 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
           {/* Botón de Filtros */}
           <TouchableOpacity
-            style={styles.filterButton}
-            onPress={() => setFilterModalVisible(true)}
-          >
-            <Text style={styles.filterButtonText}>Filtros</Text>
-          </TouchableOpacity>
+          style={styles.filterButton}
+          onPress={() => setFilterModalVisible(true)}
+        >
+          <ImageBackground
+            source={require('../assets/filter_icon.png')} // Reemplaza esta ruta con la ubicación de tu imagen
+            style={styles.filterImage} // Aplica un estilo para ajustar el tamaño de la imagen
+          />
+        </TouchableOpacity>
+
 
           {/* Modal para mostrar detalles del QR */}
           <Modal
@@ -451,7 +455,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 50,
     right: 20,
-    backgroundColor: 'white',
     padding: 10,
     borderRadius: 8,
     flexDirection: 'row',
@@ -536,4 +539,12 @@ const styles = StyleSheet.create({
     width: 66,
     height: 66,
   },
+filterImage: {
+  position: 'absolute',
+  bottom: 0,
+  alignSelf: 'center',
+  width: 66,
+  height: 66,
+  left:-30,
+},
 });
