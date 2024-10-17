@@ -287,7 +287,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             <MapButton
               onPress={goToMap}
               iconImage={require('../assets/map_icon.png')}
-              
             />
           </View>
 
