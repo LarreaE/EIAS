@@ -26,7 +26,6 @@ const IngredientSelector = ({ onSelectionChange }) => {
   const [selectedIngredients, setSelectedIngredients] = useState({});
   const [currentIndex, setCurrentIndex] = useState(0);
   const {ingredients } = useContext(UserContext);
-  
   // Estado para controlar la visibilidad del modal y el ingrediente seleccionado
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState<Ingredients | null>(null);
@@ -42,10 +41,8 @@ const IngredientSelector = ({ onSelectionChange }) => {
         (a, b) => a + b,
         0
       );
-  
       // Obtener el conteo actual del ingrediente
       const currentCount = prevSelectedIngredients[ingredient._id] || 0;
-  
       if (totalSelections < 4) {
         // Incrementar el conteo del ingrediente
         const updatedSelection = {
