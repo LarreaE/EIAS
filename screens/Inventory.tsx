@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet, Text, SafeAreaView, Image } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, SafeAreaView, Image, ImageBackground } from 'react-native';
 import EquipmentSlot from '../components/Slot';
 import { ZoomInEasyDown } from 'react-native-reanimated';
 
@@ -12,7 +12,7 @@ const createInvetory = (inventory:any) => {
     for (const key in inventory) {
         for (let i = 0; i < inventory[key].length; i++) {
             newInventory.push(inventory[key][i]);
-        }
+        }marginTop: 100
     }
     return newInventory;
 };
@@ -24,6 +24,11 @@ const Inventory: React.FC<Props> = ({user}) => {
     const slots = Array.from({length: 200});
     slots.length -= newInventory.length;
     return (
+<ImageBackground
+      source={require('../assets/profile.png')}
+      style={styles.background}
+      resizeMode="cover"
+    >
       <ScrollView>
         <View style={styles.container}>
           {newInventory.map((_,index) => (
@@ -34,6 +39,8 @@ const Inventory: React.FC<Props> = ({user}) => {
         ))}
         </View>
       </ScrollView>
+      </ImageBackground>
+
     );
 };
 
@@ -42,6 +49,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap', // This will allow the slots to wrap to the next row
         justifyContent: 'center', // Center the equipment slots
+        alignItems: 'center',
+        marginTop: 100
+      },
+      background: {
+        flex: 1,
+        justifyContent: 'center',
         alignItems: 'center',
       },
   });
