@@ -32,39 +32,87 @@ class Potion implements Potions{
 
     static create(ingredients: Ingredients[]){
 
-        let value;
+        let value = calculateValue(ingredients);
         let description;
-        let image;
-        let type;
-        let modifiers;
-
+        let image = 'no images yet';
+        let type = 'Potion';
+        let modifiers = calculateModifiers(ingredients);
+        let id = 'id';
         let effectsArray = [];
 
         console.log("Ingreds");
-        
         console.log(ingredients);
-        
         for (let i = 0; i < ingredients.length; i++) {
             const categorizedEffect = categorizeEffect(ingredients[i].effects[0]);
             effectsArray.push(categorizedEffect);
         }
         console.log(effectsArray);
-        
         const lowerPotency = checkIngredientCompatibility(effectsArray);
         console.log(lowerPotency);
+        let potion_name = '';
+        switch (effectsArray[0].effect) {
+            case 'increase':
+                potion_name = `Essence of ${lowerPotency} ${effectsArray[0].effect}`;
+                console.log(potion_name);
+                break;
+            case 'decrease':
+                potion_name = `Stench of ${lowerPotency} ${effectsArray[0].effect}`;
+                console.log(potion_name);
+                break;
+            case 'calm':
+                potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`;
+                console.log(potion_name);
+                break;
+            case 'frenzy':
+                potion_name = `${lowerPotency} ${effectsArray[0].effect} venom`;
+                console.log(potion_name);
+                break;
+            case 'boost':
+                potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`;
+                console.log(potion_name);
+                break;
+            case 'setback':
+                potion_name = `${lowerPotency} ${effectsArray[0].attribute} venom`;
+                console.log(potion_name);
+                break;
+            case 'restore':
+                potion_name = `${lowerPotency} Antidote of "CURSE"`;
+                console.log(potion_name);
+                break;
+            case 'damage':
+                potion_name = `${lowerPotency} Venom of "CURSE"`;
+                console.log(potion_name);
+                break;
 
-        const potion_name = `Potion of ${ingredients[0].effects}`;
-        // return new Potion();
-        // console.log(potion_name);
-        
+            default:
+                break;
+        }
+
+        description = ingredients[0].description;
+
+        return new Potion(id, potion_name, description, image, type , value , modifiers);
+
     }
 
 }
-
+function calculateValue(ingredients: Ingredients[]) {
+    let value = 0;
+    for (let i = 0; i < ingredients.length; i++) {
+        value += ingredients[i].value;
+    }
+    return value;
+}
+function calculateModifiers(ingredients: Ingredients[]) {
+    let mods = 0;
+    for (let i = 0; i < ingredients.length; i++) {
+    }
+    return mods;
+}
 function  categorizeEffect(str: string) {
 
     console.log(str);
-    
+    str = str.replace('hit_points', 'hitpoints');
+
     const parts = str.split('_');
     let potency = '';
     let effect = '';
@@ -74,18 +122,13 @@ function  categorizeEffect(str: string) {
         potency = parts[0];
         effect = parts[1];
         attribute = parts[2];
-    } else if (parts.length > 3) {
-        // hit_points have broken the algorithm
-        potency = parts[0];
-        effect = parts[1];
-        attribute = parts.slice(2).join('_'); // combine remaining parts as attribute
     } else if (parts.length === 2) {
         // no potency
         potency = 'nothing';
         effect = parts[0];
         attribute = parts[1];
     } else {
-        throw new Error('Invalid string format');
+        throw new Error('Invalid string format: ' + str);
     }
 
     return { potency, effect, attribute };
