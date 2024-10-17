@@ -276,11 +276,10 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             style={styles.qrButton}
           >
             <ImageBackground
-              source={require('../assets/boton.png')}  // Ruta de la imagen
+              source={require('../assets/QR_icon.png')}  // Ruta de la imagen
               style={styles.openButton}  // Aplicar estilos al contenedor
               resizeMode="cover"         // Ajuste de la imagen
             >
-              <Text style={styles.textStyle}>Show QR</Text>
             </ImageBackground>
           </TouchableOpacity>
           <View style={styles.buttonMap}>
@@ -404,16 +403,18 @@ const styles = StyleSheet.create({
   },
   qrButton: {
     position: 'absolute',
-    //bottom: 70,
+    bottom: 100,
     alignSelf: 'center',
-    top:20,
+    width: 66,
+    height: 66,
+    top:10
   },
   openButton: {
     padding: 10,
     borderRadius: 10,
-    width: 120,
+    width: 66,
+    height: 66,
     alignItems: 'center',
-    backgroundColor: '#333', // Fondo más oscuro para mejor contraste
   },
   textStyle: {
     color: 'white',

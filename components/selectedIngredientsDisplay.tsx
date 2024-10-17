@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    top:200,
+    top:80,
   },
   circle: {
     width: 75,
