@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { useState, useRef, useContext } from 'react';
 import {
   Animated,
@@ -264,7 +265,7 @@ const styles = StyleSheet.create({
     width: 150,
     marginHorizontal: 5,
     height: 200,
-    marginTop: -200,
+    top:10,
   },
   gradientBackground: {
     flex: 1,
@@ -303,7 +304,7 @@ const styles = StyleSheet.create({
     top: 20,
     right: 5,
     backgroundColor: '#ff6f61',
-    borderRadius: 10,
+    borderRadius: 50,
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
@@ -312,23 +313,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   createPotionButtonContainer: {
-    width: '100%',
+    width: '10%',
     height: 100,
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+    left:60,
   },
   createPotionButton: {
     width: 200,
     height: 100,
-    padding: 15,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: '24%',
-    marginBottom: 150,
-    marginTop: -200
+    left: '24%',
+    top: -100,
   },
   createPotionButtonText: {
     fontSize: 18,
@@ -345,10 +345,11 @@ const styles = StyleSheet.create({
   modalContent: {
     padding: 20,
     borderRadius: 10,
-    width: '90%',
-    height: '80%',
+    width: '110%',
+    height: '90%',
     justifyContent: 'center',
     alignItems: 'center',
+    left:0,
   },
   modalImage: {
     width: 100,
@@ -359,26 +360,29 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10,
+    bottom: 20,
     color: 'white',
   },
   modalDescription: {
     fontSize: 16,
     color: 'white',
     textAlign: 'center',
+    maxWidth:200,
+    top:-20,
   },
   modalAtribute: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#cc9a52',
+    color: 'yellow',
     textAlign: 'center',
+    top:-20,
   },
   modalCloseButton: {
     position: 'absolute',
     top: 10,
-    right: 10,
-    backgroundColor: '#cc9a52',
-    borderRadius: 15,
+    right: 25,
+    backgroundColor: '#ff6f61',
+    borderRadius: 20,
     padding: 10,
   },
   modalCloseButtonText: {
@@ -391,12 +395,16 @@ const styles = StyleSheet.create({
     top: 10,
     left: 10,
     backgroundColor: '#ff6f61',
-    borderRadius: 20,
+    borderRadius: 30,
     padding: 5,
+    height: 30,
+    width:30,
+    alignItems:'center',
   },
   decreaseButtonText: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 20,
+    top:-5,
   },
 });

@@ -279,8 +279,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
               source={require('../assets/QR_icon.png')}  // Ruta de la imagen
               style={styles.openButton}  // Aplicar estilos al contenedor
               resizeMode="cover"         // Ajuste de la imagen
-            >
-            </ImageBackground>
+            />
           </TouchableOpacity>
           <View style={styles.buttonMap}>
             <MapButton
@@ -342,7 +341,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
               >
                 {/* Superposición para mejorar la legibilidad */}
                 <View style={styles.filterOverlay}>
-                  <Text style={styles.filterModalTitle}>Selecciona Efectos</Text>
+                  <Text style={styles.filterModalTitle}>Select Effects</Text>
                   <ScrollView style={styles.scrollView}>
                     {availableEffects.map((effect) => (
                       <TouchableOpacity
@@ -373,7 +372,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
                   source={require('../assets/boton.png')}
                   resizeMode="stretch"
                    >
-                    <Text style={styles.applyFiltersText}>Aplicar Filtros</Text>
+                    <Text style={styles.applyFiltersText}>Apply Filters</Text>
                     </ImageBackground>
                   </TouchableOpacity>
                 </View>
@@ -407,7 +406,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: 66,
     height: 66,
-    top:10
+    top:10,
   },
   openButton: {
     padding: 10,
