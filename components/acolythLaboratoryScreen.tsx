@@ -236,11 +236,27 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
     });
   };
 
-  // Función para aplicar los filtros
   const applyFilters = () => {
     if (selectedEffects.length === 0) {
-      setIngredients(allIngredients); // Si no hay filtros, muestra todos
+      // No se han seleccionado filtros, aplicar filtro por rol
+      if (role === 'ACOLYTE') {
+        // Filtrar ingredientes con efectos buenos
+        const goodIngredients = allIngredients.filter(ingredient =>
+          ingredient.effects.some(effect => GOOD_EFFECTS.includes(effect))
+        );
+        setIngredients(goodIngredients);
+      } else if (role === 'VILLAIN') {
+        // Filtrar ingredientes con efectos malos
+        const badIngredients = allIngredients.filter(ingredient =>
+          ingredient.effects.some(effect => BAD_EFFECTS.includes(effect))
+        );
+        setIngredients(badIngredients);
+      } else {
+        // En caso de que el rol no sea ni 'ACOLYTE' ni 'VILLAIN', mostrar todos los ingredientes
+        setIngredients(allIngredients);
+      }
     } else {
+      // Se han seleccionado filtros, aplicar filtrado basado en los efectos seleccionados
       const filtered = allIngredients.filter(ingredient =>
         ingredient.effects.some(effect =>
           selectedEffects.some(selectedEffect =>
@@ -248,7 +264,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
           )
         )
       );
-      setIngredients(filtered); // Actualiza el contexto con ingredientes filtrados
+      setIngredients(filtered);
     }
     setFilterModalVisible(false); // Cierra el modal de filtros
   };

@@ -148,7 +148,7 @@ const IngredientSelector = ({ onSelectionChange }) => {
               </View>
             )}
             <Image source={LocalIngredientImage} style={styles.ingredientImage} />
-            <Text style={styles.ingredientName}>{item.name}</Text>
+            <Text style={styles.ingredientName} numberOfLines={1}>{item.name} </Text>
             <Text style={styles.ingredientDescription} numberOfLines={2}>
               {item.description}
             </Text>
