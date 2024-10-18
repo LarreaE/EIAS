@@ -66,7 +66,7 @@ export default class Potion implements Potions{
                     potion_name = `Essence of ${lowerPotency} heal`;
                     console.log(potion_name);
                     type = 'Essence';
-                    let heal = 0;
+                    let heal = Essence.calculateMod(effectsArray);
                     return new Essence({
                         _id: id,
                         name: potion_name,
@@ -74,6 +74,7 @@ export default class Potion implements Potions{
                         image: image,
                         type: type,
                         value: value,
+                        heal: heal,
                     });
                 case 'decrease':
                     potion_name = `Stench of ${lowerPotency} damage`;
