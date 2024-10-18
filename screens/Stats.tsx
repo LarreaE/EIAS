@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Image} from 'react-native';
 import * as Progress from 'react-native-progress';  // Importar la librería de progreso
 
 import { Modifier } from '../interfaces/Modifier';
@@ -16,8 +16,9 @@ const StatsScreen: React.FC<Props> = ({ user }) => {
     if (player) calculateAllAttributes();
   }, [player]);
 
-  const role = user?.playerData.role || 'No name available';
+  const role = user?.playerData.role || 'No roll available';
   const userName = user?.playerData?.nickname || 'No name available';
+  const image = user?.playerData?.avatar || 'No photo available'
   const calculateAllAttributes = () => {
     if(player) {
       const charisma =  
@@ -85,9 +86,10 @@ const StatsScreen: React.FC<Props> = ({ user }) => {
       resizeMode="cover"
     >
     <View style={styles.container}>
+      <Image source={{ uri: image }} style={styles.profilePhoto} />
       <Text style={styles.header}>{role}</Text>
       <Text style={styles.header}>Name: {userName}</Text>
-      <Text style={styles.space}></Text>
+      <Text style={styles.header}></Text>
       {currentAttributes ? (
         <View style={styles.statsContainer}>
           <StatBar label="Charisma" value={currentAttributes.charisma} />
@@ -171,6 +173,11 @@ const styles = StyleSheet.create({
   progressBar: {
     marginHorizontal: 10,  // Añadir margen horizontal entre la barra y el número
   },
+  profilePhoto: {
+    borderRadius: 50,
+    width: 100,
+    height: 100,
+  }
 });
 
 export default StatsScreen;
