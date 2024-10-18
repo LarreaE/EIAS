@@ -162,24 +162,32 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   }, [player.is_active, player.email]);
 
   // Usa useCallback para evitar re-renderizados innecesarios
-  const createPotion = useCallback((selectedIngredients: { [key: string]: number }) => {
-    // Convierte el objeto de ingredientes seleccionados a un array
-    const potionIngredients = Object.keys(selectedIngredients).map(id => {
-      const ingredient = ingredients.find(ing => ing._id === id);
-      return ingredient ? { ...ingredient, quantity: selectedIngredients[id] } : null;
-    }).filter(ing => ing !== null) as Array<{ /* Define el tipo correcto aquí */ }>;
+   // Función para crear poción (Enfoque 1: Expandir el arreglo)
+   const createPotion = useCallback((selectedIngredients: { [key: string]: number }) => {
+    console.log('createPotion called with:', selectedIngredients);
+
+    // Convertir el objeto a un array de ingredientes con cantidades individuales
+    const potionIngredients = Object.keys(selectedIngredients).flatMap(id => {
+      const ingredient = allIngredients.find(ing => ing._id === id);
+      const quantity = selectedIngredients[id];
+      if (ingredient) {
+        // Crear un arreglo con múltiples instancias del ingrediente
+        return Array(quantity).fill({ ...ingredient });
+      }
+      return [];
+    });
 
     console.log('Selected Ingredients for Potion:', potionIngredients);
-    
+
     try {
       const potion = Potion.create(potionIngredients, curses);
       console.log('Created Potion:', potion);
       setPotionCreated(true);
     } catch (error) {
       console.error('Error creating potion:', error);
-      // Puedes manejar el error aquí, por ejemplo, mostrando una notificación al usuario
     }
-  }, [ingredients, curses]);
+  }, [allIngredients, curses]);
+
 
   // Función para manejar la selección de efectos
   const toggleEffect = (effect: string) => {
