@@ -1,5 +1,6 @@
 import { Modifier } from '../../interfaces/Modifier';
 import { Venoms } from '../../interfaces/Venom';
+import EffectArray from '../../interfaces/EffectArray';
 class Venom implements Venoms{
 
     _id: string;
@@ -21,6 +22,51 @@ class Venom implements Venoms{
         this.value = props.value;
         this.modifiers = props.modifiers;
     }
-}
+    static calculateMod(effectArray: Array<EffectArray>) {
 
+        let modifiers: Modifier = {
+            intelligence: 0,
+            dexterity: 0,
+            insanity: 0,
+            charisma: 0,
+            constitution: 0,
+            strength: 0,
+        };
+
+        if ( effectArray.every(element => element.attribute === effectArray[0].attribute)) {
+            let attributeName = effectArray[0].attribute;
+            effectArray.forEach(effect => {
+                let potencyValue = 0;
+                const { attribute, potency } = effect;
+                switch (effect.potency) {
+                  case 'least':
+                    potencyValue = 5;
+                    break;
+                  case 'lesser':
+                    potencyValue = 10;
+                    break;
+                  case 'greater':
+                    potencyValue = 20;
+                    break;
+                  default: // no potency or unknown
+                    potencyValue = 15;
+                    break;
+                }
+                if (modifiers.hasOwnProperty(attribute)) {
+                    modifiers[attribute as keyof Modifier] -= potencyValue;
+                  }
+              });
+
+              modifiers[attributeName as keyof Modifier] = round(modifiers[attributeName as keyof Modifier]); // round too newares 5
+              if (attributeName === 'insanity') {
+                modifiers[attributeName as keyof Modifier] = +modifiers[attributeName as keyof Modifier]; // take into account frenzy and calm
+              }
+              console.log("MODIFIERS OF VENOM: " + modifiers);
+              return modifiers;
+        }
+    }
+}
+function round(value: number): number {
+    return Math.floor(value / 5) * 5;
+}
 export default Venom;

@@ -58,6 +58,9 @@ class Elixir implements Elixirs {
               });
 
               modifiers[attributeName as keyof Modifier] = round(modifiers[attributeName as keyof Modifier]); // round too newares 5
+              if (attributeName === 'insanity') {
+                modifiers[attributeName as keyof Modifier] = -modifiers[attributeName as keyof Modifier]; // take into account frenzy and calm
+              }
               console.log("MODIFIERS OF ELIXIR: " + modifiers);
               return modifiers;
         }
