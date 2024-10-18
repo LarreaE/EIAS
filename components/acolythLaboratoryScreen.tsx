@@ -340,6 +340,8 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             style={styles.image}
             />
             <Text style={styles.effectText}>{potion.name}</Text>
+            <Text style={styles.effectText}>Value: {potion.value}</Text>
+            <Text style={styles.effectText}>Type: {potion.type}</Text>
               </>
           ) : <View style={styles.container}/>}
             </View>
