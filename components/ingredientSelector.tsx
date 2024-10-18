@@ -1,5 +1,3 @@
-// IngredientSelector.tsx
-
 import React, { useState, useRef, useContext } from 'react';
 import {
   Animated,
@@ -19,7 +17,7 @@ import { Ingredients } from '../interfaces/Ingredients';
 import LocalIngredientImage from '../assets/EIAS.png';
 import runaBackground from '../assets/runa.png';
 import createPotionButton from '../assets/boton.png';
-import SelectedIngredientsDisplay from './selectedIngredientsDisplay'; // Asegúrate de que el nombre del archivo sea correcto
+import SelectedIngredientsDisplay from './selectedIngredientsDisplay';
 
 interface IngredientSelectorProps {
   onSelectionChange: (selectedIngredients: { [key: string]: number }) => void;
@@ -164,8 +162,9 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
   const ITEM_SIZE = ITEM_WIDTH + ITEM_MARGIN * 2;
   const { width: WIDTH } = Dimensions.get('window');
 
-  // Verificación de si hay ingredientes seleccionados
-  const hasSelectedIngredients = Object.keys(selectedIngredients).length > 0;
+  // Verificación de si hay al menos dos ingredientes seleccionados
+  const totalSelectedCount = Object.values(selectedIngredients).reduce((a, b) => a + b, 0);
+  const hasAtLeastTwoSelected = totalSelectedCount >= 2;
 
   return (
     <View style={{ flex: 1 }}>
@@ -201,7 +200,7 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
       />
 
       {/* Create Potion Button */}
-      {hasSelectedIngredients && (
+      {hasAtLeastTwoSelected && (
         <TouchableOpacity 
           style={styles.createPotionButtonContainer} 
           onPress={() => { createPotion(selectedIngredients) }}
@@ -264,6 +263,7 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
 
 export default IngredientSelector;
 
+
 // Estilos (sin cambios, pero asegúrate de que sean consistentes)
 const styles = StyleSheet.create({
   ingredientItemContainer: {
@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
   },
   createPotionButtonContainer: {
     position: 'absolute',
-    bottom: 20, // Ajusta la posición según sea necesario
+    bottom: 100, // Ajusta la posición según sea necesario
     alignSelf: 'center',
     width: 200,
     height: 100,
