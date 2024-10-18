@@ -27,7 +27,7 @@ interface IngredientSelectorProps {
 const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChange, createPotion }) => {
   const [selectedIngredients, setSelectedIngredients] = useState<{ [key: string]: number }>({});
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { ingredients } = useContext(UserContext);
+  const { ingredients, setPotionVisible } = useContext(UserContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState<Ingredients | null>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -202,9 +202,14 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
       {/* Create Potion Button */}
       {hasAtLeastTwoSelected && (
         <TouchableOpacity 
-          style={styles.createPotionButtonContainer} 
-          onPress={() => { createPotion(selectedIngredients) }}
-        >
+        style={styles.createPotionButtonContainer} 
+        onPress={() => {
+          createPotion(selectedIngredients);
+          setSelectedIngredients({}); // Deselecciona todos los ingredientes
+          onSelectionChange({}); // Actualiza los cambios en otros componentes
+          setPotionVisible(true);
+        }}
+      >
           <ImageBackground
             source={createPotionButton}
             style={styles.createPotionButton}

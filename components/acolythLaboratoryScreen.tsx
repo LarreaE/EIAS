@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, useCallback } from 'react';
 import QRGenerator from './QrGenerator.tsx';
-import { ImageBackground, Modal, StyleSheet, TouchableOpacity, View, Vibration, Text, ScrollView } from 'react-native';
+import { ImageBackground, Modal, StyleSheet, TouchableOpacity, View, Vibration, Text, ScrollView, Image } from 'react-native';
 import { clearServerEvents, listenToServerEventsScanAcolyte } from '../sockets/listenEvents.tsx';
 import IngredientSelector from './ingredientSelector.tsx';
 import { UserContext } from '../context/UserContext'; // Importa el contexto
@@ -12,6 +12,13 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons.js';
 import Potion from './Potions/Potion.tsx';
 import Ingredient from './Potions/Ingredient.tsx';
 import Curse from './Potions/Curse.tsx';
+import Essence from './Potions/Essence.tsx';
+import { Ingredients } from '../interfaces/Ingredients.tsx';
+import Antidote from './Potions/Antidote.tsx';
+import Elixir from './Potions/Elixir.tsx';
+import Poison from './Potions/Poison.tsx';
+import Stench from './Potions/Stench.tsx';
+import Venom from './Potions/Venom.tsx';
 
 type Props = { UserData: any };
 
@@ -63,11 +70,12 @@ const EFFECT_ICONS: { [key: string]: string } = {
 const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isInside, setIsInside] = useState(UserData.UserData.playerData.is_active);
-  const { ingredients, setIngredients } = useContext(UserContext);
+  const { ingredients, setIngredients , potionVisible, setPotionVisible} = useContext(UserContext);
   const [allIngredients, setAllIngredients] = useState<Ingredients[]>([]);
   const [curses, setCurses] = useState([]);
   const [ingredientsRetrieved, setIngredientsRetrieved] = useState(false);
   const [potionCreated, setPotionCreated] = useState(false);
+  const [potion, setPotion] = useState<Potion | Essence | Stench | Elixir | Venom | Antidote | Poison | undefined>();
 
   const player = UserData.UserData.playerData;
   const vibrationDuration = 250;
@@ -180,13 +188,15 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
     console.log('Selected Ingredients for Potion:', potionIngredients);
 
     try {
-      const potion = Potion.create(potionIngredients, curses);
-      console.log('Created Potion:', potion);
+      const newpotion = Potion.create(potionIngredients, curses);
+      console.log('Created Potion:', newpotion);
       setPotionCreated(true);
+      setPotion(newpotion);
+      setPotionVisible(true);
     } catch (error) {
       console.error('Error creating potion:', error);
     }
-  }, [allIngredients, curses]);
+  }, [allIngredients, curses, setPotion, setPotionVisible]);
 
 
   // Función para manejar la selección de efectos
@@ -310,6 +320,35 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
                 </TouchableOpacity>
               </View>
             </View>
+          </Modal>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={potionVisible}
+            onRequestClose={() => {
+              setPotionVisible(false);
+            }}
+          >
+            <View style={styles.centeredView}>
+            {potion ? (
+              <>
+              <Image
+            source={{
+                uri: `https://kaotika.vercel.app/images/equipment/weapons/weapon_init_6.png`,
+            }}  // Ruta de la imagen de fondo
+            resizeMode="cover"
+            style={styles.image}
+            />
+            <Text style={styles.effectText}>{potion.name}</Text>
+              </>
+          ) : <View style={styles.container}/>}
+            </View>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setPotionVisible(false)}
+                >
+                  <Text>Close</Text>
+                </TouchableOpacity>
           </Modal>
 
           {/* Modal de Filtros */}
@@ -439,6 +478,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginTop: 10,
+  },
+  image: {
+    width: '40%',
+    height: '40%',
+    color: 'black',
   },
   // Estilos para el botón de filtros
   filterButton: {
