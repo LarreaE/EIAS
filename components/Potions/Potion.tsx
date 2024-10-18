@@ -59,7 +59,6 @@ export default class Potion implements Potions{
         //same effect
         if ( effectsArray.every(element => element.effect === effectsArray[0].effect)) {
             console.log('SAME EFFECT');
-            if (curse != null) {
                 switch (effectsArray[0].effect) {
                     case 'increase':
                         potion_name = Essence.name(lowerPotency);
@@ -120,7 +119,6 @@ export default class Potion implements Potions{
                     case 'boost':
                         potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`;
                         console.log(potion_name);
-    
                         type = 'Elixir';
                         modifiers = Elixir.calculateMod(effectsArray);
                         return new Elixir({
@@ -146,25 +144,21 @@ export default class Potion implements Potions{
                             value: value,
                             modifiers: modifiers,
                         });
-    
                     default:
-                        break;
+                        potion_name = 'Failed Potion';
+                        console.log(potion_name);
+                        type = 'Failed Potion';
+                        value = 1;
+                        description = 'A failed potion, do not consume.';
+                        return new Potion({
+                            _id: id,
+                            name: potion_name,
+                            description: description,
+                            image: image,
+                            type: type,
+                            value: value,
+                        });
                 }
-            } else {
-                potion_name = 'Failed Potion';
-                    console.log(potion_name);
-                    type = 'Failed Potion';
-                    value = 1;
-                    description = 'A failed potion, do not consume.';
-                    return new Potion({
-                        _id: id,
-                        name: potion_name,
-                        description: description,
-                        image: image,
-                        type: type,
-                        value: value,
-                    });
-            }
         } else {  //not same effect (check antidotes-poison)
             console.log('NOT ther SAME EFFECT');
             if (curse === null) {
