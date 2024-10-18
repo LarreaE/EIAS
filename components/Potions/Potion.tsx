@@ -59,95 +59,111 @@ export default class Potion implements Potions{
         //same effect
         if ( effectsArray.every(element => element.effect === effectsArray[0].effect)) {
             console.log('SAME EFFECT');
-            switch (effectsArray[0].effect) {
-                case 'increase':
-                    potion_name = Essence.name(lowerPotency);
+            if (curse != null) {
+                switch (effectsArray[0].effect) {
+                    case 'increase':
+                        potion_name = Essence.name(lowerPotency);
+                        console.log(potion_name);
+                        type = 'Essence';
+                        let heal = Essence.calculateMod(effectsArray);
+                        return new Essence({
+                            _id: id,
+                            name: potion_name,
+                            description: description,
+                            image: image,
+                            type: type,
+                            value: value,
+                            heal: heal,
+                        });
+                    case 'decrease':
+                        potion_name = Stench.name(lowerPotency);
+                        type = 'Stench';
+                        console.log(potion_name);
+                        let damage = Stench.calculateMod(effectsArray);
+                        return new Stench({
+                            _id: id,
+                            name: potion_name,
+                            description: description,
+                            image: image,
+                            type: type,
+                            value: value,
+                            damage: damage,
+                        });
+                    case 'calm':
+                        potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`; // calm elixir
+                        console.log(potion_name);
+                        type = 'Elixir';
+                        modifiers = Elixir.calculateMod(effectsArray);
+                        return new Elixir({
+                            _id: id,
+                            name: potion_name,
+                            description: description,
+                            image: image,
+                            type: type,
+                            value: value,
+                            modifiers: modifiers,
+                        });
+                    case 'frenzy':
+                        potion_name = `${lowerPotency} ${effectsArray[0].effect} venom`;
+                        console.log(potion_name);
+                        type = 'Venom';
+                        modifiers = Venom.calculateMod(effectsArray);
+                        return new Venom({
+                            _id: id,
+                            name: potion_name,
+                            description: description,
+                            image: image,
+                            type: type,
+                            value: value,
+                            modifiers: modifiers,
+                        });
+                    case 'boost':
+                        potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`;
+                        console.log(potion_name);
+    
+                        type = 'Elixir';
+                        modifiers = Elixir.calculateMod(effectsArray);
+                        return new Elixir({
+                            _id: id,
+                            name: potion_name,
+                            description: description,
+                            image: image,
+                            type: type,
+                            value: value,
+                            modifiers: modifiers,
+                        });
+                    case 'setback':
+                        potion_name = `${lowerPotency} ${effectsArray[0].attribute} venom`;
+                        console.log(potion_name);
+                        type = 'Venom';
+                        modifiers = Venom.calculateMod(effectsArray);
+                        return new Venom({
+                            _id: id,
+                            name: potion_name,
+                            description: description,
+                            image: image,
+                            type: type,
+                            value: value,
+                            modifiers: modifiers,
+                        });
+    
+                    default:
+                        break;
+                }
+            } else {
+                potion_name = 'Failed Potion';
                     console.log(potion_name);
-                    type = 'Essence';
-                    let heal = Essence.calculateMod(effectsArray);
-                    return new Essence({
+                    type = 'Failed Potion';
+                    value = 1;
+                    description = 'A failed potion, do not consume.';
+                    return new Potion({
                         _id: id,
                         name: potion_name,
                         description: description,
                         image: image,
                         type: type,
                         value: value,
-                        heal: heal,
                     });
-                case 'decrease':
-                    potion_name = Stench.name(lowerPotency);
-                    type = 'Stench';
-                    console.log(potion_name);
-                    let damage = Stench.calculateMod(effectsArray);
-                    return new Stench({
-                        _id: id,
-                        name: potion_name,
-                        description: description,
-                        image: image,
-                        type: type,
-                        value: value,
-                        damage: damage,
-                    });
-                case 'calm':
-                    potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`; // calm elixir
-                    console.log(potion_name);
-                    type = 'Elixir';
-                    modifiers = Elixir.calculateMod(effectsArray);
-                    return new Elixir({
-                        _id: id,
-                        name: potion_name,
-                        description: description,
-                        image: image,
-                        type: type,
-                        value: value,
-                        modifiers: modifiers,
-                    });
-                case 'frenzy':
-                    potion_name = `${lowerPotency} ${effectsArray[0].effect} venom`;
-                    console.log(potion_name);
-                    type = 'Venom';
-                    modifiers = Venom.calculateMod(effectsArray);
-                    return new Venom({
-                        _id: id,
-                        name: potion_name,
-                        description: description,
-                        image: image,
-                        type: type,
-                        value: value,
-                        modifiers: modifiers,
-                    });
-                case 'boost':
-                    potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`;
-                    console.log(potion_name);
-
-                    type = 'Elixir';
-                    modifiers = Elixir.calculateMod(effectsArray);
-                    return new Elixir({
-                        _id: id,
-                        name: potion_name,
-                        description: description,
-                        image: image,
-                        type: type,
-                        value: value,
-                        modifiers: modifiers,
-                    });
-                case 'setback':
-                    potion_name = `${lowerPotency} ${effectsArray[0].attribute} venom`;
-                    console.log(potion_name);
-                    type = 'Venom';
-                    modifiers = Venom.calculateMod(effectsArray);
-                    return new Venom({
-                        _id: id,
-                        name: potion_name,
-                        description: description,
-                        image: image,
-                        type: type,
-                        value: value,
-                        modifiers: modifiers,
-                    });
-
-                default:
-                    break;
             }
         } else {  //not same effect (check antidotes-poison)
             console.log('NOT ther SAME EFFECT');
