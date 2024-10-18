@@ -1,20 +1,21 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 import QRGenerator from './QrGenerator.tsx';
 import { ImageBackground, Modal, StyleSheet, TouchableOpacity, View, Vibration, Text, ScrollView } from 'react-native';
 import { clearServerEvents, listenToServerEventsScanAcolyte } from '../sockets/listenEvents.tsx';
 import IngredientSelector from './ingredientSelector.tsx';
 import { UserContext } from '../context/UserContext'; // Importa el contexto
-// import boton back to map
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/types';
 import MapButton from './MapButton.tsx';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons.js'; // Importa Icon para los filtros
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons.js';
 import Potion from './Potions/Potion.tsx';
 import Ingredient from './Potions/Ingredient.tsx';
 import Curse from './Potions/Curse.tsx';
 
 type Props = { UserData: any };
+
+type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
 
 // Definir los efectos disponibles categorizados
 const GOOD_EFFECTS = [
@@ -52,69 +53,12 @@ const BAD_EFFECTS = [
 ];
 
 const EFFECT_LABELS: { [key: string]: string } = {
-  increase_hit_points: 'Increase Hit Points',
-  decrease_hit_points: 'Decrease Hit Points',
-  restore_strength: 'Restore Strength',
-  restore_insanity: 'Restore Insanity',
-  restore_constitution: 'Restore Constitution',
-  restore_dexterity: 'Restore Dexterity',
-  restore_hit_points: 'Restore Hit Points',
-  restore_intelligence: 'Restore Intelligence',
-  restore_charisma: 'Restore Charisma',
-  damage_dexterity: 'Damage Dexterity',
-  damage_constitution: 'Damage Constitution',
-  damage_charisma: 'Damage Charisma',
-  damage_strength: 'Damage Strength',
-  damage_hit_points: 'Damage Hit Points',
-  damage_insanity: 'Damage Insanity',
-  damage_intelligence: 'Damage Intelligence',
-  boost_constitution: 'Boost Constitution',
-  boost_strength: 'Boost Strength',
-  boost_dexterity: 'Boost Dexterity',
-  boost_intelligence: 'Boost Intelligence',
-  boost_charisma: 'Boost Charisma',
-  setback_constitution: 'Setback Constitution',
-  setback_strength: 'Setback Strength',
-  setback_dexterity: 'Setback Dexterity',
-  setback_intelligence: 'Setback Intelligence',
-  setback_charisma: 'Setback Charisma',
-  calm: 'calm',
-  frenzy:'frenzy',
+  // ... tus etiquetas de efectos
 };
 
-// Mapeo de efectos a iconos
 const EFFECT_ICONS: { [key: string]: string } = {
-  increase_hit_points: 'hand-heart',
-  decrease_hit_points: 'heart',
-  restore_strength: 'arm-flex',
-  restore_insanity: 'head-heart',
-  restore_constitution: 'human-child',
-  restore_dexterity: 'feather',
-  restore_hit_points: 'ambulance',
-  restore_intelligence: 'brain',
-  restore_charisma: 'message-star',
-  damage_dexterity: 'weight',
-  damage_constitution: 'human-wheelchair',
-  damage_charisma: 'chat-minus',
-  damage_strength: 'arm-flex-outline',
-  damage_hit_points: 'heart-broken',
-  damage_insanity: 'bomb',
-  damage_intelligence: 'head-remove',
-  boost_constitution: 'human-greeting',
-  boost_strength: 'dumbbell',
-  boost_dexterity: 'flash',
-  boost_intelligence: 'account-plus',
-  boost_charisma: 'message-star',
-  setback_constitution: 'human-handsdown',
-  setback_strength: 'arm-flex-outline',
-  setback_dexterity: 'weight-kilogram',
-  setback_intelligence: 'head-remove',
-  setback_charisma: 'chat-minus',
-  calm: 'sleep',
-  frenzy:'emoticon-angry',
+  // ... tus iconos de efectos
 };
-type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
-
 
 const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -124,7 +68,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const [curses, setCurses] = useState([]);
   const [ingredientsRetrieved, setIngredientsRetrieved] = useState(false);
   const [potionCreated, setPotionCreated] = useState(false);
-
 
   const player = UserData.UserData.playerData;
   const vibrationDuration = 250;
@@ -171,54 +114,16 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   }, [setIngredients]);
 
   useEffect(() => {
-    let newIngredients = [];
-    let newCurses = [];
-
-    if (ingredientsRetrieved && !potionCreated && curses) {
-      for (let i = 0; i < ingredients.length; i++) {
-        newIngredients.push(Ingredient.from(ingredients[i]));
-      }
-      for (let i = 0; i < curses.length; i++) {
-        newCurses.push(Curse.from(curses[i]));
-      }
-      setCurses(newCurses);
-      setIngredients(newIngredients); // class ingredient
-      console.log(curses);
-
-      const potionIngredi = [newIngredients[13],newIngredients[2]];
-
-      const potion = Potion.create(potionIngredi,curses);
-
-      console.log(potion);
-      setPotionCreated(true);
-
+    if (ingredientsRetrieved && !potionCreated && allIngredients.length > 0 && curses.length > 0) {
+      const processedIngredients = allIngredients.map(ingredient => Ingredient.from(ingredient));
+      const processedCurses = curses.map(curse => Curse.from(curse));
+      setIngredients(processedIngredients);
+      setCurses(processedCurses);
+      console.log('Ingredientes procesados:', processedIngredients);
+      console.log('Maldiciones procesadas:', processedCurses);
     }
-  }, [ingredients, ingredientsRetrieved, setIngredients, potionCreated,setPotionCreated,curses]);
+  }, [ingredientsRetrieved, potionCreated, allIngredients, curses, setIngredients, setCurses]);
 
-
-  useEffect(() => {
-    const fetchPotions = async () => {
-      try {
-        console.log('Fetching potions...');
-        const response = await fetch('https://eiasserver.onrender.com/potions');
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          const data = await response.json();
-          if (data.success === true && Array.isArray(data.potionsData) && data.potionsData.length > 0) {
-            setCurses(data.potionsData);
-          } else {
-            console.error('No potions found or status is not OK.');
-          }
-        } else {
-          const text = await response.text();
-          console.error('Response is not JSON:', text);
-        }
-      } catch (error) {
-        console.error('Error getting potions:', error);
-      }
-    };
-    fetchPotions();
-  }, [setCurses]);
 
   useEffect(() => {
     listenToServerEventsScanAcolyte(setIsInside);
@@ -255,6 +160,26 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
       clearServerEvents();
     };
   }, [player.is_active, player.email]);
+
+  // Usa useCallback para evitar re-renderizados innecesarios
+  const createPotion = useCallback((selectedIngredients: { [key: string]: number }) => {
+    // Convierte el objeto de ingredientes seleccionados a un array
+    const potionIngredients = Object.keys(selectedIngredients).map(id => {
+      const ingredient = ingredients.find(ing => ing._id === id);
+      return ingredient ? { ...ingredient, quantity: selectedIngredients[id] } : null;
+    }).filter(ing => ing !== null) as Array<{ /* Define el tipo correcto aquí */ }>;
+
+    console.log('Selected Ingredients for Potion:', potionIngredients);
+    
+    try {
+      const potion = Potion.create(potionIngredients, curses);
+      console.log('Created Potion:', potion);
+      setPotionCreated(true);
+    } catch (error) {
+      console.error('Error creating potion:', error);
+      // Puedes manejar el error aquí, por ejemplo, mostrando una notificación al usuario
+    }
+  }, [ingredients, curses]);
 
   // Función para manejar la selección de efectos
   const toggleEffect = (effect: string) => {
@@ -308,6 +233,10 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
     navigation.navigate('Map');
   };
 
+  const onSelectionChange = useCallback((selected: { [key: string]: number }) => {
+    console.log('Selected Ingredients:', selected);
+  }, []);
+
   return (
     <View style={styles.container}>
       {isInside ? (
@@ -318,7 +247,10 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
         >
 
           {/* Selector de Ingredientes Filtrados */}
-          <IngredientSelector onSelectionChange={undefined} />
+          <IngredientSelector 
+            onSelectionChange={onSelectionChange}  
+            createPotion={createPotion} 
+          />
           {/* Botón para mostrar el QR */}
           <TouchableOpacity
             onPress={() => setModalVisible(true)}
@@ -339,14 +271,14 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
           {/* Botón de Filtros */}
           <TouchableOpacity
-          style={styles.filterButton}
-          onPress={() => setFilterModalVisible(true)}
-        >
-          <ImageBackground
-            source={require('../assets/filter_icon.png')} // Reemplaza esta ruta con la ubicación de tu imagen
-            style={styles.filterImage} // Aplica un estilo para ajustar el tamaño de la imagen
-          />
-        </TouchableOpacity>
+            style={styles.filterButton}
+            onPress={() => setFilterModalVisible(true)}
+          >
+            <ImageBackground
+              source={require('../assets/filter_icon.png')} // Reemplaza esta ruta con la ubicación de tu imagen
+              style={styles.filterImage} // Aplica un estilo para ajustar el tamaño de la imagen
+            />
+          </TouchableOpacity>
 
 
           {/* Modal para mostrar detalles del QR */}
@@ -355,7 +287,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             transparent={true}
             visible={modalVisible}
             onRequestClose={() => {
-              setModalVisible(true);
+              setModalVisible(false);
             }}
           >
             <View style={styles.centeredView}>
@@ -372,8 +304,8 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             </View>
           </Modal>
 
-                   {/* Modal de Filtros */}
-                   <Modal
+          {/* Modal de Filtros */}
+          <Modal
             animationType="slide"
             transparent={true}
             visible={filterModalVisible}
@@ -417,11 +349,12 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
                   <TouchableOpacity
                     style={styles.applyFiltersButton}
                     onPress={applyFilters}
-                  ><ImageBackground
-                  source={require('../assets/boton.png')}
-                  resizeMode="stretch"
-                   >
-                    <Text style={styles.applyFiltersText}>Apply Filters</Text>
+                  >
+                    <ImageBackground
+                      source={require('../assets/boton.png')}
+                      resizeMode="stretch"
+                    >
+                      <Text style={styles.applyFiltersText}>Apply Filters</Text>
                     </ImageBackground>
                   </TouchableOpacity>
                 </View>
@@ -588,12 +521,12 @@ const styles = StyleSheet.create({
     width: 66,
     height: 66,
   },
-filterImage: {
-  position: 'absolute',
-  bottom: 0,
-  alignSelf: 'center',
-  width: 66,
-  height: 66,
-  left:-30,
-},
+  filterImage: {
+    position: 'absolute',
+    bottom: 0,
+    alignSelf: 'center',
+    width: 66,
+    height: 66,
+    left:-30,
+  },
 });

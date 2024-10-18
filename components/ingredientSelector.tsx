@@ -1,4 +1,5 @@
-/* eslint-disable react-native/no-inline-styles */
+// IngredientSelector.tsx
+
 import React, { useState, useRef, useContext } from 'react';
 import {
   Animated,
@@ -17,12 +18,16 @@ import { UserContext } from '../context/UserContext';
 import { Ingredients } from '../interfaces/Ingredients';
 import LocalIngredientImage from '../assets/EIAS.png';
 import runaBackground from '../assets/runa.png';
-import createPotionButton from '../assets/boton.png'
+import createPotionButton from '../assets/boton.png';
 import SelectedIngredientsDisplay from './selectedIngredientsDisplay'; // Asegúrate de que el nombre del archivo sea correcto
 
+interface IngredientSelectorProps {
+  onSelectionChange: (selectedIngredients: { [key: string]: number }) => void;
+  createPotion: (selectedIngredients: { [key: string]: number }) => void;
+}
 
-const IngredientSelector = ({ onSelectionChange }) => {
-  const [selectedIngredients, setSelectedIngredients] = useState({});
+const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChange, createPotion }) => {
+  const [selectedIngredients, setSelectedIngredients] = useState<{ [key: string]: number }>({});
   const [currentIndex, setCurrentIndex] = useState(0);
   const { ingredients } = useContext(UserContext);
   const [modalVisible, setModalVisible] = useState(false);
@@ -31,7 +36,7 @@ const IngredientSelector = ({ onSelectionChange }) => {
 
   const showToastWithGravityAndOffset = () => {
     ToastAndroid.showWithGravityAndOffset(
-      'You reach the maximum ingredients',
+      'Has alcanzado el máximo de ingredientes',
       ToastAndroid.LONG,
       ToastAndroid.BOTTOM,
       25,
@@ -39,7 +44,7 @@ const IngredientSelector = ({ onSelectionChange }) => {
     );
   };
 
-  const toggleSelection = (ingredient) => {
+  const toggleSelection = (ingredient: Ingredients) => {
     setSelectedIngredients((prevSelectedIngredients) => {
       const totalSelections = Object.values(prevSelectedIngredients).reduce((a, b) => a + b, 0);
       const currentCount = prevSelectedIngredients[ingredient._id] || 0;
@@ -49,9 +54,7 @@ const IngredientSelector = ({ onSelectionChange }) => {
           ...prevSelectedIngredients,
           [ingredient._id]: currentCount + 1,
         };
-        if (onSelectionChange) {
-          onSelectionChange(updatedSelection);
-        }
+        onSelectionChange(updatedSelection);
         return updatedSelection;
       } else {
         showToastWithGravityAndOffset();
@@ -60,7 +63,7 @@ const IngredientSelector = ({ onSelectionChange }) => {
     });
   };
 
-  const decreaseSelection = (ingredientId) => {
+  const decreaseSelection = (ingredientId: string) => {
     setSelectedIngredients((prevSelectedIngredients) => {
       const currentCount = prevSelectedIngredients[ingredientId] || 0;
       if (currentCount > 0) {
@@ -71,9 +74,7 @@ const IngredientSelector = ({ onSelectionChange }) => {
         if (updatedSelection[ingredientId] === 0) {
           delete updatedSelection[ingredientId];
         }
-        if (onSelectionChange) {
-          onSelectionChange(updatedSelection);
-        }
+        onSelectionChange(updatedSelection);
         return updatedSelection;
       } else {
         return prevSelectedIngredients;
@@ -81,11 +82,11 @@ const IngredientSelector = ({ onSelectionChange }) => {
     });
   };
 
-  const deselectIngredient = (ingredientId) => {
+  const deselectIngredient = (ingredientId: string) => {
     decreaseSelection(ingredientId);
   };
 
-  const renderIngredient = ({ item, index }) => {
+  const renderIngredient = ({ item, index }: { item: Ingredients; index: number }) => {
     const selectedCount = selectedIngredients[item._id] || 0;
 
     const inputRange = [
@@ -148,7 +149,7 @@ const IngredientSelector = ({ onSelectionChange }) => {
               </View>
             )}
             <Image source={LocalIngredientImage} style={styles.ingredientImage} />
-            <Text style={styles.ingredientName} numberOfLines={1}>{item.name} </Text>
+            <Text style={styles.ingredientName} numberOfLines={1}>{item.name}</Text>
             <Text style={styles.ingredientDescription} numberOfLines={2}>
               {item.description}
             </Text>
@@ -201,15 +202,18 @@ const IngredientSelector = ({ onSelectionChange }) => {
 
       {/* Create Potion Button */}
       {hasSelectedIngredients && (
-        <TouchableOpacity style={styles.createPotionButtonContainer} onPress={() => { /* Future functionality here */ }}>
+        <TouchableOpacity 
+          style={styles.createPotionButtonContainer} 
+          onPress={() => { createPotion(selectedIngredients) }}
+        >
           <ImageBackground
-              source={createPotionButton}
-              style={styles.createPotionButton}
-              imageStyle={{ borderRadius: 10 }}
-              resizeMode="stretch"
-            >
-              <Text style={styles.createPotionButtonText}>create potion</Text>
-            </ImageBackground>
+            source={createPotionButton}
+            style={styles.createPotionButton}
+            imageStyle={{ borderRadius: 10 }}
+            resizeMode="stretch"
+          >
+            <Text style={styles.createPotionButtonText}>Crear Poción</Text>
+          </ImageBackground>
         </TouchableOpacity>
       )}
 
@@ -238,17 +242,17 @@ const IngredientSelector = ({ onSelectionChange }) => {
                 style={styles.modalImage}
               />
               <Text style={styles.modalTitle}>{selectedIngredient.name}</Text>
-              <Text style={styles.modalAtribute}>DESCRIPTION:</Text>
+              <Text style={styles.modalAtribute}>DESCRIPCIÓN:</Text>
               <Text style={styles.modalDescription}>
                 {selectedIngredient.description}
               </Text>
-              <Text style={styles.modalAtribute}>VALUE:</Text>
+              <Text style={styles.modalAtribute}>VALOR:</Text>
               <Text style={styles.modalDescription}>
                 {selectedIngredient.value}
               </Text>
-              <Text style={styles.modalAtribute}>EFFECTS:</Text>
+              <Text style={styles.modalAtribute}>EFECTOS:</Text>
               <Text style={styles.modalDescription}>
-                {selectedIngredient.effects}
+                {selectedIngredient.effects.join(', ')}
               </Text>
             </ImageBackground>
           </View>
@@ -260,12 +264,13 @@ const IngredientSelector = ({ onSelectionChange }) => {
 
 export default IngredientSelector;
 
+// Estilos (sin cambios, pero asegúrate de que sean consistentes)
 const styles = StyleSheet.create({
   ingredientItemContainer: {
     width: 150,
     marginHorizontal: 5,
     height: 200,
-    top:10,
+    top: 10,
   },
   gradientBackground: {
     flex: 1,
@@ -313,28 +318,25 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   createPotionButtonContainer: {
-    width: '10%',
-    height: 100,
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    left:60,
-  },
-  createPotionButton: {
+    position: 'absolute',
+    bottom: 20, // Ajusta la posición según sea necesario
+    alignSelf: 'center',
     width: 200,
     height: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  createPotionButton: {
+    width: '100%',
+    height: '100%',
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    left: '24%',
-    top: -100,
   },
   createPotionButtonText: {
     fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
-
   },
   modalOverlay: {
     flex: 1,
@@ -345,11 +347,10 @@ const styles = StyleSheet.create({
   modalContent: {
     padding: 20,
     borderRadius: 10,
-    width: '110%',
-    height: '90%',
+    width: '90%',
+    height: '80%',
     justifyContent: 'center',
     alignItems: 'center',
-    left:0,
   },
   modalImage: {
     width: 100,
@@ -360,22 +361,21 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    bottom: 20,
     color: 'white',
   },
   modalDescription: {
     fontSize: 16,
     color: 'white',
     textAlign: 'center',
-    maxWidth:200,
-    top:-20,
+    maxWidth: 200,
+    marginTop: 10,
   },
   modalAtribute: {
     fontSize: 16,
     fontWeight: 'bold',
     color: 'yellow',
     textAlign: 'center',
-    top:-20,
+    marginTop: 10,
   },
   modalCloseButton: {
     position: 'absolute',
@@ -395,16 +395,16 @@ const styles = StyleSheet.create({
     top: 10,
     left: 10,
     backgroundColor: '#ff6f61',
-    borderRadius: 30,
+    borderRadius: 15,
     padding: 5,
     height: 30,
-    width:30,
-    alignItems:'center',
+    width: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   decreaseButtonText: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 20,
-    top:-5,
   },
 });
