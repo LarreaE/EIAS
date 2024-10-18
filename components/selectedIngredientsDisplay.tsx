@@ -40,18 +40,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    marginVertical: 20, // Aumenta el margen vertical
+    top:80,
   },
   circle: {
-    width: 90,
-    height: 90,
+    width: 75,
+    height: 75,
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
     margin: 5,
     overflow: 'hidden',
-    marginTop: -300,
-    marginBottom: 300
+    marginTop: -400,
+    marginBottom: 300,
   },
   image: {
     width: 58,

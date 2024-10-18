@@ -5,6 +5,7 @@ apply plugin: "com.google.gms.google-services"
 apply plugin: "com.google.firebase.crashlytics"
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 apply plugin: 'kotlin-android'
+apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
 
 def enableProguardInReleaseBuilds = false // Cambia a true si habilitas Proguard
 
@@ -96,4 +97,5 @@ dependencies {
     implementation project(':react-native-reanimated')
 
     implementation project(':react-native-pager-view')
+    implementation project(':react-native-vector-icons')
 }

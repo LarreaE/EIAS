@@ -1,4 +1,3 @@
-// IngredientSelector.js
 import React, { useState, useRef, useContext } from 'react';
 import {
   Animated,
@@ -7,17 +6,19 @@ import {
   Text,
   StyleSheet,
   Dimensions,
-  Alert,
   View,
   ImageBackground,
   Modal,
   Vibration,
+  ToastAndroid,
 } from 'react-native';
 import { UserContext } from '../context/UserContext';
 import { Ingredients } from '../interfaces/Ingredients';
 import LocalIngredientImage from '../assets/EIAS.png';
 import runaBackground from '../assets/runa.png';
+import createPotionButton from '../assets/boton.png'
 import SelectedIngredientsDisplay from './selectedIngredientsDisplay'; // Asegúrate de que el nombre del archivo sea correcto
+
 
 const IngredientSelector = ({ onSelectionChange }) => {
   const [selectedIngredients, setSelectedIngredients] = useState({});
@@ -26,6 +27,16 @@ const IngredientSelector = ({ onSelectionChange }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState<Ingredients | null>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
+
+  const showToastWithGravityAndOffset = () => {
+    ToastAndroid.showWithGravityAndOffset(
+      'You reach the maximum ingredients',
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      50,
+    );
+  };
 
   const toggleSelection = (ingredient) => {
     setSelectedIngredients((prevSelectedIngredients) => {
@@ -42,7 +53,7 @@ const IngredientSelector = ({ onSelectionChange }) => {
         }
         return updatedSelection;
       } else {
-        Alert.alert('Limit reached', 'You can only select up to 4 ingredients in total.');
+        showToastWithGravityAndOffset();
         return prevSelectedIngredients;
       }
     });
@@ -70,7 +81,7 @@ const IngredientSelector = ({ onSelectionChange }) => {
   };
 
   const deselectIngredient = (ingredientId) => {
-    decreaseSelection(ingredientId); // Reutilizamos decreaseSelection para deseleccionar
+    decreaseSelection(ingredientId);
   };
 
   const renderIngredient = ({ item, index }) => {
@@ -151,6 +162,9 @@ const IngredientSelector = ({ onSelectionChange }) => {
   const ITEM_SIZE = ITEM_WIDTH + ITEM_MARGIN * 2;
   const { width: WIDTH } = Dimensions.get('window');
 
+  // Verificación de si hay ingredientes seleccionados
+  const hasSelectedIngredients = Object.keys(selectedIngredients).length > 0;
+
   return (
     <View style={{ flex: 1 }}>
       <Animated.FlatList
@@ -178,14 +192,26 @@ const IngredientSelector = ({ onSelectionChange }) => {
         }}
       />
 
-      {/* Show the selected ingredients in circles */}
       <SelectedIngredientsDisplay
         selectedIngredients={selectedIngredients}
         ingredients={ingredients}
-        onDeselection={deselectIngredient} // Pass the deselection function
+        onDeselection={deselectIngredient}
       />
 
-      {/* Modal to show ingredient details */}
+      {/* Create Potion Button */}
+      {hasSelectedIngredients && (
+        <TouchableOpacity style={styles.createPotionButtonContainer} onPress={() => { /* Future functionality here */ }}>
+          <ImageBackground
+              source={createPotionButton}
+              style={styles.createPotionButton}
+              imageStyle={{ borderRadius: 10 }}
+              resizeMode="stretch"
+            >
+              <Text style={styles.createPotionButtonText}>create potion</Text>
+            </ImageBackground>
+        </TouchableOpacity>
+      )}
+
       {selectedIngredient && (
         <Modal
           visible={modalVisible}
@@ -238,7 +264,7 @@ const styles = StyleSheet.create({
     width: 150,
     marginHorizontal: 5,
     height: 200,
-    marginTop: -150,
+    marginTop: -200,
   },
   gradientBackground: {
     flex: 1,
@@ -277,90 +303,100 @@ const styles = StyleSheet.create({
     top: 20,
     right: 5,
     backgroundColor: '#ff6f61',
-    borderRadius: 12,
-    width: 24,
-    height: 24,
+    borderRadius: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  countText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  createPotionButtonContainer: {
+    width: '100%',
+    height: 100,
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  createPotionButton: {
+    width: 200,
+    height: 100,
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: '24%',
+    marginBottom: 150,
+    marginTop: -200
+  },
+  createPotionButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  modalContent: {
+    padding: 20,
+    borderRadius: 10,
+    width: '90%',
+    height: '80%',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  countText: {
-    color: '#fff',
-    fontSize: 14,
+  modalImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: 'white',
+  },
+  modalDescription: {
+    fontSize: 16,
+    color: 'white',
+    textAlign: 'center',
+  },
+  modalAtribute: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#cc9a52',
+    textAlign: 'center',
+  },
+  modalCloseButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    backgroundColor: '#cc9a52',
+    borderRadius: 15,
+    padding: 10,
+  },
+  modalCloseButtonText: {
+    fontSize: 16,
+    color: 'white',
     fontWeight: 'bold',
   },
   decreaseButton: {
     position: 'absolute',
-    top: 20,
+    top: 10,
     left: 10,
     backgroundColor: '#ff6f61',
-    borderRadius: 12,
-    width: 24,
-    height: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderRadius: 20,
+    padding: 5,
   },
   decreaseButtonText: {
-    color: '#fff',
-    fontSize: 18,
+    color: 'white',
     fontWeight: 'bold',
-    lineHeight: 18,
-  },
-  // Styles for the modal
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semitransparente
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    width: '100%',
-    height: '90%',
-    borderRadius: 10,
-    padding: 20,
-    alignItems: 'center',
-    overflow: 'hidden',
-    left: 20,
-  },
-  modalCloseButton: {
-    position: 'absolute',
-    top: 30,
-    right: 50,
-  },
-  modalCloseButtonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  modalImage: {
-    width: 120,
-    height: 100,
-    borderRadius: 75,
-    marginBottom: 15,
-    top: 30,
-    right: 20,
-  },
-  modalTitle: {
-    top: 10,
-    right: 20,
     fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#fff',
-    textAlign: 'center',
-  },
-  modalDescription: {
-    right: 20,
-    top: 10,
-    fontSize: 16,
-    color: '#fff',
-    textAlign: 'center',
-    maxWidth: 150,
-  },
-  modalAtribute: {
-    right: 20,
-    top: 10,
-    fontSize: 16,
-    color: 'yellow',
-    textAlign: 'center',
   },
 });
