@@ -8,6 +8,7 @@ class Essence {
     type: string;
     name: string;
     value: number;
+    heal: number;
 
     constructor(
        props: Essences
@@ -18,6 +19,7 @@ class Essence {
         this.type = props.type;
         this.name = props.name;
         this.value = props.value;
+        this.heal = props.heal;
     }
 }
 

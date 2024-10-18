@@ -1,5 +1,6 @@
 import { Modifier } from '../../interfaces/Modifier';
 import { Elixirs } from '../../interfaces/Elixir';
+import EffectArray from '../../interfaces/EffectArray';
 class Elixir implements Elixirs {
 
     _id: string;
@@ -21,6 +22,49 @@ class Elixir implements Elixirs {
         this.value = props.value;
         this.modifiers = props.modifiers;
     }
+    static calculateMod(effectArray: Array<EffectArray>) {
+
+        let modifiers: Modifier = {
+            intelligence: 0,
+            dexterity: 0,
+            insanity: 0,
+            charisma: 0,
+            constitution: 0,
+            strength: 0,
+        };
+
+        if ( effectArray.every(element => element.attribute === effectArray[0].attribute)) {
+            let attributeName = effectArray[0].attribute;
+            effectArray.forEach(effect => {
+                let potencyValue = 0;
+                const { attribute, potency } = effect;
+                switch (effect.potency) {
+                  case 'least':
+                    potencyValue = 5;
+                    break;
+                  case 'lesser':
+                    potencyValue = 10;
+                    break;
+                  case 'greater':
+                    potencyValue = 20;
+                    break;
+                  default: // no potency or unknown
+                    potencyValue = 15;
+                    break;
+                }
+                if (modifiers.hasOwnProperty(attribute)) {
+                    modifiers[attribute as keyof Modifier] += potencyValue;
+                  }
+              });
+
+              modifiers[attributeName as keyof Modifier] = round(modifiers[attributeName as keyof Modifier]); // round too newares 5
+              console.log("MODIFIERS OF ELIXIR: " + modifiers);
+              return modifiers;
+        }
+    }
 }
+function round(value: number): number {
+    return Math.floor(value / 5) * 5;
+  }
 
 export default Elixir;

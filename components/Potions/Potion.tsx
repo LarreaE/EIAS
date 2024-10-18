@@ -66,6 +66,7 @@ export default class Potion implements Potions{
                     potion_name = `Essence of ${lowerPotency} heal`;
                     console.log(potion_name);
                     type = 'Essence';
+                    let heal = 0;
                     return new Essence({
                         _id: id,
                         name: potion_name,
@@ -202,6 +203,7 @@ function calculateValue(ingredients: Ingredients[]) {
     }
     return value;
 }
+
 function seekCurse(ingredients: Ingredients[], curses: Curses[]) {
 
     const ingredientEffects = new Set<string>();
