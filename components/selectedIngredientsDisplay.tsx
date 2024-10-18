@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    top:-250,
+    top:'-40%',
   },
   circle: {
     width: 75,

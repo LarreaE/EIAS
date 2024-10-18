@@ -29,7 +29,7 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLoged }) => {
           style={styles.buttonImage}  // Estilos para la imagen dentro del botón
           resizeMode="cover"         // Ajuste de la imagen
         >
-          <Text style={styles.signOutText}>Sign Out</Text>
+          <Text style={styles.signOutText}>Sing Out</Text>
         </ImageBackground>
       </TouchableOpacity>
     </ImageBackground>
@@ -39,28 +39,30 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLoged }) => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,                    // Ocupa todo el espacio disponible
-    justifyContent: 'center',   // Centra el contenido verticalmente
-    alignItems: 'center',
-    width:700,
-    left:-180,    // Centra el contenido horizontalmente
+    width:'165%',
+    height: '170%',
+    left:'-100%',
   },
   signOutButton: {
-    position: 'absolute',       // Posicionamiento absoluto para colocar el botón donde se desee
-    bottom: 450,
-    left: '50%',
-    transform: [{ translateX: -100 }], // Mitad del ancho del botón para centrarlo
+    position: 'relative',       // Posicionamiento absoluto para colocar el botón donde se desee
+    bottom: '-60%',
+    left:'60%',
+    width: '250%',
+    height: '70%',
   },
   buttonImage: {
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    width: 200,
-    height: 100,
+    width: '50%',
+    height: '70%',
   },
   signOutText: {
     color: 'white',
     fontSize: 22,
     fontWeight: 'bold',
+    left:'-25%',
+    top:'-15%',
   },
   // Estilos adicionales que puedes necesitar
   // Por ejemplo, si deseas agregar más elementos en el futuro

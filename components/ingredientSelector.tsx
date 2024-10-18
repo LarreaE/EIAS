@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
     width: 150,
     marginHorizontal: 5,
     height: 200,
-    top: 10,
+    top: '-20%',
   },
   gradientBackground: {
     flex: 1,
@@ -347,8 +347,8 @@ const styles = StyleSheet.create({
   modalContent: {
     padding: 20,
     borderRadius: 10,
-    width: '90%',
-    height: '80%',
+    width: '110%',
+    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -362,6 +362,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: 'white',
+    top:'0%',
   },
   modalDescription: {
     fontSize: 16,
