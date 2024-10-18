@@ -185,7 +185,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
       setIngredients(newIngredients); // class ingredient
       console.log(curses);
 
-      const potionIngredi = [newIngredients[13],newIngredients[2]];
+      const potionIngredi = [newIngredients[0],newIngredients[2], newIngredients[0]];
 
       const potion = Potion.create(potionIngredi,curses);
 

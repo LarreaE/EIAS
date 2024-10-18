@@ -52,8 +52,16 @@ class Stench implements Stenches{
                 damageValue = damageValue * 1.8; // +80%
               }
 
+              damageValue = Math.ceil(damageValue);
               console.log("MODIFIERS OF STENCH: " + damageValue);
               return -damageValue;
+    }
+    static name(potency: string | undefined) {
+      if (potency === '') {
+        return 'Stench of damage';
+      } else {
+        return `Stench of ${potency} damage`;
+      }
     }
 }
 

@@ -51,9 +51,17 @@ class Essence {
               } else if (effectArray.every(element => element.potency === effectArray[0].potency && effectArray.length === 2)) {
                 healValue = healValue * 1.8; // +80%
               }
-
+              healValue = Math.ceil(healValue);
               console.log("MODIFIERS OF ESSENCE: " + healValue);
               return healValue;
+    }
+
+    static name(potency: string | undefined) {
+      if (potency === '') {
+        return 'Essence of heal';
+      } else {
+        return `Essence of ${potency} heal`;
+      }
     }
 }
 

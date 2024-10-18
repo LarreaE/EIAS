@@ -50,11 +50,9 @@ export default class Potion implements Potions{
             const categorizedEffect = categorizeEffect(ingredients[i].effects[0]);
             effectsArray.push(categorizedEffect);
         }
-        const lowerPotency = checkIngredientCompatibility(effectsArray);
+        let lowerPotency = checkIngredientCompatibility(effectsArray);
         description = ingredients[0].description;
-        if (lowerPotency) {
-
-        }
+        if (lowerPotency === 'nothing') {lowerPotency = '';}
         let potion_name = '';
         console.log(effectsArray);
 
@@ -63,7 +61,7 @@ export default class Potion implements Potions{
             console.log('SAME EFFECT');
             switch (effectsArray[0].effect) {
                 case 'increase':
-                    potion_name = `Essence of ${lowerPotency} heal`;
+                    potion_name = Essence.name(lowerPotency);
                     console.log(potion_name);
                     type = 'Essence';
                     let heal = Essence.calculateMod(effectsArray);
@@ -77,7 +75,7 @@ export default class Potion implements Potions{
                         heal: heal,
                     });
                 case 'decrease':
-                    potion_name = `Stench of ${lowerPotency} damage`;
+                    potion_name = Stench.name(lowerPotency);
                     type = 'Stench';
                     console.log(potion_name);
                     let damage = Stench.calculateMod(effectsArray);
