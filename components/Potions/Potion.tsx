@@ -117,7 +117,7 @@ export default class Potion implements Potions{
                             modifiers: modifiers,
                         });
                     case 'boost':
-                        potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`;
+                        potion_name = `${lowerPotency} ${effectsArray[0].attribute} elixir`;
                         console.log(potion_name);
                         type = 'Elixir';
                         modifiers = Elixir.calculateMod(effectsArray);
@@ -291,16 +291,17 @@ interface EffectArray {
 
 function checkIngredientCompatibility(effects: Array<EffectArray>) {
 
+    let lowerPotencyeffect = effects[0];
     for (let i = 0; i < effects.length; i++) {
         for (let j = i + 1; j < effects.length; j++) {
           const effect1 = effects[i];
           const effect2 = effects[j];
 
-            const lowerPotencyeffect = potencyTiers[effect1.potency] < potencyTiers[effect2.potency] ? effect1 : effect2;
+            lowerPotencyeffect = potencyTiers[effect1.potency] < potencyTiers[effect2.potency] ? effect1 : effect2;
             console.log(
               `Triggering action for effect: ${effect1.effect} and attribute: ${effect1.attribute}. Lower potency is: ${lowerPotencyeffect.potency}`
             );
-            return lowerPotencyeffect.potency;
         }
     }
+    return lowerPotencyeffect.potency;
 }
