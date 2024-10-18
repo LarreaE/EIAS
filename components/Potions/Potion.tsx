@@ -80,6 +80,7 @@ export default class Potion implements Potions{
                     potion_name = `Stench of ${lowerPotency} damage`;
                     type = 'Stench';
                     console.log(potion_name);
+                    let damage = Stench.calculateMod(effectsArray);
                     return new Stench({
                         _id: id,
                         name: potion_name,
@@ -87,11 +88,13 @@ export default class Potion implements Potions{
                         image: image,
                         type: type,
                         value: value,
+                        damage: damage,
                     });
                 case 'calm':
                     potion_name = `${lowerPotency} ${effectsArray[0].effect} elixir`; // calm elixir
                     console.log(potion_name);
                     type = 'Elixir';
+                    modifiers = Elixir.calculateMod(effectsArray);
                     return new Elixir({
                         _id: id,
                         name: potion_name,
@@ -105,6 +108,7 @@ export default class Potion implements Potions{
                     potion_name = `${lowerPotency} ${effectsArray[0].effect} venom`;
                     console.log(potion_name);
                     type = 'Venom';
+                    modifiers = Venom.calculateMod(effectsArray);
                     return new Venom({
                         _id: id,
                         name: potion_name,
@@ -119,6 +123,7 @@ export default class Potion implements Potions{
                     console.log(potion_name);
 
                     type = 'Elixir';
+                    modifiers = Elixir.calculateMod(effectsArray);
                     return new Elixir({
                         _id: id,
                         name: potion_name,
@@ -132,6 +137,7 @@ export default class Potion implements Potions{
                     potion_name = `${lowerPotency} ${effectsArray[0].attribute} venom`;
                     console.log(potion_name);
                     type = 'Venom';
+                    modifiers = Venom.calculateMod(effectsArray);
                     return new Venom({
                         _id: id,
                         name: potion_name,

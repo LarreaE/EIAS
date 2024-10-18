@@ -6,4 +6,5 @@ export interface Stenches {
 	image: string,
 	type: string,
 	value: number,
+	damage: number
 }
