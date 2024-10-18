@@ -36,6 +36,15 @@ const EquipmentSlot: React.FC<Slot> = ({item , size}) => {
             <Text style={styles.modalButton}>Close</Text>
           </View>
         </TouchableOpacity>
+        {item ? (
+            <Image
+            source={{
+                uri: `https://kaotika.vercel.app${item.image}`,
+            }}  // Ruta de la imagen de fondo
+            resizeMode="cover"
+            style={styles.image}
+            />
+          ) : <View style={styles.container}/>}
       </Modal>
     </>
     );
