@@ -19,19 +19,14 @@ export default class Potion implements Potions{
     value: number;
 
     constructor(
-        _id: string,
-        name: string,
-        description: string,
-        image: string,
-        type: string,
-        value: number ,
+        props: Potions
     ) {
-        this._id = _id;
-        this.description = description;
-        this.image = image;
-        this.type = type;
-        this.name = name;
-        this.value = value;
+        this._id = props._id;
+        this.description = props.description;
+        this.image = props.image;
+        this.type = props.type;
+        this.name = props.name;
+        this.value = props.value;
     }
 
     static create(ingredients: Ingredients[] , curses: Curses[]){
@@ -151,8 +146,19 @@ export default class Potion implements Potions{
         } else {  //not same effect (check antidotes-poison)
             console.log('NOT ther SAME EFFECT');
             if (curse === null) {
-                console.log('FAILED POTION');
-                return -1;
+                potion_name = 'Failed Potion';
+                    console.log(potion_name);
+                    type = 'Failed Potion';
+                    value = 1;
+                    description = 'A failed potion, do not consume.';
+                    return new Potion({
+                        _id: id,
+                        name: potion_name,
+                        description: description,
+                        image: image,
+                        type: type,
+                        value: value,
+                    });
             }
             switch (effectsArray[0].effect) {
                 case 'restore':
