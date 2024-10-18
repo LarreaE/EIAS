@@ -227,6 +227,17 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
             >
               {props => <HomeVillain {...props} user={UserData} />}
             </Tab.Screen>
+            <Tab.Screen
+              name="LaboratoryVillain"
+              options={{
+                tabBarLabel: '',
+                tabBarIcon: () => (
+                  <Image source={require('./assets/laboratory_icon.png')} style={styles.icon} />
+                ),
+              }}
+            >
+               {props => <AcolythLaboratoryScreen {...props} UserData={UserData} />}
+            </Tab.Screen>
           </>
         );
 

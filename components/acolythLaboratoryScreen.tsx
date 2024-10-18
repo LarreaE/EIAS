@@ -93,13 +93,13 @@ const EFFECT_ICONS: { [key: string]: string } = {
   restore_hit_points: 'ambulance',
   restore_intelligence: 'brain',
   restore_charisma: 'message-star',
-  damage_dexterity: 'hand-paper',
-  damage_constitution: 'flask',
-  damage_charisma: 'user-secret',
-  damage_strength: 'bolt',
-  damage_hit_points: 'bolt',
+  damage_dexterity: 'weight',
+  damage_constitution: 'human-wheelchair',
+  damage_charisma: 'chat-minus',
+  damage_strength: 'arm-flex-outline',
+  damage_hit_points: 'heart-broken',
   damage_insanity: 'bomb',
-  damage_intelligence: 'question',
+  damage_intelligence: 'head-remove',
   boost_constitution: 'human-greeting',
   boost_strength: 'dumbbell',
   boost_dexterity: 'flash',
@@ -269,11 +269,27 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
     });
   };
 
-  // Función para aplicar los filtros
   const applyFilters = () => {
     if (selectedEffects.length === 0) {
-      setIngredients(allIngredients); // Si no hay filtros, muestra todos
+      // No se han seleccionado filtros, aplicar filtro por rol
+      if (role === 'ACOLYTE') {
+        // Filtrar ingredientes con efectos buenos
+        const goodIngredients = allIngredients.filter(ingredient =>
+          ingredient.effects.some(effect => GOOD_EFFECTS.includes(effect))
+        );
+        setIngredients(goodIngredients);
+      } else if (role === 'VILLAIN') {
+        // Filtrar ingredientes con efectos malos
+        const badIngredients = allIngredients.filter(ingredient =>
+          ingredient.effects.some(effect => BAD_EFFECTS.includes(effect))
+        );
+        setIngredients(badIngredients);
+      } else {
+        // En caso de que el rol no sea ni 'ACOLYTE' ni 'VILLAIN', mostrar todos los ingredientes
+        setIngredients(allIngredients);
+      }
     } else {
+      // Se han seleccionado filtros, aplicar filtrado basado en los efectos seleccionados
       const filtered = allIngredients.filter(ingredient =>
         ingredient.effects.some(effect =>
           selectedEffects.some(selectedEffect =>
@@ -281,7 +297,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
           )
         )
       );
-      setIngredients(filtered); // Actualiza el contexto con ingredientes filtrados
+      setIngredients(filtered);
     }
     setFilterModalVisible(false); // Cierra el modal de filtros
   };
@@ -312,8 +328,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
               source={require('../assets/QR_icon.png')}  // Ruta de la imagen
               style={styles.openButton}  // Aplicar estilos al contenedor
               resizeMode="cover"         // Ajuste de la imagen
-            >
-            </ImageBackground>
+            />
           </TouchableOpacity>
           <View style={styles.buttonMap}>
             <MapButton
@@ -375,7 +390,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
               >
                 {/* Superposición para mejorar la legibilidad */}
                 <View style={styles.filterOverlay}>
-                  <Text style={styles.filterModalTitle}>Selecciona Efectos</Text>
+                  <Text style={styles.filterModalTitle}>Select Effects</Text>
                   <ScrollView style={styles.scrollView}>
                     {availableEffects.map((effect) => (
                       <TouchableOpacity
@@ -406,7 +421,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
                   source={require('../assets/boton.png')}
                   resizeMode="stretch"
                    >
-                    <Text style={styles.applyFiltersText}>Aplicar Filtros</Text>
+                    <Text style={styles.applyFiltersText}>Apply Filters</Text>
                     </ImageBackground>
                   </TouchableOpacity>
                 </View>
@@ -440,7 +455,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: 66,
     height: 66,
-    top:10
+    top:10,
   },
   openButton: {
     padding: 10,

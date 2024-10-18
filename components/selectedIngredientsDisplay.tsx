@@ -9,8 +9,7 @@ const SelectedIngredientsDisplay = ({ selectedIngredients, ingredients, onDesele
       {Object.keys(selectedIngredients).map((ingredientId) => {
         const ingredient = ingredients.find(item => item._id === ingredientId);
         console.log(ingredient);
-        
-        if (!ingredient) return null; // Asegurarse de que el ingrediente exista
+        if (!ingredient) {return null;} // Asegurarse de que el ingrediente exista
 
         // Obtener el conteo del ingrediente seleccionado
         const count = selectedIngredients[ingredientId];
@@ -23,9 +22,9 @@ const SelectedIngredientsDisplay = ({ selectedIngredients, ingredients, onDesele
                 style={styles.background}  //Aplicar estilos al contenedor
                 resizeMode="cover"         // Ajuste de la imagen
             >
-                <Image 
-                    source={LocalIngredientImage} 
-                    style={styles.image} 
+                <Image
+                    source={LocalIngredientImage}
+                    style={styles.image}
                 />
             </ImageBackground>
           </TouchableOpacity>
@@ -40,7 +39,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    top:80,
+    top:-100,
   },
   circle: {
     width: 75,
@@ -48,10 +47,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 5,
+    marginHorizontal: 5,
     overflow: 'hidden',
-    marginTop: -400,
-    marginBottom: 300,
   },
   image: {
     width: 58,
