@@ -74,8 +74,9 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const [isInside, setIsInside] = useState(UserData.UserData.playerData.is_active);
   const { ingredients, setIngredients , potionVisible, setPotionVisible} = useContext(UserContext);
   const [allIngredients, setAllIngredients] = useState<Ingredients[]>([]);
-  const [curses, setCurses] = useState([]);
+  const [curses, setCurses] = useState<Curse[]>([]);
   const [ingredientsRetrieved, setIngredientsRetrieved] = useState(false);
+  const [cursesRetrieved, setCursesRetrieved] = useState(false);
   const [potionCreated, setPotionCreated] = useState(false);
   const [potion, setPotion] = useState<Potion | Essence | Stench | Elixir | Venom | Antidote | Poison | undefined>();
   const [spinnerMessage, setSpinnerMessage] = useState('Preparing Ingredients...');
@@ -127,15 +128,42 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   }, [setIngredients]);
 
   useEffect(() => {
-    if (ingredientsRetrieved && !potionCreated && allIngredients.length > 0 && curses.length > 0) {
-      const processedIngredients = allIngredients.map(ingredient => Ingredient.from(ingredient));
-      const processedCurses = curses.map(curse => Curse.from(curse));
-      setIngredients(processedIngredients);
-      setCurses(processedCurses);
-      console.log('Ingredientes procesados:', processedIngredients);
-      console.log('Maldiciones procesadas:', processedCurses);
-    }
-  }, [ingredientsRetrieved, potionCreated, allIngredients, curses, setIngredients, setCurses]);
+    const fetchCurses = async () => {
+      try {
+        setIngredientsRetrieved(false);
+        console.log('Fetching curses...');
+        const response = await fetch('https://eiasserver.onrender.com/potions');
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const data = await response.json();
+          if (data.success === true && Array.isArray(data.potionsData) && data.potionsData.length > 0) {
+            setCurses(data.potionsData); // Almacenar en contexto global
+          } else {
+            console.error('No curses found or status is not OK.');
+          }
+        } else {
+          const text = await response.text();
+          console.error('Response is not JSON:', text);
+        }
+      } catch (error) {
+        console.error('Error getting curses:', error);
+      } finally {
+        setCursesRetrieved(true);
+      }
+    };
+    fetchCurses();
+  }, [setCurses]);
+
+  // useEffect(() => {
+  //   if (ingredientsRetrieved && !potionCreated && allIngredients.length > 0 && curses.length > 0) {
+  //     const processedIngredients = allIngredients.map(ingredient => Ingredient.from(ingredient));
+  //     const processedCurses = curses.map(curse => Curse.from(curse));
+  //     setIngredients(processedIngredients);
+  //     setCurses(processedCurses);
+  //     console.log('Ingredientes procesados:', processedIngredients);
+  //     console.log('Maldiciones procesadas:', processedCurses);
+  //   }
+  // }, [ingredientsRetrieved, potionCreated, allIngredients, curses, setIngredients, setCurses]);
 
 
   useEffect(() => {
@@ -314,7 +342,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
               style={styles.filterImage} // Aplica un estilo para ajustar el tamaño de la imagen
             />
           </TouchableOpacity>
-          <CookBookModal visible={cookBookModalVisible} setVisible={setCookBookModalVisible}/>
+          <CookBookModal key={1} visible={cookBookModalVisible} setVisible={setCookBookModalVisible} curses={curses}/>
           {/* Modal para mostrar detalles del QR */}
           <Modal
             animationType="slide"

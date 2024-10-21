@@ -1,5 +1,5 @@
-import React from "react";
-import { Modal, StyleSheet, Text, TouchableOpacity, View, ScrollView } from "react-native";
+import React, { useState } from "react";
+import { Modal, StyleSheet, Text, TouchableOpacity, View, ScrollView, ImageBackground } from "react-native";
 import { Curses } from "../interfaces/Curse";
 
 interface Props {
@@ -7,31 +7,54 @@ interface Props {
     visible: boolean,
     curses: Curses[],
 }
-const CookBookModal: React.FC<Props> = ({visible,setVisible}) => {
+const CookBookModal: React.FC<Props> = ({visible, setVisible, curses}) => {
+
+    const [index, setIndex] = useState(0);
 
     return (
         <Modal
-            animationType="slide"
+            animationType="fade"
             transparent={true}
             visible={visible}
             onRequestClose={() => {
                 setVisible(false);
             }}
         >
-            <ScrollView>
-                <View style={styles.centeredView}>
-                  <View style={styles.modalView}>
-                    <TouchableOpacity
-                      style={styles.closeButton}
-                      onPress={() => setVisible(false)}
-                    >
-                      <Text>Close</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-            </ScrollView>
+            <ImageBackground
+                source={require('../assets/runa.png')}  // Ruta de la imagen
+                style={styles.background}  // Aplicar estilos al contenedor
+                resizeMode="cover"         // Ajuste de la imagen
+            >
+                <View style={styles.modalView}>
+                <ScrollView>
+                    <View style={styles.centeredView}>
+                    {
+                        <>
+                            <Text style={styles.textStyle}>{curses[index].name}</Text>
+                            <Text style={styles.textStyle}>{curses[index].description}</Text>
+                            <Text style={styles.textStyle}>{curses[index].poison_effects}</Text>
 
-              </Modal>
+                        </>
+                    }
+
+                    </View>
+                </ScrollView>
+                <TouchableOpacity
+                    style={styles.closeButton}
+                    onPress={() => setVisible(false)}
+                >
+                    <Text>Next</Text>
+                </TouchableOpacity>
+                </View>
+                <TouchableOpacity
+                    style={styles.closeButton}
+                    onPress={() => setVisible(false)}
+                >
+                    <Text>Close</Text>
+                </TouchableOpacity>
+            </ImageBackground>
+
+        </Modal>
     );
 
 };
@@ -66,7 +89,7 @@ centeredView: {
 },
 modalView: {
     width: 300,
-    height: 300,
+    height: 400,
     margin: 20,
     borderRadius: 20,
     padding: 5,
