@@ -14,11 +14,11 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
     const [index, setIndex] = useState(0);
 
     const nextIndex = () => {
-        setIndex((prevIndex) => (prevIndex + 1) % curses.length); // Loop to the first curse
+        setIndex((prevIndex) => (prevIndex + 1) % curses.length);
     };
 
     const prevIndex = () => {
-        setIndex((prevIndex) => (prevIndex - 1 + curses.length) % curses.length); // Loop to the last curse
+        setIndex((prevIndex) => (prevIndex - 1 + curses.length) % curses.length);
     };
 
     if (!curses[0]) {
@@ -42,18 +42,14 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
                 <View style={styles.modalView}>
                     <ScrollView>
                         <View style={styles.contentContainer}>
-                            {/* Title and description */}
                             <Text style={styles.title}>{curses[index].name}</Text>
                             <Text style={styles.description}>{curses[index].description}</Text>
 
-                            {/* Table structure for inflicting and curing curses */}
                             <View style={styles.tableContainer}>
-                                {/* Row for inflicting */}
                                 <View style={styles.tableRow}>
                                     <Text style={styles.tableHeader}>How to Inflict</Text>
                                     <Text style={styles.tableData}>{curses[index].poison_effects}</Text>
                                 </View>
-                                {/* Row for curing */}
                                 <View style={styles.tableRow}>
                                     <Text style={styles.tableHeader}>How to Cure</Text>
                                     <Text style={styles.tableData}>{curses[index].antidote_effects}</Text>
@@ -62,7 +58,6 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
                         </View>
                     </ScrollView>
 
-                    {/* Buttons for navigating between curses */}
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity style={styles.button} onPress={prevIndex}>
                             <Text style={styles.buttonText}>Back</Text>
@@ -73,7 +68,6 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
                         </TouchableOpacity>
                     </View>
 
-                    {/* Close Button */}
                     <TouchableOpacity style={styles.closeButton} onPress={() => setVisible(false)}>
                         <Text style={styles.buttonText}>Close</Text>
                     </TouchableOpacity>
