@@ -11,17 +11,9 @@ interface Props {
 const { width, height } = Dimensions.get('window'); // Get device dimensions
 
 const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
-    const [index, setIndex] = useState(0);
+    const [selectedCurse, setSelectedCurse] = useState<number | null>(null);
 
-    const nextIndex = () => {
-        setIndex((prevIndex) => (prevIndex + 1) % curses.length);
-    };
-
-    const prevIndex = () => {
-        setIndex((prevIndex) => (prevIndex - 1 + curses.length) % curses.length);
-    };
-
-    if (!curses[0]) {
+    if (!curses || curses.length === 0) {
         return <Text>Receiving Curses...</Text>;
     }
 
@@ -30,9 +22,7 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
             animationType="fade"
             transparent={true}
             visible={visible}
-            onRequestClose={() => {
-                setVisible(false);
-            }}
+            onRequestClose={() => setVisible(false)}
         >
             <ImageBackground
                 source={require('../assets/runa.png')}
@@ -41,32 +31,44 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
             >
                 <View style={styles.modalView}>
                     <ScrollView>
-                        <View style={styles.contentContainer}>
-                            <Text style={styles.title}>{curses[index].name}</Text>
-                            <Text style={styles.description}>{curses[index].description}</Text>
-
-                            <View style={styles.tableContainer}>
-                                <View style={styles.tableRow}>
-                                    <Text style={styles.tableHeader}>How to Inflict</Text>
-                                    <Text style={styles.tableData}>{curses[index].poison_effects}</Text>
-                                </View>
-                                <View style={styles.tableRow}>
-                                    <Text style={styles.tableHeader}>How to Cure</Text>
-                                    <Text style={styles.tableData}>{curses[index].antidote_effects}</Text>
-                                </View>
+                        {selectedCurse === null ? (
+                            <View style={styles.listContainer}>
+                                <Text style={styles.title}>Select a Curse</Text>
+                                {curses.map((curse, index) => (
+                                    <TouchableOpacity
+                                        key={index}
+                                        style={styles.curseButton}
+                                        onPress={() => setSelectedCurse(index)}
+                                    >
+                                        <Text style={styles.curseButtonText}>{curse.name}</Text>
+                                    </TouchableOpacity>
+                                ))}
                             </View>
-                        </View>
+                        ) : (
+                            <View style={styles.contentContainer}>
+                                <Text style={styles.title}>{curses[selectedCurse].name}</Text>
+                                <Text style={styles.description}>{curses[selectedCurse].description}</Text>
+
+                                <View style={styles.tableContainer}>
+                                    <View style={styles.tableRow}>
+                                        <Text style={styles.tableHeader}>How to Inflict</Text>
+                                        <Text style={styles.tableData}>{curses[selectedCurse].poison_effects}</Text>
+                                    </View>
+                                    <View style={styles.tableRow}>
+                                        <Text style={styles.tableHeader}>How to Cure</Text>
+                                        <Text style={styles.tableData}>{curses[selectedCurse].antidote_effects}</Text>
+                                    </View>
+                                </View>
+
+                                <TouchableOpacity
+                                    style={styles.backButton}
+                                    onPress={() => setSelectedCurse(null)}
+                                >
+                                    <Text style={styles.buttonText}>Back to List</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )}
                     </ScrollView>
-
-                    <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.button} onPress={prevIndex}>
-                            <Text style={styles.buttonText}>Back</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.button} onPress={nextIndex}>
-                            <Text style={styles.buttonText}>Next</Text>
-                        </TouchableOpacity>
-                    </View>
 
                     <TouchableOpacity style={styles.closeButton} onPress={() => setVisible(false)}>
                         <Text style={styles.buttonText}>Close</Text>
@@ -85,19 +87,15 @@ const styles = StyleSheet.create({
     },
     modalView: {
         width: width * 0.9, // 90% of screen width
-        height: height * 0.8, // 80% of screen height
-        padding: 20,
+        height: height * 0.85, // 85% of screen height for better visibility
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
         borderRadius: 20,
+        padding: 20,
         alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
     },
-    contentContainer: {
-        marginBottom: 20,
+    listContainer: {
+        width: '100%',
+        alignItems: 'center',
     },
     title: {
         fontSize: 28,
@@ -112,12 +110,30 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: 20,
     },
+    curseButton: {
+        backgroundColor: '#FFD700',
+        padding: 10,
+        marginVertical: 5,
+        borderRadius: 8,
+        width: '90%',
+        alignItems: 'center',
+    },
+    curseButtonText: {
+        fontSize: 18,
+        color: '#000',
+        fontWeight: 'bold',
+    },
+    contentContainer: {
+        marginBottom: 20,
+        alignItems: 'center',
+    },
     tableContainer: {
         width: '100%',
         borderWidth: 1,
         borderColor: '#ffffff50',
         borderRadius: 10,
         padding: 10,
+        marginBottom: 20,
     },
     tableRow: {
         flexDirection: 'row',
@@ -135,24 +151,13 @@ const styles = StyleSheet.create({
         color: 'white',
         textAlign: 'right',
     },
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: '100%',
-        marginTop: 10,
-    },
-    button: {
+    backButton: {
         backgroundColor: '#2196F3',
         borderRadius: 10,
         padding: 10,
-        marginHorizontal: 10,
-        width: '40%',
+        marginTop: 10,
+        width: '60%',
         alignItems: 'center',
-    },
-    buttonText: {
-        color: 'white',
-        fontWeight: 'bold',
-        fontSize: 16,
     },
     closeButton: {
         backgroundColor: '#2196F3',
@@ -161,6 +166,11 @@ const styles = StyleSheet.create({
         marginTop: 10,
         width: '60%',
         alignItems: 'center',
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 16,
     },
 });
 
