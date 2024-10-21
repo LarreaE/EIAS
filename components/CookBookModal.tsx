@@ -30,7 +30,7 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
                 resizeMode="cover"
             >
                 <View style={styles.modalView}>
-                    <ScrollView>
+                    <ScrollView contentContainerStyle={styles.scrollViewContent}>
                         {selectedCurse === null ? (
                             <View style={styles.listContainer}>
                                 <Text style={styles.title}>Select a Curse</Text>
@@ -56,6 +56,13 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
                                     </View>
                                     <View style={styles.tableRow}>
                                         <Text style={styles.tableHeader}>How to Cure</Text>
+                                        {curses[selectedCurse].antidote_effects.map((effect) => (
+                                        <TouchableOpacity
+                                            key={effect}
+                                        >
+                                            <Text style={styles.tableData}>{effect}</Text>
+                                        </TouchableOpacity>
+                                        ))}
                                         <Text style={styles.tableData}>{curses[selectedCurse].antidote_effects}</Text>
                                     </View>
                                 </View>
@@ -70,7 +77,10 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
                         )}
                     </ScrollView>
 
-                    <TouchableOpacity style={styles.closeButton} onPress={() => setVisible(false)}>
+                    <TouchableOpacity style={styles.closeButton} onPress={() => {
+                        setVisible(false);
+                        setSelectedCurse(null);
+                    }}>
                         <Text style={styles.buttonText}>Close</Text>
                     </TouchableOpacity>
                 </View>
@@ -87,15 +97,21 @@ const styles = StyleSheet.create({
     },
     modalView: {
         width: width * 0.9, // 90% of screen width
-        height: height * 0.85, // 85% of screen height for better visibility
+        height: height * 0.85, // 85% of screen height
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
         borderRadius: 20,
         padding: 20,
         alignItems: 'center',
     },
+    scrollViewContent: {
+        flexGrow: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     listContainer: {
         width: '100%',
         alignItems: 'center',
+        flexWrap: 'wrap', // Flexwrap for curses list
     },
     title: {
         fontSize: 28,
@@ -103,12 +119,14 @@ const styles = StyleSheet.create({
         color: 'white',
         textAlign: 'center',
         marginBottom: 15,
+        width: '100%',
     },
     description: {
         fontSize: 16,
         color: 'white',
         textAlign: 'center',
         marginBottom: 20,
+        flexWrap: 'wrap',
     },
     curseButton: {
         backgroundColor: '#FFD700',
@@ -124,13 +142,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     contentContainer: {
-        marginBottom: 20,
-        alignItems: 'center',
     },
     tableContainer: {
-        width: '100%',
         borderWidth: 1,
-        borderColor: '#ffffff50',
+        borderColor: 'rgba(255, 255, 255, 0.3)', // Slightly transparent white border
         borderRadius: 10,
         padding: 10,
         marginBottom: 20,
@@ -139,17 +154,21 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginBottom: 10,
+        flexWrap: 'wrap', // Ensure table rows wrap
     },
     tableHeader: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#FFD700', // Gold color for headers
+        color: '#FFD700',
         textAlign: 'left',
+        flex: 1,
+        flexWrap: 'wrap', // Ensure long text in headers wraps
     },
     tableData: {
         fontSize: 16,
         color: 'white',
-        textAlign: 'right',
+        flex: 1,
+        width: '100%',
     },
     backButton: {
         backgroundColor: '#2196F3',
