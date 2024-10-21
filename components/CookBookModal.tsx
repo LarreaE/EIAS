@@ -10,6 +10,15 @@ interface Props {
 const CookBookModal: React.FC<Props> = ({visible, setVisible, curses}) => {
 
     const [index, setIndex] = useState(0);
+    const nextIndex = () => {
+        setIndex(index + 1);
+    };
+
+    if (!curses[0]) {
+        return (
+            <Text> Receiving Curses</Text>
+        );
+    }
 
     return (
         <Modal
@@ -41,7 +50,7 @@ const CookBookModal: React.FC<Props> = ({visible, setVisible, curses}) => {
                 </ScrollView>
                 <TouchableOpacity
                     style={styles.closeButton}
-                    onPress={() => setVisible(false)}
+                    onPress={nextIndex}
                 >
                     <Text>Next</Text>
                 </TouchableOpacity>

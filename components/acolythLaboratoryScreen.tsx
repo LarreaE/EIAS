@@ -130,7 +130,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   useEffect(() => {
     const fetchCurses = async () => {
       try {
-        setIngredientsRetrieved(false);
+        setCursesRetrieved(false);
         console.log('Fetching curses...');
         const response = await fetch('https://eiasserver.onrender.com/potions');
         const contentType = response.headers.get('content-type');
@@ -297,7 +297,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
           resizeMode="cover"         // Ajuste de la imagen
         >
 
-          {!ingredientsRetrieved && <Spinner message={spinnerMessage} />}
+          {!cursesRetrieved && !ingredientsRetrieved && <Spinner message={spinnerMessage} />}
           {/* Selector de Ingredientes Filtrados */}
           <IngredientSelector 
             onSelectionChange={onSelectionChange}  
