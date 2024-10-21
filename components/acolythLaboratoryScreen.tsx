@@ -19,6 +19,7 @@ import Elixir from './Potions/Elixir.tsx';
 import Poison from './Potions/Poison.tsx';
 import Stench from './Potions/Stench.tsx';
 import Venom from './Potions/Venom.tsx';
+import Spinner from './Spinner.tsx';
 
 type Props = { UserData: any };
 
@@ -76,6 +77,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const [ingredientsRetrieved, setIngredientsRetrieved] = useState(false);
   const [potionCreated, setPotionCreated] = useState(false);
   const [potion, setPotion] = useState<Potion | Essence | Stench | Elixir | Venom | Antidote | Poison | undefined>();
+  const [spinnerMessage, setSpinnerMessage] = useState('Preparing Ingredients...');
 
   const player = UserData.UserData.playerData;
   const vibrationDuration = 250;
@@ -97,6 +99,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   useEffect(() => {
     const fetchIngredients = async () => {
       try {
+        setIngredientsRetrieved(false);
         console.log('Fetching ingredients...');
         const response = await fetch('https://eiasserver.onrender.com/ingredients');
         const contentType = response.headers.get('content-type');
@@ -264,6 +267,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
           resizeMode="cover"         // Ajuste de la imagen
         >
 
+          {!ingredientsRetrieved && <Spinner message={spinnerMessage} />}
           {/* Selector de Ingredientes Filtrados */}
           <IngredientSelector 
             onSelectionChange={onSelectionChange}  
