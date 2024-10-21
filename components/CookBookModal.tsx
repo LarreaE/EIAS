@@ -52,7 +52,13 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
                                 <View style={styles.tableContainer}>
                                     <View style={styles.tableRow}>
                                         <Text style={styles.tableHeader}>How to Inflict</Text>
-                                        <Text style={styles.tableData}>{curses[selectedCurse].poison_effects}</Text>
+                                        {curses[selectedCurse].poison_effects.map((effect) => (
+                                        <TouchableOpacity
+                                            key={effect}
+                                        >
+                                            <Text style={styles.tableData}>{effect}</Text>
+                                        </TouchableOpacity>
+                                        ))}
                                     </View>
                                     <View style={styles.tableRow}>
                                         <Text style={styles.tableHeader}>How to Cure</Text>
@@ -63,7 +69,6 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
                                             <Text style={styles.tableData}>{effect}</Text>
                                         </TouchableOpacity>
                                         ))}
-                                        <Text style={styles.tableData}>{curses[selectedCurse].antidote_effects}</Text>
                                     </View>
                                 </View>
 
@@ -169,6 +174,7 @@ const styles = StyleSheet.create({
         color: 'white',
         flex: 1,
         width: '100%',
+        flexWrap: 'wrap', // Ensure long text in headers wraps
     },
     backButton: {
         backgroundColor: '#2196F3',
