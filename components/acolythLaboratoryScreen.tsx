@@ -338,7 +338,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
               <>
               <Image
             source={{
-                uri: `https://kaotika.vercel.app/images/equipment/weapons/weapon_init_6.png`,
+                uri: `https://kaotika.vercel.app/images/equipment/potions/healing/healing_3.png`,
             }}  // Ruta de la imagen de fondo
             resizeMode="cover"
             style={styles.image}
