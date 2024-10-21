@@ -20,6 +20,7 @@ import Poison from './Potions/Poison.tsx';
 import Stench from './Potions/Stench.tsx';
 import Venom from './Potions/Venom.tsx';
 import Spinner from './Spinner.tsx';
+import CookBookModal from './CookBookModal.tsx';
 
 type Props = { UserData: any };
 
@@ -78,6 +79,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const [potionCreated, setPotionCreated] = useState(false);
   const [potion, setPotion] = useState<Potion | Essence | Stench | Elixir | Venom | Antidote | Poison | undefined>();
   const [spinnerMessage, setSpinnerMessage] = useState('Preparing Ingredients...');
+  const [cookBookModalVisible, setCookBookModalVisible] = useState(false);
 
   const player = UserData.UserData.playerData;
   const vibrationDuration = 250;
@@ -291,6 +293,17 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             />
           </View>
 
+          {/* Botón de Cookbook */}
+          <TouchableOpacity
+            style={styles.cookBookButton}
+            onPress={() => setCookBookModalVisible(true)}
+          >
+            <ImageBackground
+              source={require('../assets/filter_icon.png')} // Reemplaza esta ruta con la ubicación de tu imagen
+              style={styles.filterImage} // Aplica un estilo para ajustar el tamaño de la imagen
+            />
+          </TouchableOpacity>
+
           {/* Botón de Filtros */}
           <TouchableOpacity
             style={styles.filterButton}
@@ -301,8 +314,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
               style={styles.filterImage} // Aplica un estilo para ajustar el tamaño de la imagen
             />
           </TouchableOpacity>
-
-
+          <CookBookModal visible={cookBookModalVisible} setVisible={setCookBookModalVisible}/>
           {/* Modal para mostrar detalles del QR */}
           <Modal
             animationType="slide"
@@ -489,6 +501,15 @@ const styles = StyleSheet.create({
     width: '40%',
     height: '40%',
     color: 'black',
+  },
+  cookBookButton: {
+    position: 'absolute',
+    top: 50,
+    left: 40,
+    padding: 10,
+    borderRadius: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   // Estilos para el botón de filtros
   filterButton: {
