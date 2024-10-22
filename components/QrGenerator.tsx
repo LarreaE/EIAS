@@ -1,6 +1,7 @@
 import React from 'react';
-import { View , StyleSheet, Text} from 'react-native';
+import { View , StyleSheet} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
+import MedievalText from './MedievalText';
 
 const QRGenerator = (data:any) => {
 
@@ -29,7 +30,7 @@ const QRGenerator = (data:any) => {
               logo={require('../assets/laboratory_icon.png')}
               />
           </View>
-          <Text style={styles.qrText}>Scan to Enter the Laboratory</Text>
+          <MedievalText style={styles.qrText}>Scan to Enter the Laboratory</MedievalText>
         </View>
       );
     }

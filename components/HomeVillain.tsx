@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import socket from '../sockets/socketConnection';
+import MedievalText from './MedievalText';
 
 type Props = {
   user: any;  // Datos del usuario pasados como prop desde la pantalla principal
@@ -12,8 +12,8 @@ const HomeVillain: React.FC<Props> = ({ user}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>VILLAIN</Text>
-      <Text style={styles.text}>User name: {userName}</Text>
+      <MedievalText style={styles.text}>VILLAIN</MedievalText>
+      <MedievalText style={styles.text}>User name: {userName}</MedievalText>
     </View>
   );
 };
