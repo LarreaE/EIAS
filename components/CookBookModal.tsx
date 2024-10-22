@@ -164,7 +164,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginBottom: 10,
         flexWrap: 'wrap', // Ensure table rows wrap
-        backgroundColor: 'green',
         width: '100%',
     },
     tableHeader: {
