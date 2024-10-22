@@ -3,7 +3,7 @@ import { Ingredients } from '../../interfaces/Ingredients';
 class Ingredient implements Ingredients {
     _id!: string;
     description!: string;
-    effects: string;
+    effects: string[];
     image!: string;
     name: string;
     type!: string;
@@ -12,7 +12,7 @@ class Ingredient implements Ingredients {
     constructor(
         _id: string,
         name: string,
-        effects: string,
+        effects: string[],
         value: number,
         type: string,
         image: string,

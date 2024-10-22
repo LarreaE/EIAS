@@ -7,7 +7,8 @@ import Poison from './Poison';
 import Stench from './Stench';
 import Venom from './Venom';
 import { Curses } from '../../interfaces/Curse';
-export default class Potion implements Potions{
+import { Modifier } from '../../interfaces/Modifier';
+export default class Potion implements Potions {
 
     _id!: string;
     name: string;
@@ -15,6 +16,7 @@ export default class Potion implements Potions{
     image!: string;
     type!: string;
     value: number;
+    modifiers: Modifier | null;
 
     constructor(
         props: Potions
@@ -25,6 +27,7 @@ export default class Potion implements Potions{
         this.type = props.type;
         this.name = props.name;
         this.value = props.value;
+        this.modifiers = props.modifiers;
     }
 
     static create(ingredients: Ingredients[] , curses: Curses[]){
@@ -70,6 +73,7 @@ export default class Potion implements Potions{
                         image: image,
                         type: type,
                         value: value,
+                        modifiers: modifiers,
                     });
             } else {
                 switch (effectsArray[0].effect) {
@@ -199,6 +203,7 @@ export default class Potion implements Potions{
                             image: image,
                             type: type,
                             value: value,
+                            modifiers: modifiers,
                         });
                 }
             }
@@ -217,6 +222,7 @@ export default class Potion implements Potions{
                         image: image,
                         type: type,
                         value: value,
+                        modifiers: modifiers,
                     });
             }
         }
