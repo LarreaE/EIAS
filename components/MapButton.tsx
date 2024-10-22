@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, View, Button, StyleSheet, TouchableOpacity, Image, ImageSourcePropType } from 'react-native';
+import MedievalText from './MedievalText';
 
 type Props = {
   title?: string;
@@ -13,7 +14,7 @@ const MapButton: React.FC<Props> = ({ title, onPress, iconImage }) => {
       {iconImage ? (
         <TouchableOpacity onPress={onPress}>
           <Image source={iconImage} style={styles.iconStyle} />
-          <Text style={styles.text}>{title}</Text>
+          <MedievalText style={styles.text}>{title}</MedievalText>
 
         </TouchableOpacity>
       ) : (

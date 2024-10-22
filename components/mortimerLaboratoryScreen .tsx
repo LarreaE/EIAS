@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground, FlatList } from 'react-native';
 import AcolythCard from './acolythCard';
 import { listenToServerEventsMortimer, clearServerEvents } from '../sockets/listenEvents.tsx';
+import MedievalText from './MedievalText.tsx';
 
 // define la interfaz para el tipo de datos de usuario
 interface User {
@@ -52,7 +53,7 @@ const MortimerLaboratoryScreen: React.FC<Props> = () => {
       style={styles.background}
       resizeMode="cover"
     >
-      <Text>
+      <MedievalText>
         {/* mapear array users */}
         {users.map((user) => (
           <AcolythCard
@@ -62,7 +63,7 @@ const MortimerLaboratoryScreen: React.FC<Props> = () => {
             avatar={user.avatar}
           />
         ))}
-      </Text>
+      </MedievalText>
     </ImageBackground>
   );
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, ActivityIndicator, StyleSheet, Text } from 'react-native';
+import MedievalText from './MedievalText';
 
 interface SpinnerProps {
   message?: string;
@@ -9,7 +10,7 @@ const Spinner: React.FC<SpinnerProps> = ({ message = 'Loading...' }) => {
   return (
     <View style={styles.container}>
       <ActivityIndicator size="large" color="#4285F4" />
-      <Text style={styles.message}>{message}</Text>
+      <MedievalText style={styles.message}>{message}</MedievalText>
     </View>
   );
 };

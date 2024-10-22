@@ -1,6 +1,17 @@
+// components/AcolythLaboratoryScreen.tsx
+
 import React, { useEffect, useState, useContext, useCallback } from 'react';
 import QRGenerator from './QrGenerator.tsx';
-import { ImageBackground, Modal, StyleSheet, TouchableOpacity, View, Vibration, Text, ScrollView, Image } from 'react-native';
+import {
+  ImageBackground,
+  Modal,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Vibration,
+  ScrollView,
+  Image,
+} from 'react-native';
 import { clearServerEvents, listenToServerEventsScanAcolyte } from '../sockets/listenEvents.tsx';
 import IngredientSelector from './ingredientSelector.tsx';
 import { UserContext } from '../context/UserContext'; // Importa el contexto
@@ -19,6 +30,7 @@ import Elixir from './Potions/Elixir.tsx';
 import Poison from './Potions/Poison.tsx';
 import Stench from './Potions/Stench.tsx';
 import Venom from './Potions/Venom.tsx';
+import MedievalText from './MedievalText'; // Importación del componente MedievalText
 
 type Props = { UserData: any };
 
@@ -60,17 +72,72 @@ const BAD_EFFECTS = [
 ];
 
 const EFFECT_LABELS: { [key: string]: string } = {
-  // ... tus etiquetas de efectos
+  increase_hit_points: 'Increase Hit Points',
+  decrease_hit_points: 'Decrease Hit Points',
+  restore_strength: 'Restore Strength',
+  restore_insanity: 'Restore Insanity',
+  restore_constitution: 'Restore Constitution',
+  restore_dexterity: 'Restore Dexterity',
+  restore_hit_points: 'Restore Hit Points',
+  restore_intelligence: 'Restore Intelligence',
+  restore_charisma: 'Restore Charisma',
+  damage_dexterity: 'Damage Dexterity',
+  damage_constitution: 'Damage Constitution',
+  damage_charisma: 'Damage Charisma',
+  damage_strength: 'Damage Strength',
+  damage_hit_points: 'Damage Hit Points',
+  damage_insanity: 'Damage Insanity',
+  damage_intelligence: 'Damage Intelligence',
+  boost_constitution: 'Boost Constitution',
+  boost_strength: 'Boost Strength',
+  boost_dexterity: 'Boost Dexterity',
+  boost_intelligence: 'Boost Intelligence',
+  boost_charisma: 'Boost Charisma',
+  setback_constitution: 'Setback Constitution',
+  setback_strength: 'Setback Strength',
+  setback_dexterity: 'Setback Dexterity',
+  setback_intelligence: 'Setback Intelligence',
+  setback_charisma: 'Setback Charisma',
+  calm: 'Calm',
+  frenzy: 'Frenzy',
 };
 
+// Mapeo de efectos a iconos
 const EFFECT_ICONS: { [key: string]: string } = {
-  // ... tus iconos de efectos
+  increase_hit_points: 'hand-heart',
+  decrease_hit_points: 'heart',
+  restore_strength: 'arm-flex',
+  restore_insanity: 'head-heart',
+  restore_constitution: 'human-child',
+  restore_dexterity: 'feather',
+  restore_hit_points: 'ambulance',
+  restore_intelligence: 'brain',
+  restore_charisma: 'message-star',
+  damage_dexterity: 'hand-paper',
+  damage_constitution: 'flask',
+  damage_charisma: 'user-secret',
+  damage_strength: 'bolt',
+  damage_hit_points: 'bolt',
+  damage_insanity: 'bomb',
+  damage_intelligence: 'question',
+  boost_constitution: 'human-greeting',
+  boost_strength: 'dumbbell',
+  boost_dexterity: 'flash',
+  boost_intelligence: 'account-plus',
+  boost_charisma: 'message-star',
+  setback_constitution: 'human-handsdown',
+  setback_strength: 'arm-flex-outline',
+  setback_dexterity: 'weight-kilogram',
+  setback_intelligence: 'head-remove',
+  setback_charisma: 'chat-minus',
+  calm: 'sleep',
+  frenzy: 'emoticon-angry',
 };
 
 const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isInside, setIsInside] = useState(UserData.UserData.playerData.is_active);
-  const { ingredients, setIngredients , potionVisible, setPotionVisible} = useContext(UserContext);
+  const { ingredients, setIngredients, potionVisible, setPotionVisible } = useContext(UserContext);
   const [allIngredients, setAllIngredients] = useState<Ingredients[]>([]);
   const [curses, setCurses] = useState([]);
   const [ingredientsRetrieved, setIngredientsRetrieved] = useState(false);
@@ -316,7 +383,9 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
                   style={styles.closeButton}
                   onPress={() => setModalVisible(false)}
                 >
-                  <Text>Close</Text>
+                  <MedievalText fontSize={16} color="#ffffff" style={styles.modalText}>
+                    Close
+                  </MedievalText>
                 </TouchableOpacity>
               </View>
             </View>
@@ -330,27 +399,35 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             }}
           >
             <View style={styles.centeredView}>
-            {potion ? (
-              <>
-              <Image
-            source={{
-                uri: `https://kaotika.vercel.app/images/equipment/weapons/weapon_init_6.png`,
-            }}  // Ruta de la imagen de fondo
-            resizeMode="cover"
-            style={styles.image}
-            />
-            <Text style={styles.effectText}>{potion.name}</Text>
-            <Text style={styles.effectText}>Value: {potion.value}</Text>
-            <Text style={styles.effectText}>Type: {potion.type}</Text>
-              </>
-          ) : <View style={styles.container}/>}
+              {potion ? (
+                <>
+                  <Image
+                    source={{
+                      uri: `https://kaotika.vercel.app/images/equipment/weapons/weapon_init_6.png`,
+                    }}  // Ruta de la imagen de fondo
+                    resizeMode="cover"
+                    style={styles.image}
+                  />
+                  <MedievalText fontSize={24} color="#ffffff" style={styles.effectText}>
+                    {potion.name}
+                  </MedievalText>
+                  <MedievalText fontSize={16} color="#ffffff" style={styles.effectText}>
+                    Value: {potion.value}
+                  </MedievalText>
+                  <MedievalText fontSize={16} color="#ffffff" style={styles.effectText}>
+                    Type: {potion.type}
+                  </MedievalText>
+                </>
+              ) : <View style={styles.container}/>}
             </View>
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={() => setPotionVisible(false)}
-                >
-                  <Text>Close</Text>
-                </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setPotionVisible(false)}
+            >
+              <MedievalText fontSize={16} color="#ffffff" style={styles.modalText}>
+                Close
+              </MedievalText>
+            </TouchableOpacity>
           </Modal>
 
           {/* Modal de Filtros */}
@@ -371,7 +448,9 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
               >
                 {/* Superposición para mejorar la legibilidad */}
                 <View style={styles.filterOverlay}>
-                  <Text style={styles.filterModalTitle}>Select Effects</Text>
+                  <MedievalText fontSize={20} color="#ffffff" style={styles.filterModalTitle}>
+                    Select Effects
+                  </MedievalText>
                   <ScrollView style={styles.scrollView}>
                     {availableEffects.map((effect) => (
                       <TouchableOpacity
@@ -391,7 +470,9 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
                             style={styles.effectIcon}
                           />
                         )}
-                        <Text style={styles.effectText}>{EFFECT_LABELS[effect] || effect}</Text>
+                        <MedievalText fontSize={16} color="#ffffff" style={styles.effectText}>
+                          {EFFECT_LABELS[effect] || effect}
+                        </MedievalText>
                       </TouchableOpacity>
                     ))}
                   </ScrollView>
@@ -402,8 +483,11 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
                     <ImageBackground
                       source={require('../assets/boton.png')}
                       resizeMode="stretch"
+                      style={{ width: '100%', height: '100%' }}
                     >
-                      <Text style={styles.applyFiltersText}>Apply Filters</Text>
+                      <MedievalText fontSize={16} color="#ffffff" style={styles.applyFiltersText}>
+                        Apply Filters
+                      </MedievalText>
                     </ImageBackground>
                   </TouchableOpacity>
                 </View>
@@ -437,7 +521,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: 66,
     height: 66,
-    top:10,
+    top: 10,
   },
   openButton: {
     padding: 10,
