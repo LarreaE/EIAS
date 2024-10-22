@@ -275,20 +275,36 @@ function  categorizeEffect(str: string) {
     let potency = '';
     let effect = '';
     let attribute = '';
-    if (parts.length === 3) {
-        // three parts
-        potency = parts[0];
-        effect = parts[1];
-        attribute = parts[2];
-    } else if (parts.length === 2) {
-        // no potency
-        potency = 'nothing';
-        effect = parts[0];
-        attribute = parts[1];
-    } else {
-        throw new Error('Invalid string format: ' + str);
-    }
 
+    if (str.includes('calm')) {
+        if (parts.length === 2) {
+            // two parts
+            potency = parts[0];
+            effect = parts[1];
+            attribute = 'insanity';
+        } else if (parts.length === 1) {
+            // no potency
+            potency = 'nothing';
+            effect = parts[0];
+            attribute = 'insanity';
+        } else {
+            throw new Error('Invalid string format: ' + str);
+        }
+    } else {
+        if (parts.length === 3) {
+            // three parts
+            potency = parts[0];
+            effect = parts[1];
+            attribute = parts[2];
+        } else if (parts.length === 2) {
+            // no potency
+            potency = 'nothing';
+            effect = parts[0];
+            attribute = parts[1];
+        } else {
+            throw new Error('Invalid string format: ' + str);
+        }
+    }
     return { potency, effect, attribute };
 }
 
