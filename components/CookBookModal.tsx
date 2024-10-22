@@ -55,6 +55,7 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
                                         {curses[selectedCurse].poison_effects.map((effect) => (
                                         <TouchableOpacity
                                             key={effect}
+                                            style={styles.tableRow}
                                         >
                                             <Text style={styles.tableData}>{effect}</Text>
                                         </TouchableOpacity>
@@ -65,6 +66,7 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
                                         {curses[selectedCurse].antidote_effects.map((effect) => (
                                         <TouchableOpacity
                                             key={effect}
+                                            style={styles.tableRow}
                                         >
                                             <Text style={styles.tableData}>{effect}</Text>
                                         </TouchableOpacity>
@@ -123,6 +125,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'white',
         textAlign: 'center',
+        justifyContent: 'center',
         marginBottom: 15,
         width: '100%',
     },
@@ -147,6 +150,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     contentContainer: {
+        width: '100%',
     },
     tableContainer: {
         borderWidth: 1,
@@ -160,29 +164,34 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginBottom: 10,
         flexWrap: 'wrap', // Ensure table rows wrap
+        backgroundColor: 'green',
+        width: '100%',
     },
     tableHeader: {
         fontSize: 18,
         fontWeight: 'bold',
         color: '#FFD700',
-        textAlign: 'left',
-        flex: 1,
         flexWrap: 'wrap', // Ensure long text in headers wraps
+        width: '100%',
+        textAlign: 'center',
     },
     tableData: {
         fontSize: 16,
         color: 'white',
-        flex: 1,
+        textAlign: 'center',
+        alignContent: 'center',
         width: '100%',
-        flexWrap: 'wrap', // Ensure long text in headers wraps
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     backButton: {
-        backgroundColor: '#2196F3',
+        backgroundColor: '#A196F3',
         borderRadius: 10,
         padding: 10,
         marginTop: 10,
-        width: '60%',
+        width: '100%',
         alignItems: 'center',
+
     },
     closeButton: {
         backgroundColor: '#2196F3',
