@@ -6,8 +6,6 @@ import Essence from './Essence';
 import Poison from './Poison';
 import Stench from './Stench';
 import Venom from './Venom';
-import { Essences } from '../../interfaces/Essence';
-import Curse from './Curse';
 import { Curses } from '../../interfaces/Curse';
 export default class Potion implements Potions{
 
@@ -144,6 +142,35 @@ export default class Potion implements Potions{
                             value: value,
                             modifiers: modifiers,
                         });
+                    case 'restore':
+                        potion_name = `${lowerPotency} Antidote of ${curse?.name}`;
+                        console.log(potion_name);
+                        type = 'Antidote';
+
+                        return new Antidote({
+                            _id: id,
+                            name: potion_name,
+                            description: description,
+                            image: image,
+                            type: type,
+                            value: value,
+                            modifiers: modifiers,
+                        });
+                    case 'damage':
+                        potion_name = `${lowerPotency} Poison of ${curse?.name}`;
+                        console.log(potion_name);
+                        type = 'Poison';
+
+                        return new Poison({
+                            _id: id,
+                            name: potion_name,
+                            description: description,
+                            image: image,
+                            type: type,
+                            value: value,
+                            modifiers: modifiers,
+                        });
+
                     default:
                         potion_name = 'Failed Potion';
                         console.log(potion_name);
@@ -175,38 +202,6 @@ export default class Potion implements Potions{
                         type: type,
                         value: value,
                     });
-            }
-            switch (effectsArray[0].effect) {
-                case 'restore':
-                    potion_name = `${lowerPotency} Antidote of ${curse?.name}`;
-                    console.log(potion_name);
-                    type = 'Antidote';
-
-                    return new Antidote({
-                        _id: id,
-                        name: potion_name,
-                        description: description,
-                        image: image,
-                        type: type,
-                        value: value,
-                        modifiers: modifiers,
-                    });
-                case 'damage':
-                    potion_name = `${lowerPotency} Poison of ${curse?.name}`;
-                    console.log(potion_name);
-                    type = 'Poison';
-
-                    return new Poison({
-                        _id: id,
-                        name: potion_name,
-                        description: description,
-                        image: image,
-                        type: type,
-                        value: value,
-                        modifiers: modifiers,
-                    });
-                default:
-                    break;
             }
         }
     }
