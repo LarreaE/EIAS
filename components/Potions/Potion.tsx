@@ -57,6 +57,21 @@ export default class Potion implements Potions{
         //same effect
         if ( effectsArray.every(element => element.effect === effectsArray[0].effect)) {
             console.log('SAME EFFECT');
+            if (curse === null) {
+                potion_name = 'Failed Potion';
+                    console.log(potion_name);
+                    type = 'Failed Potion';
+                    value = 1;
+                    description = 'A failed potion, do not consume.';
+                    return new Potion({
+                        _id: id,
+                        name: potion_name,
+                        description: description,
+                        image: image,
+                        type: type,
+                        value: value,
+                    });
+            } else {
                 switch (effectsArray[0].effect) {
                     case 'increase':
                         potion_name = Essence.name(lowerPotency);
@@ -186,6 +201,7 @@ export default class Potion implements Potions{
                             value: value,
                         });
                 }
+            }
         } else {  //not same effect (check antidotes-poison)
             console.log('NOT ther SAME EFFECT');
             if (curse === null) {
@@ -216,33 +232,40 @@ function calculateValue(ingredients: Ingredients[]) {
 
 function seekCurse(ingredients: Ingredients[], curses: Curses[]) {
 
-    const ingredientEffects = new Set<string>();
-    // add ingredients
+    const ingredientEffects: string[] = [];
+
+    // add ingredients, keeping all effects including duplicates
     ingredients.forEach(ingredient => {
         ingredient.effects.forEach((effect: string) => {
-            ingredientEffects.add(effect);
+            ingredientEffects.push(effect);
         });
     });
+
     console.log('EFFECTS');
     console.log(ingredientEffects);
 
-    // check for antidotes
-    for (let i = 0; i < curses.length; i++) {
 
-        for (const effect of curses[i].poison_effects) {
-            if (ingredientEffects.has(effect)) {
-                return curses[i];
-            }
-        }
-        for (const effect of curses[i].antidote_effects) {
-            if (ingredientEffects.has(effect)) {
-                return curses[i];
-            }
+    // check for poison or antidote effects match in curses
+    for (let i = 0; i < curses.length; i++) {
+        const poisonMatch = effectsMatch(curses[i].poison_effects, ingredientEffects);
+        const antidoteMatch = effectsMatch(curses[i].antidote_effects, ingredientEffects);
+
+        if (poisonMatch || antidoteMatch) {
+            return curses[i];
         }
     }
 
     return null; // no match
 }
+// check if all curse effects match ingredient effects
+function effectsMatch(curseEffects: string[], ingredientEffects: string[]): boolean {
+    // check if all curseEffects are included in ingredientEffects, regardless of order
+    return curseEffects.every(effect =>
+        ingredientEffects.includes(effect) &&
+        ingredientEffects.filter(e => e === effect).length === curseEffects.filter(e => e === effect).length
+    );
+}
+
 function  categorizeEffect(str: string) {
 
     console.log(str);
