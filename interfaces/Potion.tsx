@@ -7,5 +7,5 @@ export interface Potions {
 	image: string,
 	type: string,
 	value: number,
-	modifiers: Modifier | null,
+	modifiers: Modifier | null | undefined,
 }

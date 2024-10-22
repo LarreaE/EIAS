@@ -25,6 +25,7 @@ class Elixir implements Elixirs {
     static calculateMod(effectArray: Array<EffectArray>) {
 
         let modifiers: Modifier = {
+            hit_points: 0,
             intelligence: 0,
             dexterity: 0,
             insanity: 0,
@@ -37,7 +38,7 @@ class Elixir implements Elixirs {
             let attributeName = effectArray[0].attribute;
             effectArray.forEach(effect => {
                 let potencyValue = 0;
-                const { attribute, potency } = effect;
+                const { attribute } = effect;
                 switch (effect.potency) {
                   case 'least':
                     potencyValue = 5;
@@ -61,7 +62,7 @@ class Elixir implements Elixirs {
               if (attributeName === 'insanity') {
                 modifiers[attributeName as keyof Modifier] = -modifiers[attributeName as keyof Modifier]; // take into account frenzy and calm
               }
-              console.log("MODIFIERS OF ELIXIR: " + modifiers);
+              console.log('MODIFIERS OF ELIXIR: ' + modifiers);
               return modifiers;
         }
     }

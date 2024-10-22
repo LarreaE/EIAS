@@ -5,4 +5,5 @@ export interface Modifier {
     insanity: number;
     charisma: number;
     strength: number;
+    hit_points: number;
   }

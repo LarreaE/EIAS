@@ -16,7 +16,7 @@ export default class Potion implements Potions {
     image!: string;
     type!: string;
     value: number;
-    modifiers: Modifier | null;
+    modifiers: Modifier | undefined | null;
 
     constructor(
         props: Potions

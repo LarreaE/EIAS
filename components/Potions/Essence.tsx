@@ -52,7 +52,7 @@ class Essence {
                 healValue = healValue * 1.8; // +80%
               }
               healValue = Math.ceil(healValue);
-              console.log("MODIFIERS OF ESSENCE: " + healValue);
+              console.log('MODIFIERS OF ESSENCE: ' + healValue);
               return healValue;
     }
 

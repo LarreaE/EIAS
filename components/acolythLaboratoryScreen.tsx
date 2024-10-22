@@ -389,6 +389,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             {'modifiers' in potion && (
               <>
                <Text style={styles.effectText}>Modifiers:</Text>
+               <Text style={styles.effectText}>Hit Points:  {potion.modifiers?.hit_points}</Text>
                <Text style={styles.effectText}>Charisma:  {potion.modifiers?.charisma}</Text>
                <Text style={styles.effectText}>Constitution:  {potion.modifiers?.constitution}</Text>
                <Text style={styles.effectText}>Dexterity:  {potion.modifiers?.dexterity}</Text>
