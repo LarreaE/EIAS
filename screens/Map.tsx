@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Button, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -6,11 +6,14 @@ import { RootStackParamList } from '../types/types';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ImageBackground } from 'react-native';
 import MapButton from '../components/MapButton';
+import { UserContext } from '../context/UserContext';
 
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
 
 const MapScreen: React.FC = () => {
   const navigation = useNavigation<MapScreenNavigationProp>();
+
+  const { isInsideLab } = useContext(UserContext);
 
   const goToHome = () => {
     navigation.navigate('HomeAcolyth');
@@ -19,6 +22,28 @@ const MapScreen: React.FC = () => {
     navigation.navigate('LaboratoryAcolyth');
   };
 
+  if (isInsideLab) {
+    console.log("is inside lab");
+    return(
+      <GestureHandlerRootView style={styles.container}>
+      <ImageBackground
+        source={require('../assets/map.png')}  // Ruta de la imagen de fondo
+        style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
+        resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+      >
+
+        <View style={styles.buttonLaboratory}>
+          <MapButton
+            title="Laboratory"
+            onPress={goToLaboratory}
+            iconImage={require('../assets/laboratory_icon.png')}
+          />
+        </View>
+
+      </ImageBackground>
+    </GestureHandlerRootView>
+    );
+  }
   return (
     <GestureHandlerRootView style={styles.container}>
       <ImageBackground

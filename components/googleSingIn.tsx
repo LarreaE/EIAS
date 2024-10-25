@@ -17,7 +17,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
   const [loading, setLoading] = useState(false); // Estado para el loading
   const [socketId, setSocketId] = useState<string | null>(null); // Estado para almacenar el socket ID
   const [spinnerMessage, setSpinnerMessage] = useState('Connecting...');
-  const { setUserData } = useContext(UserContext);
+  const { setUserData, setIsInsideLab } = useContext(UserContext);
   useEffect(() => {
     const configureGoogleSignIn = async () => {
       await GoogleSignin.configure({
@@ -81,6 +81,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
       //SAVE JWT ENCRIPTED
       setUserData(response.data);
       setIsLoged(true);
+      setIsInsideLab(response.data.playerData.is_active);
       setSpinnerMessage('Connection established...');
     });
     } catch (error) {
