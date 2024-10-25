@@ -71,8 +71,7 @@ const EFFECT_ICONS: { [key: string]: string } = {
 
 const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [isInside, setIsInside] = useState(UserData.UserData.playerData.is_active);
-  const { ingredients, setIngredients , potionVisible, setPotionVisible} = useContext(UserContext);
+  const { ingredients, setIngredients , potionVisible, setPotionVisible, setIsInsideLab, isInsideLab} = useContext(UserContext);
   const [allIngredients, setAllIngredients] = useState<Ingredients[]>([]);
   const [curses, setCurses] = useState<Curse[]>([]);
   const [ingredientsRetrieved, setIngredientsRetrieved] = useState(false);
@@ -97,7 +96,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
   useEffect(() => {
     setModalVisible(false);
-  }, [isInside]);
+  }, [isInsideLab]);
 
   useEffect(() => {
     const fetchIngredients = async () => {
@@ -167,7 +166,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
 
   useEffect(() => {
-    listenToServerEventsScanAcolyte(setIsInside);
+    listenToServerEventsScanAcolyte(setIsInsideLab);
 
     const updateIsInside = async () => {
       try {
@@ -186,7 +185,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
           })
           .then(data => {
             console.log('Server response:', data);
-            setIsInside(data.is_active);
+            setIsInsideLab(data.is_active);
           })
           .catch(error => {
             console.error('Error:', error);
@@ -200,7 +199,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
     return () => {
       clearServerEvents();
     };
-  }, [player.is_active, player.email]);
+  }, [player.is_active, player.email, setIsInsideLab]);
 
   // Usa useCallback para evitar re-renderizados innecesarios
    // Función para crear poción (Enfoque 1: Expandir el arreglo)
@@ -290,7 +289,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
   return (
     <View style={styles.container}>
-      {isInside ? (
+      {isInsideLab ? (
         <ImageBackground
           source={require('../assets/laboratory.png')}  // Ruta de la imagen
           style={styles.background}  // Aplicar estilos al contenedor
@@ -314,12 +313,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
               resizeMode="cover"         // Ajuste de la imagen
             />
           </TouchableOpacity>
-          <View style={styles.buttonMap}>
-            <MapButton
-              onPress={goToMap}
-              iconImage={require('../assets/map_icon.png')}
-            />
-          </View>
 
           {/* Botón de Cookbook */}
           <TouchableOpacity
@@ -474,8 +467,16 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
           </Modal>
         </ImageBackground>
       ) : (
+        <>
         <QRGenerator {...UserData}
           onCodeScanned={() => Vibration.vibrate(1 * vibrationDuration)} />
+          <View style={styles.buttonMap}>
+          <MapButton
+            onPress={goToMap}
+            iconImage={require('../assets/map_icon.png')}
+          />
+        </View>
+        </>
       )}
     </View>
   );
@@ -640,8 +641,7 @@ const styles = StyleSheet.create({
     left:42,
   },
   buttonMap: {
-    position: 'absolute',
-    bottom: -70,
+    position: 'relative',
     alignSelf: 'center',
     width: 66,
     height: 66,

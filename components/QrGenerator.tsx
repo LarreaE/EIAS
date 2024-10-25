@@ -29,7 +29,6 @@ const QRGenerator = (data:any) => {
               logo={require('../assets/laboratory_icon.png')}
               />
           </View>
-          <Text style={styles.qrText}>Scan to Enter the Laboratory</Text>
         </View>
       );
     }

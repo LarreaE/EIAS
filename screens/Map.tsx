@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Button, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -7,13 +7,14 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ImageBackground } from 'react-native';
 import MapButton from '../components/MapButton';
 import { UserContext } from '../context/UserContext';
+import AcolythLaboratoryScreen from '../components/acolythLaboratoryScreen';
 
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
 
 const MapScreen: React.FC = () => {
   const navigation = useNavigation<MapScreenNavigationProp>();
 
-  const { isInsideLab } = useContext(UserContext);
+  const { isInsideLab, userData } = useContext(UserContext);
 
   const goToHome = () => {
     navigation.navigate('HomeAcolyth');
@@ -22,28 +23,17 @@ const MapScreen: React.FC = () => {
     navigation.navigate('LaboratoryAcolyth');
   };
 
+  useEffect(() => {
+    console.log("changed is inside: " + isInsideLab);
+    navigation.navigate('Map');
+  }, [isInsideLab,navigation]);
+
   if (isInsideLab) {
-    console.log("is inside lab");
     return(
-      <GestureHandlerRootView style={styles.container}>
-      <ImageBackground
-        source={require('../assets/map.png')}  // Ruta de la imagen de fondo
-        style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
-        resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
-      >
-
-        <View style={styles.buttonLaboratory}>
-          <MapButton
-            title="Laboratory"
-            onPress={goToLaboratory}
-            iconImage={require('../assets/laboratory_icon.png')}
-          />
-        </View>
-
-      </ImageBackground>
-    </GestureHandlerRootView>
+      <AcolythLaboratoryScreen UserData={userData}/>
     );
   }
+
   return (
     <GestureHandlerRootView style={styles.container}>
       <ImageBackground
