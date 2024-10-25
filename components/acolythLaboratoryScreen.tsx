@@ -36,7 +36,7 @@ import MedievalText from './MedievalText'; // Importación del componente Mediev
 
 type Props = { UserData: any };
 
-type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
+type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Tower'>;
 
 // Definir los efectos disponibles categorizados
 const GOOD_EFFECTS = [

@@ -22,9 +22,11 @@ const MapScreen: React.FC = () => {
   const goToLaboratory = () => {
     navigation.navigate('LaboratoryAcolyth');
   };
+  const goToTower = () => {
+    navigation.navigate('TowerAcolyth');
+  };
 
   useEffect(() => {
-    console.log("changed is inside: " + isInsideLab);
     navigation.navigate('Map');
   }, [isInsideLab,navigation]);
 
@@ -41,6 +43,14 @@ const MapScreen: React.FC = () => {
         style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
         resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
       >
+
+        <View style={styles.buttonTower}>
+          <MapButton
+            title="Tower"
+            onPress={goToTower}
+            iconImage={require('../assets/home_icon.png')}
+          />
+        </View>
 
         <View style={styles.buttonLaboratory}>
           <MapButton
@@ -83,6 +93,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 100,
     right: 75,
+    alignSelf: 'center',
+  },
+  buttonTower: {
+    position: 'absolute',
+    bottom: 210,
+    right: 260,
     alignSelf: 'center',
   },
 

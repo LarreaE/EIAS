@@ -23,6 +23,7 @@ import AcolythScreen from './screens/Info.tsx';
 import { Player } from './interfaces/Player.tsx';
 import MapScreen from './screens/Map.tsx';
 import { createStackNavigator } from '@react-navigation/stack';
+import Tower from './screens/Tower.tsx';
 
 
 const Tab = createMaterialTopTabNavigator();
@@ -320,6 +321,12 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               options={{ headerShown: false }}
             >
               {props => <AcolythLaboratoryScreen {...props} UserData={UserData} />}
+            </Stack.Screen>
+            <Stack.Screen
+              name="TowerAcolyth"
+              options={{ headerShown: false }}
+            >
+              {props => <Tower {...props} />}
             </Stack.Screen>
           </Stack.Navigator>
         </NavigationContainer>
