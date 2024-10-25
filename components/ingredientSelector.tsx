@@ -1,9 +1,10 @@
+// components/IngredientSelector.tsx
+
 import React, { useState, useRef, useContext } from 'react';
 import {
   Animated,
   TouchableOpacity,
   Image,
-  Text,
   StyleSheet,
   Dimensions,
   View,
@@ -18,6 +19,7 @@ import LocalIngredientImage from '../assets/EIAS.png';
 import runaBackground from '../assets/runa.png';
 import createPotionButton from '../assets/boton.png';
 import SelectedIngredientsDisplay from './selectedIngredientsDisplay';
+import MedievalText from './MedievalText'; // Importación del componente MedievalText
 
 interface IngredientSelectorProps {
   onSelectionChange: (selectedIngredients: { [key: string]: number }) => void;
@@ -138,19 +140,25 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
                 style={styles.decreaseButton}
                 onPress={() => decreaseSelection(item._id)}
               >
-                <Text style={styles.decreaseButtonText}>-</Text>
+                <MedievalText fontSize={20} color="#ffffff" style={styles.decreaseButtonText}>
+                  -
+                </MedievalText>
               </TouchableOpacity>
             )}
             {selectedCount > 0 && (
               <View style={styles.countBadge}>
-                <Text style={styles.countText}>{selectedCount}</Text>
+                <MedievalText fontSize={14} color="#ffffff" style={styles.countText}>
+                  {selectedCount}
+                </MedievalText>
               </View>
             )}
             <Image source={LocalIngredientImage} style={styles.ingredientImage} />
-            <Text style={styles.ingredientName} numberOfLines={1}>{item.name}</Text>
-            <Text style={styles.ingredientDescription} numberOfLines={2}>
+            <MedievalText fontSize={16} color="#ffffff" style={styles.ingredientName} numberOfLines={1}>
+              {item.name}
+            </MedievalText>
+            <MedievalText fontSize={12} color="#ffffff" style={styles.ingredientDescription} numberOfLines={2}>
               {item.description}
-            </Text>
+            </MedievalText>
           </ImageBackground>
         </Animated.View>
       </TouchableOpacity>
@@ -202,21 +210,23 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
       {/* Create Potion Button */}
       {hasAtLeastTwoSelected && (
         <TouchableOpacity 
-        style={styles.createPotionButtonContainer} 
-        onPress={() => {
-          createPotion(selectedIngredients);
-          setSelectedIngredients({}); // Deselecciona todos los ingredientes
-          onSelectionChange({}); // Actualiza los cambios en otros componentes
-          setPotionVisible(true);
-        }}
-      >
+          style={styles.createPotionButtonContainer} 
+          onPress={() => {
+            createPotion(selectedIngredients);
+            setSelectedIngredients({}); // Deselecciona todos los ingredientes
+            onSelectionChange({}); // Actualiza los cambios en otros componentes
+            setPotionVisible(true);
+          }}
+        >
           <ImageBackground
             source={createPotionButton}
             style={styles.createPotionButton}
             imageStyle={{ borderRadius: 10 }}
             resizeMode="stretch"
           >
-            <Text style={styles.createPotionButtonText}>Crear Poción</Text>
+            <MedievalText fontSize={18} color="#ffffff" style={styles.createPotionButtonText}>
+              Crear Poción
+            </MedievalText>
           </ImageBackground>
         </TouchableOpacity>
       )}
@@ -239,25 +249,35 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
                 style={styles.modalCloseButton}
                 onPress={() => setModalVisible(false)}
               >
-                <Text style={styles.modalCloseButtonText}>X</Text>
+                <MedievalText fontSize={16} color="#ffffff" style={styles.modalCloseButtonText}>
+                  X
+                </MedievalText>
               </TouchableOpacity>
               <Image
                 source={selectedIngredient.image}
                 style={styles.modalImage}
               />
-              <Text style={styles.modalTitle}>{selectedIngredient.name}</Text>
-              <Text style={styles.modalAtribute}>DESCRIPCIÓN:</Text>
-              <Text style={styles.modalDescription}>
+              <MedievalText fontSize={24} color="#ffffff" style={styles.modalTitle}>
+                {selectedIngredient.name}
+              </MedievalText>
+              <MedievalText fontSize={16} color="#ffff00" style={styles.modalAtribute}>
+                DESCRIPCIÓN:
+              </MedievalText>
+              <MedievalText fontSize={16} color="#ffffff" style={styles.modalDescription}>
                 {selectedIngredient.description}
-              </Text>
-              <Text style={styles.modalAtribute}>VALOR:</Text>
-              <Text style={styles.modalDescription}>
+              </MedievalText>
+              <MedievalText fontSize={16} color="#ffff00" style={styles.modalAtribute}>
+                VALOR:
+              </MedievalText>
+              <MedievalText fontSize={16} color="#ffffff" style={styles.modalDescription}>
                 {selectedIngredient.value}
-              </Text>
-              <Text style={styles.modalAtribute}>EFECTOS:</Text>
-              <Text style={styles.modalDescription}>
+              </MedievalText>
+              <MedievalText fontSize={16} color="#ffff00" style={styles.modalAtribute}>
+                EFECTOS:
+              </MedievalText>
+              <MedievalText fontSize={16} color="#ffffff" style={styles.modalDescription}>
                 {selectedIngredient.effects.join(', ')}
-              </Text>
+              </MedievalText>
             </ImageBackground>
           </View>
         </Modal>
@@ -267,7 +287,6 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
 };
 
 export default IngredientSelector;
-
 
 // Estilos (sin cambios, pero asegúrate de que sean consistentes)
 const styles = StyleSheet.create({
@@ -299,14 +318,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   ingredientName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'white',
+    // fontSize y color se manejan por el componente MedievalText
     textAlign: 'center',
   },
   ingredientDescription: {
-    fontSize: 12,
-    color: 'white',
+    // fontSize y color se manejan por el componente MedievalText
     textAlign: 'center',
   },
   countBadge: {
@@ -319,8 +335,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   countText: {
-    color: 'white',
-    fontWeight: 'bold',
+    // fontSize y color se manejan por el componente MedievalText
   },
   createPotionButtonContainer: {
     position: 'absolute',
@@ -339,9 +354,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   createPotionButtonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
+    // fontSize y color se manejan por el componente MedievalText
   },
   modalOverlay: {
     flex: 1,
@@ -364,23 +377,17 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   modalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
-    top:'0%',
+    // fontSize y color se manejan por el componente MedievalText
+    marginBottom: 10,
   },
   modalDescription: {
-    fontSize: 16,
-    color: 'white',
+    // fontSize y color se manejan por el componente MedievalText
     textAlign: 'center',
     maxWidth: 200,
     marginTop: 10,
   },
   modalAtribute: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'yellow',
-    textAlign: 'center',
+    // fontSize y color se manejan por el componente MedievalText
     marginTop: 10,
   },
   modalCloseButton: {
@@ -392,9 +399,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   modalCloseButtonText: {
-    fontSize: 16,
-    color: 'white',
-    fontWeight: 'bold',
+    // fontSize y color se manejan por el componente MedievalText
   },
   decreaseButton: {
     position: 'absolute',
@@ -409,8 +414,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   decreaseButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 20,
+    // fontSize y color se manejan por el componente MedievalText
   },
 });

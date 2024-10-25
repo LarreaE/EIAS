@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Image, StyleSheet, TouchableOpacity, Modal, Text } from "react-native";
+import MedievalText from "./MedievalText";
 
 interface Slot {
     item: any | null;
@@ -33,7 +34,7 @@ const EquipmentSlot: React.FC<Slot> = ({item , size}) => {
       >
         <TouchableOpacity onPress={() => setIsModalVisible(false)}>
           <View style={styles.square}>
-            <Text style={styles.modalButton}>Close</Text>
+            <MedievalText style={styles.modalButton}>Close</MedievalText>
           </View>
         </TouchableOpacity>
         {item ? (

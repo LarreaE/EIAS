@@ -3,6 +3,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import socket from '../sockets/socketConnection';
+import MedievalText from './MedievalText';
 
 type Props = {
   user: any;  // Datos del usuario pasados como prop desde la pantalla principal
@@ -29,7 +30,7 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLoged }) => {
           style={styles.buttonImage}  // Estilos para la imagen dentro del botón
           resizeMode="cover"         // Ajuste de la imagen
         >
-          <Text style={styles.signOutText}>Sing Out</Text>
+          <MedievalText style={styles.signOutText}>Sing Out</MedievalText>
         </ImageBackground>
       </TouchableOpacity>
     </ImageBackground>

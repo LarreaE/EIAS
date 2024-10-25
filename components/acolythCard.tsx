@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { Image, View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
+import { Image, View, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { RootStackParamList } from '../types/types';
 import io from 'socket.io-client';
+import MedievalText from './MedievalText';
 
 // definir tipo de datos de props
 type Props = {
@@ -19,10 +20,10 @@ const AcolythCard: React.FC<Props> = ({ nickname, is_active, avatar }) => {
           source={{ uri: avatar }}
           style={styles.image}
         />
-        <Text style={[styles.text]}>{nickname}</Text>
-        <Text style={[styles.outText, is_active && styles.inText]}>
+        <MedievalText style={[styles.MedievalText]}>{nickname}</MedievalText>
+        <MedievalText style={[styles.outMedievalText, is_active && styles.inMedievalText]}>
           {is_active ? ' Dentro' : ' Fuera'}
-        </Text>
+        </MedievalText>
       </View>
     </View>
   );
@@ -40,13 +41,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgrey',
     borderRadius: 30
   },
-  text: {
+  MedievalText: {
     color: 'black',
   },
-  inText: {
+  inMedievalText: {
     color: 'green',
   },
-  outText: {
+  outMedievalText: {
     color: 'red',
   },
   image: {
