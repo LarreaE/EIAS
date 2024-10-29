@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, StyleSheet } from 'react-native';
 import MedievalText from '../components/MedievalText';
 import MapButton from '../components/MapButton';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/types';
+import { UserContext } from '../context/UserContext';
+import MortimerTower from '../components/mortimerTower';
 
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TowerAcolyth'>;
 
 const Tower: React.FC = () => {
+
+  const { setUserData, userData } = useContext(UserContext);
 
   const navigation = useNavigation<MapScreenNavigationProp>();
 
@@ -16,18 +20,26 @@ const Tower: React.FC = () => {
         navigation.navigate('Map');
       };
 
-  return (
-    <>
-    <View style={styles.container}>
-      <MedievalText style={styles.text}>TOWER</MedievalText>
-      <MedievalText style={styles.text}>You may now activate the door</MedievalText>
-      <MapButton
-            onPress={goToMap}
-            iconImage={require('../assets/map_icon.png')}
-          />
-    </View>
-    </>
-  );
+  if (userData.playerData.role === 'MORTIMER') {
+    return (
+      <>
+      <MortimerTower/>
+      </>
+    );
+  } else {
+    return (
+      <>
+      <View style={styles.container}>
+        <MedievalText style={styles.text}>TOWER</MedievalText>
+        <MedievalText style={styles.text}>You may now activate the door</MedievalText>
+        <MapButton
+              onPress={goToMap}
+              iconImage={require('../assets/map_icon.png')}
+            />
+      </View>
+      </>
+    );
+  }
 };
 
 const styles = StyleSheet.create({

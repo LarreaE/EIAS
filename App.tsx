@@ -200,6 +200,17 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
             >
               {props => <MortimerLaboratoryScreen {...props} />}
             </Tab.Screen>
+            <Tab.Screen
+              name="TowerMortimer"
+              options={{
+                tabBarLabel: '',
+                tabBarIcon: () => (
+                  <Image source={require('./assets/laboratory_icon.png')} style={styles.icon} />
+                ),
+              }}
+            >
+              {props => <Tower {...props} />}
+            </Tab.Screen>
           </>
         );
 
