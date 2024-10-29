@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground, FlatList } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, FlatList, Dimensions } from 'react-native';
 import AcolythCard from './acolythCard';
 import { listenToServerEventsMortimer, clearServerEvents } from '../sockets/listenEvents.tsx';
 import MedievalText from './MedievalText.tsx';
+
+const { width, height } = Dimensions.get('window');
 
 const MortimerTower: React.FC = () => {
 
@@ -43,7 +45,7 @@ const MortimerTower: React.FC = () => {
           <AcolythCard
             key={user._id}
             nickname={user.nickname}
-            is_active={user.is_active}
+            is_active={user.is_inside_tower}
             avatar={user.avatar}
           />
         ))}
