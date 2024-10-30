@@ -1,4 +1,4 @@
-package com.er6
+package com.eias.er6
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

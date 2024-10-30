@@ -71,10 +71,14 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     //Get the token from the current User
     const idTokenResult = await auth().currentUser?.getIdTokenResult();
     console.log('USER JWT');
-    axios.post('https://eiasserver.onrender.com/verify-token', {
+    console.log(idTokenResult);
+    console.log(email);
+    console.log(socket.id);
+
+    await axios.post('https://eiasserver.onrender.com/verify-token', {
       idToken: idTokenResult?.token,
       email: email,
-      socketId: socketId,
+      socketId: socket.id,
     })
     .then((response) => {
       console.log('JWT TOKEN FROM EXPRESS');
@@ -85,7 +89,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
       setSpinnerMessage('Connection established...');
     });
     } catch (error) {
-      console.error(error);
+      console.error(error.response.data);
       console.log('error');
       setLoading(false); // Detener el loading
     } finally {

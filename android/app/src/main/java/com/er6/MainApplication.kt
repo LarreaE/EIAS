@@ -1,4 +1,4 @@
-package com.er6
+package com.eias.er6
 
 import android.app.Application
 import com.facebook.react.PackageList

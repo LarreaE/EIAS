@@ -36,6 +36,17 @@ function App() {
     checkAndRequestNotificationPermission();
 }, []);
 
+  useEffect(() => {
+    onMessageReceived();
+  }, []);
+  const onMessageReceived = () => {
+    messaging().onMessage(async remoteMessage => {
+      console.log('Notificación recibida en primer plano:', remoteMessage);
+      Alert.alert(remoteMessage?.notification?.title!, remoteMessage?.notification?.body);
+    });
+  };
+
+
   return (
     <UserProvider>
       <AppContent
@@ -57,7 +68,15 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
       Alert.alert('Notification received');
     });
   });
+  useEffect(() => {
+      // Set background message handler
+    messaging().setBackgroundMessageHandler(async remoteMessage => {
+      console.log('Notification handled in the background:', remoteMessage);
+    });
+  });
 
+
+  
   useEffect(() => {
     socket.on('request_email', () => {
       console.log('El servidor ha solicitado el correo electrónico');

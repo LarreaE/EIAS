@@ -14,9 +14,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.er6"
+    namespace "com.eias.er6"
     defaultConfig {
-        applicationId "com.er6"
+        applicationId "com.eias.er6"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -74,6 +74,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation platform('com.google.firebase:firebase-bom:32.3.1')
     implementation 'com.google.firebase:firebase-auth' // Sin especificar versión, usa la del BOM
+    implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
         
     implementation project(':@react-native-google-signin_google-signin')
