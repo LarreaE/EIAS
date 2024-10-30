@@ -57,6 +57,8 @@ dependencies {
 
     //firebase app    
     implementation project(path: ":@react-native-firebase_app")
+    implementation project(':@react-native-firebase_messaging')
+
     implementation project(path: ":@react-native-firebase_auth")
 
     //vision

@@ -4,9 +4,9 @@
   "private": true,
   "rnpm": {
     "assets": [
-	"./assets/fonts/"
+      "./assets/fonts/"
     ]
-},
+  },
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -15,8 +15,9 @@
     "test": "jest"
   },
   "dependencies": {
-    "@react-native-firebase/app": "20.5.0",
-    "@react-native-firebase/auth": "20.5.0",
+    "@react-native-firebase/app": "^21.2.0",
+    "@react-native-firebase/auth": "^21.2.0",
+    "@react-native-firebase/messaging": "^21.2.0",
     "@react-native-google-signin/google-signin": "^13.0.2",
     "@react-navigation/bottom-tabs": "^6.6.1",
     "@react-navigation/material-top-tabs": "^6.6.14",

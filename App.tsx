@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useState, useEffect, useContext } from 'react';
-import { SafeAreaView, StyleSheet, Image, Modal, TouchableOpacity, Text, View, ImageBackground } from 'react-native';
+import { SafeAreaView, StyleSheet, Image, Modal, TouchableOpacity, Text, View, ImageBackground, Alert } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -24,14 +24,17 @@ import { Player } from './interfaces/Player.tsx';
 import MapScreen from './screens/Map.tsx';
 import { createStackNavigator } from '@react-navigation/stack';
 import Tower from './screens/Tower.tsx';
-
-
+import messaging from '@react-native-firebase/messaging';
+import { checkAndRequestNotificationPermission } from './components/notificationPermissions.tsx';
 const Tab = createMaterialTopTabNavigator();
 
 function App() {
   const [isLoged, setIsLoged] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
+  useEffect(() => {
+    checkAndRequestNotificationPermission();
+}, []);
 
   return (
     <UserProvider>
@@ -47,6 +50,13 @@ function App() {
 
 function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) {
   const { userData: UserData, setUserData } = useContext(UserContext); // Usamos useContext para UserData;
+
+  useEffect(() => {
+    messaging().onMessage(async remoteMessage => {
+      console.log('Notification received:',remoteMessage);
+      Alert.alert('Notification received');
+    });
+  });
 
   useEffect(() => {
     socket.on('request_email', () => {
