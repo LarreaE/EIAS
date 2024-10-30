@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ImageBackground, FlatList, Dimensions } from 'r
 import AcolythCard from './acolythCard';
 import { listenToServerEventsMortimer, clearServerEvents } from '../sockets/listenEvents.tsx';
 import MedievalText from './MedievalText.tsx';
+import Config from 'react-native-config';
 
 const { width, height } = Dimensions.get('window');
 
@@ -17,7 +18,7 @@ const MortimerTower: React.FC = () => {
     // Petición a la base de datos para obtener los usuarios iniciales
     const addUsers = async () => {
       try {
-        const response = await fetch('https://eiasserver.onrender.com/mortimer');
+        const response = await fetch(`https://${Config.RENDER}/mortimer`);
         const data = await response.json();
         setUsers(data);
       } catch (error) {

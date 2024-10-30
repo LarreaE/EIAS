@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ImageBackground, FlatList } from 'react-native'
 import AcolythCard from './acolythCard';
 import { listenToServerEventsMortimer, clearServerEvents } from '../sockets/listenEvents.tsx';
 import MedievalText from './MedievalText.tsx';
+import Config from 'react-native-config';
 
 // define la interfaz para el tipo de datos de usuario
 interface User {
@@ -31,7 +32,7 @@ const MortimerLaboratoryScreen: React.FC<Props> = () => {
     // Petición a la base de datos para obtener los usuarios iniciales
     const addUsers = async () => {
       try {
-        const response = await fetch('https://eiasserver.onrender.com/mortimer');
+        const response = await fetch(`https://${Config.RENDER}/mortimer`);
         const data: User[] = await response.json();
         setUsers(data);
       } catch (error) {
