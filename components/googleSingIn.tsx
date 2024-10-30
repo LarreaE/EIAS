@@ -71,7 +71,10 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     //Get the token from the current User
     const idTokenResult = await auth().currentUser?.getIdTokenResult();
     console.log('USER JWT');
-    axios.post(`https://${Config.RENDER}/verify-token`, {
+    console.log(idTokenResult);
+    console.log(email);
+    console.log(socket.id);
+    await axios.post(`${Config.RENDER}/verify-token`, {
       idToken: idTokenResult?.token,
       email: email,
       socketId: socket.id,
