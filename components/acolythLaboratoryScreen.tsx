@@ -33,6 +33,7 @@ import Venom from './Potions/Venom.tsx';
 import Spinner from './Spinner.tsx';
 import CookBookModal from './CookBookModal.tsx';
 import MedievalText from './MedievalText'; // Importación del componente MedievalText
+import Config from 'react-native-config';
 
 type Props = { UserData: any };
 
@@ -170,7 +171,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
       try {
         setIngredientsRetrieved(false);
         console.log('Fetching ingredients...');
-        const response = await fetch('https://eiasserver.onrender.com/ingredients');
+        const response = await fetch(`https://${Config.RENDER}/ingredients`);
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
           const data = await response.json();
@@ -198,7 +199,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
       try {
         setCursesRetrieved(false);
         console.log('Fetching curses...');
-        const response = await fetch('https://eiasserver.onrender.com/potions');
+        const response = await fetch(`https://${Config.RENDER}/potions`);
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
           const data = await response.json();
@@ -237,7 +238,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
     const updateIsInside = async () => {
       try {
-        await fetch('https://eiasserver.onrender.com/isInside', {
+        await fetch(`https://${Config.RENDER}/isInside`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
