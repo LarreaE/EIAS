@@ -67,7 +67,7 @@ const Tower: React.FC = () => {
         <TouchableOpacity
               onPress={sendNotification}
             >
-              <Text>hello</Text>
+              <Text>Send Automessage</Text>
             </TouchableOpacity>
         <MapButton
               onPress={goToMap}
