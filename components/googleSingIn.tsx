@@ -7,6 +7,7 @@ import auth from '@react-native-firebase/auth';
 import axios from 'axios';
 import socket from '../sockets/socketConnection';
 import { UserContext } from '../context/UserContext'; // Importa el contexto
+import messaging from'@react-native-firebase/messaging';
 
 
 interface Props {
@@ -70,14 +71,20 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     setSpinnerMessage('Verifying credentials...');
     //Get the token from the current User
     const idTokenResult = await auth().currentUser?.getIdTokenResult();
+    //FCM token
+    const token = await messaging().getToken();
+
     console.log('USER JWT');
     console.log(idTokenResult);
     console.log(email);
     console.log(socket.id);
+    console.log(token);
+
     await axios.post(`${Config.RENDER}/verify-token`, {
       idToken: idTokenResult?.token,
       email: email,
       socketId: socket.id,
+      fcmToken: token,
     })
     .then((response) => {
       console.log('JWT TOKEN FROM EXPRESS');

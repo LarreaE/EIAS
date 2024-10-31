@@ -63,12 +63,6 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
   const { userData: UserData, setUserData } = useContext(UserContext); // Usamos useContext para UserData;
 
   useEffect(() => {
-    messaging().onMessage(async remoteMessage => {
-      console.log('Notification received:',remoteMessage);
-      Alert.alert('Notification received');
-    });
-  });
-  useEffect(() => {
       // Set background message handler
     messaging().setBackgroundMessageHandler(async remoteMessage => {
       console.log('Notification handled in the background:', remoteMessage);
