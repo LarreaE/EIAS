@@ -40,17 +40,17 @@ const MortimerTower: React.FC = () => {
       style={styles.background}
       resizeMode="cover"
     >
-      <MedievalText>
+      <View style={styles.users}>
         {/* mapear array users */}
         {users.map((user) => (
           <AcolythCard
             key={user._id}
             nickname={user.nickname}
-            is_active={user.is_inside_tower}
+            is_active={user.is_active}
             avatar={user.avatar}
           />
         ))}
-      </MedievalText>
+        </View>
     </ImageBackground>
   );
 };
@@ -58,8 +58,10 @@ const MortimerTower: React.FC = () => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+  },
+  users: {
+    top:50,
   },
 });
 

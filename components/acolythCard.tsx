@@ -1,11 +1,7 @@
-import React, { useEffect } from 'react';
-import { Image, View, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
-import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-handler';
-import { RootStackParamList } from '../types/types';
-import io from 'socket.io-client';
+import React from 'react';
+import { Image, View, StyleSheet } from 'react-native';
 import MedievalText from './MedievalText';
 
-// definir tipo de datos de props
 type Props = {
   nickname: string;
   is_active: boolean;
@@ -14,47 +10,44 @@ type Props = {
 
 const AcolythCard: React.FC<Props> = ({ nickname, is_active, avatar }) => {
   return (
-    <View>
-      <View style={styles.container}>
+    <View style={styles.container}>
       <Image
-          source={{ uri: avatar }}
-          style={styles.image}
-        />
-        <MedievalText style={[styles.MedievalText]}>{nickname}</MedievalText>
-        <MedievalText style={[styles.outMedievalText, is_active && styles.inMedievalText]}>
-          {is_active ? ' Dentro' : ' Fuera'}
-        </MedievalText>
-      </View>
+        source={{ uri: avatar }}
+        style={[styles.image, is_active ? styles.activeBorder : styles.inactiveBorder]}
+      />
+      <MedievalText style={styles.MedievalText}>{nickname}</MedievalText>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-
   container: {
     flexDirection: 'row',
-    padding: 20,
-    margin: 20,
-    borderStyle: "solid",
+    padding: 10,
+    margin: 5,
+    borderStyle: 'solid',
     borderColor: 'grey',
     borderBottomWidth: 1,
     backgroundColor: 'lightgrey',
-    borderRadius: 30
+    borderRadius: 30,
+    alignItems: 'center',
+    width:320,
   },
   MedievalText: {
     color: 'black',
-  },
-  inMedievalText: {
-    color: 'green',
-  },
-  outMedievalText: {
-    color: 'red',
   },
   image: {
     width: 50,
     height: 50,
     borderRadius: 25,
     marginRight: 10,
+    borderWidth: 2, // Grosor del borde
+  },
+  activeBorder: {
+    borderColor: 'green',
+  },
+  inactiveBorder: {
+    borderColor: 'red',
   },
 });
 
