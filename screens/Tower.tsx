@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, ToastAndroid } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, ToastAndroid, ImageBackground } from 'react-native';
 import MedievalText from '../components/MedievalText';
 import MapButton from '../components/MapButton';
 import { useNavigation } from '@react-navigation/native';
@@ -36,9 +36,9 @@ const Tower: React.FC = () => {
   const getNewIngredients = async (url: string) => {
     try {
       const response = await axios.get(url);
-      console.log(response);
+      console.log(response.data.data);
       const ingredients = []
-      setPurifyIngredients(response.data);
+      setPurifyIngredients(response.data.data);
     } catch (error) {
       console.error('Failed to fetch ingredients:', error);
     }
@@ -77,14 +77,25 @@ const Tower: React.FC = () => {
   useEffect(() => {
     console.log('Message updated:', msg);
   }, [msg]);
+  useEffect(() => {
+    console.log('Ingredients updated:', purifyIngredients);
+  }, [purifyIngredients]);
 
   if (userData.playerData.role === 'MORTIMER') {
     return <MortimerTower />;
   } else {
     return (
       <>
+     
+
+                    
         {userData.playerData.is_inside_tower ? (
           // inside the tower
+        <ImageBackground
+          source={require('../assets/scroll.png')}  // Ruta de la imagen de fondo
+          style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
+          resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+        >
           <View style={styles.container}>
             <MedievalText style={styles.text}>{msg}</MedievalText>
             <MedievalText style={styles.text}>You are now seeing a scroll</MedievalText>
@@ -106,6 +117,7 @@ const Tower: React.FC = () => {
               iconImage={require('../assets/map_icon.png')}
             />
           </View>
+        </ImageBackground>
         ) : (
           // outside the tower
           <View style={styles.container}>
@@ -130,7 +142,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'lightgrey',
   },
   text: {
     fontSize: 24,
