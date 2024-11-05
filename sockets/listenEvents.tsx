@@ -1,6 +1,8 @@
 import { Alert, Vibration } from 'react-native';
 import socket from './socketConnection';
-import { sendUserEMail } from './emitEvents.tsx';
+import Config from 'react-native-config';
+import { useContext } from 'react';
+import { UserContext } from '../context/UserContext';
 
 // Función para escuchar eventos del servidor
 export const listenToServerEvents = (): void => {
@@ -18,6 +20,9 @@ export const listenToServerEventsMortimer = (updatePlayers: (players: any) => vo
   socket.on('all_players', (data: { players: any }) => {
     console.log('Jugadores recibidos del servidor:', data.players);
     updatePlayers(data.players); // Llamamos a la función de actualización con los jugadores
+  });
+  socket.on('pushNotification', () => {
+    sendNotification();
   });
 };
 
@@ -37,5 +42,41 @@ export const clearServerEvents = (): void => {
   socket.off('alert');
   socket.off('all_players');
   socket.off('change_isInside');
-  socket.off('qr_scanned'); 
+  socket.off('qr_scanned');
+  socket.off('pushNotification');
+};
+
+
+const sendNotification = async () => {
+
+  const { setUserData, userData } = useContext(UserContext);
+
+const player = userData.playerData;
+
+  console.log('Sending notification to email:', player.email);
+  try {
+    await fetch(`${Config.RENDER}/send-notification`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email: player.email }),
+    })
+      .then(response => {
+        console.log(response);
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Server response:', data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  } catch (error) {
+    console.error('Caught error:', error);
+  }
 };

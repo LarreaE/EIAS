@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View, StyleSheet, Button, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import MedievalText from '../components/MedievalText';
 import MapButton from '../components/MapButton';
 import { useNavigation } from '@react-navigation/native';
