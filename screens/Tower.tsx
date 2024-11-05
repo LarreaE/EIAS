@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, ToastAndroid, ImageBackground } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, ToastAndroid, ImageBackground, ScrollView } from 'react-native';
 import MedievalText from '../components/MedievalText';
 import MapButton from '../components/MapButton';
 import { useNavigation } from '@react-navigation/native';
@@ -91,23 +91,23 @@ const Tower: React.FC = () => {
                     
         {userData.playerData.is_inside_tower ? (
           // inside the tower
-        <ImageBackground
-          source={require('../assets/scroll.png')}  // Ruta de la imagen de fondo
-          style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
-          resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+          <ImageBackground
+          source={require('../assets/scroll.png')}
+          style={styles.background}
+          resizeMode="cover"
         >
           <View style={styles.container}>
             <MedievalText style={styles.text}>{msg}</MedievalText>
-            <MedievalText style={styles.text}>You are now seeing a scroll</MedievalText>
+            <MedievalText style={styles.text}>You have new ingredients</MedievalText>
             {purifyIngredients.length > 0 && (
-              <View style={styles.ingredientsContainer}>
+              <View style={styles.scrollContainer}>
+              <ScrollView contentContainerStyle={styles.scrollContent}>
                 <MedievalText>Purified Ingredients:</MedievalText>
                 {purifyIngredients.map((ingredient, index) => (
-                  <MedievalText key={index}>
-                    {ingredient.name}
-                  </MedievalText>
+                  <MedievalText key={index}>{ingredient.name}</MedievalText>
                 ))}
-              </View>
+              </ScrollView>
+            </View>
             )}
             <TouchableOpacity onPress={decrypt}>
               <Text>Decypher Scroll</Text>
@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 20,
   },
   text: {
     fontSize: 24,
@@ -181,6 +182,20 @@ const styles = StyleSheet.create({
   ingredientsContainer: {
     marginTop: 20,
     alignItems: 'center',
+  },
+  scrollContainer: {
+    width: 250,
+    height: 150,
+    borderRadius: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0)', // Slightly transparent background
+    overflow: 'hidden', // This hides content that overflows the container
+    marginVertical: 20,
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  scrollContent: {
+    padding: 10,
   },
 });
 
