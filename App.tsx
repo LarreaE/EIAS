@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useState, useEffect, useContext } from 'react';
-import { SafeAreaView, StyleSheet, Image, Modal, TouchableOpacity, Text, View, ImageBackground, Alert } from 'react-native';
+import { SafeAreaView, StyleSheet, Image, Modal, TouchableOpacity, Text, View, ImageBackground, Alert, ToastAndroid } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -42,7 +42,7 @@ function App() {
   const onMessageReceived = () => {
     messaging().onMessage(async remoteMessage => {
       console.log('Notificación recibida en primer plano:', remoteMessage);
-      Alert.alert(remoteMessage?.notification?.title!, remoteMessage?.notification?.body);
+      ToastAndroid.show(`${remoteMessage?.notification?.title}`,5)
     });
   };
 
