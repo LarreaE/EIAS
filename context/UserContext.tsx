@@ -12,6 +12,12 @@ interface UserContextType {
   setPotionVisible: React.Dispatch<React.SetStateAction<boolean>>;
   isInsideLab: boolean;
   setIsInsideLab: React.Dispatch<React.SetStateAction<boolean>>;
+  parchment: boolean;
+  setParchment: React.Dispatch<React.SetStateAction<boolean>>;
+  purifyIngredients: Ingredients[];
+  setPurifyIngredients: React.Dispatch<React.SetStateAction<Ingredients[]>>;
+
+
 }
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -21,9 +27,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [ingredients, setIngredients] = useState<Ingredients[]>([]); // Estado global para ingredientes
   const [potionVisible, setPotionVisible] = useState(false);
   const [isInsideLab, setIsInsideLab] = useState(false);
+  const [parchment, setParchment] = useState(false);
+  const [purifyIngredients, setPurifyIngredients] = useState<Ingredients[]>([]); // Estado global para ingredientes
+
 
   return (
-    <UserContext.Provider value={{ userData, setUserData, ingredients, setIngredients,potionVisible, setPotionVisible, isInsideLab , setIsInsideLab }}>
+    <UserContext.Provider value={{ userData, setUserData, ingredients, setIngredients,potionVisible, setPotionVisible, isInsideLab , setIsInsideLab, parchment, setParchment, purifyIngredients, setPurifyIngredients }}>
       {children}
     </UserContext.Provider>
   );
