@@ -55,7 +55,7 @@ const player = userData.playerData;
 
   console.log('Sending notification to email:', player.email);
   try {
-    await fetch(`${Config.RENDER}/send-notification`, {
+    await fetch(`${Config.PM2}/send-notification`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -36,9 +36,9 @@ const Tower: React.FC = () => {
   const getNewIngredients = async (url: string) => {
     try {
       const response = await axios.get(url);
-      console.log(response.data.data);
+      console.log(response.data.data["Zachariah's herbal"].ingredients);
       const ingredients = []
-      setPurifyIngredients(response.data.data);
+      setPurifyIngredients(response.data.data["Zachariah's herbal"].ingredients);
     } catch (error) {
       console.error('Failed to fetch ingredients:', error);
     }
@@ -56,7 +56,7 @@ const Tower: React.FC = () => {
   const sendNotification = async () => {
     console.log('Sending notification to email:', player.email);
     try {
-      const response = await fetch(`${Config.RENDER}/send-notification`, {
+      const response = await fetch(`${Config.PM2}/send-notification`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

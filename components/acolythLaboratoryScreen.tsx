@@ -171,7 +171,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
       try {
         setIngredientsRetrieved(false);
         console.log('Fetching ingredients...');
-        const response = await fetch(`${Config.RENDER}/ingredients`);
+        const response = await fetch(`${Config.PM2}/ingredients`);
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
           const data = await response.json();
@@ -199,7 +199,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
       try {
         setCursesRetrieved(false);
         console.log('Fetching curses...');
-        const response = await fetch(`${Config.RENDER}/potions`);
+        const response = await fetch(`${Config.PM2}/potions`);
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
           const data = await response.json();
@@ -238,7 +238,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
     const updateIsInside = async () => {
       try {
-        await fetch(`${Config.RENDER}/isInside`, {
+        await fetch(`${Config.PM2}/isInside`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

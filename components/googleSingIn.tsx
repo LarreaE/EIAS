@@ -80,7 +80,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     console.log(socket.id);
     console.log(token);
 
-    await axios.post(`${Config.RENDER}/verify-token`, {
+    await axios.post(`${Config.PM2}/verify-token`, {
       idToken: idTokenResult?.token,
       email: email,
       socketId: socket.id,
