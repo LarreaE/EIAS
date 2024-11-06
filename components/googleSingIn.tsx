@@ -45,9 +45,100 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     };
   }, []);
 
+  const fetchIngredients = async () => {
+    try {
+      console.log('Fetching ingredients...');
+      const response = await fetch(`${Config.PM2}/ingredients`);
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const data = await response.json();
+        if (data.success === true && Array.isArray(data.ingredientsData) && data.ingredientsData.length > 0) {
+          setAllIngredients(data.ingredientsData); // Almacenar en variable local
+          setIngredients(data.ingredientsData); // Almacenar en contexto global
+        } else {
+          console.error('No ingredients found or status is not OK.');
+        }
+      } else {
+        const text = await response.text();
+        console.error('Response is not JSON:', text);
+      }
+    } catch (error) {
+      console.error('Error getting ingredients:', error);
+    } finally {
+    }
+  };
+
+  const fetchCurses = async () => {
+    
+    try {
+      console.log('Fetching curses...');
+      const response = await fetch(`${Config.PM2}/potions`);
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const data = await response.json();
+        if (data.success === true && Array.isArray(data.potionsData) && data.potionsData.length > 0) {
+          setCurses(data.potionsData); // Almacenar en contexto global
+        } else {
+          console.error('No curses found or status is not OK.');
+        }
+      } else {
+        const text = await response.text();
+        console.error('Response is not JSON:', text);
+      }
+    } catch (error) {
+      console.error('Error getting curses:', error);
+    } finally {
+    }
+  };
 
   const signIn = async () => {
     try {
+      const authenticate = async() => {
+        try {
+          setSpinnerMessage('Connecting...');
+          
+          // Perform the axios request and wait for the response
+          const response = await axios.post(`${Config.PM2}/verify-token`, {
+            idToken: idTokenResult?.token,
+            email: email,
+            socketId: socket.id,
+            fcmToken: token,
+          });
+          
+          console.log('JWT TOKEN FROM EXPRESS');
+        
+          // If successful, update the state
+          setSpinnerMessage('Connection established...');
+          setUserData(response.data);
+          setIsInsideLab(response.data.playerData.is_active);
+        
+          // Fetch ingredients and curses in sequence
+          setSpinnerMessage('Fetching Ingredients...');
+          await fetchIngredients();
+        
+          setSpinnerMessage('Fetching Curses...');
+          await fetchCurses();
+        
+          // Log the user in
+          setIsLoged(true);
+        
+        } catch (error) {
+          console.log('An error occurred during token verification or data fetching.');
+          
+          // Check if error.response and error.response.data exist
+          if (error.response && error.response.data) {
+            console.log("Error data: ", error.response.data);
+          } else {
+            console.log("Error: ", error.message || 'An unknown error occurred.');
+          }
+        
+          // Stop any loading indicators
+          setLoading(false);
+          
+        } finally {
+          console.log('authenticated');
+        }    
+      }
       setLoading(true); // Iniciar el loading
       const userInfo = await GoogleSignin.signIn(); // Reemplaza esto con tu lógica de inicio de sesión
       console.log('Usuario de Google:', userInfo);
@@ -82,30 +173,8 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     console.log(socket.id);
     console.log(token);
 
-    await axios.post(`${Config.PM2}/verify-token`, {
-      idToken: idTokenResult?.token,
-      email: email,
-      socketId: socket.id,
-      fcmToken: token,
-    })
-    .then((response) => {
-      console.log('JWT TOKEN FROM EXPRESS');
-      //SAVE JWT ENCRIPTED
-      setSpinnerMessage('Connection established...');
-      setUserData(response.data);
-      setIsInsideLab(response.data.playerData.is_active);
-    })
-    .then(() => {
-      fetchIngredients();
-      setSpinnerMessage('Fetching Ingredients...');
-    }) 
-    .then(() => {
-      fetchCurses();
-      setSpinnerMessage('Fetching Curses...');
-    })
-    .then(() => {
-      setIsLoged(true);
-    });
+    await authenticate();
+    
     } catch (error:any) {
       console.log("Error: ", error.response.data);
       setLoading(false); // Detener el loading
@@ -114,51 +183,6 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     }
   };
 
-  const fetchIngredients = async () => {
-    try {
-      console.log('Fetching ingredients...');
-      const response = await fetch(`${Config.PM2}/ingredients`);
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
-        const data = await response.json();
-        if (data.success === true && Array.isArray(data.ingredientsData) && data.ingredientsData.length > 0) {
-          setAllIngredients(data.ingredientsData); // Almacenar en variable local
-          setIngredients(data.ingredientsData); // Almacenar en contexto global
-        } else {
-          console.error('No ingredients found or status is not OK.');
-        }
-      } else {
-        const text = await response.text();
-        console.error('Response is not JSON:', text);
-      }
-    } catch (error) {
-      console.error('Error getting ingredients:', error);
-    } finally {
-    }
-  };
-
-  const fetchCurses = async () => {
-    try {
-      console.log('Fetching curses...');
-      const response = await fetch(`${Config.PM2}/potions`);
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
-        const data = await response.json();
-        if (data.success === true && Array.isArray(data.potionsData) && data.potionsData.length > 0) {
-          setCurses(data.potionsData); // Almacenar en contexto global
-        } else {
-          console.error('No curses found or status is not OK.');
-        }
-      } else {
-        const text = await response.text();
-        console.error('Response is not JSON:', text);
-      }
-    } catch (error) {
-      console.error('Error getting curses:', error);
-    } finally {
-    }
-  };
-  
   useEffect(() => {
     const verificarTokenCaducado = async () => {
       try {

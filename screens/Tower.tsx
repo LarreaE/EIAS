@@ -10,31 +10,20 @@ import MortimerTower from '../components/mortimerTower';
 import Config from 'react-native-config';
 import axios from 'axios';
 import Ingredient from '../components/Potions/Ingredient';
-
+import { getBoolean, saveBoolean } from '../helper/AsyncStorage';
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TowerAcolyth'>;
 
 const Tower: React.FC = () => {
 
   const context = useContext(UserContext) as UserContextType;
   
-  const { setUserData, userData, parchment, setParchment, purifyIngredients, setPurifyIngredients, setAllIngredients, allIngredients  } = context;
+  const { setUserData, userData, purifyIngredients, setPurifyIngredients, setAllIngredients, allIngredients, parchment , setParchment  } = context;
   const navigation = useNavigation<MapScreenNavigationProp>();
 
   const [msg, setMsg] = useState("la,,br e h  - h  ,  a  ,i,,r,,ah c a z/,  s, ,  t, , n e i,d,  ,er,g,  , n ,i /,  ,  v  ed  ,,. y  l,f.,,r  ,,ev,,  r  ,e  s-a,,k  ,it  oa,k//,  :sp,t, , th");
 
   const player = userData.playerData;
-
-  const decrypt = () => {
-    if (!parchment) {
-      const decryptedMsg = msg.replace(/[, ]/g, '').split('').reverse().join('');
-      setMsg(decryptedMsg);
-      console.log("Scroll patched");
-      setParchment(true);
-      getNewIngredients(decryptedMsg);
-    } else {
-      ToastAndroid.show('The knowledge has already been acquired' , 3)
-    }
-  }
+  
 
   const getNewIngredients = async (url: string) => {
     try {
@@ -80,6 +69,27 @@ const Tower: React.FC = () => {
     }
   };
 
+  const decrypt = () => {
+    
+    if (!parchment) {
+      const decryptedMsg = msg.replace(/[, ]/g, '').split('').reverse().join('');
+      setMsg(decryptedMsg);
+      console.log("Scroll patched");
+      getNewIngredients(decryptedMsg);
+    } else {
+      ToastAndroid.show('The knowledge has already been acquired' , 3)
+    }
+  }
+  useEffect(() => {
+    const getParchment = async() => {
+      try {
+        setParchment(await getBoolean('parchment'));
+      } catch (error) {
+        console.log("error getting parchment asyncstorage", error);
+      }
+    }
+    getParchment()
+  }, [decrypt]);
   // change msg
   useEffect(() => {
     console.log('Message updated:', msg);
@@ -88,7 +98,6 @@ const Tower: React.FC = () => {
     console.log('ALL INGREDIENTS UPDATED:', allIngredients);
   }, [allIngredients]);
   useEffect(() => {
-    console.log("MERGING INGREDIENTS WITH: ", purifyIngredients[0]);
     const mergedIngredients = [...allIngredients, ...purifyIngredients];
     setAllIngredients(mergedIngredients);
   }, [purifyIngredients]);
