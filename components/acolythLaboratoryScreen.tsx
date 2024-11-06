@@ -139,7 +139,7 @@ const EFFECT_ICONS: { [key: string]: string } = {
 
 const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const { ingredients, setIngredients , potionVisible, setPotionVisible, setIsInsideLab, isInsideLab} = useContext(UserContext);
+  const { ingredients, setIngredients , potionVisible, setPotionVisible, setIsInsideLab, isInsideLab, parchment, purifyIngredients} = useContext(UserContext);
   const [allIngredients, setAllIngredients] = useState<Ingredients[]>([]);
   const [curses, setCurses] = useState<Curse[]>([]);
   const [ingredientsRetrieved, setIngredientsRetrieved] = useState(false);
@@ -232,6 +232,18 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   //   }
   // }, [ingredientsRetrieved, potionCreated, allIngredients, curses, setIngredients, setCurses]);
 
+  //updates ingredients when parchment equals true
+  useEffect(() => {
+    if (parchment) {
+      console.log("Ingredients Updated");
+      
+      setIngredients((currentIngredients: Ingredient[]) => [
+        ...currentIngredients,
+        ...purifyIngredients,
+      ]);
+    }
+    
+  }, [parchment, purifyIngredients]);
 
   useEffect(() => {
     listenToServerEventsScanAcolyte(setIsInsideLab);

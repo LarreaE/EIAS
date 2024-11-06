@@ -27,7 +27,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [ingredients, setIngredients] = useState<Ingredients[]>([]); // Estado global para ingredientes
   const [potionVisible, setPotionVisible] = useState(false);
   const [isInsideLab, setIsInsideLab] = useState(false);
-  const [parchment, setParchment] = useState(false);
+  const [parchment, setParchment] = useState(true);
   const [purifyIngredients, setPurifyIngredients] = useState<Ingredients[]>([]); // Estado global para ingredientes
 
 
