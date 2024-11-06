@@ -49,6 +49,7 @@ const GOOD_EFFECTS = [
   'restore_hit_points',
   'restore_intelligence',
   'restore_charisma',
+  'cleanse_parchment',
   'boost_constitution',
   'boost_strength',
   'boost_dexterity',
@@ -66,6 +67,7 @@ const BAD_EFFECTS = [
   'damage_hit_points',
   'damage_insanity',
   'damage_intelligence',
+  'cleanse_parchment',
   'setback_constitution',
   'setback_strength',
   'setback_dexterity',
@@ -84,6 +86,7 @@ const EFFECT_LABELS: { [key: string]: string } = {
   restore_hit_points: 'Restore Hit Points',
   restore_intelligence: 'Restore Intelligence',
   restore_charisma: 'Restore Charisma',
+  cleanse_parchment: 'Cleanse Parchment',
   damage_dexterity: 'Damage Dexterity',
   damage_constitution: 'Damage Constitution',
   damage_charisma: 'Damage Charisma',
@@ -116,6 +119,7 @@ const EFFECT_ICONS: { [key: string]: string } = {
   restore_hit_points: 'ambulance',
   restore_intelligence: 'brain',
   restore_charisma: 'message-star',
+  cleanse_parchment: 'star',
   damage_dexterity: 'hand-paper',
   damage_constitution: 'flask',
   damage_charisma: 'user-secret',
@@ -169,7 +173,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   useEffect(() => {
     const fetchIngredients = async () => {
       try {
-        setIngredientsRetrieved(false);
         console.log('Fetching ingredients...');
         const response = await fetch(`${Config.PM2}/ingredients`);
         const contentType = response.headers.get('content-type');
@@ -191,13 +194,14 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
         setIngredientsRetrieved(true);
       }
     };
-    fetchIngredients();
+    if (!ingredientsRetrieved) {
+      fetchIngredients();  
+    }
   }, [setIngredients]);
 
   useEffect(() => {
     const fetchCurses = async () => {
       try {
-        setCursesRetrieved(false);
         console.log('Fetching curses...');
         const response = await fetch(`${Config.PM2}/potions`);
         const contentType = response.headers.get('content-type');
@@ -218,27 +222,19 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
         setCursesRetrieved(true);
       }
     };
-    fetchCurses();
+    if (!cursesRetrieved) {
+      fetchCurses();
+    }
   }, [setCurses]);
 
-  // useEffect(() => {
-  //   if (ingredientsRetrieved && !potionCreated && allIngredients.length > 0 && curses.length > 0) {
-  //     const processedIngredients = allIngredients.map(ingredient => Ingredient.from(ingredient));
-  //     const processedCurses = curses.map(curse => Curse.from(curse));
-  //     setIngredients(processedIngredients);
-  //     setCurses(processedCurses);
-  //     console.log('Ingredientes procesados:', processedIngredients);
-  //     console.log('Maldiciones procesadas:', processedCurses);
-  //   }
-  // }, [ingredientsRetrieved, potionCreated, allIngredients, curses, setIngredients, setCurses]);
 
   //updates ingredients when parchment equals true
   useEffect(() => {
     if (parchment) {
       console.log("Ingredients Updated");
       
-      setIngredients((currentIngredients: Ingredient[]) => [
-        ...currentIngredients,
+      setAllIngredients((allIngredients: Ingredients[]) => [
+        ...allIngredients,
         ...purifyIngredients,
       ]);
     }
@@ -542,15 +538,10 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
                     style={styles.applyFiltersButton}
                     onPress={applyFilters}
                   >
-                    <ImageBackground
-                      source={require('../assets/boton.png')}
-                      resizeMode="stretch"
-                      style={{ width: '100%', height: '100%' }}
-                    >
+                    
                       <MedievalText fontSize={16} color="#ffffff" style={styles.applyFiltersText}>
                         Apply Filters
                       </MedievalText>
-                    </ImageBackground>
                   </TouchableOpacity>
                 </View>
               </ImageBackground>
