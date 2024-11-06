@@ -169,19 +169,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
     setModalVisible(false);
   }, [isInsideLab]);
 
-  //updates ingredients when parchment equals true
-  useEffect(() => {
-    if (parchment) {
-      console.log("Ingredients Updated");
-      
-      setAllIngredients((allIngredients: Ingredients[]) => [
-        ...allIngredients,
-        ...purifyIngredients,
-      ]);
-    }
-    
-  }, [parchment, purifyIngredients]);
-
   useEffect(() => {
     listenToServerEventsScanAcolyte(setIsInsideLab);
 

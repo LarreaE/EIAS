@@ -17,7 +17,7 @@ const Tower: React.FC = () => {
 
   const context = useContext(UserContext) as UserContextType;
   
-  const { setUserData, userData, parchment, setParchment, purifyIngredients, setPurifyIngredients  } = context;
+  const { setUserData, userData, parchment, setParchment, purifyIngredients, setPurifyIngredients, setAllIngredients, allIngredients  } = context;
   const navigation = useNavigation<MapScreenNavigationProp>();
 
   const [msg, setMsg] = useState("la,,br e h  - h  ,  a  ,i,,r,,ah c a z/,  s, ,  t, , n e i,d,  ,er,g,  , n ,i /,  ,  v  ed  ,,. y  l,f.,,r  ,,ev,,  r  ,e  s-a,,k  ,it  oa,k//,  :sp,t, , th");
@@ -39,16 +39,18 @@ const Tower: React.FC = () => {
   const getNewIngredients = async (url: string) => {
     try {
       const response = await axios.get(url);
-      console.log(response.data.data["Zachariah's herbal"].ingredients);
       const ingredients = response.data.data["Zachariah's herbal"].ingredients
       let ingredientsArray = [];
       for (let index = 0; index < ingredients.length; index++) {
         let ingredient = new Ingredient(ingredients[index]._id,ingredients[index].name,ingredients[index].effects,ingredients[index].value,ingredients[index].type,ingredients[index].image,ingredients[index].description); 
         ingredientsArray.push(ingredient);
       }
-      console.log(ingredientsArray);
       setPurifyIngredients(ingredientsArray);
-      
+      setAllIngredients((allIngredients) => [
+        ...allIngredients,
+        ...purifyIngredients,
+      ]);
+      console.log("All ingredients Updated: ", allIngredients);      
     } catch (error) {
       console.error('Failed to fetch ingredients:', error);
     }
@@ -210,3 +212,7 @@ const styles = StyleSheet.create({
 });
 
 export default Tower;
+function setAllIngredients(arg0: (allIngredients: Ingredients[]) => any[]) {
+  throw new Error('Function not implemented.');
+}
+
