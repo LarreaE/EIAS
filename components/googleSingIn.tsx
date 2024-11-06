@@ -95,8 +95,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
       setSpinnerMessage('Connection established...');
     });
     } catch (error) {
-      console.error(error.response.data);
-      console.log('error');
+      console.log('error', error);
       setLoading(false); // Detener el loading
     } finally {
       console.log('UserLoged');
