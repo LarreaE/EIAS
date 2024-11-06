@@ -33,11 +33,15 @@ const Tab = createMaterialTopTabNavigator();
 function App() {
   const [isLoged, setIsLoged] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  saveBoolean('parchment',true);
+  
   useEffect(() => {
+    const setParchment = async () => {
+      await saveBoolean('parchment',true);
+    };
+    
+    setParchment();
     checkAndRequestNotificationPermission();
-}, []);
-
+  }, []);
   useEffect(() => {
     onMessageReceived();
   }, []);
