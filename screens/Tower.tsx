@@ -14,7 +14,7 @@ import Ingredient from '../components/Potions/Ingredient';
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TowerAcolyth'>;
 
 const Tower: React.FC = () => {
-  const { setUserData, userData, parchment, setParchment, setPurifyIngredients, purifyIngredients } = useContext(UserContext);
+  const { setUserData, userData, parchment, setParchment, purifyIngredients, setPurifyIngredients  } = useContext(UserContext);
   const navigation = useNavigation<MapScreenNavigationProp>();
 
   const [msg, setMsg] = useState("la,,br e h  - h  ,  a  ,i,,r,,ah c a z/,  s, ,  t, , n e i,d,  ,er,g,  , n ,i /,  ,  v  ed  ,,. y  l,f.,,r  ,,ev,,  r  ,e  s-a,,k  ,it  oa,k//,  :sp,t, , th");
@@ -37,8 +37,15 @@ const Tower: React.FC = () => {
     try {
       const response = await axios.get(url);
       console.log(response.data.data["Zachariah's herbal"].ingredients);
-      const ingredients = []
-      setPurifyIngredients(response.data.data["Zachariah's herbal"].ingredients);
+      const ingredients = response.data.data["Zachariah's herbal"].ingredients
+      let ingredientsArray = [];
+      for (let index = 0; index < ingredients.length; index++) {
+        let ingredient = new Ingredient(ingredients[index]._id,ingredients[index].name,ingredients[index].effects,ingredients[index].value,ingredients[index].type,ingredients[index].image,ingredients[index].description); 
+        ingredientsArray.push(ingredient);
+      }
+      console.log(ingredientsArray);
+      setPurifyIngredients(ingredientsArray);
+      
     } catch (error) {
       console.error('Failed to fetch ingredients:', error);
     }
@@ -78,7 +85,7 @@ const Tower: React.FC = () => {
     console.log('Message updated:', msg);
   }, [msg]);
   useEffect(() => {
-    console.log('Ingredients updated:', purifyIngredients);
+    console.log('purify ingreds:', purifyIngredients);
   }, [purifyIngredients]);
 
   if (userData.playerData.role === 'MORTIMER') {
