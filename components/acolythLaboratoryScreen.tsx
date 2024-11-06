@@ -140,7 +140,7 @@ const EFFECT_ICONS: { [key: string]: string } = {
 
 const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const { ingredients, setIngredients , potionVisible, setPotionVisible, setIsInsideLab, isInsideLab} = useContext(UserContext);
+  const { userData, ingredients, setIngredients , potionVisible, setPotionVisible, setIsInsideLab, isInsideLab} = useContext(UserContext);
   const [allIngredients, setAllIngredients] = useState<Ingredients[]>([]);
   const [curses, setCurses] = useState<Curse[]>([]);
   const [ingredientsRetrieved, setIngredientsRetrieved] = useState(false);
@@ -163,7 +163,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   // Determinar los efectos disponibles según el rol
   const availableEffects = role === 'ACOLYTE' ? GOOD_EFFECTS : BAD_EFFECTS;
 
-  sendLocation("Laboratory")
+  sendLocation("Laboratory", userData.playerData.email)
 
   useEffect(() => {
     setModalVisible(false);

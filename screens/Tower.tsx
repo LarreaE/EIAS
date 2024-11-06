@@ -23,7 +23,7 @@ const Tower: React.FC = () => {
   const [isDoorOpen, setIsDoorOpen] = useState(false); // Estado para la puerta
 
   const player = userData.playerData;
-  sendLocation("Tower")
+  sendLocation("Tower", userData.playerData.email)
 
   const decrypt = () => {
     if (!parchment) {
