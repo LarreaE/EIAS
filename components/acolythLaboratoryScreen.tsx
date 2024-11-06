@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { clearServerEvents, listenToServerEventsScanAcolyte } from '../sockets/listenEvents.tsx';
 import IngredientSelector from './ingredientSelector.tsx';
-import { UserContext } from '../context/UserContext'; // Importa el contexto
+import { UserContext, UserContextType } from '../context/UserContext'; // Importa el contexto
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/types';
@@ -142,10 +142,9 @@ const EFFECT_ICONS: { [key: string]: string } = {
 };
 
 const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
+  const context = useContext(UserContext) as UserContextType;
+  const { ingredients, setIngredients , setAllIngredients, potionVisible, setPotionVisible, setIsInsideLab, isInsideLab, parchment, purifyIngredients, curses, allIngredients} = context;
   const [modalVisible, setModalVisible] = useState(false);
-  const { ingredients, setIngredients , potionVisible, setPotionVisible, setIsInsideLab, isInsideLab, parchment, purifyIngredients} = useContext(UserContext);
-  const [allIngredients, setAllIngredients] = useState<Ingredients[]>([]);
-  const [curses, setCurses] = useState<Curse[]>([]);
   const [ingredientsRetrieved, setIngredientsRetrieved] = useState(false);
   const [cursesRetrieved, setCursesRetrieved] = useState(false);
   const [potionCreated, setPotionCreated] = useState(false);
@@ -169,64 +168,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   useEffect(() => {
     setModalVisible(false);
   }, [isInsideLab]);
-
-  useEffect(() => {
-    const fetchIngredients = async () => {
-      try {
-        console.log('Fetching ingredients...');
-        const response = await fetch(`${Config.PM2}/ingredients`);
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          const data = await response.json();
-          if (data.success === true && Array.isArray(data.ingredientsData) && data.ingredientsData.length > 0) {
-            setAllIngredients(data.ingredientsData); // Almacenar en variable local
-            setIngredients(data.ingredientsData); // Almacenar en contexto global
-          } else {
-            console.error('No ingredients found or status is not OK.');
-          }
-        } else {
-          const text = await response.text();
-          console.error('Response is not JSON:', text);
-        }
-      } catch (error) {
-        console.error('Error getting ingredients:', error);
-      } finally {
-        setIngredientsRetrieved(true);
-      }
-    };
-    if (!ingredientsRetrieved) {
-      fetchIngredients();  
-    }
-  }, [setIngredients]);
-
-  useEffect(() => {
-    const fetchCurses = async () => {
-      try {
-        console.log('Fetching curses...');
-        const response = await fetch(`${Config.PM2}/potions`);
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          const data = await response.json();
-          if (data.success === true && Array.isArray(data.potionsData) && data.potionsData.length > 0) {
-            setCurses(data.potionsData); // Almacenar en contexto global
-          } else {
-            console.error('No curses found or status is not OK.');
-          }
-        } else {
-          const text = await response.text();
-          console.error('Response is not JSON:', text);
-        }
-      } catch (error) {
-        console.error('Error getting curses:', error);
-      } finally {
-        setCursesRetrieved(true);
-      }
-    };
-    if (!cursesRetrieved) {
-      fetchCurses();
-    }
-  }, [setCurses]);
-
 
   //updates ingredients when parchment equals true
   useEffect(() => {

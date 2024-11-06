@@ -5,7 +5,7 @@ import MapButton from '../components/MapButton';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/types';
-import { UserContext } from '../context/UserContext';
+import { UserContext, UserContextType } from '../context/UserContext';
 import MortimerTower from '../components/mortimerTower';
 import Config from 'react-native-config';
 import axios from 'axios';
@@ -14,7 +14,10 @@ import Ingredient from '../components/Potions/Ingredient';
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TowerAcolyth'>;
 
 const Tower: React.FC = () => {
-  const { setUserData, userData, parchment, setParchment, purifyIngredients, setPurifyIngredients  } = useContext(UserContext);
+
+  const context = useContext(UserContext) as UserContextType;
+  
+  const { setUserData, userData, parchment, setParchment, purifyIngredients, setPurifyIngredients  } = context;
   const navigation = useNavigation<MapScreenNavigationProp>();
 
   const [msg, setMsg] = useState("la,,br e h  - h  ,  a  ,i,,r,,ah c a z/,  s, ,  t, , n e i,d,  ,er,g,  , n ,i /,  ,  v  ed  ,,. y  l,f.,,r  ,,ev,,  r  ,e  s-a,,k  ,it  oa,k//,  :sp,t, , th");

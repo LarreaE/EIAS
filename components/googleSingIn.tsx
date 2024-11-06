@@ -18,7 +18,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
   const [loading, setLoading] = useState(false); // Estado para el loading
   const [socketId, setSocketId] = useState<string | null>(null); // Estado para almacenar el socket ID
   const [spinnerMessage, setSpinnerMessage] = useState('Connecting...');
-  const { setUserData, setIsInsideLab } = useContext(UserContext);
+  const { setUserData, setIsInsideLab, setAllIngredients, setIngredients, setCurses } = useContext(UserContext);
   useEffect(() => {
     const configureGoogleSignIn = async () => {
       await GoogleSignin.configure({
@@ -89,10 +89,22 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     .then((response) => {
       console.log('JWT TOKEN FROM EXPRESS');
       //SAVE JWT ENCRIPTED
-      setUserData(response.data);
-      setIsLoged(true);
-      setIsInsideLab(response.data.playerData.is_active);
       setSpinnerMessage('Connection established...');
+      setUserData(response.data);
+      setIsInsideLab(response.data.playerData.is_active);
+    })
+    .then(() => {
+      fetchIngredients();
+      setSpinnerMessage('Fetching Ingredients...');
+      setIsLoged(true);
+    }) 
+    .then(() => {
+      fetchCurses();
+      setSpinnerMessage('Fetching Curses...');
+      setIsLoged(true);
+    })
+    .then(() => {
+      setIsLoged(true);
     });
     } catch (error:any) {
       console.log(error.response.data);
@@ -102,6 +114,51 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     }
   };
 
+  const fetchIngredients = async () => {
+    try {
+      console.log('Fetching ingredients...');
+      const response = await fetch(`${Config.PM2}/ingredients`);
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const data = await response.json();
+        if (data.success === true && Array.isArray(data.ingredientsData) && data.ingredientsData.length > 0) {
+          setAllIngredients(data.ingredientsData); // Almacenar en variable local
+          setIngredients(data.ingredientsData); // Almacenar en contexto global
+        } else {
+          console.error('No ingredients found or status is not OK.');
+        }
+      } else {
+        const text = await response.text();
+        console.error('Response is not JSON:', text);
+      }
+    } catch (error) {
+      console.error('Error getting ingredients:', error);
+    } finally {
+    }
+  };
+
+  const fetchCurses = async () => {
+    try {
+      console.log('Fetching curses...');
+      const response = await fetch(`${Config.PM2}/potions`);
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const data = await response.json();
+        if (data.success === true && Array.isArray(data.potionsData) && data.potionsData.length > 0) {
+          setCurses(data.potionsData); // Almacenar en contexto global
+        } else {
+          console.error('No curses found or status is not OK.');
+        }
+      } else {
+        const text = await response.text();
+        console.error('Response is not JSON:', text);
+      }
+    } catch (error) {
+      console.error('Error getting curses:', error);
+    } finally {
+    }
+  };
+  
   useEffect(() => {
     const verificarTokenCaducado = async () => {
       try {
