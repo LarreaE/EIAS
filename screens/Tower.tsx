@@ -45,12 +45,7 @@ const Tower: React.FC = () => {
         let ingredient = new Ingredient(ingredients[index]._id,ingredients[index].name,ingredients[index].effects,ingredients[index].value,ingredients[index].type,ingredients[index].image,ingredients[index].description); 
         ingredientsArray.push(ingredient);
       }
-      setPurifyIngredients(ingredientsArray);
-      setAllIngredients((allIngredients) => [
-        ...allIngredients,
-        ...purifyIngredients,
-      ]);
-      console.log("All ingredients Updated: ", allIngredients);      
+      setPurifyIngredients(ingredientsArray);   
     } catch (error) {
       console.error('Failed to fetch ingredients:', error);
     }
@@ -90,7 +85,12 @@ const Tower: React.FC = () => {
     console.log('Message updated:', msg);
   }, [msg]);
   useEffect(() => {
-    console.log('purify ingreds:', purifyIngredients);
+    console.log('ALL INGREDIENTS UPDATED:', allIngredients);
+  }, [allIngredients]);
+  useEffect(() => {
+    console.log("MERGING INGREDIENTS WITH: ", purifyIngredients[0]);
+    const mergedIngredients = [...allIngredients, ...purifyIngredients];
+    setAllIngredients(mergedIngredients);
   }, [purifyIngredients]);
 
   if (userData.playerData.role === 'MORTIMER') {

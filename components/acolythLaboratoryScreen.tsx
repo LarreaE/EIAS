@@ -145,8 +145,8 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const context = useContext(UserContext) as UserContextType;
   const { ingredients, setIngredients , setAllIngredients, potionVisible, setPotionVisible, setIsInsideLab, isInsideLab, parchment, purifyIngredients, curses, allIngredients} = context;
   const [modalVisible, setModalVisible] = useState(false);
-  const [ingredientsRetrieved, setIngredientsRetrieved] = useState(false);
-  const [cursesRetrieved, setCursesRetrieved] = useState(false);
+  const [ingredientsRetrieved, setIngredientsRetrieved] = useState(true);
+  const [cursesRetrieved, setCursesRetrieved] = useState(true);
   const [potionCreated, setPotionCreated] = useState(false);
   const [potion, setPotion] = useState<Potion | Essence | Stench | Elixir | Venom | Antidote | Poison | undefined>();
   const [spinnerMessage, setSpinnerMessage] = useState('Preparing Ingredients...');

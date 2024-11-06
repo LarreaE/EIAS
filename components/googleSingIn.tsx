@@ -6,7 +6,7 @@ import Config from 'react-native-config';
 import auth from '@react-native-firebase/auth';
 import axios from 'axios';
 import socket from '../sockets/socketConnection';
-import { UserContext } from '../context/UserContext'; // Importa el contexto
+import { UserContext, UserContextType } from '../context/UserContext'; // Importa el contexto
 import messaging from'@react-native-firebase/messaging';
 
 
@@ -15,10 +15,12 @@ interface Props {
 }
 
 const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
+  const context = useContext(UserContext) as UserContextType;
+  const { setUserData, setIsInsideLab, setAllIngredients, setIngredients, setCurses } = context;
+  
   const [loading, setLoading] = useState(false); // Estado para el loading
   const [socketId, setSocketId] = useState<string | null>(null); // Estado para almacenar el socket ID
   const [spinnerMessage, setSpinnerMessage] = useState('Connecting...');
-  const { setUserData, setIsInsideLab, setAllIngredients, setIngredients, setCurses } = useContext(UserContext);
   useEffect(() => {
     const configureGoogleSignIn = async () => {
       await GoogleSignin.configure({
@@ -96,18 +98,16 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     .then(() => {
       fetchIngredients();
       setSpinnerMessage('Fetching Ingredients...');
-      setIsLoged(true);
     }) 
     .then(() => {
       fetchCurses();
       setSpinnerMessage('Fetching Curses...');
-      setIsLoged(true);
     })
     .then(() => {
       setIsLoged(true);
     });
     } catch (error:any) {
-      console.log(error.response.data);
+      console.log("Error: ", error.response.data);
       setLoading(false); // Detener el loading
     } finally {
       console.log('UserLoged');
