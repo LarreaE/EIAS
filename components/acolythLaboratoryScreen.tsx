@@ -34,6 +34,7 @@ import Spinner from './Spinner.tsx';
 import CookBookModal from './CookBookModal.tsx';
 import MedievalText from './MedievalText'; // Importación del componente MedievalText
 import Config from 'react-native-config';
+import { sendLocation } from '../sockets/emitEvents.tsx';
 
 type Props = { UserData: any };
 
@@ -161,6 +162,8 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
   // Determinar los efectos disponibles según el rol
   const availableEffects = role === 'ACOLYTE' ? GOOD_EFFECTS : BAD_EFFECTS;
+
+  sendLocation("Laboratory")
 
   useEffect(() => {
     setModalVisible(false);

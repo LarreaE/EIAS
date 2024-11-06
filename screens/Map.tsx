@@ -8,6 +8,7 @@ import { ImageBackground } from 'react-native';
 import MapButton from '../components/MapButton';
 import { UserContext } from '../context/UserContext';
 import AcolythLaboratoryScreen from '../components/acolythLaboratoryScreen';
+import { sendLocation } from '../sockets/emitEvents';
 
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
 
@@ -15,6 +16,8 @@ const MapScreen: React.FC = () => {
   const navigation = useNavigation<MapScreenNavigationProp>();
 
   const { isInsideLab, userData } = useContext(UserContext);
+
+  sendLocation("Map")
 
   const goToHome = () => {
     navigation.navigate('HomeAcolyth');

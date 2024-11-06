@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, ToastAndroid, ImageBackground, ScrollView } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, ToastAndroid, ImageBackground, ScrollView, Vibration } from 'react-native';
 import MedievalText from '../components/MedievalText';
 import MapButton from '../components/MapButton';
 import { useNavigation } from '@react-navigation/native';
@@ -10,6 +10,8 @@ import MortimerTower from '../components/mortimerTower';
 import Config from 'react-native-config';
 import axios from 'axios';
 import Ingredient from '../components/Potions/Ingredient';
+import { listenToServerEventsDoorOpened, clearServerEvents } from '../sockets/listenEvents';// Importamos los eventos del socket
+import { sendLocation } from '../sockets/emitEvents';
 
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TowerAcolyth'>;
 
@@ -18,8 +20,10 @@ const Tower: React.FC = () => {
   const navigation = useNavigation<MapScreenNavigationProp>();
 
   const [msg, setMsg] = useState("la,,br e h  - h  ,  a  ,i,,r,,ah c a z/,  s, ,  t, , n e i,d,  ,er,g,  , n ,i /,  ,  v  ed  ,,. y  l,f.,,r  ,,ev,,  r  ,e  s-a,,k  ,it  oa,k//,  :sp,t, , th");
+  const [isDoorOpen, setIsDoorOpen] = useState(false); // Estado para la puerta
 
   const player = userData.playerData;
+  sendLocation("Tower")
 
   const decrypt = () => {
     if (!parchment) {
@@ -29,15 +33,14 @@ const Tower: React.FC = () => {
       setParchment(true);
       getNewIngredients(decryptedMsg);
     } else {
-      ToastAndroid.show('The knowledge has already been acquired' , 3)
+      ToastAndroid.show('The knowledge has already been acquired', 3);
     }
-  }
+  };
 
   const getNewIngredients = async (url: string) => {
     try {
       const response = await axios.get(url);
       console.log(response.data.data["Zachariah's herbal"].ingredients);
-      const ingredients = []
       setPurifyIngredients(response.data.data["Zachariah's herbal"].ingredients);
     } catch (error) {
       console.error('Failed to fetch ingredients:', error);
@@ -46,11 +49,6 @@ const Tower: React.FC = () => {
 
   const goToMap = () => {
     navigation.navigate('Map');
-  };
-
-  const goToLab = () => {
-    navigation.navigate('Map');
-    userData.playerData.is_inside_tower = false;
   };
 
   const sendNotification = async () => {
@@ -73,10 +71,20 @@ const Tower: React.FC = () => {
     }
   };
 
-  // change msg
+  useEffect(() => {
+    // Escuchamos el evento del socket para cuando la puerta se abre
+    listenToServerEventsDoorOpened(setIsDoorOpen);
+
+    // Limpiamos eventos de socket al desmontar el componente
+    return () => {
+      clearServerEvents();
+    };
+  }, []);
+
   useEffect(() => {
     console.log('Message updated:', msg);
   }, [msg]);
+
   useEffect(() => {
     console.log('Ingredients updated:', purifyIngredients);
   }, [purifyIngredients]);
@@ -86,40 +94,36 @@ const Tower: React.FC = () => {
   } else {
     return (
       <>
-     
-
-                    
         {userData.playerData.is_inside_tower ? (
-          // inside the tower
+          // Inside the tower
           <ImageBackground
-          source={require('../assets/scroll.png')}
-          style={styles.background}
-          resizeMode="cover"
-        >
-          <View style={styles.container}>
-            <MedievalText style={styles.text}>{msg}</MedievalText>
-            <MedievalText style={styles.text}>You have new ingredients</MedievalText>
-            {purifyIngredients.length > 0 && (
-              <View style={styles.scrollContainer}>
-              <ScrollView contentContainerStyle={styles.scrollContent}>
-                <MedievalText>Purified Ingredients:</MedievalText>
-                {purifyIngredients.map((ingredient, index) => (
-                  <MedievalText key={index}>{ingredient.name}</MedievalText>
-                ))}
-              </ScrollView>
+            source={require('../assets/scroll.png')}
+            style={styles.background}
+            resizeMode="cover"
+          >
+            <View style={styles.container}>
+              <MedievalText style={styles.text}>{msg}</MedievalText>
+              <MedievalText style={styles.text}>You have new ingredients</MedievalText>
+              {purifyIngredients.length > 0 && (
+                <View style={styles.scrollContainer}>
+                  <ScrollView contentContainerStyle={styles.scrollContent}>
+                    <MedievalText>Purified Ingredients:</MedievalText>
+                    {purifyIngredients.map((ingredient, index) => (
+                      <MedievalText key={index}>{ingredient.name}</MedievalText>
+                    ))}
+                  </ScrollView>
+                </View>
+              )}
+              <TouchableOpacity onPress={decrypt}>
+                <Text>Decipher Scroll</Text>
+              </TouchableOpacity>
+              {isDoorOpen && (
+                <Text style={styles.text}>The door is now open</Text>
+              )}
             </View>
-            )}
-            <TouchableOpacity onPress={decrypt}>
-              <Text>Decypher Scroll</Text>
-            </TouchableOpacity>
-            <MapButton
-              onPress={goToLab}
-              iconImage={require('../assets/map_icon.png')}
-            />
-          </View>
-        </ImageBackground>
+          </ImageBackground>
         ) : (
-          // outside the tower
+          // Outside the tower
           <View style={styles.container}>
             <MedievalText style={styles.text}>TOWER</MedievalText>
             <MedievalText style={styles.text}>You may now activate the door</MedievalText>
