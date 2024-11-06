@@ -212,7 +212,5 @@ const styles = StyleSheet.create({
 });
 
 export default Tower;
-function setAllIngredients(arg0: (allIngredients: Ingredients[]) => any[]) {
-  throw new Error('Function not implemented.');
-}
+
 
