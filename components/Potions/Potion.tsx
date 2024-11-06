@@ -8,6 +8,7 @@ import Stench from './Stench';
 import Venom from './Venom';
 import { Curses } from '../../interfaces/Curse';
 import { Modifier } from '../../interfaces/Modifier';
+import Cleanse from './Cleanse';
 export default class Potion implements Potions {
 
     _id!: string;
@@ -189,7 +190,20 @@ export default class Potion implements Potions {
                             value: value,
                             modifiers: modifiers,
                         });
+                        //purification potion
+                    case 'cleanse':
+                        potion_name = Cleanse.name(lowerPotency);
+                        console.log(potion_name);
+                        type = 'Cleanse';
 
+                        return new Cleanse({
+                            _id: id,
+                            name: potion_name,
+                            description: description,
+                            image: image,
+                            type: type,
+                            value: value,
+                        });
                     default:
                         potion_name = 'Failed Potion';
                         console.log(potion_name);
