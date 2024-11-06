@@ -26,12 +26,14 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Tower from './screens/Tower.tsx';
 import messaging from '@react-native-firebase/messaging';
 import { checkAndRequestNotificationPermission } from './components/notificationPermissions.tsx';
+import { saveBoolean, getBoolean } from './helper/AsyncStorage.tsx';
+
 const Tab = createMaterialTopTabNavigator();
 
 function App() {
   const [isLoged, setIsLoged] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-
+  saveBoolean('parchment',true);
   useEffect(() => {
     checkAndRequestNotificationPermission();
 }, []);
