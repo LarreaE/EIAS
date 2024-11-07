@@ -152,7 +152,11 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
                 </MedievalText>
               </View>
             )}
-            <Image source={LocalIngredientImage} style={styles.ingredientImage} />
+            <Image 
+              source={{
+                      uri: `https://kaotika.vercel.app/${item.image}`,
+                  }}  
+              style={styles.ingredientImage} />
             <MedievalText fontSize={16} color="#ffffff" style={styles.ingredientName} numberOfLines={1}>
               {item.name}
             </MedievalText>

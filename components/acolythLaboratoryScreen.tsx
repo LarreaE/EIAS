@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { clearServerEvents, listenToServerEventsScanAcolyte } from '../sockets/listenEvents.tsx';
 import IngredientSelector from './ingredientSelector.tsx';
-import { UserContext } from '../context/UserContext'; // Importa el contexto
+import { UserContext, UserContextType } from '../context/UserContext'; // Importa el contexto
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/types';
@@ -49,6 +49,7 @@ const GOOD_EFFECTS = [
   'restore_hit_points',
   'restore_intelligence',
   'restore_charisma',
+  'cleanse_parchment',
   'boost_constitution',
   'boost_strength',
   'boost_dexterity',
@@ -66,6 +67,7 @@ const BAD_EFFECTS = [
   'damage_hit_points',
   'damage_insanity',
   'damage_intelligence',
+  'cleanse_parchment',
   'setback_constitution',
   'setback_strength',
   'setback_dexterity',
@@ -84,6 +86,7 @@ const EFFECT_LABELS: { [key: string]: string } = {
   restore_hit_points: 'Restore Hit Points',
   restore_intelligence: 'Restore Intelligence',
   restore_charisma: 'Restore Charisma',
+  cleanse_parchment: 'Cleanse Parchment',
   damage_dexterity: 'Damage Dexterity',
   damage_constitution: 'Damage Constitution',
   damage_charisma: 'Damage Charisma',
@@ -116,6 +119,7 @@ const EFFECT_ICONS: { [key: string]: string } = {
   restore_hit_points: 'ambulance',
   restore_intelligence: 'brain',
   restore_charisma: 'message-star',
+  cleanse_parchment: 'star',
   damage_dexterity: 'hand-paper',
   damage_constitution: 'flask',
   damage_charisma: 'user-secret',
@@ -138,12 +142,11 @@ const EFFECT_ICONS: { [key: string]: string } = {
 };
 
 const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
+  const context = useContext(UserContext) as UserContextType;
+  const { ingredients, setIngredients , setAllIngredients, potionVisible, setPotionVisible, setIsInsideLab, isInsideLab, parchment, purifyIngredients, curses, allIngredients} = context;
   const [modalVisible, setModalVisible] = useState(false);
-  const { ingredients, setIngredients , potionVisible, setPotionVisible, setIsInsideLab, isInsideLab} = useContext(UserContext);
-  const [allIngredients, setAllIngredients] = useState<Ingredients[]>([]);
-  const [curses, setCurses] = useState<Curse[]>([]);
-  const [ingredientsRetrieved, setIngredientsRetrieved] = useState(false);
-  const [cursesRetrieved, setCursesRetrieved] = useState(false);
+  const [ingredientsRetrieved, setIngredientsRetrieved] = useState(true);
+  const [cursesRetrieved, setCursesRetrieved] = useState(true);
   const [potionCreated, setPotionCreated] = useState(false);
   const [potion, setPotion] = useState<Potion | Essence | Stench | Elixir | Venom | Antidote | Poison | undefined>();
   const [spinnerMessage, setSpinnerMessage] = useState('Preparing Ingredients...');
@@ -192,7 +195,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
       }
     };
     fetchIngredients();
-  }, [setIngredients]);
+  }, [setAllIngredients, setIngredients]);
 
   useEffect(() => {
     const fetchCurses = async () => {
@@ -530,15 +533,10 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
                     style={styles.applyFiltersButton}
                     onPress={applyFilters}
                   >
-                    <ImageBackground
-                      source={require('../assets/boton.png')}
-                      resizeMode="stretch"
-                      style={{ width: '100%', height: '100%' }}
-                    >
+                    
                       <MedievalText fontSize={16} color="#ffffff" style={styles.applyFiltersText}>
                         Apply Filters
                       </MedievalText>
-                    </ImageBackground>
                   </TouchableOpacity>
                 </View>
               </ImageBackground>
