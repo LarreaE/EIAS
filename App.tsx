@@ -44,9 +44,13 @@ function App() {
   const onMessageReceived = () => {
     messaging().onMessage(async remoteMessage => {
       console.log('Notificación recibida en primer plano:', remoteMessage);
-      ToastAndroid.show(`${remoteMessage?.notification?.title}`,5)
+      const title = remoteMessage.notification?.title || '';
+      const message = remoteMessage.notification?.body || '';
+      // Concatenamos el título y el mensaje en un solo string
+      const fullMessage = `${title}: ${message}`;
+      ToastAndroid.show(fullMessage, ToastAndroid.LONG);
     });
-  };
+  }
 
 
   return (
