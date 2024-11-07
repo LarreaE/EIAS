@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, ToastAndroid, ImageBackground, ScrollView, ImageBackground } from 'react-native';
+import React, { useContext, useState, useEffect } from 'react';
+import { View, StyleSheet, TouchableOpacity, Text, ToastAndroid, ScrollView, ImageBackground } from 'react-native';
 import MedievalText from '../components/MedievalText';
 import MapButton from '../components/MapButton';
 import { useNavigation } from '@react-navigation/native';
