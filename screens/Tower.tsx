@@ -92,7 +92,7 @@ const Tower: React.FC = () => {
       setParchment(await getBoolean('parchment'));      
     };
     getParchment();
-  }, []);
+  }, [setParchment]);
   
   const decrypt = () => {
   
