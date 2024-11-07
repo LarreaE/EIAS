@@ -310,6 +310,10 @@ function  categorizeEffect(str: string) {
         } else {
             throw new Error('Invalid string format: ' + str);
         }
+    } else if (str.includes('unknown')) { //rare ingredients
+        potency = '';
+        effect = 'unknown';
+        attribute = 'unknown';
     } else {
         if (parts.length === 3) {
             // three parts
