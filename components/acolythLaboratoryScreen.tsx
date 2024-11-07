@@ -34,6 +34,8 @@ import Spinner from './Spinner.tsx';
 import CookBookModal from './CookBookModal.tsx';
 import MedievalText from './MedievalText'; // Importación del componente MedievalText
 import Config from 'react-native-config';
+import Cleanse from './Potions/Cleanse.tsx';
+import ScrollModal from './ScrollModal.tsx';
 
 type Props = { UserData: any };
 
@@ -152,9 +154,10 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const [ingredientsRetrieved, setIngredientsRetrieved] = useState(true);
   const [cursesRetrieved, setCursesRetrieved] = useState(true);
   const [potionCreated, setPotionCreated] = useState(false);
-  const [potion, setPotion] = useState<Potion | Essence | Stench | Elixir | Venom | Antidote | Poison | undefined>();
+  const [potion, setPotion] = useState<Potion | Essence | Stench | Elixir | Venom | Antidote | Poison | Cleanse | undefined>();
   const [spinnerMessage, setSpinnerMessage] = useState('Preparing Ingredients...');
   const [cookBookModalVisible, setCookBookModalVisible] = useState(false);
+  const [scrollModalVisible, setScrollModalVisible] = useState(false);
 
   const player = UserData.UserData.playerData;
   const vibrationDuration = 250;
@@ -172,6 +175,14 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   useEffect(() => {
     setModalVisible(false);
   }, [isInsideLab]);
+
+  useEffect(() => {
+    console.log("POTION CREATED");
+    
+    if (potion?.type === 'Cleanse') {
+      setScrollModalVisible(true);
+    }
+  }, [potion]);
 
   useEffect(() => {
     listenToServerEventsScanAcolyte(setIsInsideLab);
@@ -344,6 +355,8 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             />
           </TouchableOpacity>
           <CookBookModal key={1} visible={cookBookModalVisible} setVisible={setCookBookModalVisible} curses={curses}/>
+          <ScrollModal key={2} visible={scrollModalVisible} setVisible={setScrollModalVisible}/>
+
           {/* Modal para mostrar detalles del QR */}
           <Modal
             animationType="slide"
