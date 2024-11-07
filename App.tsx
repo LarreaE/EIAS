@@ -64,7 +64,7 @@ function App() {
 function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) {
   const context = useContext(UserContext) as UserContextType;
 
-  const { userData: UserData, setUserData } = context; // Usamos useContext para UserData;
+  const { userData: UserData, setUserData ,setParchment} = context; // Usamos useContext para UserData;
 
   useEffect(() => {
       // Set background message handler
@@ -75,8 +75,9 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
 
   useEffect(() => {
     const getParchment = async () => {
-      const parch = await getBoolean('parchment');
-      console.log(parch);
+      setParchment(await getBoolean('parchment'));
+      console.log("Parchment set");
+      
     };
       
     getParchment();

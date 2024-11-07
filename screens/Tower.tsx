@@ -69,17 +69,15 @@ const Tower: React.FC = () => {
     }
   };
 
-  //get parchment from asyncstorage
-  useEffect(() => {
-    const getParchment = async () => {
-      setParchment(await getBoolean('parchment'));      
-    };
-    getParchment();
-  }, []);
-  
+  const resetParchment = async () => {
+    await saveBoolean('parchment',true);
+    console.log("Parchment set to true");
+    setParchment(true);
+  };
+    
   const decrypt = () => {
-  
     if (!parchment) {
+      resetParchment();
       const decryptedMsg = msg.replace(/[, ]/g, '').split('').reverse().join('');
       setMsg(decryptedMsg);
       console.log("Scroll patched");
@@ -88,16 +86,7 @@ const Tower: React.FC = () => {
       ToastAndroid.show('The knowledge has already been acquired' , 3)
     }
   }
-  useEffect(() => {
-    const getParchment = async() => {
-      try {
-        setParchment(await getBoolean('parchment'));
-      } catch (error) {
-        console.log("error getting parchment asyncstorage", error);
-      }
-    }
-    getParchment()
-  }, [decrypt]);
+
   // change msg
   useEffect(() => {
     console.log('Message updated:', msg);

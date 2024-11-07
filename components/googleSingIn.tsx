@@ -8,6 +8,7 @@ import axios from 'axios';
 import socket from '../sockets/socketConnection';
 import { UserContext, UserContextType } from '../context/UserContext'; // Importa el contexto
 import messaging from'@react-native-firebase/messaging';
+import Ingredient from './Potions/Ingredient';
 
 
 interface Props {
@@ -16,7 +17,7 @@ interface Props {
 
 const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
   const context = useContext(UserContext) as UserContextType;
-  const { setUserData, setIsInsideLab, setAllIngredients, setIngredients, setCurses } = context;
+  const { setUserData, setIsInsideLab, setAllIngredients, setCurses, parchment, allIngredients } = context;
   
   const [loading, setLoading] = useState(false); // Estado para el loading
   const [socketId, setSocketId] = useState<string | null>(null); // Estado para almacenar el socket ID
@@ -54,7 +55,6 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
         const data = await response.json();
         if (data.success === true && Array.isArray(data.ingredientsData) && data.ingredientsData.length > 0) {
           setAllIngredients(data.ingredientsData); // Almacenar en variable local
-          setIngredients(data.ingredientsData); // Almacenar en contexto global
         } else {
           console.error('No ingredients found or status is not OK.');
         }
@@ -62,12 +62,33 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
         const text = await response.text();
         console.error('Response is not JSON:', text);
       }
+      if (parchment) {
+        setSpinnerMessage('Fetching Rare Ingredients...');
+        await fetchRareIngredients();
+      }
     } catch (error) {
       console.error('Error getting ingredients:', error);
     } finally {
     }
   };
-
+  const fetchRareIngredients = async () => {
+    try {
+      const response = await axios.get('https://kaotika-server.fly.dev/ingredients/zachariah-herbal');
+      const ingredients = response.data.data["Zachariah's herbal"].ingredients
+      let ingredientsArray = [];
+      for (let index = 0; index < ingredients.length; index++) {
+        let ingredient = new Ingredient(ingredients[index]._id,ingredients[index].name,ingredients[index].effects,ingredients[index].value,ingredients[index].type,ingredients[index].image,ingredients[index].description); 
+        ingredientsArray.push(ingredient);
+      }
+      console.log("ALL INGREDIE", allIngredients);
+      
+      const mergedIngredients = [...allIngredients, ...ingredientsArray];
+      setAllIngredients(mergedIngredients);
+      console.log("MERGED INGREDIENTS", mergedIngredients);
+    } catch (error) {
+      console.error('Failed to fetch ingredients:', error);
+    }
+  };
   const fetchCurses = async () => {
     
     try {
@@ -119,6 +140,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
           setSpinnerMessage('Fetching Curses...');
           await fetchCurses();
         
+          
           // Log the user in
           setIsLoged(true);
         
