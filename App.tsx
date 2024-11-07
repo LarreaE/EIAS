@@ -17,7 +17,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { listenToServerEvents, clearServerEvents } from './sockets/listenEvents';
 import socket from './sockets/socketConnection';
 import { sendUserEMail } from './sockets/emitEvents.tsx';
-import { UserProvider } from './context/UserContext'; // Importa el proveedor
+import { UserContextType, UserProvider } from './context/UserContext'; // Importa el proveedor
 import { UserContext } from './context/UserContext'; // Importa el contexto
 import AcolythScreen from './screens/Info.tsx';
 import { Player } from './interfaces/Player.tsx';
@@ -35,13 +35,9 @@ function App() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   
   useEffect(() => {
-    const setParchment = async () => {
-      await saveBoolean('parchment',true);
-    };
-    
-    setParchment();
     checkAndRequestNotificationPermission();
   }, []);
+
   useEffect(() => {
     onMessageReceived();
   }, []);
@@ -66,7 +62,9 @@ function App() {
 }
 
 function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) {
-  const { userData: UserData, setUserData } = useContext(UserContext); // Usamos useContext para UserData;
+  const context = useContext(UserContext) as UserContextType;
+
+  const { userData: UserData, setUserData } = context; // Usamos useContext para UserData;
 
   useEffect(() => {
       // Set background message handler
@@ -75,7 +73,14 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
     });
   });
 
-
+  useEffect(() => {
+    const getParchment = async () => {
+      const parch = await getBoolean('parchment');
+      console.log(parch);
+    };
+      
+    getParchment();
+  }, []);
   
   useEffect(() => {
     socket.on('request_email', () => {

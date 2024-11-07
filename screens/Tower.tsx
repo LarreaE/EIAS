@@ -69,8 +69,16 @@ const Tower: React.FC = () => {
     }
   };
 
+  //get parchment from asyncstorage
+  useEffect(() => {
+    const getParchment = async () => {
+      setParchment(await getBoolean('parchment'));      
+    };
+    getParchment();
+  }, []);
+  
   const decrypt = () => {
-    
+  
     if (!parchment) {
       const decryptedMsg = msg.replace(/[, ]/g, '').split('').reverse().join('');
       setMsg(decryptedMsg);
