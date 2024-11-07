@@ -1,4 +1,4 @@
-import { Alert, Vibration } from 'react-native';
+import { Alert, Vibration,ToastAndroid } from 'react-native';
 import socket from './socketConnection';
 import Config from 'react-native-config';
 import { useContext } from 'react';
@@ -13,6 +13,7 @@ export const listenToServerEvents = (): void => {
   socket.on('alert', (data: { message: string }) => {
     Alert.alert('Server Alert', data.message);
   });
+
 };
 
 // Función para escuchar eventos del servidor y actualizar el estado de los jugadores
@@ -30,8 +31,18 @@ export const listenToServerEventsMortimer = (updatePlayers: (players: any) => vo
 export const listenToServerEventsScanAcolyte = (setIsInside: (is_active: any) => void): void => {
   socket.on('change_isInside', (data: { data: any }) => {
     console.log('Valor de is_active:', data);
-    Vibration.vibrate(1000); 
+    Vibration.vibrate(1000);
     setIsInside(data.data); // Llamamos a la función de actualización con los jugadores
+  });
+};
+
+// Función para escuchar eventos del servidor y actualizar el estado de los jugadores
+export const listenToServerEventsAcolyte = (email): void => {
+  socket.on('door_status', (data: { message: string }) => {
+    console.log('door open');
+    Vibration.vibrate(1000);
+   showToastWithGravityAndOffset();
+  sendNotification(email);
   });
 };
 
@@ -44,39 +55,42 @@ export const clearServerEvents = (): void => {
   socket.off('change_isInside');
   socket.off('qr_scanned');
   socket.off('pushNotification');
+  socket.off('door_status');
 };
 
 
-const sendNotification = async () => {
 
-  const { setUserData, userData } = useContext(UserContext);
+const sendNotification = async (email:any) => {
+  console.log('Sending notification with email:', email);
 
-const player = userData.playerData;
-
-  console.log('Sending notification to email:', player.email);
   try {
-    await fetch(`${Config.PM2}/send-notification`, {
+    const response = await fetch(`${Config.PM2}/send-notification`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email: player.email }),
-    })
-      .then(response => {
-        console.log(response);
+      body: JSON.stringify({ email }),
+    });
 
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log('Server response:', data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    console.log('Server response:', data);
   } catch (error) {
-    console.error('Caught error:', error);
+    console.error('Error:', error);
   }
+};
+
+
+
+const showToastWithGravityAndOffset = () => {
+  ToastAndroid.showWithGravityAndOffset(
+    'Puerta abierta',
+    ToastAndroid.LONG,
+    ToastAndroid.BOTTOM,
+    25,
+    50,
+  );
 };
