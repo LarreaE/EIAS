@@ -52,7 +52,7 @@ const Tower: React.FC = () => {
   const sendNotification = async () => {
     console.log('Sending notification to email:', player.email);
     try {
-      const response = await fetch(`${Config.PM2}/send-notification`, {
+      const response = await fetch(`${Config.RENDER}/send-notification`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

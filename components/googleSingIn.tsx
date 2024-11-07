@@ -17,7 +17,7 @@ interface Props {
 
 const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
   const context = useContext(UserContext) as UserContextType;
-  const { setUserData, setIsInsideLab, setAllIngredients, setCurses, parchment, allIngredients } = context;
+  const { setUserData, setIsInsideLab, setAllIngredients, setPurifyIngredients, setCurses, parchment, allIngredients, purifyIngredients } = context;
   
   const [loading, setLoading] = useState(false); // Estado para el loading
   const [socketId, setSocketId] = useState<string | null>(null); // Estado para almacenar el socket ID
@@ -46,10 +46,18 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     };
   }, []);
 
+   //merge ingredients when purifyIngredients or allingredients changes
+  useEffect(() => {
+    const mergedIngredients = [...allIngredients, ...purifyIngredients];
+    console.log("Merged Ingreds:", mergedIngredients);
+    setAllIngredients(mergedIngredients);
+  }, [purifyIngredients]);
+
+
   const fetchIngredients = async () => {
     try {
       console.log('Fetching ingredients...');
-      const response = await fetch(`${Config.PM2}/ingredients`);
+      const response = await fetch(`${Config.RENDER}/ingredients`);
       const contentType = response.headers.get('content-type');
       if (contentType && contentType.includes('application/json')) {
         const data = await response.json();
@@ -61,10 +69,6 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
       } else {
         const text = await response.text();
         console.error('Response is not JSON:', text);
-      }
-      if (parchment) {
-        setSpinnerMessage('Fetching Rare Ingredients...');
-        await fetchRareIngredients();
       }
     } catch (error) {
       console.error('Error getting ingredients:', error);
@@ -80,11 +84,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
         let ingredient = new Ingredient(ingredients[index]._id,ingredients[index].name,ingredients[index].effects,ingredients[index].value,ingredients[index].type,ingredients[index].image,ingredients[index].description); 
         ingredientsArray.push(ingredient);
       }
-      console.log("ALL INGREDIE", allIngredients);
-      
-      const mergedIngredients = [...allIngredients, ...ingredientsArray];
-      setAllIngredients(mergedIngredients);
-      console.log("MERGED INGREDIENTS", mergedIngredients);
+      setPurifyIngredients(ingredientsArray);
     } catch (error) {
       console.error('Failed to fetch ingredients:', error);
     }
@@ -93,7 +93,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     
     try {
       console.log('Fetching curses...');
-      const response = await fetch(`${Config.PM2}/potions`);
+      const response = await fetch(`${Config.RENDER}/potions`);
       const contentType = response.headers.get('content-type');
       if (contentType && contentType.includes('application/json')) {
         const data = await response.json();
@@ -119,7 +119,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
           setSpinnerMessage('Connecting...');
           
           // Perform the axios request and wait for the response
-          const response = await axios.post(`${Config.PM2}/verify-token`, {
+          const response = await axios.post(`${Config.RENDER}/verify-token`, {
             idToken: idTokenResult?.token,
             email: email,
             socketId: socket.id,
@@ -140,7 +140,10 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
           setSpinnerMessage('Fetching Curses...');
           await fetchCurses();
         
-          
+          if (parchment) {
+            setSpinnerMessage('Fetching Rare Ingredients...');
+            await fetchRareIngredients();
+          }
           // Log the user in
           setIsLoged(true);
         
@@ -235,7 +238,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     // Limpia el intervalo al desmontar el componente
     return () => clearInterval(interval);
   }, []);
-
+ 
   return (
     <ImageBackground
       source={require('../assets/home_door.png')}
