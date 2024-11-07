@@ -1,6 +1,6 @@
 // components/IngredientSelector.tsx
 
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import {
   Animated,
   TouchableOpacity,
@@ -20,6 +20,7 @@ import runaBackground from '../assets/runa.png';
 import createPotionButton from '../assets/boton.png';
 import SelectedIngredientsDisplay from './selectedIngredientsDisplay';
 import MedievalText from './MedievalText'; // Importación del componente MedievalText
+import Ingredient from './Potions/Ingredient';
 
 interface IngredientSelectorProps {
   onSelectionChange: (selectedIngredients: { [key: string]: number }) => void;
@@ -31,6 +32,7 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
   const [currentIndex, setCurrentIndex] = useState(0);
   const { ingredients, setPotionVisible } = useContext(UserContext);
   const [modalVisible, setModalVisible] = useState(false);
+  const [buttonText, setButtonText] = useState('Create Potion');
   const [selectedIngredient, setSelectedIngredient] = useState<Ingredients | null>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
 
@@ -169,6 +171,18 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
     );
   };
 
+  useEffect(() => {
+    checkIngredientsEffect();
+  }, [ingredients]);
+
+  // Function to check if all ingredients have the "cleanse" effect
+  const checkIngredientsEffect = () => {
+    const allCleanse = ingredients.every((ingredient:Ingredient) => ingredient.effects[0] === 'cleanse_parchment');
+    console.log(allCleanse);
+    
+    setButtonText(allCleanse ? 'Purification Potion' : 'Create Potion');
+  };
+
   const ITEM_WIDTH = 150;
   const ITEM_MARGIN = 5;
   const ITEM_SIZE = ITEM_WIDTH + ITEM_MARGIN * 2;
@@ -229,7 +243,7 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
             resizeMode="stretch"
           >
             <MedievalText fontSize={18} color="#ffffff" style={styles.createPotionButtonText}>
-              Crear Poción
+              {buttonText}
             </MedievalText>
           </ImageBackground>
         </TouchableOpacity>
