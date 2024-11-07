@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, ToastAndroid, ScrollView, ImageBackground } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, ToastAndroid, ScrollView, ImageBackground, Dimensions } from 'react-native';
 import MedievalText from '../components/MedievalText';
 import MapButton from '../components/MapButton';
 import { useNavigation } from '@react-navigation/native';
@@ -14,11 +14,10 @@ import Ingredient from '../components/Potions/Ingredient';
 import { getBoolean, saveBoolean } from '../helper/AsyncStorage';
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TowerAcolyth'>;
 
+const { width, height } = Dimensions.get('window');
+
 const Tower: React.FC = () => {
-
-
-
-
+  
   const context = useContext(UserContext) as UserContextType;
   
   const { setUserData, userData, purifyIngredients, setPurifyIngredients, setAllIngredients, allIngredients, parchment , setParchment  } = context;
@@ -133,9 +132,9 @@ const Tower: React.FC = () => {
         >
           <View style={styles.container}>
             <MedievalText style={styles.text}>{msg}</MedievalText>
-            <MedievalText style={styles.text}>You have new ingredients</MedievalText>
             {purifyIngredients.length > 0 && (
               <View style={styles.scrollContainer}>
+              <MedievalText style={styles.text}>You have new ingredients</MedievalText>
               <ScrollView contentContainerStyle={styles.scrollContent}>
                 <MedievalText>Purified Ingredients:</MedievalText>
                 {purifyIngredients.map((ingredient, index) => (
@@ -144,8 +143,8 @@ const Tower: React.FC = () => {
               </ScrollView>
             </View>
             )}
-            <TouchableOpacity onPress={decrypt}>
-              <Text>Decypher Scroll</Text>
+            <TouchableOpacity style={styles.touchableContainer} onPress={decrypt}>
+              <Text style={styles.title}>Decypher Scroll</Text>
             </TouchableOpacity>
             <MapButton
               onPress={goToLab}
@@ -163,7 +162,7 @@ const Tower: React.FC = () => {
       <View style={styles.container}>
             <MedievalText style={styles.text}>TOWER</MedievalText>
             <MedievalText style={styles.text}>You may now activate the door</MedievalText>
-            <TouchableOpacity onPress={sendNotification}>
+            <TouchableOpacity style={styles.touchableContainer} onPress={sendNotification}>
               <Text>Send Automessage</Text>
             </TouchableOpacity>
       </View>
@@ -184,8 +183,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     opacity:0.8,
-    width:200,
-    height:100,
+    width: width * 0.8,
+    height: height * 0.8,
   },
   text: {
     fontSize: 24,
@@ -205,6 +204,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     color: 'white',
+  },
+  touchableContainer: {
+    backgroundColor: '#2196F3',
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 10,
   },
   signOutButton: {
     position: 'absolute',
