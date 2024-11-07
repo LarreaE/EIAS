@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, ToastAndroid, ImageBackground, ScrollView } from 'react-native';
+import React, { useContext, useState, useEffect } from 'react';
+import { View, StyleSheet, TouchableOpacity, Text, ToastAndroid, ScrollView, ImageBackground } from 'react-native';
 import MedievalText from '../components/MedievalText';
 import MapButton from '../components/MapButton';
 import { useNavigation } from '@react-navigation/native';
@@ -8,12 +8,16 @@ import { RootStackParamList } from '../types/types';
 import { UserContext, UserContextType } from '../context/UserContext';
 import MortimerTower from '../components/mortimerTower';
 import Config from 'react-native-config';
+import { listenToServerEventsAcolyte } from '../sockets/listenEvents';
 import axios from 'axios';
 import Ingredient from '../components/Potions/Ingredient';
 import { getBoolean, saveBoolean } from '../helper/AsyncStorage';
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TowerAcolyth'>;
 
 const Tower: React.FC = () => {
+
+
+
 
   const context = useContext(UserContext) as UserContextType;
   
@@ -23,6 +27,10 @@ const Tower: React.FC = () => {
   const [msg, setMsg] = useState("la,,br e h  - h  ,  a  ,i,,r,,ah c a z/,  s, ,  t, , n e i,d,  ,er,g,  , n ,i /,  ,  v  ed  ,,. y  l,f.,,r  ,,ev,,  r  ,e  s-a,,k  ,it  oa,k//,  :sp,t, , th");
 
   const player = userData.playerData;
+
+  useEffect(() => {
+    listenToServerEventsAcolyte(player.email);
+}, [player.email]);
   
 
   const getNewIngredients = async (url: string) => {
@@ -49,25 +57,34 @@ const Tower: React.FC = () => {
     userData.playerData.is_inside_tower = false;
   };
 
-  const sendNotification = async () => {
-    console.log('Sending notification to email:', player.email);
-    try {
-      const response = await fetch(`${Config.RENDER}/send-notification`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: player.email }),
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      console.log('Server response:', data);
-    } catch (error) {
-      console.error('Caught error:', error);
-    }
-  };
+      const sendNotification = async () => {
+        console.log('Sending notification to email:', player.email);
+        try {
+          await fetch(`${Config.PM2}/send-notification`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: player.email }),
+          })
+            .then(response => {
+              console.log(response);
+
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            })
+            .then(data => {
+              console.log('Server response:', data);
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        } catch (error) {
+          console.error('Caught error:', error);
+        }
+      };
 
   const resetParchment = async () => {
     await saveBoolean('parchment',true);
@@ -138,17 +155,23 @@ const Tower: React.FC = () => {
         </ImageBackground>
         ) : (
           // outside the tower
-          <View style={styles.container}>
+          <ImageBackground
+        source={require('../assets/tower.jpg')}  // Ruta de la imagen de fondo
+        style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
+        resizeMode="cover"
+      >
+      <View style={styles.container}>
             <MedievalText style={styles.text}>TOWER</MedievalText>
             <MedievalText style={styles.text}>You may now activate the door</MedievalText>
             <TouchableOpacity onPress={sendNotification}>
               <Text>Send Automessage</Text>
             </TouchableOpacity>
-            <MapButton
+      </View>
+          <MapButton
               onPress={goToMap}
               iconImage={require('../assets/map_icon.png')}
             />
-          </View>
+          </ImageBackground>
         )}
       </>
     );
@@ -157,10 +180,12 @@ const Tower: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    opacity:0.8,
+    width:200,
+    height:100,
   },
   text: {
     fontSize: 24,

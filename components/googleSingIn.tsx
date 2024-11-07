@@ -193,9 +193,9 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     const token = await messaging().getToken();
 
     console.log('USER JWT');
-    console.log(idTokenResult);
+    //console.log(idTokenResult);
     console.log(email);
-    console.log(socket.id);
+    console.log('socket: ' + socket.id);
     console.log(token);
 
     await authenticate();
