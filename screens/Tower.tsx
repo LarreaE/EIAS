@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { View, StyleSheet, TouchableOpacity, Text, ImageBackground } from 'react-native';
 import MedievalText from '../components/MedievalText';
 import MapButton from '../components/MapButton';
 import { useNavigation } from '@react-navigation/native';
@@ -8,14 +8,21 @@ import { RootStackParamList } from '../types/types';
 import { UserContext } from '../context/UserContext';
 import MortimerTower from '../components/mortimerTower';
 import Config from 'react-native-config';
+import { listenToServerEventsAcolyte } from '../sockets/listenEvents';
 
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TowerAcolyth'>;
 
 const Tower: React.FC = () => {
 
+
+
   const { setUserData, userData } = useContext(UserContext);
 
   const player = userData.playerData;
+
+  useEffect(() => {
+    listenToServerEventsAcolyte(player.email);
+}, [player.email]);
 
   const navigation = useNavigation<MapScreenNavigationProp>();
 
@@ -26,7 +33,7 @@ const Tower: React.FC = () => {
       const sendNotification = async () => {
         console.log('Sending notification to email:', player.email);
         try {
-          await fetch(`${Config.RENDER}/send-notification`, {
+          await fetch(`${Config.PM2}/send-notification`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -61,6 +68,11 @@ const Tower: React.FC = () => {
   } else {
     return (
       <>
+      <ImageBackground
+        source={require('../assets/tower.jpg')}  // Ruta de la imagen de fondo
+        style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
+        resizeMode="cover"
+      >
       <View style={styles.container}>
         <MedievalText style={styles.text}>TOWER</MedievalText>
         <MedievalText style={styles.text}>You may now activate the door</MedievalText>
@@ -69,11 +81,12 @@ const Tower: React.FC = () => {
             >
               <Text>Send Automessage</Text>
             </TouchableOpacity>
-        <MapButton
+      </View>
+      <MapButton
               onPress={goToMap}
               iconImage={require('../assets/map_icon.png')}
             />
-      </View>
+      </ImageBackground>
       </>
     );
   }
@@ -81,10 +94,12 @@ const Tower: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'lightgrey',
+    opacity:0.8,
+    width:200,
+    height:100,
   },
   text: {
     fontSize: 24,

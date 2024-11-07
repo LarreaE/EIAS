@@ -70,7 +70,6 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
   });
 
 
-  
   useEffect(() => {
     socket.on('request_email', () => {
       console.log('El servidor ha solicitado el correo electrónico');
