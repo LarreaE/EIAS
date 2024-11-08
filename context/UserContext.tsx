@@ -20,6 +20,10 @@ export interface UserContextType {
   setAllIngredients: React.Dispatch<React.SetStateAction<Ingredients[]>>;
   curses: Curse[];
   setCurses: React.Dispatch<React.SetStateAction<Curse[]>>;
+  currentScreen: string;
+  setCurrentScreen: React.Dispatch<React.SetStateAction<string>>;
+  player: Player | null;
+  setPlayer: React.Dispatch<React.SetStateAction<Player | null>>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -29,11 +33,13 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [ingredients, setIngredients] = useState<Ingredients[]>([]);
   const [allIngredients, setAllIngredients] = useState<Ingredients[]>([]);
   const [curses, setCurses] = useState<Curse[]>([]);
-
+  const [currentScreen, setCurrentScreen] = useState('Home'); // Default starting screen name
   const [potionVisible, setPotionVisible] = useState(false);
   const [isInsideLab, setIsInsideLab] = useState(false);
   const [parchment, setParchment] = useState(false);
   const [purifyIngredients, setPurifyIngredients] = useState<Ingredients[]>([]);
+  const [player, setPlayer] = useState<Player | null>(null);
+
 
   return (
     <UserContext.Provider value={{
@@ -44,7 +50,9 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
       parchment, setParchment,
       purifyIngredients, setPurifyIngredients,
       allIngredients, setAllIngredients,
-      curses, setCurses
+      curses, setCurses,
+      currentScreen, setCurrentScreen,
+      player, setPlayer,
     }}>
       {children}
     </UserContext.Provider>

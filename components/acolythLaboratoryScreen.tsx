@@ -150,7 +150,7 @@ const EFFECT_ICONS: { [key: string]: string } = {
 
 const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const context = useContext(UserContext) as UserContextType;
-  const { userData, ingredients, setIngredients , setAllIngredients, potionVisible, setPotionVisible, setIsInsideLab, isInsideLab, parchment, purifyIngredients, curses, allIngredients} = context;
+  const { userData, ingredients, setIngredients , setAllIngredients, potionVisible, setPotionVisible, setIsInsideLab, isInsideLab, parchment, purifyIngredients, curses, allIngredients, setPlayer} = context;
   const [modalVisible, setModalVisible] = useState(false);
   const [ingredientsRetrieved, setIngredientsRetrieved] = useState(true);
   const [cursesRetrieved, setCursesRetrieved] = useState(true);
