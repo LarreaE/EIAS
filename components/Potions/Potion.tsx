@@ -296,7 +296,7 @@ function  categorizeEffect(str: string) {
     let effect = '';
     let attribute = '';
 
-    if (str.includes('calm')) {
+    if (str.includes('calm') || str.includes('frenzy')) {
         if (parts.length === 2) {
             // two parts
             potency = parts[0];

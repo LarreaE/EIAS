@@ -33,7 +33,7 @@ const Tab = createMaterialTopTabNavigator();
 function App() {
   const [isLoged, setIsLoged] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  
+
   useEffect(() => {
     checkAndRequestNotificationPermission();
   }, []);
@@ -68,7 +68,7 @@ function App() {
 function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) {
   const context = useContext(UserContext) as UserContextType;
 
-  const { userData: UserData, setUserData ,setParchment} = context; // Usamos useContext para UserData;
+  const { userData, setUserData ,setParchment, setCurrentScreen, currentScreen , player} = context; // Usamos useContext para UserData;
 
   useEffect(() => {
       // Set background message handler
@@ -87,10 +87,21 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
     getParchment();
   }, []);
   useEffect(() => {
+    console.log(currentScreen);
+  }, [currentScreen]);
+  useEffect(() => {
+    console.log("CURRENT SCREEN:",currentScreen);
+    if (currentScreen==='LaboratoryAcolyth') {
+      userData.playerData.location = 'laboratory';
+    } else if (currentScreen==='TowerAcolyth'){
+      userData.playerData.location = 'tower';
+    }
+  }, [currentScreen]);
+  useEffect(() => {
     socket.on('request_email', () => {
       console.log('El servidor ha solicitado el correo electrónico');
-      if (isLoged && UserData?.playerData?.email) {
-        sendUserEMail(UserData.playerData.email);
+      if (isLoged && userData?.playerData?.email) {
+        sendUserEMail(userData.playerData.email);
         socket.on('reconnect', () => {
           console.log('Socket reconectado con ID:', socket.id);
         });
@@ -99,7 +110,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
     return () => {
       socket.off('request_email');
     };
-  }, [isLoged, UserData]);
+  }, [isLoged, userData]);
 
   useEffect(() => {
     SplashScreen.hide();
@@ -148,12 +159,12 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
   });
 
   const renderTabs = () => {
-    if (!UserData || !UserData.playerData || !UserData.playerData.role) {
+    if (!userData || !userData.playerData || !userData.playerData.role) {
       return null;
     }
 
 
-    switch (UserData.playerData.role) {
+    switch (userData.playerData.role) {
       case 'ISTVAN':
         return (
           <>
@@ -166,7 +177,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
                 ),
               }}
             >
-              {props => <ProfileScreen {...props} user={UserData} setIsLoged={setIsLoged} />}
+              {props => <ProfileScreen {...props} user={userData} setIsLoged={setIsLoged} />}
             </Tab.Screen>
             <Tab.Screen
               name="QRScanner"
@@ -225,7 +236,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
                 ),
               }}
             >
-              {props => <ProfileScreen {...props} user={UserData} setIsLoged={setIsLoged} />}
+              {props => <ProfileScreen {...props} user={userData} setIsLoged={setIsLoged} />}
             </Tab.Screen>
             <Tab.Screen
               name="LaboratoryMortimer"
@@ -264,10 +275,10 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
                 ),
               }}
             >
-              {props => <ProfileScreen {...props} setIsLoged={setIsLoged} user={UserData} />}
+              {props => <ProfileScreen {...props} setIsLoged={setIsLoged} user={userData} />}
             </Tab.Screen>
             <Tab.Screen
-              name="HomeVillain"
+              name="HomeAcolyth"
               options={{
                 tabBarLabel: '',
                 tabBarIcon: () => (
@@ -275,10 +286,10 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
                 ),
               }}
             >
-              {props => <HomeVillain {...props} user={UserData} />}
+              {props => <HomeVillain {...props} user={userData} />}
             </Tab.Screen>
             <Tab.Screen
-              name="LaboratoryVillain"
+              name="Map"
               options={{
                 tabBarLabel: '',
                 tabBarIcon: () => (
@@ -286,7 +297,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
                 ),
               }}
             >
-               {props => <AcolythLaboratoryScreen {...props} UserData={UserData} />}
+               {props => <MapScreen {...props}/>}
             </Tab.Screen>
           </>
         );
@@ -303,7 +314,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
                 ),
               }}
             >
-              {props => <ProfileScreen {...props} user={UserData} setIsLoged={setIsLoged} />}
+              {props => <ProfileScreen {...props} user={userData} setIsLoged={setIsLoged} />}
             </Tab.Screen>
 
             <Tab.Screen
@@ -327,7 +338,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
                 ),
               }}
             >
-              {props => <AcolythScreen {...props} user={UserData} />}
+              {props => <AcolythScreen {...props} user={userData} />}
             </Tab.Screen>
 
             <Tab.Screen
@@ -353,7 +364,12 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
   return (
     <SafeAreaView style={styles.container}>
       <GestureHandlerRootView style={styles.container}>
-        <NavigationContainer>
+        <NavigationContainer
+        onStateChange={(state) => {
+          // Get the current route's name
+          const currentRoute = state.routes[state.index];
+          setCurrentScreen(currentRoute.name);
+        }}>
           <Stack.Navigator>
             {/* Aquí se incluyen las tabs como parte de una pantalla del stack */}
             <Stack.Screen name="MainTabs" options={{ headerShown: false }}>
@@ -369,7 +385,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               name="LaboratoryAcolyth"
               options={{ headerShown: false }}
             >
-              {props => <AcolythLaboratoryScreen {...props} UserData={UserData} />}
+              {props => <AcolythLaboratoryScreen {...props} UserData={userData} />}
             </Stack.Screen>
             <Stack.Screen
               name="TowerAcolyth"

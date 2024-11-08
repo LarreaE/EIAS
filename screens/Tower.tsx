@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, ToastAndroid, ScrollView, ImageBackground, Dimensions } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, ToastAndroid, ScrollView, ImageBackground, Dimensions, Vibration } from 'react-native';
 import MedievalText from '../components/MedievalText';
 import MapButton from '../components/MapButton';
 import { useNavigation } from '@react-navigation/native';
@@ -8,10 +8,12 @@ import { RootStackParamList } from '../types/types';
 import { UserContext, UserContextType } from '../context/UserContext';
 import MortimerTower from '../components/mortimerTower';
 import Config from 'react-native-config';
-import { listenToServerEventsAcolyte } from '../sockets/listenEvents';
 import axios from 'axios';
 import Ingredient from '../components/Potions/Ingredient';
 import { getBoolean, saveBoolean } from '../helper/AsyncStorage';
+import { listenToServerEventsDoorOpened, clearServerEvents, listenToServerEventsAcolyte } from '../sockets/listenEvents';// Importamos los eventos del socket
+import { sendLocation } from '../sockets/emitEvents';
+
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TowerAcolyth'>;
 
 const { width, height } = Dimensions.get('window');
@@ -24,12 +26,24 @@ const Tower: React.FC = () => {
   const navigation = useNavigation<MapScreenNavigationProp>();
 
   const [msg, setMsg] = useState("la,,br e h  - h  ,  a  ,i,,r,,ah c a z/,  s, ,  t, , n e i,d,  ,er,g,  , n ,i /,  ,  v  ed  ,,. y  l,f.,,r  ,,ev,,  r  ,e  s-a,,k  ,it  oa,k//,  :sp,t, , th");
+  const [isDoorOpen, setIsDoorOpen] = useState(false); // Estado para la puerta
 
   const player = userData.playerData;
+  sendLocation("Tower", userData.playerData.email)
 
-  useEffect(() => {
+useEffect(() => {
     listenToServerEventsAcolyte(player.email);
 }, [player.email]);
+
+useEffect(() => {
+  // Escuchamos el evento del socket para cuando la puerta se abre
+  listenToServerEventsDoorOpened(setIsDoorOpen);
+
+  // Limpiamos eventos de socket al desmontar el componente
+  return () => {
+    clearServerEvents();
+  };
+}, []);
   
 
   const getNewIngredients = async (url: string) => {
@@ -49,11 +63,6 @@ const Tower: React.FC = () => {
 
   const goToMap = () => {
     navigation.navigate('Map');
-  };
-
-  const goToLab = () => {
-    navigation.navigate('Map');
-    userData.playerData.is_inside_tower = false;
   };
 
       const sendNotification = async () => {
@@ -103,16 +112,11 @@ const Tower: React.FC = () => {
     }
   }
 
-  // change msg
   useEffect(() => {
     console.log('Message updated:', msg);
   }, [msg]);
   useEffect(() => {
-    console.log('ALL INGREDIENTS UPDATED:', allIngredients);
-  }, [allIngredients]);
-  useEffect(() => {
-    const mergedIngredients = [...allIngredients, ...purifyIngredients];
-    setAllIngredients(mergedIngredients);
+    console.log('Ingredients updated:', purifyIngredients);
   }, [purifyIngredients]);
 
   if (userData.playerData.role === 'MORTIMER') {
@@ -120,11 +124,8 @@ const Tower: React.FC = () => {
   } else {
     return (
       <>
-     
-
-                    
         {userData.playerData.is_inside_tower ? (
-          // inside the tower
+          // Inside the tower
           <ImageBackground
           source={require('../assets/scroll.png')}
           style={styles.background}
@@ -147,7 +148,7 @@ const Tower: React.FC = () => {
               <Text style={styles.title}>Decypher Scroll</Text>
             </TouchableOpacity>
             <MapButton
-              onPress={goToLab}
+              onPress={goToMap}
               iconImage={require('../assets/map_icon.png')}
             />
           </View>

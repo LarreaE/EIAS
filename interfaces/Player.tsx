@@ -23,6 +23,7 @@ export interface Player{
     gold: Number,
     attributes: Modifier,
     socketId: String,
+    location: String,
     equipment: {
       weapon: Weapon,
       armor: Armor,

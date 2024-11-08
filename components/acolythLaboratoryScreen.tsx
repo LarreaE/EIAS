@@ -36,6 +36,7 @@ import MedievalText from './MedievalText'; // Importación del componente Mediev
 import Config from 'react-native-config';
 import Cleanse from './Potions/Cleanse.tsx';
 import ScrollModal from './ScrollModal.tsx';
+import { sendLocation } from '../sockets/emitEvents.tsx';
 
 type Props = { UserData: any };
 
@@ -149,7 +150,7 @@ const EFFECT_ICONS: { [key: string]: string } = {
 
 const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const context = useContext(UserContext) as UserContextType;
-  const { ingredients, setIngredients , setAllIngredients, potionVisible, setPotionVisible, setIsInsideLab, isInsideLab, parchment, purifyIngredients, curses, allIngredients} = context;
+  const { userData, ingredients, setIngredients , setAllIngredients, potionVisible, setPotionVisible, setIsInsideLab, isInsideLab, parchment, purifyIngredients, curses, allIngredients, setPlayer} = context;
   const [modalVisible, setModalVisible] = useState(false);
   const [ingredientsRetrieved, setIngredientsRetrieved] = useState(true);
   const [cursesRetrieved, setCursesRetrieved] = useState(true);
@@ -171,6 +172,8 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
   // Determinar los efectos disponibles según el rol
   const availableEffects = role === 'ACOLYTE' ? GOOD_EFFECTS : BAD_EFFECTS;
+
+  sendLocation("Laboratory", userData.playerData.email)
 
   useEffect(() => {
     setModalVisible(false);

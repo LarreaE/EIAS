@@ -46,6 +46,15 @@ export const listenToServerEventsAcolyte = (email): void => {
   });
 };
 
+// Función para escuchar eventos del servidor y actualizar el estado de los jugadores
+export const listenToServerEventsDoorOpened = (setIsDoorOpen: (isOpen: boolean) => void): void => {
+  socket.on('door_status', (data: { data: boolean }) => {
+    console.log('Valor de door_status:', data.data);
+    Vibration.vibrate(1000);
+    setIsDoorOpen(data.data); // Activa el estado solo si se abre la puerta
+  });
+};
+
 
 // Función para limpiar los eventos cuando el componente se desmonte
 export const clearServerEvents = (): void => {
