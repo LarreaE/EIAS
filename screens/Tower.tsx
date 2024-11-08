@@ -8,11 +8,10 @@ import { RootStackParamList } from '../types/types';
 import { UserContext, UserContextType } from '../context/UserContext';
 import MortimerTower from '../components/mortimerTower';
 import Config from 'react-native-config';
-import { listenToServerEventsAcolyte } from '../sockets/listenEvents';
 import axios from 'axios';
 import Ingredient from '../components/Potions/Ingredient';
 import { getBoolean, saveBoolean } from '../helper/AsyncStorage';
-import { listenToServerEventsDoorOpened, clearServerEvents } from '../sockets/listenEvents';// Importamos los eventos del socket
+import { listenToServerEventsDoorOpened, clearServerEvents, listenToServerEventsAcolyte } from '../sockets/listenEvents';// Importamos los eventos del socket
 import { sendLocation } from '../sockets/emitEvents';
 
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TowerAcolyth'>;
@@ -32,9 +31,19 @@ const Tower: React.FC = () => {
   const player = userData.playerData;
   sendLocation("Tower", userData.playerData.email)
 
-  useEffect(() => {
+useEffect(() => {
     listenToServerEventsAcolyte(player.email);
 }, [player.email]);
+
+useEffect(() => {
+  // Escuchamos el evento del socket para cuando la puerta se abre
+  listenToServerEventsDoorOpened(setIsDoorOpen);
+
+  // Limpiamos eventos de socket al desmontar el componente
+  return () => {
+    clearServerEvents();
+  };
+}, []);
   
 
   const getNewIngredients = async (url: string) => {
@@ -104,16 +113,6 @@ const Tower: React.FC = () => {
   }
 
   useEffect(() => {
-    // Escuchamos el evento del socket para cuando la puerta se abre
-    listenToServerEventsDoorOpened(setIsDoorOpen);
-
-    // Limpiamos eventos de socket al desmontar el componente
-    return () => {
-      clearServerEvents();
-    };
-  }, []);
-
-  useEffect(() => {
     console.log('Message updated:', msg);
   }, [msg]);
   useEffect(() => {
@@ -149,7 +148,7 @@ const Tower: React.FC = () => {
               <Text style={styles.title}>Decypher Scroll</Text>
             </TouchableOpacity>
             <MapButton
-              onPress={goToLab}
+              onPress={goToMap}
               iconImage={require('../assets/map_icon.png')}
             />
           </View>
