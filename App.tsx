@@ -87,6 +87,9 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
     getParchment();
   }, []);
   useEffect(() => {
+    console.log(currentScreen);
+  }, [currentScreen]);
+  useEffect(() => {
     console.log("CURRENT SCREEN:",currentScreen);
     if (currentScreen==='LaboratoryAcolyth') {
       userData.playerData.location = 'laboratory';
@@ -275,7 +278,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               {props => <ProfileScreen {...props} setIsLoged={setIsLoged} user={userData} />}
             </Tab.Screen>
             <Tab.Screen
-              name="HomeVillain"
+              name="HomeAcolyth"
               options={{
                 tabBarLabel: '',
                 tabBarIcon: () => (
