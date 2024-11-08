@@ -36,13 +36,14 @@ export const listenToServerEventsScanAcolyte = (setIsInside: (is_active: any) =>
   });
 };
 
-// Función para escuchar eventos del servidor y actualizar el estado de los jugadores
-export const listenToServerEventsAcolyte = (email): void => {
-  socket.on('door_status', (data: { message: string }) => {
+// Función para escuchar eventos del servidor y actualizar 
+export const listenToServerEventsAcolyte = (email: any,setIsInsideTower: (is_active: any) => void ): void => {
+  socket.on('door_status', (data: any) => {
     console.log('door open');
     Vibration.vibrate(1000);
-   showToastWithGravityAndOffset();
-  sendNotification(email);
+    showToastWithGravityAndOffset();
+    sendNotification(email);
+    setIsInsideTower(data.isOpen);
   });
 };
 
@@ -92,6 +93,29 @@ const sendNotification = async (email:any) => {
   }
 };
 
+ async function checkIfInsideTower(email: any) {
+  try {
+    console.log('FEtchint');
+    const response = await fetch(`${Config.PM2}/isInsideTower`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al verificar si esta dentro');
+    }
+
+    const data = await response.json();
+    console.log('Respuesta del servidor:', data.is_inside_tower); // Puedes verificar la respuesta aquí
+    return data.is_inside_tower;
+  } catch (error) {
+    console.error('Error al verificar si el usuario está dentro de la torre:', error);
+    return null;
+  }
+}
 
 
 const showToastWithGravityAndOffset = () => {

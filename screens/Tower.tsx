@@ -20,9 +20,8 @@ type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TowerAco
 const { width, height } = Dimensions.get('window');
 
 const Tower: React.FC = () => {
-  
+
   const context = useContext(UserContext) as UserContextType;
-  
   const { setUserData, userData, purifyIngredients, setPurifyIngredients, setAllIngredients, allIngredients, parchment , setParchment  } = context;
   const navigation = useNavigation<MapScreenNavigationProp>();
 
@@ -32,24 +31,22 @@ const Tower: React.FC = () => {
   const [spinnerActive, setSpinnerActive] = useState(false); 
 
 
-
   const player = userData.playerData;
   sendLocation("Tower", userData.playerData.email)
+  const [isInsideTower,setIsInsideTower] = useState(userData.is_inside_tower);
+
+  useEffect(() => {
+    console.log("isInsideTower");
+    console.log(isInsideTower);
+    player.is_inside_tower = isInsideTower;
+    console.log("PLayer inside: " + player.is_inside_tower);  
+
+}, [isInsideTower, player]);
 
 useEffect(() => {
-    listenToServerEventsAcolyte(player.email);
-}, [player.email]);
+  listenToServerEventsAcolyte(player.email,setIsInsideTower);
+}, [player]);
 
-useEffect(() => {
-  // Escuchamos el evento del socket para cuando la puerta se abre
-  listenToServerEventsDoorOpened(setIsDoorOpen);
-
-  // Limpiamos eventos de socket al desmontar el componente
-  return () => {
-    clearServerEvents();
-  };
-}, []);
-  
 
   const getNewIngredients = async (url: string) => {
     try {
@@ -133,8 +130,8 @@ useEffect(() => {
   } else {
     return (
       <>
-        {userData.playerData.is_inside_tower ? (
-          // Inside the tower
+        {!userData.playerData.is_inside_tower ? (
+          // inside the tower
           <ImageBackground
           source={require('../assets/scroll.png')}
           style={styles.background}
