@@ -14,6 +14,7 @@ import { getBoolean, saveBoolean } from '../helper/AsyncStorage';
 import { listenToServerEventsDoorOpened, clearServerEvents, listenToServerEventsAcolyte } from '../sockets/listenEvents';// Importamos los eventos del socket
 import { sendLocation } from '../sockets/emitEvents';
 import Spinner from '../components/Spinner';
+import { sendIsInside } from '../sockets/emitEvents';
 
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TowerAcolyth'>;
 
@@ -40,7 +41,7 @@ const Tower: React.FC = () => {
     console.log(isInsideTower);
     player.is_inside_tower = isInsideTower;
     console.log("PLayer inside: " + player.is_inside_tower);  
-
+    sendIsInside(isInsideTower);
 }, [isInsideTower, player]);
 
 useEffect(() => {
