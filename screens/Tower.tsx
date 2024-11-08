@@ -26,11 +26,14 @@ const Tower: React.FC = () => {
   const [msg, setMsg] = useState("la,,br e h  - h  ,  a  ,i,,r,,ah c a z/,  s, ,  t, , n e i,d,  ,er,g,  , n ,i /,  ,  v  ed  ,,. y  l,f.,,r  ,,ev,,  r  ,e  s-a,,k  ,it  oa,k//,  :sp,t, , th");
 
   const player = userData.playerData;
+  const [isTower,setIsTower] = useState(false);
 
   useEffect(() => {
-    listenToServerEventsAcolyte(player.email);
-}, [player.email]);
-  
+    setIsTower(listenToServerEventsAcolyte(player.email));
+    //userData.playerData.is_inside_tower = isInsideTower;
+    console.log(isTower);
+}, [isTower, player.email]);
+
 
   const getNewIngredients = async (url: string) => {
     try {
@@ -123,7 +126,7 @@ const Tower: React.FC = () => {
      
 
                     
-        {userData.playerData.is_inside_tower ? (
+        {isTower ? (
           // inside the tower
           <ImageBackground
           source={require('../assets/scroll.png')}
