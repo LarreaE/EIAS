@@ -37,13 +37,13 @@ export const listenToServerEventsScanAcolyte = (setIsInside: (is_active: any) =>
 };
 
 // Función para escuchar eventos del servidor y actualizar 
-export const listenToServerEventsAcolyte = (email: any ): void => {
-  socket.on('door_status', (data: { message: string }) => {
+export const listenToServerEventsAcolyte = (email: any,setIsInsideTower: (is_active: any) => void ): void => {
+  socket.on('door_status', (data: any) => {
     console.log('door open');
     Vibration.vibrate(1000);
     showToastWithGravityAndOffset();
     sendNotification(email);
-    return checkIfInsideTower(email);
+    setIsInsideTower(data.isOpen);
   });
 };
 
@@ -100,7 +100,7 @@ const sendNotification = async (email:any) => {
     }
 
     const data = await response.json();
-    console.log('Respuesta del servidor:', data); // Puedes verificar la respuesta aquí
+    console.log('Respuesta del servidor:', data.is_inside_tower); // Puedes verificar la respuesta aquí
     return data.is_inside_tower;
   } catch (error) {
     console.error('Error al verificar si el usuario está dentro de la torre:', error);

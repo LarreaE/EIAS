@@ -17,22 +17,26 @@ type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TowerAco
 const { width, height } = Dimensions.get('window');
 
 const Tower: React.FC = () => {
-  
+
   const context = useContext(UserContext) as UserContextType;
-  
   const { setUserData, userData, purifyIngredients, setPurifyIngredients, setAllIngredients, allIngredients, parchment , setParchment  } = context;
   const navigation = useNavigation<MapScreenNavigationProp>();
 
   const [msg, setMsg] = useState("la,,br e h  - h  ,  a  ,i,,r,,ah c a z/,  s, ,  t, , n e i,d,  ,er,g,  , n ,i /,  ,  v  ed  ,,. y  l,f.,,r  ,,ev,,  r  ,e  s-a,,k  ,it  oa,k//,  :sp,t, , th");
-
   const player = userData.playerData;
-  const [isTower,setIsTower] = useState(false);
+  const [isInsideTower,setIsInsideTower] = useState(userData.is_inside_tower);
 
   useEffect(() => {
-    setIsTower(listenToServerEventsAcolyte(player.email));
-    //userData.playerData.is_inside_tower = isInsideTower;
-    console.log(isTower);
-}, [isTower, player.email]);
+    console.log("isInsideTower");
+    console.log(isInsideTower);
+    player.is_inside_tower = isInsideTower;
+    console.log("PLayer inside: " + player.is_inside_tower);  
+
+}, [isInsideTower, player]);
+
+useEffect(() => {
+  listenToServerEventsAcolyte(player.email,setIsInsideTower);
+}, [player]);
 
 
   const getNewIngredients = async (url: string) => {
@@ -111,9 +115,6 @@ const Tower: React.FC = () => {
     console.log('Message updated:', msg);
   }, [msg]);
   useEffect(() => {
-    console.log('ALL INGREDIENTS UPDATED:', allIngredients);
-  }, [allIngredients]);
-  useEffect(() => {
     const mergedIngredients = [...allIngredients, ...purifyIngredients];
     setAllIngredients(mergedIngredients);
   }, [purifyIngredients]);
@@ -123,10 +124,7 @@ const Tower: React.FC = () => {
   } else {
     return (
       <>
-     
-
-                    
-        {isTower ? (
+        {!userData.playerData.is_inside_tower ? (
           // inside the tower
           <ImageBackground
           source={require('../assets/scroll.png')}
