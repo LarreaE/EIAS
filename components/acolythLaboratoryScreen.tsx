@@ -267,7 +267,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   };
 
   const applyFilters = () => {
-    if (selectedEffects.length === 0) {
+    if (selectedEffects.length === 0) {      
       // No se han seleccionado filtros, aplicar filtro por rol
       if (role === 'ACOLYTE') {
         // Filtrar ingredientes con efectos buenos
@@ -298,6 +298,15 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
     }
     setFilterModalVisible(false); // Cierra el modal de filtros
   };
+
+  const applyFiltersAtStart = (callback:any) => {
+    useEffect(() => {
+      
+      callback();
+    }, []); // limpia array dependendias
+  };
+  //execute the filter once
+  applyFiltersAtStart(applyFilters);
 
   const navigation = useNavigation<MapScreenNavigationProp>();
 

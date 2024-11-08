@@ -13,6 +13,7 @@ import Ingredient from '../components/Potions/Ingredient';
 import { getBoolean, saveBoolean } from '../helper/AsyncStorage';
 import { listenToServerEventsDoorOpened, clearServerEvents, listenToServerEventsAcolyte } from '../sockets/listenEvents';// Importamos los eventos del socket
 import { sendLocation } from '../sockets/emitEvents';
+import Spinner from '../components/Spinner';
 
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TowerAcolyth'>;
 
@@ -27,6 +28,10 @@ const Tower: React.FC = () => {
 
   const [msg, setMsg] = useState("la,,br e h  - h  ,  a  ,i,,r,,ah c a z/,  s, ,  t, , n e i,d,  ,er,g,  , n ,i /,  ,  v  ed  ,,. y  l,f.,,r  ,,ev,,  r  ,e  s-a,,k  ,it  oa,k//,  :sp,t, , th");
   const [isDoorOpen, setIsDoorOpen] = useState(false); // Estado para la puerta
+  const [spinner, setSpinner] = useState(''); //
+  const [spinnerActive, setSpinnerActive] = useState(false); 
+
+
 
   const player = userData.playerData;
   sendLocation("Tower", userData.playerData.email)
@@ -55,7 +60,9 @@ useEffect(() => {
         let ingredient = new Ingredient(ingredients[index]._id,ingredients[index].name,ingredients[index].effects,ingredients[index].value,ingredients[index].type,ingredients[index].image,ingredients[index].description); 
         ingredientsArray.push(ingredient);
       }
-      setPurifyIngredients(ingredientsArray);   
+      setPurifyIngredients(ingredientsArray);
+      setSpinner('');
+      setSpinnerActive(false);
     } catch (error) {
       console.error('Failed to fetch ingredients:', error);
     }
@@ -103,6 +110,8 @@ useEffect(() => {
   const decrypt = () => {
     if (!parchment) {
       resetParchment();
+      setSpinner('Retrieving Arcane knowledge... ')
+      setSpinnerActive(true);
       const decryptedMsg = msg.replace(/[, ]/g, '').split('').reverse().join('');
       setMsg(decryptedMsg);
       console.log("Scroll patched");
@@ -131,6 +140,7 @@ useEffect(() => {
           style={styles.background}
           resizeMode="cover"
         >
+          {spinnerActive && <Spinner message={spinner} />}
           <View style={styles.container}>
             <MedievalText style={styles.text}>{msg}</MedievalText>
             {purifyIngredients.length > 0 && (
