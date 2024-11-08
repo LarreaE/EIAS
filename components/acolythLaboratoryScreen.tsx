@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { clearServerEvents, listenToServerEventsScanAcolyte } from '../sockets/listenEvents.tsx';
 import IngredientSelector from './ingredientSelector.tsx';
-import { UserContext } from '../context/UserContext'; // Importa el contexto
+import { UserContext, UserContextType } from '../context/UserContext'; // Importa el contexto
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/types';
@@ -34,6 +34,8 @@ import Spinner from './Spinner.tsx';
 import CookBookModal from './CookBookModal.tsx';
 import MedievalText from './MedievalText'; // Importación del componente MedievalText
 import Config from 'react-native-config';
+import Cleanse from './Potions/Cleanse.tsx';
+import ScrollModal from './ScrollModal.tsx';
 import { sendLocation } from '../sockets/emitEvents.tsx';
 
 type Props = { UserData: any };
@@ -50,6 +52,8 @@ const GOOD_EFFECTS = [
   'restore_hit_points',
   'restore_intelligence',
   'restore_charisma',
+  'cleanse_parchment',
+  'unknown',
   'boost_constitution',
   'boost_strength',
   'boost_dexterity',
@@ -67,6 +71,8 @@ const BAD_EFFECTS = [
   'damage_hit_points',
   'damage_insanity',
   'damage_intelligence',
+  'cleanse_parchment',
+  'unknown',
   'setback_constitution',
   'setback_strength',
   'setback_dexterity',
@@ -85,6 +91,8 @@ const EFFECT_LABELS: { [key: string]: string } = {
   restore_hit_points: 'Restore Hit Points',
   restore_intelligence: 'Restore Intelligence',
   restore_charisma: 'Restore Charisma',
+  cleanse_parchment: 'Cleanse Parchment',
+  unknown:'Unknown',
   damage_dexterity: 'Damage Dexterity',
   damage_constitution: 'Damage Constitution',
   damage_charisma: 'Damage Charisma',
@@ -117,6 +125,8 @@ const EFFECT_ICONS: { [key: string]: string } = {
   restore_hit_points: 'ambulance',
   restore_intelligence: 'brain',
   restore_charisma: 'message-star',
+  cleanse_parchment: 'star',
+  unknown: 'star',
   damage_dexterity: 'hand-paper',
   damage_constitution: 'flask',
   damage_charisma: 'user-secret',
@@ -139,16 +149,16 @@ const EFFECT_ICONS: { [key: string]: string } = {
 };
 
 const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
+  const context = useContext(UserContext) as UserContextType;
+  const { userData, ingredients, setIngredients , setAllIngredients, potionVisible, setPotionVisible, setIsInsideLab, isInsideLab, parchment, purifyIngredients, curses, allIngredients} = context;
   const [modalVisible, setModalVisible] = useState(false);
-  const { userData, ingredients, setIngredients , potionVisible, setPotionVisible, setIsInsideLab, isInsideLab} = useContext(UserContext);
-  const [allIngredients, setAllIngredients] = useState<Ingredients[]>([]);
-  const [curses, setCurses] = useState<Curse[]>([]);
-  const [ingredientsRetrieved, setIngredientsRetrieved] = useState(false);
-  const [cursesRetrieved, setCursesRetrieved] = useState(false);
+  const [ingredientsRetrieved, setIngredientsRetrieved] = useState(true);
+  const [cursesRetrieved, setCursesRetrieved] = useState(true);
   const [potionCreated, setPotionCreated] = useState(false);
-  const [potion, setPotion] = useState<Potion | Essence | Stench | Elixir | Venom | Antidote | Poison | undefined>();
+  const [potion, setPotion] = useState<Potion | Essence | Stench | Elixir | Venom | Antidote | Poison | Cleanse | undefined>();
   const [spinnerMessage, setSpinnerMessage] = useState('Preparing Ingredients...');
   const [cookBookModalVisible, setCookBookModalVisible] = useState(false);
+  const [scrollModalVisible, setScrollModalVisible] = useState(false);
 
   const player = UserData.UserData.playerData;
   const vibrationDuration = 250;
@@ -170,71 +180,12 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   }, [isInsideLab]);
 
   useEffect(() => {
-    const fetchIngredients = async () => {
-      try {
-        setIngredientsRetrieved(false);
-        console.log('Fetching ingredients...');
-        const response = await fetch(`${Config.PM2}/ingredients`);
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          const data = await response.json();
-          if (data.success === true && Array.isArray(data.ingredientsData) && data.ingredientsData.length > 0) {
-            setAllIngredients(data.ingredientsData); // Almacenar en variable local
-            setIngredients(data.ingredientsData); // Almacenar en contexto global
-          } else {
-            console.error('No ingredients found or status is not OK.');
-          }
-        } else {
-          const text = await response.text();
-          console.error('Response is not JSON:', text);
-        }
-      } catch (error) {
-        console.error('Error getting ingredients:', error);
-      } finally {
-        setIngredientsRetrieved(true);
-      }
-    };
-    fetchIngredients();
-  }, [setIngredients]);
-
-  useEffect(() => {
-    const fetchCurses = async () => {
-      try {
-        setCursesRetrieved(false);
-        console.log('Fetching curses...');
-        const response = await fetch(`${Config.PM2}/potions`);
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          const data = await response.json();
-          if (data.success === true && Array.isArray(data.potionsData) && data.potionsData.length > 0) {
-            setCurses(data.potionsData); // Almacenar en contexto global
-          } else {
-            console.error('No curses found or status is not OK.');
-          }
-        } else {
-          const text = await response.text();
-          console.error('Response is not JSON:', text);
-        }
-      } catch (error) {
-        console.error('Error getting curses:', error);
-      } finally {
-        setCursesRetrieved(true);
-      }
-    };
-    fetchCurses();
-  }, [setCurses]);
-
-  // useEffect(() => {
-  //   if (ingredientsRetrieved && !potionCreated && allIngredients.length > 0 && curses.length > 0) {
-  //     const processedIngredients = allIngredients.map(ingredient => Ingredient.from(ingredient));
-  //     const processedCurses = curses.map(curse => Curse.from(curse));
-  //     setIngredients(processedIngredients);
-  //     setCurses(processedCurses);
-  //     console.log('Ingredientes procesados:', processedIngredients);
-  //     console.log('Maldiciones procesadas:', processedCurses);
-  //   }
-  // }, [ingredientsRetrieved, potionCreated, allIngredients, curses, setIngredients, setCurses]);
-
+    console.log("POTION CREATED");
+    
+    if (potion?.type === 'Cleanse') {
+      setScrollModalVisible(true);
+    }
+  }, [potion]);
 
   useEffect(() => {
     listenToServerEventsScanAcolyte(setIsInsideLab);
@@ -407,6 +358,8 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             />
           </TouchableOpacity>
           <CookBookModal key={1} visible={cookBookModalVisible} setVisible={setCookBookModalVisible} curses={curses}/>
+          <ScrollModal key={2} visible={scrollModalVisible} setVisible={setScrollModalVisible}/>
+
           {/* Modal para mostrar detalles del QR */}
           <Modal
             animationType="slide"
@@ -533,15 +486,10 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
                     style={styles.applyFiltersButton}
                     onPress={applyFilters}
                   >
-                    <ImageBackground
-                      source={require('../assets/boton.png')}
-                      resizeMode="stretch"
-                      style={{ width: '100%', height: '100%' }}
-                    >
+                    
                       <MedievalText fontSize={16} color="#ffffff" style={styles.applyFiltersText}>
                         Apply Filters
                       </MedievalText>
-                    </ImageBackground>
                   </TouchableOpacity>
                 </View>
               </ImageBackground>

@@ -29,9 +29,9 @@ const MapScreen: React.FC = () => {
     navigation.navigate('TowerAcolyth');
   };
 
-  useEffect(() => {
-    navigation.navigate('Map');
-  }, [isInsideLab,navigation]);
+  // useEffect(() => {
+  //   navigation.navigate('Map');
+  // }, [isInsideLab,navigation]);
 
   if (isInsideLab) {
     return(

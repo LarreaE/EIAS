@@ -23,7 +23,9 @@ const SelectedIngredientsDisplay = ({ selectedIngredients, ingredients, onDesele
                 resizeMode="cover"         // Ajuste de la imagen
             >
                 <Image
-                    source={LocalIngredientImage}
+                    source={{
+                      uri: `https://kaotika.vercel.app/${ingredient.image}`,
+                  }} 
                     style={styles.image}
                 />
             </ImageBackground>

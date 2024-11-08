@@ -18,6 +18,7 @@ import com.horcrux.svg.SvgPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
 import com.reactnativepagerview.PagerViewPackage; // Nueva importación
 import com.oblador.vectoricons.VectorIconsPackage;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 
 
 class MainApplication : Application(), ReactApplication {

@@ -17,7 +17,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { listenToServerEvents, clearServerEvents } from './sockets/listenEvents';
 import socket from './sockets/socketConnection';
 import { sendUserEMail } from './sockets/emitEvents.tsx';
-import { UserProvider } from './context/UserContext'; // Importa el proveedor
+import { UserContextType, UserProvider } from './context/UserContext'; // Importa el proveedor
 import { UserContext } from './context/UserContext'; // Importa el contexto
 import AcolythScreen from './screens/Info.tsx';
 import { Player } from './interfaces/Player.tsx';
@@ -26,15 +26,17 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Tower from './screens/Tower.tsx';
 import messaging from '@react-native-firebase/messaging';
 import { checkAndRequestNotificationPermission } from './components/notificationPermissions.tsx';
+import { saveBoolean, getBoolean } from './helper/AsyncStorage.tsx';
+
 const Tab = createMaterialTopTabNavigator();
 
 function App() {
   const [isLoged, setIsLoged] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-
+  
   useEffect(() => {
     checkAndRequestNotificationPermission();
-}, []);
+  }, []);
 
   useEffect(() => {
     onMessageReceived();
@@ -42,9 +44,13 @@ function App() {
   const onMessageReceived = () => {
     messaging().onMessage(async remoteMessage => {
       console.log('Notificación recibida en primer plano:', remoteMessage);
-      ToastAndroid.show(`${remoteMessage?.notification?.title}`,5)
+      const title = remoteMessage.notification?.title || '';
+      const message = remoteMessage.notification?.body || '';
+      // Concatenamos el título y el mensaje en un solo string
+      const fullMessage = `${title}: ${message}`;
+      ToastAndroid.show(fullMessage, ToastAndroid.LONG);
     });
-  };
+  }
 
 
   return (
@@ -60,7 +66,9 @@ function App() {
 }
 
 function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) {
-  const { userData: UserData, setUserData } = useContext(UserContext); // Usamos useContext para UserData;
+  const context = useContext(UserContext) as UserContextType;
+
+  const { userData: UserData, setUserData ,setParchment} = context; // Usamos useContext para UserData;
 
   useEffect(() => {
       // Set background message handler
@@ -69,8 +77,15 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
     });
   });
 
-
-  
+  useEffect(() => {
+    const getParchment = async () => {
+      setParchment(await getBoolean('parchment'));
+      console.log("Parchment set");
+      
+    };
+      
+    getParchment();
+  }, []);
   useEffect(() => {
     socket.on('request_email', () => {
       console.log('El servidor ha solicitado el correo electrónico');
