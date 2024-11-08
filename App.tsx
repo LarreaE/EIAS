@@ -286,7 +286,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               {props => <HomeVillain {...props} user={userData} />}
             </Tab.Screen>
             <Tab.Screen
-              name="LaboratoryVillain"
+              name="Map"
               options={{
                 tabBarLabel: '',
                 tabBarIcon: () => (
@@ -294,7 +294,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
                 ),
               }}
             >
-               {props => <AcolythLaboratoryScreen {...props} UserData={userData} />}
+               {props => <MapScreen {...props}/>}
             </Tab.Screen>
           </>
         );
