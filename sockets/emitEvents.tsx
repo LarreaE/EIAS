@@ -8,3 +8,7 @@ export const sendQRScan = (scannedEmail: string): void => {
 export const sendUserEMail = (email: string) => {
   socket.emit('send_email', { email });
 };
+
+export const sendIsInside = (state: boolean): void => {
+  socket.emit('is_inside_tower', { state });
+};
