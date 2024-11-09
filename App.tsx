@@ -4,29 +4,29 @@ import { SafeAreaView, StyleSheet, Image, Modal, TouchableOpacity, Text, View, I
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import GoogleSignInComponent from './components/googleSingIn.tsx';
+import GoogleSignInComponent from './components/googleSingIn';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
-import QRScanner from './components/QrScanner.tsx';
-import ProfileScreen from './components/ProfileScreen.tsx';
-import AcolythHomeScreen from './components/acolythHomeScreen.tsx';
-import AcolythLaboratoryScreen from './components/acolythLaboratoryScreen.tsx';
-import MortimerLaboratoryScreen from './components/mortimerLaboratoryScreen .tsx';
-import HomeVillain from './components/HomeVillain.tsx';
+import QRScanner from './components/QrScanner';
+import ProfileScreen from './components/ProfileScreen';
+import AcolythHomeScreen from './components/acolythHomeScreen';
+import AcolythLaboratoryScreen from './components/acolythLaboratoryScreen';
+import MortimerLaboratoryScreen from './components/mortimerLaboratoryScreen ';
+import HomeVillain from './components/HomeVillain';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { listenToServerEvents, clearServerEvents } from './sockets/listenEvents';
 import socket from './sockets/socketConnection';
-import { sendUserEMail } from './sockets/emitEvents.tsx';
+import { sendUserEMail } from './sockets/emitEvents';
 import { UserContextType, UserProvider } from './context/UserContext'; // Importa el proveedor
 import { UserContext } from './context/UserContext'; // Importa el contexto
-import AcolythScreen from './screens/Info.tsx';
-import { Player } from './interfaces/Player.tsx';
-import MapScreen from './screens/Map.tsx';
+import AcolythScreen from './screens/Info';
+import { Player } from './interfaces/Player';
+import MapScreen from './screens/Map';
 import { createStackNavigator } from '@react-navigation/stack';
-import Tower from './screens/Tower.tsx';
+import Tower from './screens/Tower';
 import messaging from '@react-native-firebase/messaging';
-import { checkAndRequestNotificationPermission } from './components/notificationPermissions.tsx';
-import { saveBoolean, getBoolean } from './helper/AsyncStorage.tsx';
+import { checkAndRequestNotificationPermission } from './components/notificationPermissions';
+import { saveBoolean, getBoolean } from './helper/AsyncStorage';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -51,7 +51,6 @@ function App() {
       ToastAndroid.show(fullMessage, ToastAndroid.LONG);
     });
   }
-
 
   return (
     <UserProvider>
@@ -151,6 +150,9 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
       height: 80,
       elevation: 0,
     },
+    tabBarIndicatorStyle: {
+      height: 0, // Eliminamos la barra indicadora
+    },
     headerShown: false,
     swipeEnabled: route.name !== 'LaboratoryAcolyth',
     tabBarScrollEnabled: false,
@@ -163,7 +165,6 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
       return null;
     }
 
-
     switch (userData.playerData.role) {
       case 'ISTVAN':
         return (
@@ -172,8 +173,10 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               name="Settings"
               options={{
                 tabBarLabel: '',
-                tabBarIcon: () => (
-                  <Image source={require('./assets/setings_icon.png')} style={styles.icon} />
+                tabBarIcon: ({ focused }) => (
+                  <View style={focused ? styles.activeTabBackground : null}>
+                    <Image source={require('./assets/setings_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                  </View>
                 ),
               }}
             >
@@ -183,8 +186,10 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               name="QRScanner"
               options={{
                 tabBarLabel: '',
-                tabBarIcon: () => (
-                  <Image source={require('./assets/laboratory_icon.png')} style={styles.icon} />
+                tabBarIcon: ({ focused }) => (
+                  <View style={focused ? styles.activeTabBackground : null}>
+                    <Image source={require('./assets/laboratory_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                  </View>
                 ),
               }}
             >
@@ -231,8 +236,10 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               name="Settings"
               options={{
                 tabBarLabel: '',
-                tabBarIcon: () => (
-                  <Image source={require('./assets/setings_icon.png')} style={styles.icon} />
+                tabBarIcon: ({ focused }) => (
+                  <View style={focused ? styles.activeTabBackground : null}>
+                    <Image source={require('./assets/setings_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                  </View>
                 ),
               }}
             >
@@ -242,8 +249,10 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               name="LaboratoryMortimer"
               options={{
                 tabBarLabel: '',
-                tabBarIcon: () => (
-                  <Image source={require('./assets/laboratory_icon.png')} style={styles.icon} />
+                tabBarIcon: ({ focused }) => (
+                  <View style={focused ? styles.activeTabBackground : null}>
+                    <Image source={require('./assets/laboratory_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                  </View>
                 ),
               }}
             >
@@ -253,8 +262,10 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               name="TowerMortimer"
               options={{
                 tabBarLabel: '',
-                tabBarIcon: () => (
-                  <Image source={require('./assets/laboratory_icon.png')} style={styles.icon} />
+                tabBarIcon: ({ focused }) => (
+                  <View style={focused ? styles.activeTabBackground : null}>
+                    <Image source={require('./assets/laboratory_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                  </View>
                 ),
               }}
             >
@@ -270,8 +281,10 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               name="Settings"
               options={{
                 tabBarLabel: '',
-                tabBarIcon: () => (
-                  <Image source={require('./assets/setings_icon.png')} style={styles.icon} />
+                tabBarIcon: ({ focused }) => (
+                  <View style={focused ? styles.activeTabBackground : null}>
+                    <Image source={require('./assets/setings_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                  </View>
                 ),
               }}
             >
@@ -281,8 +294,10 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               name="HomeAcolyth"
               options={{
                 tabBarLabel: '',
-                tabBarIcon: () => (
-                  <Image source={require('./assets/home_icon.png')} style={styles.icon} />
+                tabBarIcon: ({ focused }) => (
+                  <View style={focused ? styles.activeTabBackground : null}>
+                    <Image source={require('./assets/home_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                  </View>
                 ),
               }}
             >
@@ -292,8 +307,10 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               name="Map"
               options={{
                 tabBarLabel: '',
-                tabBarIcon: () => (
-                  <Image source={require('./assets/laboratory_icon.png')} style={styles.icon} />
+                tabBarIcon: ({ focused }) => (
+                  <View style={focused ? styles.activeTabBackground : null}>
+                    <Image source={require('./assets/map_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                  </View>
                 ),
               }}
             >
@@ -309,8 +326,10 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               name="Settings"
               options={{
                 tabBarLabel: '',
-                tabBarIcon: () => (
-                  <Image source={require('./assets/setings_icon.png')} style={styles.icon} />
+                tabBarIcon: ({ focused }) => (
+                  <View style={focused ? styles.activeTabBackground : null}>
+                    <Image source={require('./assets/setings_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                  </View>
                 ),
               }}
             >
@@ -321,8 +340,10 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               name="HomeAcolyth"
               options={{
                 tabBarLabel: '',
-                tabBarIcon: () => (
-                  <Image source={require('./assets/home_icon.png')} style={styles.icon} />
+                tabBarIcon: ({ focused }) => (
+                  <View style={focused ? styles.activeTabBackground : null}>
+                    <Image source={require('./assets/home_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                  </View>
                 ),
               }}
             >
@@ -333,8 +354,10 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               name="Info"
               options={{
                 tabBarLabel: '',
-                tabBarIcon: () => (
-                  <Image source={require('./assets/profile_icon.png')} style={styles.icon} />
+                tabBarIcon: ({ focused }) => (
+                  <View style={focused ? styles.activeTabBackground : null}>
+                    <Image source={require('./assets/profile_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                  </View>
                 ),
               }}
             >
@@ -345,8 +368,10 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               name="Map"
               options={{
                 tabBarLabel: '',
-                tabBarIcon: () => (
-                  <Image source={require('./assets/map_icon.png')} style={styles.icon} />
+                tabBarIcon: ({ focused }) => (
+                  <View style={focused ? styles.activeTabBackground : null}>
+                    <Image source={require('./assets/map_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                  </View>
                 ),
               }}
             >
@@ -359,7 +384,6 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
   };
 
   const Stack = createStackNavigator();
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -409,6 +433,19 @@ const styles = StyleSheet.create({
     width: 66,
     height: 66,
     right: 20,
+  },
+  activeIcon: {
+    width: 76, // Más grande cuando está activo
+    height: 76,
+    left:0,
+  },
+  activeTabBackground: {
+    backgroundColor: 'rgba(205, 133, 63, 0.5)', // Marrón claro semitransparente
+    borderRadius: 20,
+    width: 76, // Más grande cuando está activo
+    height: 76,
+    bottom:13,
+    left:-20,
   },
   openModalButton: {
     justifyContent: 'center',

@@ -73,7 +73,7 @@ useEffect(() => {
       const sendNotification = async () => {
         console.log('Sending notification to email:', player.email);
         try {
-          await fetch(`${Config.PM2}/send-notification`, {
+          await fetch(`${Config.RENDER}/send-notification`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
