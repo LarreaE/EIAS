@@ -123,7 +123,7 @@ useEffect(() => {
     console.log('Message updated:', msg);
   }, [msg]);
   useEffect(() => {
-    console.log('Ingredients updated:', purifyIngredients);
+    //console.log('Ingredients updated:', purifyIngredients);
   }, [purifyIngredients]);
 
   if (userData.playerData.role === 'MORTIMER') {
