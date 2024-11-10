@@ -188,13 +188,18 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
                 tabBarLabel: '',
                 tabBarIcon: ({ focused }) => (
                   <View style={focused ? styles.activeTabBackground : null}>
-                    <Image source={require('./assets/laboratory_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                    <Image source={require('./assets/QR_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
                   </View>
                 ),
               }}
             >
               {props => (
                 <>
+                <ImageBackground
+                      source={require('./assets/settings_background_02.png')}  // Ruta de la imagen de fondo
+                      style={styles.QRbackground}  // Aplicar estilos al contenedor de la imagen de fondo
+                      resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+                    >
                   <TouchableOpacity onPress={() => setIsModalVisible(true)}>
                     <ImageBackground
                       source={require('./assets/boton.png')}  // Ruta de la imagen de fondo
@@ -204,13 +209,14 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
                       <Text style={styles.buttonText}>Open QR Scanner</Text>
                     </ImageBackground>
                   </TouchableOpacity>
+                  
                   <View style={styles.modalView}>
                     <Modal
                       animationType="slide"
                       visible={isModalVisible}
                     >
                       <QRScanner {...props} onQRCodeScanned={handleQRCodeScanned} />
-
+                      
                       <TouchableOpacity onPress={() => setIsModalVisible(false)}>
                         <ImageBackground
                           source={require('./assets/boton.png')}  // Ruta de la imagen de fondo
@@ -223,6 +229,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
                       </TouchableOpacity>
                     </Modal>
                   </View>
+                  </ImageBackground>
                 </>
               )}
             </Tab.Screen>
@@ -451,6 +458,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 150,
+    width:250,
+    top:'200%',
   },
   closeButton: {
     backgroundColor: '#F194FF',
@@ -472,6 +481,11 @@ const styles = StyleSheet.create({
     width: '100%',       // Ancho completo para el botón
   },
   modalView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+   QRbackground: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
