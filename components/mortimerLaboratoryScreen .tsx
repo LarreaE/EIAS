@@ -54,6 +54,12 @@ const MortimerLaboratoryScreen: React.FC<Props> = () => {
       style={styles.background}
       resizeMode="cover"
     >
+       <View style={styles.titleContainer}>
+        <View style={styles.titleBackground} />
+        <MedievalText style={styles.title}>
+          Laboratory
+        </MedievalText>
+      </View>
       <View style={styles.users}>
         {/* mapear array users */}
         {users.map((user) => (
@@ -74,8 +80,26 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
+  titleContainer: {
+    position: 'absolute',
+    top: 130,
+    alignItems: 'center',
+  },
+  titleBackground: {
+    position: 'absolute',
+    backgroundColor: 'rgba(128, 128, 128, 0.7)',
+    width: 220,
+    height: 60,
+    borderRadius: 10,
+  },
+  title: {
+    fontSize: 35,
+    paddingHorizontal: 10,
+    paddingVertical: 25,  // Añade padding vertical para evitar el corte
+    textAlign: 'center',
+  },
   users: {
-    top:50,
+    top: 250,
   },
 });
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground, FlatList, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Dimensions } from 'react-native';
 import AcolythCard from './acolythCard';
 import { listenToServerEventsMortimer, clearServerEvents } from '../sockets/listenEvents.tsx';
 import MedievalText from './MedievalText.tsx';
@@ -36,21 +36,26 @@ const MortimerTower: React.FC = () => {
 
   return (
     <ImageBackground
-      source={require('../assets/laboratory.png')}
+      source={require('../assets/mortimerTower.png')}
       style={styles.background}
       resizeMode="cover"
     >
+      <View style={styles.titleContainer}>
+        <View style={styles.titleBackground} />
+        <MedievalText style={styles.title}>
+          The Tower
+        </MedievalText>
+      </View>
       <View style={styles.users}>
-        {/* mapear array users */}
         {users.map((user) => (
           <AcolythCard
             key={user._id}
             nickname={user.nickname}
-            is_active={user.is_active}
+            is_active={user.is_inside_tower}
             avatar={user.avatar}
           />
         ))}
-        </View>
+      </View>
     </ImageBackground>
   );
 };
@@ -60,9 +65,26 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
+  titleContainer: {
+    position: 'absolute',
+    top: 130,
+    alignItems: 'center',
+  },
+  titleBackground: {
+    position: 'absolute',
+    backgroundColor: 'rgba(128, 128, 128, 0.7)',
+    width: 220,
+    height: 60,
+    borderRadius: 10,
+  },
+  title: {
+    fontSize: 35,
+    paddingHorizontal: 10,
+    paddingVertical: 25,  // Añade padding vertical para evitar el corte
+    textAlign: 'center',
+  },
   users: {
-    top:50,
+    top: 250,
   },
 });
-
 export default MortimerTower;

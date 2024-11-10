@@ -264,7 +264,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
                 tabBarLabel: '',
                 tabBarIcon: ({ focused }) => (
                   <View style={focused ? styles.activeTabBackground : null}>
-                    <Image source={require('./assets/laboratory_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                    <Image source={require('./assets/tower_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
                   </View>
                 ),
               }}
