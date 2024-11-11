@@ -320,7 +320,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
   return (
     <View style={styles.container}>
-      {isInsideLab ? (
+      {isInsideLab || userData.playerData.role === 'VILLAIN' ? (
         <ImageBackground
           source={require('../assets/laboratory.png')}  // Ruta de la imagen
           style={styles.background}  // Aplicar estilos al contenedor
@@ -334,17 +334,30 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             createPotion={createPotion} 
           />
           {/* Botón para mostrar el QR */}
-          <TouchableOpacity
+          {userData.playerData.role === 'ACOLYTE' && (
+            <TouchableOpacity
             onPress={() => setModalVisible(true)}
             style={styles.qrButton}
-          >
+            >
             <ImageBackground
               source={require('../assets/QR_icon.png')}  // Ruta de la imagen
               style={styles.openButton}  // Aplicar estilos al contenedor
               resizeMode="cover"         // Ajuste de la imagen
             />
-          </TouchableOpacity>
-
+            </TouchableOpacity>
+          )}
+          {userData.playerData.role === 'VILLAIN' && (
+            <TouchableOpacity
+            onPress={goToMap}
+            style={styles.qrButton}
+            >
+            <ImageBackground
+              source={require('../assets/map_icon.png')}  // Ruta de la imagen
+              style={styles.openButton}  // Aplicar estilos al contenedor
+              resizeMode="cover"         // Ajuste de la imagen
+            />
+            </TouchableOpacity>
+          )}
           {/* Botón de Cookbook */}
           <TouchableOpacity
             style={styles.cookBookButton}

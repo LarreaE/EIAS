@@ -47,13 +47,15 @@ const MapScreen: React.FC = () => {
         resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
       >
 
-        <View style={styles.buttonTower}>
-          <MapButton
-            title="Tower"
-            onPress={goToTower}
-            iconImage={require('../assets/home_icon.png')}
-          />
-        </View>
+        {userData.playerData.role === 'ACOLYTE' && (
+          <View style={styles.buttonTower}>
+            <MapButton
+              title="Tower"
+              onPress={goToTower}
+              iconImage={require('../assets/home_icon.png')}
+            />
+          </View>
+        )}
 
         <View style={styles.buttonLaboratory}>
           <MapButton
