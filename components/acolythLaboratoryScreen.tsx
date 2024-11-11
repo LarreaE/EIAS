@@ -192,7 +192,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
     const updateIsInside = async () => {
       try {
-        await fetch(`${Config.RENDER}/isInside`, {
+        await fetch(`${Config.PM2}/isInside`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

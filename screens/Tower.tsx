@@ -46,6 +46,9 @@ const Tower: React.FC = () => {
 
 useEffect(() => {
   listenToServerEventsAcolyte(player.email,setIsInsideTower);
+  return () => {
+    clearServerEvents()
+  };
 }, [player]);
 
 
@@ -73,7 +76,7 @@ useEffect(() => {
       const sendNotification = async () => {
         console.log('Sending notification to email:', player.email);
         try {
-          await fetch(`${Config.RENDER}/send-notification`, {
+          await fetch(`${Config.PM2}/send-notification`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
