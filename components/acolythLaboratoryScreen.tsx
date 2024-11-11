@@ -479,6 +479,9 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             {'damage' in potion && (
             <MedievalText style={styles.effectText}>Damage: {potion.damage}</MedievalText>
             )}
+            {'duration' in potion && (
+            <MedievalText style={styles.effectText}>Duration: {potion.duration}</MedievalText>
+            )}
               </>
           ) : <View style={styles.container}/>}
             </View>
