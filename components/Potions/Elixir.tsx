@@ -38,29 +38,36 @@ class Elixir implements Elixirs {
 
         if ( effectArray.every(element => element.attribute === effectArray[0].attribute)) {
             let attributeName = effectArray[0].attribute;
+            let potencyArray = []
             effectArray.forEach(effect => {
                 let potencyValue = 0;
                 const { attribute } = effect;
                 switch (effect.potency) {
                   case 'least':
                     potencyValue = 5;
+                    potencyArray.push(potencyValue);
                     break;
                   case 'lesser':
                     potencyValue = 10;
+                    potencyArray.push(potencyValue);
                     break;
                   case 'greater':
                     potencyValue = 20;
+                    potencyArray.push(potencyValue);
                     break;
                   default: // no potency or unknown
                     potencyValue = 15;
+                    potencyArray.push(potencyValue);
                     break;
                 }
+                let n = media(potencyArray); // take the 
+                n = round(n); // round too newares 5
+
                 if (modifiers.hasOwnProperty(attribute)) {
-                    modifiers[attribute as keyof Modifier] = potencyValue;
+                    modifiers[attribute as keyof Modifier] = n;
                   }
               });
 
-              modifiers[attributeName as keyof Modifier] = round(modifiers[attributeName as keyof Modifier]); // round too newares 5
               if (attributeName === 'insanity') {
                 modifiers[attributeName as keyof Modifier] = -modifiers[attributeName as keyof Modifier]; // take into account frenzy and calm and reverse sign
               }
@@ -96,6 +103,14 @@ class Elixir implements Elixirs {
     }
     }
 }
+function media(potencyArray: number[]){
+
+  let sum = potencyArray.reduce((previous, current) => current += previous);
+  let media = sum / potencyArray.length;
+ 
+  return media
+}
+
 function round(value: number): number {
     return Math.floor(value / 5) * 5;
   }
