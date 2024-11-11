@@ -35,11 +35,19 @@ const Tower: React.FC = () => {
   const player = userData.playerData;
   sendLocation('Tower', userData.playerData.email);
   const [isInsideTower,setIsInsideTower] = useState(userData.is_inside_tower);
+  const [update, setUpdate] = useState(0);
+
+  useEffect(() => {
+    // Forzar actualización
+    setUpdate((prev) => prev + 1);
+}, [isInsideTower]); // Puedes pasar dependencias aquí si necesitas que se ejecute en ciertas condiciones
 
   useEffect(() => {
     console.log('isInsideTower');
     console.log(isInsideTower);
-    player.is_inside_tower = isInsideTower;
+    if (isInsideTower !== undefined) {
+      player.is_inside_tower = isInsideTower;
+    }
     console.log('PLayer inside: ' + player.is_inside_tower);
     sendIsInside(isInsideTower);
 }, [isInsideTower, player]);
@@ -134,7 +142,7 @@ useEffect(() => {
   } else {
     return (
       <>
-        {!userData.playerData.is_inside_tower ? (
+        {userData.playerData.is_inside_tower ? (
           // inside the tower
           <ImageBackground
           source={require('../assets/scroll.png')}
