@@ -26,28 +26,28 @@ const Tower: React.FC = () => {
   const { setUserData, userData, purifyIngredients, setPurifyIngredients, setAllIngredients, allIngredients, parchment , setParchment  } = context;
   const navigation = useNavigation<MapScreenNavigationProp>();
 
-  const [msg, setMsg] = useState("la,,br e h  - h  ,  a  ,i,,r,,ah c a z/,  s, ,  t, , n e i,d,  ,er,g,  , n ,i /,  ,  v  ed  ,,. y  l,f.,,r  ,,ev,,  r  ,e  s-a,,k  ,it  oa,k//,  :sp,t, , th");
+  const [msg, setMsg] = useState('la,,br e h  - h  ,  a  ,i,,r,,ah c a z/,  s, ,  t, , n e i,d,  ,er,g,  , n ,i /,  ,  v  ed  ,,. y  l,f.,,r  ,,ev,,  r  ,e  s-a,,k  ,it  oa,k//,  :sp,t, , th');
   const [isDoorOpen, setIsDoorOpen] = useState(false); // Estado para la puerta
   const [spinner, setSpinner] = useState(''); //
-  const [spinnerActive, setSpinnerActive] = useState(false); 
+  const [spinnerActive, setSpinnerActive] = useState(false);
 
 
   const player = userData.playerData;
-  sendLocation("Tower", userData.playerData.email)
+  sendLocation('Tower', userData.playerData.email);
   const [isInsideTower,setIsInsideTower] = useState(userData.is_inside_tower);
 
   useEffect(() => {
-    console.log("isInsideTower");
+    console.log('isInsideTower');
     console.log(isInsideTower);
     player.is_inside_tower = isInsideTower;
-    console.log("PLayer inside: " + player.is_inside_tower);  
+    console.log('PLayer inside: ' + player.is_inside_tower);
     sendIsInside(isInsideTower);
 }, [isInsideTower, player]);
 
 useEffect(() => {
   listenToServerEventsAcolyte(player.email,setIsInsideTower);
   return () => {
-    clearServerEvents()
+    clearServerEvents();
   };
 }, [player]);
 
@@ -55,10 +55,10 @@ useEffect(() => {
   const getNewIngredients = async (url: string) => {
     try {
       const response = await axios.get(url);
-      const ingredients = response.data.data["Zachariah's herbal"].ingredients
+      const ingredients = response.data.data["Zachariah's herbal"].ingredients;
       let ingredientsArray = [];
       for (let index = 0; index < ingredients.length; index++) {
-        let ingredient = new Ingredient(ingredients[index]._id,ingredients[index].name,ingredients[index].effects,ingredients[index].value,ingredients[index].type,ingredients[index].image,ingredients[index].description); 
+        let ingredient = new Ingredient(ingredients[index]._id,ingredients[index].name,ingredients[index].effects,ingredients[index].value,ingredients[index].type,ingredients[index].image,ingredients[index].description);
         ingredientsArray.push(ingredient);
       }
       setPurifyIngredients(ingredientsArray);
@@ -104,23 +104,23 @@ useEffect(() => {
 
   const resetParchment = async () => {
     await saveBoolean('parchment',true);
-    console.log("Parchment set to true");
+    console.log('Parchment set to true');
     setParchment(true);
   };
-    
+
   const decrypt = () => {
     if (!parchment) {
       resetParchment();
-      setSpinner('Retrieving Arcane knowledge... ')
+      setSpinner('Retrieving Arcane knowledge... ');
       setSpinnerActive(true);
       const decryptedMsg = msg.replace(/[, ]/g, '').split('').reverse().join('');
       setMsg(decryptedMsg);
-      console.log("Scroll patched");
+      console.log('Scroll patched');
       getNewIngredients(decryptedMsg);
     } else {
-      ToastAndroid.show('The knowledge has already been acquired' , 3)
+      ToastAndroid.show('The knowledge has already been acquired' , 3);
     }
-  }
+  };
 
   useEffect(() => {
     console.log('Message updated:', msg);

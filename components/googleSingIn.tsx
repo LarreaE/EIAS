@@ -18,7 +18,6 @@ interface Props {
 const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
   const context = useContext(UserContext) as UserContextType;
   const { setUserData, setIsInsideLab, setAllIngredients, setPurifyIngredients, setCurses, parchment, allIngredients, purifyIngredients } = context;
-  
   const [loading, setLoading] = useState(false); // Estado para el loading
   const [socketId, setSocketId] = useState<string | null>(null); // Estado para almacenar el socket ID
   const [spinnerMessage, setSpinnerMessage] = useState('Connecting...');
@@ -49,7 +48,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
    //merge ingredients when purifyIngredients or allingredients changes
   useEffect(() => {
     const mergedIngredients = [...allIngredients, ...purifyIngredients];
-    console.log("Merged Ingreds:", mergedIngredients);
+    console.log('Merged Ingreds:', mergedIngredients);
     setAllIngredients(mergedIngredients);
   }, [purifyIngredients]);
 
@@ -78,10 +77,10 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
   const fetchRareIngredients = async () => {
     try {
       const response = await axios.get('https://kaotika-server.fly.dev/ingredients/zachariah-herbal');
-      const ingredients = response.data.data["Zachariah's herbal"].ingredients
+      const ingredients = response.data.data["Zachariah's herbal"].ingredients;
       let ingredientsArray = [];
       for (let index = 0; index < ingredients.length; index++) {
-        let ingredient = new Ingredient(ingredients[index]._id,ingredients[index].name,ingredients[index].effects,ingredients[index].value,ingredients[index].type,ingredients[index].image,ingredients[index].description); 
+        let ingredient = new Ingredient(ingredients[index]._id,ingredients[index].name,ingredients[index].effects,ingredients[index].value,ingredients[index].type,ingredients[index].image,ingredients[index].description);
         ingredientsArray.push(ingredient);
       }
       setPurifyIngredients(ingredientsArray);
@@ -90,7 +89,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     }
   };
   const fetchCurses = async () => {
-    
+
     try {
       console.log('Fetching curses...');
       const response = await fetch(`${Config.PM2}/potions`);
@@ -117,7 +116,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
       const authenticate = async() => {
         try {
           setSpinnerMessage('Connecting...');
-          
+
           // Perform the axios request and wait for the response
           const response = await axios.post(`${Config.PM2}/verify-token`, {
             idToken: idTokenResult?.token,
@@ -125,45 +124,45 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
             socketId: socket.id,
             fcmToken: token,
           });
-          
+
           console.log('JWT TOKEN FROM EXPRESS');
-        
+
           // If successful, update the state
           setSpinnerMessage('Connection established...');
           setUserData(response.data);
           setIsInsideLab(response.data.playerData.is_active);
-        
+
           // Fetch ingredients and curses in sequence
           setSpinnerMessage('Fetching Ingredients...');
           await fetchIngredients();
-        
+
           setSpinnerMessage('Fetching Curses...');
           await fetchCurses();
-        
+
           if (parchment) {
             setSpinnerMessage('Fetching Rare Ingredients...');
             await fetchRareIngredients();
           }
           // Log the user in
           setIsLoged(true);
-        
+
         } catch (error) {
           console.log('An error occurred during token verification or data fetching.');
-          
+
           // Check if error.response and error.response.data exist
           if (error.response && error.response.data) {
-            console.log("Error data: ", error.response.data);
+            console.log('Error data: ', error.response.data);
           } else {
-            console.log("Error: ", error.message || 'An unknown error occurred.');
+            console.log('Error: ', error.message || 'An unknown error occurred.');
           }
-        
+
           // Stop any loading indicators
           setLoading(false);
-          
+
         } finally {
           console.log('authenticated');
-        }    
-      }
+        }
+      };
       setLoading(true); // Iniciar el loading
       const userInfo = await GoogleSignin.signIn(); // Reemplaza esto con tu lógica de inicio de sesión
       console.log('Usuario de Google:', userInfo);
@@ -199,9 +198,9 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     console.log(token);
 
     await authenticate();
-    
+
     } catch (error:any) {
-      console.log("Error: ", error.response.data);
+      console.log('Error: ', error.response.data);
       setLoading(false); // Detener el loading
     } finally {
       console.log('UserLoged');
@@ -238,7 +237,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     // Limpia el intervalo al desmontar el componente
     return () => clearInterval(interval);
   }, []);
- 
+
   return (
     <ImageBackground
       source={require('../assets/home_door.png')}
@@ -246,11 +245,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
       resizeMode="cover"
     >
     {loading && <Spinner message={spinnerMessage} />}
-    <TouchableOpacity style={styles.container} onPress={signIn} disabled={loading}>
-      
-        
-      
-    </TouchableOpacity>
+    <TouchableOpacity style={styles.container} onPress={signIn} disabled={loading} />
   </ImageBackground>
   );
 };
