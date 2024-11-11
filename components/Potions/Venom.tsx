@@ -10,6 +10,7 @@ class Venom implements Venoms{
     name: string;
     value: number;
     modifiers: Modifier | undefined | null;
+    duration: number | undefined;
 
     constructor(
        props: Venoms
@@ -21,6 +22,7 @@ class Venom implements Venoms{
         this.name = props.name;
         this.value = props.value;
         this.modifiers = props.modifiers;
+        this.duration = props.duration;
     }
     static calculateMod(effectArray: Array<EffectArray>) {
 
@@ -54,17 +56,44 @@ class Venom implements Venoms{
                     break;
                 }
                 if (modifiers.hasOwnProperty(attribute)) {
-                    modifiers[attribute as keyof Modifier] -= potencyValue;
+                    modifiers[attribute as keyof Modifier] = -potencyValue;
                   }
               });
 
               modifiers[attributeName as keyof Modifier] = round(modifiers[attributeName as keyof Modifier]); // round too newares 5
               if (attributeName === 'insanity') {
-                modifiers[attributeName as keyof Modifier] = +modifiers[attributeName as keyof Modifier]; // take into account frenzy and calm
+                modifiers[attributeName as keyof Modifier] = +modifiers[attributeName as keyof Modifier]; // take into account frenzy and calm and reverse the sign
               }
               console.log("MODIFIERS OF VENOM: " + modifiers);
               return modifiers;
         }
+    }
+    static calculateDuration(effectArray: Array<EffectArray>) {
+      
+      let duration: number = 0;
+
+    if ( effectArray.every(element => element.attribute === effectArray[0].attribute)) {
+        
+        effectArray.forEach(effect => {
+            switch (effect.potency) {
+              case 'least':
+                duration += 1;
+                break;
+              case 'lesser':
+                duration += 1;
+                break;
+              case 'greater':
+                duration += 3;
+                break;
+              default: // no potency or unknown
+                duration += 2;
+                break;
+            }
+          });
+
+          console.log("DURATION OF VENOM: " + duration);
+          return duration;
+    }
     }
 }
 function round(value: number): number {
