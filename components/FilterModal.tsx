@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View, ScrollView, ImageBackground, Dimensions } from "react-native";
 import { Curses } from "../interfaces/Curse";
 import MedievalText from "./MedievalText";
@@ -118,7 +118,7 @@ export const GOOD_EFFECTS = [
     visible: boolean,
     availableEffects: string[],
     selectedEffects: string[],
-    setSelectedEffect: () => void ,
+    setSelectedEffect: Dispatch<SetStateAction<string[]>> ,
     applyFilters: () => void,
     toggleEffect: (effect: string) => void,
 }
