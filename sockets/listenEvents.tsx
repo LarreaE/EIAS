@@ -71,7 +71,7 @@ const sendNotification = async (email:any) => {
   console.log('Sending notification with email:', email);
 
   try {
-    const response = await fetch(`${Config.PM2}/send-notification`, {
+    const response = await fetch(`${Config.RENDER}/send-notification`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ const sendNotification = async (email:any) => {
  async function checkIfInsideTower(email: any) {
   try {
     console.log('FEtchint');
-    const response = await fetch(`${Config.PM2}/isInsideTower`, {
+    const response = await fetch(`${Config.RENDER}/isInsideTower`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
