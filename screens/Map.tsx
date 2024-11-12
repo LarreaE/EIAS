@@ -6,16 +6,21 @@ import { RootStackParamList } from '../types/types';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ImageBackground } from 'react-native';
 import MapButton from '../components/MapButton';
-import { UserContext } from '../context/UserContext';
+import { UserContext, UserContextType } from '../context/UserContext';
 import AcolythLaboratoryScreen from '../components/acolythLaboratoryScreen';
 import { sendLocation } from '../sockets/emitEvents';
+import { Dimensions } from 'react-native';
+
+const { width, height } = Dimensions.get('window');
 
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
 
 const MapScreen: React.FC = () => {
   const navigation = useNavigation<MapScreenNavigationProp>();
 
-  const { isInsideLab, userData } = useContext(UserContext);
+  const context = useContext(UserContext) as UserContextType;
+
+  const { isInsideLab, userData } = context;
 
   sendLocation("Map", userData.playerData.email)
 
@@ -28,7 +33,9 @@ const MapScreen: React.FC = () => {
   const goToTower = () => {
     navigation.navigate('TowerAcolyth');
   };
-
+  const goToMap = () => {
+    navigation.navigate('GeoMap');
+  };
   // useEffect(() => {
   //   navigation.navigate('Map');
   // }, [isInsideLab,navigation]);
@@ -57,6 +64,13 @@ const MapScreen: React.FC = () => {
           </View>
         )}
 
+        <View style={styles.buttonMap}>
+            <MapButton
+              title="GeoMap"
+              onPress={goToMap}
+              iconImage={require('../assets/home_icon.png')}
+            />
+        </View>
         <View style={styles.buttonLaboratory}>
           <MapButton
             title="Laboratory"
@@ -98,6 +112,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 100,
     right: 75,
+    alignSelf: 'center',
+  },
+  buttonMap: {
+    position: 'absolute',
+    bottom: 100,
+    right: 250,
     alignSelf: 'center',
   },
   buttonTower: {
