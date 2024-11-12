@@ -39,6 +39,7 @@ export default class Potion implements Potions {
         let type = 'Potion';
         let curse = seekCurse(ingredients , curses);
         let modifiers = null;
+        let duration: number | undefined = 0;
         if (curse) {
             modifiers = curse.modifiers;
         }
@@ -111,6 +112,8 @@ export default class Potion implements Potions {
                         console.log(potion_name);
                         type = 'Elixir';
                         modifiers = Elixir.calculateMod(effectsArray);
+                        duration = Elixir.calculateDuration(effectsArray);
+
                         return new Elixir({
                             _id: id,
                             name: potion_name,
@@ -119,12 +122,15 @@ export default class Potion implements Potions {
                             type: type,
                             value: value,
                             modifiers: modifiers,
+                            duration: duration,
                         });
                     case 'frenzy':
                         potion_name = `${lowerPotency} ${effectsArray[0].effect} venom`;
                         console.log(potion_name);
                         type = 'Venom';
                         modifiers = Venom.calculateMod(effectsArray);
+                        duration = Venom.calculateDuration(effectsArray);
+
                         return new Venom({
                             _id: id,
                             name: potion_name,
@@ -133,12 +139,14 @@ export default class Potion implements Potions {
                             type: type,
                             value: value,
                             modifiers: modifiers,
+                            duration: duration,
                         });
                     case 'boost':
                         potion_name = `${lowerPotency} ${effectsArray[0].attribute} elixir`;
                         console.log(potion_name);
                         type = 'Elixir';
                         modifiers = Elixir.calculateMod(effectsArray);
+                        duration = Elixir.calculateDuration(effectsArray);
                         return new Elixir({
                             _id: id,
                             name: potion_name,
@@ -147,12 +155,15 @@ export default class Potion implements Potions {
                             type: type,
                             value: value,
                             modifiers: modifiers,
+                            duration: duration
                         });
                     case 'setback':
                         potion_name = `${lowerPotency} ${effectsArray[0].attribute} venom`;
                         console.log(potion_name);
                         type = 'Venom';
                         modifiers = Venom.calculateMod(effectsArray);
+                        duration = Elixir.calculateDuration(effectsArray);
+
                         return new Venom({
                             _id: id,
                             name: potion_name,
@@ -161,6 +172,7 @@ export default class Potion implements Potions {
                             type: type,
                             value: value,
                             modifiers: modifiers,
+                            duration: duration,
                         });
                     case 'restore':
                         potion_name = `${lowerPotency} Antidote of ${curse?.name}`;

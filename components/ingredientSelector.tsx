@@ -162,8 +162,8 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
             <MedievalText fontSize={16} color="#ffffff" style={styles.ingredientName} numberOfLines={1}>
               {item.name}
             </MedievalText>
-            <MedievalText fontSize={12} color="#ffffff" style={styles.ingredientDescription} numberOfLines={2}>
-              {item.description}
+            <MedievalText fontSize={10} color="#ffffff" style={styles.ingredientDescription} numberOfLines={1}>
+              {item.effects[0]}
             </MedievalText>
           </ImageBackground>
         </Animated.View>

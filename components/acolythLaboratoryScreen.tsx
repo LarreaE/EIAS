@@ -192,7 +192,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
     const updateIsInside = async () => {
       try {
-        await fetch(`${Config.RENDER}/isInside`, {
+        await fetch(`${Config.PM2}/isInside`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -320,7 +320,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
   return (
     <View style={styles.container}>
-      {isInsideLab ? (
+      {isInsideLab || userData.playerData.role === 'VILLAIN' ? (
         <ImageBackground
           source={require('../assets/laboratory.png')}  // Ruta de la imagen
           style={styles.background}  // Aplicar estilos al contenedor
@@ -334,17 +334,30 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             createPotion={createPotion} 
           />
           {/* Botón para mostrar el QR */}
-          <TouchableOpacity
+          {userData.playerData.role === 'ACOLYTE' && (
+            <TouchableOpacity
             onPress={() => setModalVisible(true)}
             style={styles.qrButton}
-          >
+            >
             <ImageBackground
               source={require('../assets/QR_icon.png')}  // Ruta de la imagen
               style={styles.openButton}  // Aplicar estilos al contenedor
               resizeMode="cover"         // Ajuste de la imagen
             />
-          </TouchableOpacity>
-
+            </TouchableOpacity>
+          )}
+          {userData.playerData.role === 'VILLAIN' && (
+            <TouchableOpacity
+            onPress={goToMap}
+            style={styles.qrButton}
+            >
+            <ImageBackground
+              source={require('../assets/map_icon.png')}  // Ruta de la imagen
+              style={styles.openButton}  // Aplicar estilos al contenedor
+              resizeMode="cover"         // Ajuste de la imagen
+            />
+            </TouchableOpacity>
+          )}
           {/* Botón de Cookbook */}
           <TouchableOpacity
             style={styles.cookBookButton}
@@ -416,14 +429,48 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             <MedievalText style={styles.effectText}>Type: {potion.type}</MedievalText>
             {'modifiers' in potion && (
               <>
-               <MedievalText style={styles.effectText}>Modifiers:</MedievalText>
-               <MedievalText style={styles.effectText}>Hit Points:  {potion.modifiers?.hit_points}</MedievalText>
-               <MedievalText style={styles.effectText}>Charisma:  {potion.modifiers?.charisma}</MedievalText>
-               <MedievalText style={styles.effectText}>Constitution:  {potion.modifiers?.constitution}</MedievalText>
-               <MedievalText style={styles.effectText}>Dexterity:  {potion.modifiers?.dexterity}</MedievalText>
-               <MedievalText style={styles.effectText}>Insanity:  {potion.modifiers?.insanity}</MedievalText>
-               <MedievalText style={styles.effectText}>Intelligence:  {potion.modifiers?.intelligence}</MedievalText>
-               <MedievalText style={styles.effectText}>Strength:  {potion.modifiers?.strength}</MedievalText>
+              <MedievalText style={styles.effectText}>Modifiers:</MedievalText>
+              {potion.modifiers?.hit_points != null && potion.modifiers.hit_points !== 0 && (
+                <MedievalText style={styles.effectText}>
+                  Hit Points: {potion.modifiers.hit_points}
+                </MedievalText>
+              )}
+
+              {potion.modifiers?.charisma != null && potion.modifiers.charisma !== 0 && (
+                <MedievalText style={styles.effectText}>
+                  Charisma: {potion.modifiers.charisma}
+                </MedievalText>
+              )}
+
+              {potion.modifiers?.constitution != null && potion.modifiers.constitution !== 0 && (
+                <MedievalText style={styles.effectText}>
+                  Constitution: {potion.modifiers.constitution}
+                </MedievalText>
+              )}
+
+              {potion.modifiers?.dexterity != null && potion.modifiers.dexterity !== 0 && (
+                <MedievalText style={styles.effectText}>
+                  Dexterity: {potion.modifiers.dexterity}
+                </MedievalText>
+              )}
+
+              {potion.modifiers?.insanity != null && potion.modifiers.insanity !== 0 && (
+                <MedievalText style={styles.effectText}>
+                  Insanity: {potion.modifiers.insanity}
+                </MedievalText>
+              )}
+
+              {potion.modifiers?.intelligence != null && potion.modifiers.intelligence !== 0 && (
+                <MedievalText style={styles.effectText}>
+                  Intelligence: {potion.modifiers.intelligence}
+                </MedievalText>
+              )}
+
+              {potion.modifiers?.strength != null && potion.modifiers.strength !== 0 && (
+                <MedievalText style={styles.effectText}>
+                  Strength: {potion.modifiers.strength}
+                </MedievalText>
+              )}
               </>
             )}
             {'heal' in potion && (
@@ -431,6 +478,9 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             )}
             {'damage' in potion && (
             <MedievalText style={styles.effectText}>Damage: {potion.damage}</MedievalText>
+            )}
+            {'duration' in potion && (
+            <MedievalText style={styles.effectText}>Duration: {potion.duration}</MedievalText>
             )}
               </>
           ) : <View style={styles.container}/>}

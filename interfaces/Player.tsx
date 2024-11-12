@@ -1,16 +1,16 @@
-import { Modifier } from "./Modifier.tsx";
-import { Armor } from "./Armor.tsx";
-import { Weapon } from "./Weapon.tsx";
-import { Jewelry } from "./Jewelry.tsx";
-import { Antidotes } from "./Antidote.tsx";
-import { Essences } from "./Essence.tsx";
-import { Elixirs } from "./Elixir.tsx";
-import { Profile } from "./Profile.tsx";
-import { Task } from "./Task.tsx";
+import { Modifier } from './Modifier.tsx';
+import { Armor } from './Armor.tsx';
+import { Weapon } from './Weapon.tsx';
+import { Jewelry } from './Jewelry.tsx';
+import { Antidotes } from './Antidote.tsx';
+import { Essences } from './Essence.tsx';
+import { Elixirs } from './Elixir.tsx';
+import { Profile } from './Profile.tsx';
+import { Task } from './Task.tsx';
 
 export interface Player{
     _id: string,
-    name: String,    
+    name: String,
     nickname: String,
     email: String,
     role: String,
@@ -24,6 +24,7 @@ export interface Player{
     attributes: Modifier,
     socketId: String,
     location: String,
+    is_inside_tower:boolean,
     equipment: {
       weapon: Weapon,
       armor: Armor,
@@ -50,4 +51,4 @@ export interface Player{
     },
     profile: Profile,
     tasks: [Task]
-  };
+  }

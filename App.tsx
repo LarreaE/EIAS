@@ -50,7 +50,7 @@ function App() {
       const fullMessage = `${title}: ${message}`;
       ToastAndroid.show(fullMessage, ToastAndroid.LONG);
     });
-  }
+  };
 
   return (
     <UserProvider>
@@ -79,20 +79,20 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
   useEffect(() => {
     const getParchment = async () => {
       setParchment(await getBoolean('parchment'));
-      console.log("Parchment set");
-      
+      console.log('Parchment set');
+
     };
-      
+
     getParchment();
   }, []);
   useEffect(() => {
     console.log(currentScreen);
   }, [currentScreen]);
   useEffect(() => {
-    console.log("CURRENT SCREEN:",currentScreen);
-    if (currentScreen==='LaboratoryAcolyth') {
+    console.log('CURRENT SCREEN:',currentScreen);
+    if (currentScreen === 'LaboratoryAcolyth') {
       userData.playerData.location = 'laboratory';
-    } else if (currentScreen==='TowerAcolyth'){
+    } else if (currentScreen === 'TowerAcolyth'){
       userData.playerData.location = 'tower';
     }
   }, [currentScreen]);
@@ -209,14 +209,14 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
                       <Text style={styles.buttonText}>Open QR Scanner</Text>
                     </ImageBackground>
                   </TouchableOpacity>
-                  
+
                   <View style={styles.modalView}>
                     <Modal
                       animationType="slide"
                       visible={isModalVisible}
                     >
                       <QRScanner {...props} onQRCodeScanned={handleQRCodeScanned} />
-                      
+
                       <TouchableOpacity onPress={() => setIsModalVisible(false)}>
                         <ImageBackground
                           source={require('./assets/boton.png')}  // Ruta de la imagen de fondo
