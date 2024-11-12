@@ -22,9 +22,6 @@ export const listenToServerEventsMortimer = (updatePlayers: (players: any) => vo
     console.log('Jugadores recibidos del servidor:', data.players);
     updatePlayers(data.players); // Llamamos a la función de actualización con los jugadores
   });
-  socket.on('pushNotification', () => {
-    sendNotification();
-  });
 };
 
 // Función para escuchar eventos del servidor y actualizar el estado de los jugadores
@@ -74,7 +71,7 @@ const sendNotification = async (email:any) => {
   console.log('Sending notification with email:', email);
 
   try {
-    const response = await fetch(`${Config.RENDER}/send-notification`, {
+    const response = await fetch(`${Config.PM2}/send-notification`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -96,7 +93,7 @@ const sendNotification = async (email:any) => {
  async function checkIfInsideTower(email: any) {
   try {
     console.log('FEtchint');
-    const response = await fetch(`${Config.RENDER}/isInsideTower`, {
+    const response = await fetch(`${Config.PM2}/isInsideTower`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
