@@ -66,7 +66,7 @@ const EffectDropdownMenu: React.FC<Props> = ({ availableEffects, toggleEffect, s
                     {rareEffects.every(effect => selectedEffects.includes(effect)) && <View style={styles.checkedBox} />}
                   </View>
                   <MedievalText fontSize={16} color="#ffffff" style={styles.effectText}>
-                    Rare Effects
+                    Zachariah's Herbal
                   </MedievalText>
                 </TouchableOpacity>
               </>
@@ -112,21 +112,22 @@ const EffectDropdownMenu: React.FC<Props> = ({ availableEffects, toggleEffect, s
 const styles = StyleSheet.create({
   dropdownContainer: {
     marginVertical: 10,
+    alignItems: 'center',
   },
   dropdownButton: {
-    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#ddd',
     padding: 10,
-    borderRadius: 8,
+    borderRadius: 20,
+    width: width*0.8,
   },
   dropdownButtonText: {
     fontSize: 16,
     color: '#333',
   },
   scrollView: {
-    maxHeight: height * 0.5, // Set max height 
+    maxHeight: height * 0.4, // Set max height 
     maxWidth: width * 0.85,
     backgroundColor: '#333', // Style as desired
     borderRadius: 20,

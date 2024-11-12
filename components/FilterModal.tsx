@@ -183,6 +183,7 @@ const FilterModal: React.FC<Props> = ({ visible, setVisible, availableEffects, s
                     </TouchableOpacity>
                     <TouchableOpacity
                     onPress={() => {setFilterbyEffect(!filterByEffect)}}
+                    style={styles.applyFiltersButton}
                     >
                         <MedievalText fontSize={16} color="#ffffff" style={styles.applyFiltersText}>
                         Filter by Rarity
@@ -318,13 +319,9 @@ const styles = StyleSheet.create({
       height:300,
     },
     filterModalTitle: {
-      top:10,
-      left:10,
-      fontSize: 20,
-      fontWeight: 'bold',
-      marginBottom: 10,
+      padding: 30,
+      fontSize: 36,
       textAlign: 'center',
-      color: 'white',
     },
     effectOption: {
       top:10,
@@ -357,17 +354,15 @@ const styles = StyleSheet.create({
     },
     applyFiltersButton: {
       padding: 10,
-      marginTop: -10,
-      alignItems: 'center',
+      alignItems: 'center',      
     },
     applyFiltersText: {
       color: 'white',
-      fontWeight: 'bold',
       fontSize: 16,
-      height:100,
-      width: 180,
-      top:36,
-      left:42,
+      textAlign: 'center',
+      width: width*0.4,
+      backgroundColor: '#333',
+      borderRadius: 30,
     },
     buttonMap: {
       position: 'relative',
