@@ -13,14 +13,8 @@ interface User {
 }
 
 // definir tipos de datos de props
-type Props = {
-  _id: string;
-  nickname: string;
-  is_inside_tower: boolean;
-  avatar: string
-};
 
-const MortimerTower: React.FC<Props> = () => {
+const MortimerTower: React.FC = () => {
 
   const [users, setUsers] = useState<User[]>([]);
 
