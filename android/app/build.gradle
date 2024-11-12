@@ -57,7 +57,7 @@ dependencies {
     implementation project(':react-native-safe-area-context')
     implementation project(':react-native-screens')
     implementation project(':@react-native-async-storage_async-storage')
-
+    implementation project(':@react-native-community_geolocation')
     //firebase app    
     implementation project(path: ":@react-native-firebase_app")
     implementation project(':@react-native-firebase_messaging')
