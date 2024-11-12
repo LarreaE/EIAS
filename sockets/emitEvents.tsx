@@ -14,5 +14,6 @@ export const sendUserEMail = (email: string) => {
 };
 
 export const sendIsInside = (state: boolean): void => {
+  console.log('send is inside tower');
   socket.emit('is_inside_tower', { state });
 };

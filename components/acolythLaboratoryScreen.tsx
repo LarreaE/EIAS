@@ -89,7 +89,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
     const updateIsInside = async () => {
       try {
-        await fetch(`${Config.PM2}/isInside`, {
+        await fetch(`${Config.PM2}/api/players/isInside`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
