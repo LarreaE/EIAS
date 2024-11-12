@@ -1,15 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground, Dimensions } from 'react-native';
-import AcolythCard from './acolythCard';
+import AcolythCardTower from './acolythCardTower.tsx';
 import { listenToServerEventsMortimer, clearServerEvents } from '../sockets/listenEvents.tsx';
 import MedievalText from './MedievalText.tsx';
 import Config from 'react-native-config';
 
-const { width, height } = Dimensions.get('window');
+interface User {
+  _id: string;
+  nickname: string;
+  is_inside_tower: boolean;
+  avatar: string
+}
 
-const MortimerTower: React.FC = () => {
+// definir tipos de datos de props
+type Props = {
+  _id: string;
+  nickname: string;
+  is_inside_tower: boolean;
+  avatar: string
+};
 
-  const [users, setUsers] = useState([]);
+const MortimerTower: React.FC<Props> = () => {
+
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
     // Escuchar eventos del servidor y actualizar el estado de users
@@ -19,7 +32,7 @@ const MortimerTower: React.FC = () => {
     const addUsers = async () => {
       try {
         const response = await fetch(`${Config.RENDER}/mortimer`);
-        const data = await response.json();
+        const data: User[] = await response.json();
         setUsers(data);
       } catch (error) {
         console.error('Error al obtener los datos:', error);
@@ -48,10 +61,10 @@ const MortimerTower: React.FC = () => {
       </View>
       <View style={styles.users}>
         {users.map((user) => (
-          <AcolythCard
+          <AcolythCardTower
             key={user._id}
             nickname={user.nickname}
-            is_active={user.is_inside_tower}
+            is_inside_tower={user.is_inside_tower}
             avatar={user.avatar}
           />
         ))}

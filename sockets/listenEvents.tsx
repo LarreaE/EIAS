@@ -22,9 +22,6 @@ export const listenToServerEventsMortimer = (updatePlayers: (players: any) => vo
     console.log('Jugadores recibidos del servidor:', data.players);
     updatePlayers(data.players); // Llamamos a la función de actualización con los jugadores
   });
-  socket.on('pushNotification', () => {
-    sendNotification();
-  });
 };
 
 // Función para escuchar eventos del servidor y actualizar el estado de los jugadores
