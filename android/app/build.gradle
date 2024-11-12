@@ -9,6 +9,8 @@ apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
 
 def enableProguardInReleaseBuilds = false // Cambia a true si habilitas Proguard
 
+def googleMapApiKey = System.getenv("googleMapApiKey")
+
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -65,6 +67,8 @@ dependencies {
     //vision
     implementation project(path: ":react-native-vision-camera")
 
+    implementation project(':react-native-maps')
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
 
     // Hermes or JavaScriptCore
     if (hermesEnabled.toBoolean()) {

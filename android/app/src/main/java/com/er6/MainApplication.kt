@@ -31,7 +31,7 @@ class MainApplication : Application(), ReactApplication {
               // add(MyReactNativePackage())
               ReanimatedPackage()
               PagerViewPackage()
-              VectorIconsPackage()  
+              VectorIconsPackage()
             }
 
         override fun getJSMainModuleName(): String = "index"
