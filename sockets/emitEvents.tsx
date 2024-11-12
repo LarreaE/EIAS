@@ -6,7 +6,7 @@ export const sendQRScan = (scannedEmail: string): void => {
 };
 
 export const sendLocation = (location: string, email: string): void => {
-  socket.emit('location', { location, email });
+  socket.emit('location', location, email);
 };
 
 export const sendUserEMail = (email: string) => {
