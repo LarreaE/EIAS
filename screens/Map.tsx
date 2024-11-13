@@ -102,6 +102,13 @@ const MapScreen: React.FC = () => {
                 />
               </View>
             )}
+        {/* <View style={styles.buttonMap}>
+            <MapButton
+              title="Old_School"
+              onPress={goToSchool}
+              iconImage={require('../assets/school_icon.png')}
+            />
+        </View> */}
 
         <View style={styles.buttonMap}>
             <MapButton
