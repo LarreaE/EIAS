@@ -160,7 +160,7 @@ const Swamp: React.FC = () => {
         showsUserLocation
       >
         {Object.keys(otherAcolytes).map((userId:any) => {
-          const deviceLocation = otherAcolytes[userId];
+          const deviceLocation = otherAcolytes[userId].coords;
           if (userId !== userData.playerData.nickname) { // Exclude current user's marker
             return (
               <Marker
