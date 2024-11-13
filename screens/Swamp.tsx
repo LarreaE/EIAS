@@ -18,7 +18,7 @@ const Swamp: React.FC = () => {
   const context = useContext(UserContext) as UserContextType;
   const { userData } = context;
 
-  // modes
+  //modes
   const [mapMode, setMapMode] = useState<'northUp' | 'facing' | 'free'>('northUp');
   const [location, setLocation] = useState({
     latitude: 42.5,
@@ -27,6 +27,7 @@ const Swamp: React.FC = () => {
     longitudeDelta: 0.01,
   });
 
+  // permission
   const requestLocationPermission = async () => {
     if (Platform.OS === 'android') {
       try {
@@ -50,14 +51,32 @@ const Swamp: React.FC = () => {
     }
   };
   
+  // initial location
   useEffect(() => {
-    const getLocationUpdates = async () => {
+    const getCurrentLocation = async () => {
       const hasPermission = await requestLocationPermission();
       if (!hasPermission) {
         console.log("Location permission not granted");
         return;
       }
 
+      // current position
+      Geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocation((prevLocation) => ({
+            ...prevLocation,
+            latitude,
+            longitude,
+          }));
+        },
+        (error) => {
+          console.error("Error getting current location:", error);
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
+      );
+
+      //updates
       const watchId = Geolocation.watchPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
@@ -73,7 +92,7 @@ const Swamp: React.FC = () => {
         {
           enableHighAccuracy: true,
           distanceFilter: 10,
-          interval: 1000, //1 s updates
+          interval: 1000,
           timeout: 10000,
         }
       );
@@ -85,12 +104,11 @@ const Swamp: React.FC = () => {
       };
     };
 
-    getLocationUpdates();
+    getCurrentLocation();
   }, []);
 
   useEffect(() => {
     console.log(location);
-    
   }, [location]);
 
   const handleMapModeChange = (mode: 'northUp' | 'facing' | 'free') => {
@@ -111,21 +129,9 @@ const Swamp: React.FC = () => {
         zoom: 18,
       };
 
-      // switch (mapMode) {
-      //   case 'northUp':
-      //     camera = { ...camera, heading: 0 };
-      //     break;
-      //   case 'facing':
-      //     camera = { ...camera, heading: 90 };
-      //     break;
-      //   case 'free':
-          
-      //     break;
-      // }
-
       mapViewRef.current.animateCamera(camera, { duration: 1000 });
     }
-  }, [ location]);
+  }, [location]);
 
   return (
     <View style={styles.container}>
@@ -148,15 +154,6 @@ const Swamp: React.FC = () => {
         </Marker>
       </MapView>
       <View style={styles.buttonContainer}>
-        {/* <TouchableOpacity style={styles.modeButton} onPress={() => handleMapModeChange('northUp')}>
-          <Text style={styles.buttonText}>North-Up</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.modeButton} onPress={() => handleMapModeChange('facing')}>
-          <Text style={styles.buttonText}>Facing</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.modeButton} onPress={() => handleMapModeChange('free')}>
-          <Text style={styles.buttonText}>Free</Text>
-        </TouchableOpacity> */}
       </View>
       <TouchableOpacity style={styles.closeButton} onPress={() => navigation.navigate('Map')}>
         <MedievalText>Close</MedievalText>
