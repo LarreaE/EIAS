@@ -9,6 +9,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/types';
 import MedievalText from '../components/MedievalText';
 import MapMarker from '../components/MapMarker';
+import socket from '../sockets/socketConnection';
+import { Locations } from '../interfaces/Location';
 
 const { width, height } = Dimensions.get('window');
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
@@ -17,7 +19,8 @@ const Swamp: React.FC = () => {
   const navigation = useNavigation<MapScreenNavigationProp>();
   const context = useContext(UserContext) as UserContextType;
   const { userData } = context;
-
+  const [otherAcolytes, setOtherAcolytes] = useState<Locations[]>([]);
+  
   //modes
   const [mapMode, setMapMode] = useState<'northUp' | 'facing' | 'free'>('northUp');
   const [location, setLocation] = useState({
@@ -60,21 +63,24 @@ const Swamp: React.FC = () => {
         return;
       }
 
-      // current position
-      Geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setLocation((prevLocation) => ({
-            ...prevLocation,
-            latitude,
-            longitude,
-          }));
-        },
-        (error) => {
-          console.error("Error getting current location:", error);
-        },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
-      );
+      socket.on('connect',() => {
+        // current position
+        Geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setLocation((prevLocation) => ({
+              ...prevLocation,
+              latitude,
+              longitude,
+            }));
+          },
+          (error) => {
+            console.error("Error getting current location:", error);
+          },
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
+        );
+      })
+      
 
       //updates
       const watchId = Geolocation.watchPosition(
@@ -85,6 +91,7 @@ const Swamp: React.FC = () => {
             latitude,
             longitude,
           }));
+          socket.emit('locationUpdate', { userId: socket.id, location: { latitude, longitude } });
         },
         (error) => {
           console.error("Error watching location:", error);
@@ -100,11 +107,17 @@ const Swamp: React.FC = () => {
       return () => {
         if (watchId != null) {
           Geolocation.clearWatch(watchId);
+          socket.disconnect();
         }
       };
     };
 
     getCurrentLocation();
+
+    socket.on('deviceLocations', (locations) => {
+      setOtherAcolytes(locations);
+    });
+
   }, []);
 
   useEffect(() => {
@@ -142,16 +155,23 @@ const Swamp: React.FC = () => {
         showsCompass
         showsUserLocation
       >
-        <Marker
-          coordinate={{
-            latitude: location.latitude,
-            longitude: location.longitude,
-          }}
-          title={userData.playerData.nickname}
-          anchor={{ x: 0.5, y: 0.5 }} // Center the marker
-        >
-          <MapMarker avatarUri={userData.playerData.avatar} />
-        </Marker>
+        {Object.keys(otherAcolytes).map((userId:any) => {
+          const deviceLocation = otherAcolytes[userId];
+          if (userId !== socket.id) { // Exclude current user's marker
+            return (
+              <Marker
+                key={userId}
+                coordinate={{
+                  latitude: deviceLocation.latitude,
+                  longitude: deviceLocation.longitude,
+                }}
+              >
+                <MapMarker avatarUri="https://other-avatar-url.com/avatar.png" />
+              </Marker>
+            );
+          }
+          return null;
+        })}
       </MapView>
       <View style={styles.buttonContainer}>
       </View>
