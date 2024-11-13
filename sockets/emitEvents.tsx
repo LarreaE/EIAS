@@ -1,3 +1,4 @@
+import { Int32 } from 'react-native/Libraries/Types/CodegenTypes';
 import socket from './socketConnection';
 
 // Tipamos el parámetro scannedEmail
@@ -16,4 +17,9 @@ export const sendUserEMail = (email: string) => {
 export const sendIsInside = (state: boolean): void => {
   console.log('send is inside tower');
   socket.emit('is_inside_tower', { state });
+};
+
+export const objectTaken = (objectId: Int32) => {
+  console.log("object taken send");
+  socket.emit('objectTaken', { id: objectId });
 };

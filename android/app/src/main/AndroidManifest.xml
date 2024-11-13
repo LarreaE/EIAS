@@ -20,6 +20,10 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     
     <application
         android:name=".MainApplication"
@@ -60,7 +64,9 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
     
-      <!-- To use multiple models: android:value="barcode,model2,model3" -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyB0IzkBRPwoy8f-649qFv_BMEZeFlVUSv4"/>
 
     </application>
 </manifest>
