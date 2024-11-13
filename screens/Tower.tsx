@@ -31,7 +31,7 @@ const Tower: React.FC = () => {
   const [spinner, setSpinner] = useState(''); //
   const [spinnerActive, setSpinnerActive] = useState(false);
 
-  sendLocation("Map", userData.playerData.email)
+  sendLocation("Tower", userData.playerData.email)
 
   const player = userData.playerData;
   sendLocation('Tower', userData.playerData.email);
