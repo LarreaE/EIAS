@@ -4,6 +4,12 @@ import AcolythCardTower from './acolythCardTower.tsx';
 import { listenToServerEventsMortimer, clearServerEvents } from '../sockets/listenEvents.tsx';
 import MedievalText from './MedievalText.tsx';
 import Config from 'react-native-config';
+import MapButton from './MapButton.tsx';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../types/types.ts';
+
+type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TowerMortimer'>;
 
 interface User {
   _id: string;
@@ -21,6 +27,12 @@ type Props = {
 };
 
 const MortimerTower: React.FC<Props> = () => {
+
+  const navigation = useNavigation<MapScreenNavigationProp>();
+
+  const goToMap = () => {
+    navigation.navigate('Map');
+  };
 
   const [users, setUsers] = useState<User[]>([]);
 
@@ -69,6 +81,10 @@ const MortimerTower: React.FC<Props> = () => {
           />
         ))}
       </View>
+      <MapButton
+        onPress={goToMap}
+        iconImage={require('../assets/map_icon.png')}
+      />
     </ImageBackground>
   );
 };

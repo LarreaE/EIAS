@@ -27,6 +27,7 @@ import Tower from './screens/Tower';
 import messaging from '@react-native-firebase/messaging';
 import { checkAndRequestNotificationPermission } from './components/notificationPermissions';
 import { saveBoolean, getBoolean } from './helper/AsyncStorage';
+import MortimerTower from './components/mortimerTower';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -252,31 +253,33 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
             >
               {props => <ProfileScreen {...props} user={userData} setIsLoged={setIsLoged} />}
             </Tab.Screen>
+            
             <Tab.Screen
-              name="LaboratoryMortimer"
+              name="Info"
               options={{
                 tabBarLabel: '',
                 tabBarIcon: ({ focused }) => (
                   <View style={focused ? styles.activeTabBackground : null}>
-                    <Image source={require('./assets/laboratory_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                    <Image source={require('./assets/profile_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
                   </View>
                 ),
               }}
             >
-              {props => <MortimerLaboratoryScreen {...props} />}
+              {props => <AcolythScreen {...props} user={userData} />}
             </Tab.Screen>
+            
             <Tab.Screen
-              name="TowerMortimer"
+              name="Map"
               options={{
                 tabBarLabel: '',
                 tabBarIcon: ({ focused }) => (
                   <View style={focused ? styles.activeTabBackground : null}>
-                    <Image source={require('./assets/tower_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                    <Image source={require('./assets/map_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
                   </View>
                 ),
               }}
             >
-              {props => <Tower {...props} />}
+               {props => <MapScreen {...props}/>}
             </Tab.Screen>
           </>
         );
@@ -423,6 +426,18 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               options={{ headerShown: false }}
             >
               {props => <Tower {...props} />}
+            </Stack.Screen>
+            <Stack.Screen
+              name="LaboratoryMortimer"
+              options={{ headerShown: false }}
+            >
+              {props => <MortimerLaboratoryScreen {...props} UserData={userData} />}
+            </Stack.Screen>
+            <Stack.Screen
+              name="TowerMortimer"
+              options={{ headerShown: false }}
+            >
+              {props => <MortimerTower {...props} UserData={userData} />}
             </Stack.Screen>
           </Stack.Navigator>
         </NavigationContainer>

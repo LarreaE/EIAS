@@ -29,53 +29,91 @@ const MapScreen: React.FC = () => {
     navigation.navigate('TowerAcolyth');
   };
 
-  // useEffect(() => {
-  //   navigation.navigate('Map');
-  // }, [isInsideLab,navigation]);
+  const goToTowerMortimer = () => {
+    navigation.navigate('TowerMortimer');
+
+  }
+
+  const goToLaboratoryMortimer = () => {
+    navigation.navigate('LaboratoryMortimer');
+  }
 
   if (isInsideLab) {
-    return(
-      <AcolythLaboratoryScreen UserData={userData}/>
+    return (
+      <AcolythLaboratoryScreen UserData={userData} />
     );
   }
 
-  return (
-    <GestureHandlerRootView style={styles.container}>
-      <ImageBackground
-        source={require('../assets/map.png')}  // Ruta de la imagen de fondo
-        style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
-        resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
-      >
+  switch (userData.playerData.role) {
+    case 'MORTIMER':
+      return (
+        <GestureHandlerRootView style={styles.container}>
+          <ImageBackground
+            source={require('../assets/map.png')}  // Ruta de la imagen de fondo
+            style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
+            resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+          >
 
-        {userData.playerData.role === 'ACOLYTE' && (
-          <View style={styles.buttonTower}>
-            <MapButton
-              title="Tower"
-              onPress={goToTower}
-              iconImage={require('../assets/home_icon.png')}
-            />
-          </View>
-        )}
+            <View style={styles.buttonTower}>
+              <MapButton
+                title="Tower"
+                onPress={goToTowerMortimer}
+                iconImage={require('../assets/home_icon.png')}
+              />
+            </View>
 
-        <View style={styles.buttonLaboratory}>
-          <MapButton
-            title="Laboratory"
-            onPress={goToLaboratory}
-            iconImage={require('../assets/laboratory_icon.png')}
-          />
-        </View>
+            <View style={styles.buttonLaboratory}>
+              <MapButton
+                title="Laboratory"
+                onPress={goToLaboratoryMortimer}
+                iconImage={require('../assets/laboratory_icon.png')}
+              />
+            </View>
 
-        <View style={styles.buttonHome}>
-          <MapButton
-            title="Home"
-            onPress={goToHome}
-            iconImage={require('../assets/home_icon.png')}
-          />
-        </View>
+          </ImageBackground>
+        </GestureHandlerRootView>
+      )
 
-      </ImageBackground>
-    </GestureHandlerRootView>
-  );
+    default:
+
+      return (
+        <GestureHandlerRootView style={styles.container}>
+          <ImageBackground
+            source={require('../assets/map.png')}  // Ruta de la imagen de fondo
+            style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
+            resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+          >
+
+            {userData.playerData.role === 'ACOLYTE' && (
+              <View style={styles.buttonTower}>
+                <MapButton
+                  title="Tower"
+                  onPress={goToTower}
+                  iconImage={require('../assets/home_icon.png')}
+                />
+              </View>
+            )}
+
+            <View style={styles.buttonLaboratory}>
+              <MapButton
+                title="Laboratory"
+                onPress={goToLaboratory}
+                iconImage={require('../assets/laboratory_icon.png')}
+              />
+            </View>
+
+            <View style={styles.buttonHome}>
+              <MapButton
+                title="Home"
+                onPress={goToHome}
+                iconImage={require('../assets/home_icon.png')}
+              />
+            </View>
+
+          </ImageBackground>
+        </GestureHandlerRootView>
+      );
+  }
 };
 
 const styles = StyleSheet.create({

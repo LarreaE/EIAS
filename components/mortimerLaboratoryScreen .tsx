@@ -4,6 +4,12 @@ import AcolythCard from './acolythCard';
 import { listenToServerEventsMortimer, clearServerEvents } from '../sockets/listenEvents.tsx';
 import MedievalText from './MedievalText.tsx';
 import Config from 'react-native-config';
+import MapButton from './MapButton.tsx';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../types/types.ts';
+
+type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'LaboratoryMortimer'>;
 
 // define la interfaz para el tipo de datos de usuario
 interface User {
@@ -22,6 +28,12 @@ type Props = {
 };
 
 const MortimerLaboratoryScreen: React.FC<Props> = () => {
+
+  const navigation = useNavigation<MapScreenNavigationProp>();
+
+  const goToMap = () => {
+    navigation.navigate('Map');
+  };
 
   const [users, setUsers] = useState<User[]>([]);
 
@@ -54,7 +66,7 @@ const MortimerLaboratoryScreen: React.FC<Props> = () => {
       style={styles.background}
       resizeMode="cover"
     >
-       <View style={styles.titleContainer}>
+      <View style={styles.titleContainer}>
         <View style={styles.titleBackground} />
         <MedievalText style={styles.title}>
           Laboratory
@@ -70,7 +82,11 @@ const MortimerLaboratoryScreen: React.FC<Props> = () => {
             avatar={user.avatar}
           />
         ))}
-        </View>
+      </View>
+      <MapButton
+        onPress={goToMap}
+        iconImage={require('../assets/map_icon.png')}
+      />
     </ImageBackground>
   );
 };
