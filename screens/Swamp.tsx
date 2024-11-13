@@ -160,14 +160,14 @@ const Swamp: React.FC = () => {
         showsUserLocation
       >
         {Object.keys(otherAcolytes).map((userId:any) => {
-          const deviceLocation = otherAcolytes[userId].coords;
+          const deviceLocation = otherAcolytes[userId];
           if (userId !== userData.playerData.nickname) { // Exclude current user's marker
             return (
               <Marker
                 key={userId}
                 coordinate={{
-                  latitude: deviceLocation.latitude,
-                  longitude: deviceLocation.longitude,
+                  latitude: deviceLocation.coords.latitude,
+                  longitude: deviceLocation.coords.longitude,
                 }}
               >
                 <MapMarker avatarUri={otherAcolytes[userId].avatar} />
