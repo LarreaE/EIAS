@@ -118,7 +118,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
           setSpinnerMessage('Connecting...');
 
           // Perform the axios request and wait for the response
-          const response = await axios.post(`${Config.RENDER}/verify-token`, {
+          const response = await axios.post(`${Config.PM2}/api/auth/verify-token`, {
             idToken: idTokenResult?.token,
             email: email,
             socketId: socket.id,

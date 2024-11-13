@@ -6,7 +6,7 @@ export const sendQRScan = (scannedEmail: string): void => {
 };
 
 export const sendLocation = (location: string, email: string): void => {
-  socket.emit('location', { location, email });
+  socket.emit('location', location, email);
 };
 
 export const sendUserEMail = (email: string) => {
@@ -14,5 +14,6 @@ export const sendUserEMail = (email: string) => {
 };
 
 export const sendIsInside = (state: boolean): void => {
+  console.log('send is inside tower');
   socket.emit('is_inside_tower', { state });
 };
