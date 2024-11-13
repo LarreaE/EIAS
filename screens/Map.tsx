@@ -17,26 +17,26 @@ const MapScreen: React.FC = () => {
 
   const { isInsideLab, userData } = useContext(UserContext);
 
-  sendLocation("Map", userData.playerData.email)
-
   const goToHome = () => {
     navigation.navigate('HomeAcolyth');
   };
   const goToLaboratory = () => {
+    sendLocation('Laboratory', userData.playerData.email);
     navigation.navigate('LaboratoryAcolyth');
   };
   const goToTower = () => {
+    sendLocation('Tower', userData.playerData.email);
     navigation.navigate('TowerAcolyth');
   };
 
   const goToTowerMortimer = () => {
     navigation.navigate('TowerMortimer');
 
-  }
+  };
 
   const goToLaboratoryMortimer = () => {
     navigation.navigate('LaboratoryMortimer');
-  }
+  };
 
   if (isInsideLab) {
     return (
