@@ -27,7 +27,7 @@ import Tower from './screens/Tower';
 import messaging from '@react-native-firebase/messaging';
 import { checkAndRequestNotificationPermission } from './components/notificationPermissions';
 import { saveBoolean, getBoolean } from './helper/AsyncStorage';
-import GeoMap from './screens/GeoMap';
+import Swamp from './screens/Swamp';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -426,10 +426,10 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               {props => <Tower {...props} />}
             </Stack.Screen>
             <Stack.Screen
-              name="GeoMap"
+              name="Swamp"
               options={{ headerShown: false }}
             >
-              {props => <GeoMap {...props} />}
+              {props => <Swamp {...props} />}
             </Stack.Screen>
           </Stack.Navigator>
         </NavigationContainer>

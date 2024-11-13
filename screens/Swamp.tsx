@@ -4,7 +4,7 @@ import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import { PermissionsAndroid, Platform ,StyleSheet} from 'react-native';
 
-const GeoMap: React.FC = () => {
+const Swamp: React.FC = () => {
   // location state
   const [location, setLocation] = useState({
     latitude: 42.5,   // 
@@ -86,14 +86,14 @@ const GeoMap: React.FC = () => {
           longitude,
         }));
       },
-      (error) => {
-        console.error("Error getting location:", error);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 20000,
-        maximumAge: 1000,
-      }
+      // (error) => {
+      //   console.error("Error getting location:", error);
+      // },
+      // {
+      //   enableHighAccuracy: true,
+      //   timeout: 20000,
+      //   maximumAge: 1000,
+      // }
     );
   }, []);
 
@@ -127,4 +127,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GeoMap;
+export default Swamp;

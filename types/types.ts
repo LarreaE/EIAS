@@ -15,5 +15,5 @@ export type RootStackParamList = {
     Map: undefined;
     TowerAcolyth: undefined;
     TowerMortimer: undefined;
-    GeoMap: undefined;
+    Swamp: undefined;
   };

@@ -33,8 +33,8 @@ const MapScreen: React.FC = () => {
   const goToTower = () => {
     navigation.navigate('TowerAcolyth');
   };
-  const goToMap = () => {
-    navigation.navigate('GeoMap');
+  const goToSwamp = () => {
+    navigation.navigate('Swamp');
   };
   // useEffect(() => {
   //   navigation.navigate('Map');
@@ -67,7 +67,7 @@ const MapScreen: React.FC = () => {
         <View style={styles.buttonMap}>
             <MapButton
               title="GeoMap"
-              onPress={goToMap}
+              onPress={goToSwamp}
               iconImage={require('../assets/home_icon.png')}
             />
         </View>
