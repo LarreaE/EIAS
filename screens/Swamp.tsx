@@ -91,7 +91,7 @@ const Swamp: React.FC = () => {
             latitude,
             longitude,
           }));
-          socket.emit('locationUpdate', { userId: userData.playerData.nickname, avatar: userData.playerData.avatar, location: { latitude, longitude } });
+          socket.emit('locationUpdate', { userId: userData.playerData.nickname, avatar: userData.playerData.avatar, coords: { latitude, longitude } });
         },
         (error) => {
           console.error("Error watching location:", error);
