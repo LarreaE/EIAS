@@ -1,7 +1,9 @@
 import React from 'react';
 import { Text, View, Button, StyleSheet, TouchableOpacity, Image, ImageSourcePropType } from 'react-native';
 import MedievalText from './MedievalText';
+import { Dimensions } from 'react-native';
 
+const { width, height } = Dimensions.get('window');
 type Props = {
   title?: string;
   onPress: () => void;
@@ -34,8 +36,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   iconStyle: {
-    width: 66,  // Ajusta el tamaño de la imagen
-    height: 66,
+    width: width * 0.18,  // Ajusta el tamaño de la imagen
+    height: height *0.1,
     alignSelf: 'center',
 
   },

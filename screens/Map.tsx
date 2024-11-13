@@ -66,7 +66,7 @@ const MapScreen: React.FC = () => {
 
         <View style={styles.buttonMap}>
             <MapButton
-              title="GeoMap"
+              title="Swamp"
               onPress={goToSwamp}
               iconImage={require('../assets/home_icon.png')}
             />
@@ -104,26 +104,26 @@ const styles = StyleSheet.create({
   },
   buttonLaboratory: {
     position: 'absolute',
-    bottom: 160,
-    right: 165,
+    bottom: height * 0.25,
+    right: width * 0.45,
     alignSelf: 'center',
   },
   buttonHome: {
     position: 'absolute',
-    bottom: 100,
-    right: 75,
+    bottom: height*0.15,
+    right: width*0.1,
     alignSelf: 'center',
   },
   buttonMap: {
     position: 'absolute',
-    bottom: 100,
-    right: 250,
+    bottom: height* 0.48,
+    right: width* 0.8,
     alignSelf: 'center',
   },
   buttonTower: {
     position: 'absolute',
-    bottom: 210,
-    right: 260,
+    bottom: height* 0.33,
+    right: width* 0.72,
     alignSelf: 'center',
   },
 
