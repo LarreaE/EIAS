@@ -91,7 +91,7 @@ const Swamp: React.FC = () => {
             latitude,
             longitude,
           }));
-          socket.emit('locationUpdate', { userId: socket.id, location: { latitude, longitude } });
+          socket.emit('locationUpdate', { userId: userData.playerData.nickname, avatar: userData.playerData.avatar, location: { latitude, longitude } });
         },
         (error) => {
           console.error("Error watching location:", error);
@@ -123,6 +123,10 @@ const Swamp: React.FC = () => {
   useEffect(() => {
     console.log(location);
   }, [location]);
+
+  useEffect(() => {
+    console.log("Other acolytes",otherAcolytes);
+  }, [otherAcolytes]);
 
   const handleMapModeChange = (mode: 'northUp' | 'facing' | 'free') => {
     setMapMode(mode);
@@ -157,7 +161,7 @@ const Swamp: React.FC = () => {
       >
         {Object.keys(otherAcolytes).map((userId:any) => {
           const deviceLocation = otherAcolytes[userId];
-          if (userId !== socket.id) { // Exclude current user's marker
+          if (userId !== userData.playerData.nickname) { // Exclude current user's marker
             return (
               <Marker
                 key={userId}
@@ -166,7 +170,7 @@ const Swamp: React.FC = () => {
                   longitude: deviceLocation.longitude,
                 }}
               >
-                <MapMarker avatarUri="https://other-avatar-url.com/avatar.png" />
+                <MapMarker avatarUri={otherAcolytes[userId].avatar} />
               </Marker>
             );
           }
