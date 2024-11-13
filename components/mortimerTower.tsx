@@ -31,7 +31,7 @@ const MortimerTower: React.FC<Props> = () => {
     // Petición a la base de datos para obtener los usuarios iniciales
     const addUsers = async () => {
       try {
-        const response = await fetch(`${Config.PM2}/api/players/mortimer`);
+        const response = await fetch(`${Config.RENDER}/api/players/mortimer`);
         const data = await response.json();
         setUsers(data);
       } catch (error) {
