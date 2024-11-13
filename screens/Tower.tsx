@@ -31,6 +31,7 @@ const Tower: React.FC = () => {
   const [spinner, setSpinner] = useState(''); //
   const [spinnerActive, setSpinnerActive] = useState(false);
 
+  sendLocation("Tower", userData.playerData.email)
 
   const player = userData.playerData;
   sendLocation('Tower', userData.playerData.email);
@@ -84,7 +85,7 @@ useEffect(() => {
       const sendNotification = async () => {
         console.log('Sending notification to email:', player.email);
         try {
-          await fetch(`${Config.PM2}//api/auth/send-notification`, {
+          await fetch(`${Config.RENDER}//api/auth/send-notification`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
