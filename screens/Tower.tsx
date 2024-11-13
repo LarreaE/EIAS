@@ -31,15 +31,14 @@ const Tower: React.FC = () => {
   const [spinner, setSpinner] = useState(''); //
   const [spinnerActive, setSpinnerActive] = useState(false);
 
-
   const player = userData.playerData;
-  sendLocation('Tower', userData.playerData.email);
   const [isInsideTower,setIsInsideTower] = useState(userData.is_inside_tower);
   const [update, setUpdate] = useState(0);
 
   useEffect(() => {
     // Forzar actualización
     setUpdate((prev) => prev + 1);
+
 }, [isInsideTower]); // Puedes pasar dependencias aquí si necesitas que se ejecute en ciertas condiciones
 
   useEffect(() => {
@@ -50,6 +49,7 @@ const Tower: React.FC = () => {
     }
     console.log('PLayer inside: ' + player.is_inside_tower);
     sendIsInside(isInsideTower);
+    sendLocation('Tower', userData.playerData.email);
 }, [isInsideTower, player]);
 
 useEffect(() => {
@@ -78,6 +78,7 @@ useEffect(() => {
   };
 
   const goToMap = () => {
+    sendLocation('Map', userData.playerData.email);
     navigation.navigate('Map');
   };
 
@@ -260,7 +261,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     textAlign: 'center',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   scrollContent: {
     padding: 10,
