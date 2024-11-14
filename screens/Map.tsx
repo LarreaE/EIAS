@@ -17,8 +17,6 @@ const MapScreen: React.FC = () => {
   const context = useContext(UserContext) as UserContextType;
   const { isInsideLab, userData } = context;
 
-  sendLocation("Map", userData.playerData.email);
-
   const goToHome = () => {
     sendLocation('Home', userData.playerData.email);
     navigation.navigate('HomeAcolyth');
