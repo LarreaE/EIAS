@@ -191,7 +191,8 @@ const Swamp: React.FC = () => {
                 </Marker>
               );
           })}
-          {pointsOfInterest.map((poi) =>
+          {(userData.playerData.role === 'ACOLYTE' || userData.playerData.role === 'MORTIMER') && (
+          pointsOfInterest.map((poi) =>
             !poi.isTaken && (
               <React.Fragment key={poi.id}>
                 <Marker
@@ -211,8 +212,7 @@ const Swamp: React.FC = () => {
                   strokeColor={poi.inRange ? "rgba(0, 255, 0, 0.5)" : "rgba(0, 150, 255, 0.5)"}
                 />
               </React.Fragment>
-            )
-          )}
+            )))}
         </MapView>
         <TouchableOpacity style={styles.closeButton} onPress={() => navigation.navigate('Map')}>
         <MedievalText>Close</MedievalText>
