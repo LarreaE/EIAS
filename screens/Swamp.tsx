@@ -18,8 +18,7 @@ type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
 const Swamp: React.FC = () => {
   const navigation = useNavigation<MapScreenNavigationProp>();
   const context = useContext(UserContext) as UserContextType;
-  const { userData } = context;
-  const [otherAcolytes, setOtherAcolytes] = useState<Locations[]>([]);
+  const { userData, otherAcolytes, setOtherAcolytes } = context;
   
   // Puntos de interés
   const [pointsOfInterest, setPointsOfInterest] = useState([

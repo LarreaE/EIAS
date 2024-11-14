@@ -236,6 +236,19 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
                 </>
               )}
             </Tab.Screen>
+            <Tab.Screen
+              name="Map"
+              options={{
+                tabBarLabel: '',
+                tabBarIcon: ({ focused }) => (
+                  <View style={focused ? styles.activeTabBackground : null}>
+                    <Image source={require('./assets/map_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                  </View>
+                ),
+              }}
+            >
+               {props => <MapScreen {...props}/>}
+            </Tab.Screen>
           </>
         );
 

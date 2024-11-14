@@ -52,6 +52,25 @@ const MapScreen: React.FC = () => {
   }
 
   switch (userData.playerData.role) {
+    case 'ISTVAN':
+      return (
+        <GestureHandlerRootView style={styles.container}>
+          <ImageBackground
+            source={require('../assets/map.png')}  // Ruta de la imagen de fondo
+            style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
+            resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+          >
+            <View style={styles.buttonMap}>
+              <MapButton
+                title="Swamp"
+                onPress={goToSwamp}
+                iconImage={require('../assets/home_icon.png')}
+              />
+            </View>
+          </ImageBackground>
+        </GestureHandlerRootView>
+      )
+
     case 'MORTIMER':
       return (
         <GestureHandlerRootView style={styles.container}>
