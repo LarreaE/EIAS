@@ -8,6 +8,9 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/types';
 import MedievalText from '../components/MedievalText';
 import { objectTaken } from '../sockets/emitEvents';
+import socket from '../sockets/socketConnection';
+import { Locations } from '../interfaces/Location';
+import MapMarker from '../components/MapMarker';
 
 const { width, height } = Dimensions.get('window');
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
@@ -16,7 +19,8 @@ const Swamp: React.FC = () => {
   const navigation = useNavigation<MapScreenNavigationProp>();
   const context = useContext(UserContext) as UserContextType;
   const { userData } = context;
-
+  const [otherAcolytes, setOtherAcolytes] = useState<Locations[]>([]);
+  
   // Puntos de interés
   const [pointsOfInterest, setPointsOfInterest] = useState([
     { id: 1, latitude: 43.3125, longitude: -2.000, isTaken: false, inRange: false },
@@ -65,18 +69,24 @@ const Swamp: React.FC = () => {
       const hasPermission = await requestLocationPermission();
       if (!hasPermission) return;
 
-      Geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setLocation((prevLocation) => ({
-            ...prevLocation,
-            latitude,
-            longitude,
-          }));
-        },
-        (error) => console.error("Error getting current location:", error),
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
-      );
+      socket.on('connect',() => {
+        // current position
+        Geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setLocation((prevLocation) => ({
+              ...prevLocation,
+              latitude,
+              longitude,
+            }));
+          },
+          (error) => {
+            console.error("Error getting current location:", error);
+          },
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
+        );
+      })
+      
 
       watchId = Geolocation.watchPosition(
         (position) => {
@@ -86,14 +96,27 @@ const Swamp: React.FC = () => {
             latitude,
             longitude,
           }));
+          socket.emit('locationUpdate', { userId: userData.playerData.nickname, avatar: userData.playerData.avatar, coords: { latitude, longitude } });
           checkProximity(latitude, longitude);
         },
         (error) => console.error("Error watching location:", error),
         { enableHighAccuracy: true, distanceFilter: 10, interval: 1000, timeout: 10000 }
       );
+
+      return () => {
+        if (watchId != null) {
+          Geolocation.clearWatch(watchId);
+          socket.disconnect();
+        }
+      };
     };
 
     getCurrentLocation();
+
+    socket.on('deviceLocations', (locations) => {
+      setOtherAcolytes(locations);
+    });
+
 
     return () => {
       if (watchId !== null) {
@@ -105,6 +128,13 @@ const Swamp: React.FC = () => {
   useEffect(() => {
     console.log("Ubicación actualizada:", location);
   }, [location]);
+
+  useEffect(() => {
+    console.log("Other acolytes",otherAcolytes);
+  }, [otherAcolytes]);
+
+
+  const mapViewRef = React.useRef<MapView | null>(null);
 
   useEffect(() => {
     console.log("Puntos de interés actualizados:", pointsOfInterest);
@@ -143,9 +173,23 @@ const Swamp: React.FC = () => {
         style={styles.map}
         region={location}
         showsCompass
-        showsUserLocation
       >
-        {pointsOfInterest.map((poi) =>
+        {Object.keys(otherAcolytes).map((userId:any) => {
+          const deviceLocation = otherAcolytes[userId];
+            return (
+              <Marker
+                key={userId}
+                title={userId}
+                coordinate={{
+                  latitude: deviceLocation.coords.latitude,
+                  longitude: deviceLocation.coords.longitude,
+                }}
+              >
+                <MapMarker avatarUri={otherAcolytes[userId].avatar} />
+              </Marker>
+            );
+        })}
+         {pointsOfInterest.map((poi) =>
           !poi.isTaken && (
             <React.Fragment key={poi.id}>
               <Marker
