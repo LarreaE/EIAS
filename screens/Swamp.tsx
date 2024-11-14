@@ -1,13 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import MapView, { PROVIDER_GOOGLE, Marker, Camera } from 'react-native-maps';
+import { StyleSheet, TouchableOpacity, View, PermissionsAndroid, Platform, Dimensions } from 'react-native';
+import MapView, { PROVIDER_GOOGLE, Marker, Circle, Region } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-import { PermissionsAndroid, Platform, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { UserContext, UserContextType } from '../context/UserContext';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/types';
 import MedievalText from '../components/MedievalText';
+import { objectTaken } from '../sockets/emitEvents';
+import socket from '../sockets/socketConnection';
+import { Locations } from '../interfaces/Location';
 import MapMarker from '../components/MapMarker';
 
 const { width, height } = Dimensions.get('window');
@@ -16,28 +18,36 @@ type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
 const Swamp: React.FC = () => {
   const navigation = useNavigation<MapScreenNavigationProp>();
   const context = useContext(UserContext) as UserContextType;
-  const { userData } = context;
+  const { userData, otherAcolytes, setOtherAcolytes } = context;
+  
+  // Puntos de interés
+  const [pointsOfInterest, setPointsOfInterest] = useState([
+    { id: 1, latitude: 43.3125, longitude: -2.000, isTaken: false, inRange: false },
+    { id: 2, latitude: 43.3125, longitude: -2.001, isTaken: false, inRange: false },
+    { id: 3, latitude: 43.3125, longitude: -2.000, isTaken: false, inRange: false },
+    { id: 4, latitude: 43.3125, longitude: -1.999, isTaken: false, inRange: false },
+  ]);
 
-  //modes
-  const [mapMode, setMapMode] = useState<'northUp' | 'facing' | 'free'>('northUp');
-  const [location, setLocation] = useState({
-    latitude: 42.5,
-    longitude: -2,
+  // Centra la cámara cerca de los puntos de interés al inicio
+  const initialRegion: Region = {
+    latitude: pointsOfInterest.reduce((sum, poi) => sum + poi.latitude, 0) / pointsOfInterest.length,
+    longitude: pointsOfInterest.reduce((sum, poi) => sum + poi.longitude, 0) / pointsOfInterest.length,
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
-  });
+  };
+  
+  const [location, setLocation] = useState(initialRegion);
 
-  // permission
   const requestLocationPermission = async () => {
     if (Platform.OS === 'android') {
       try {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
           {
-            title: "Location Permission",
-            message: "This app needs to access your location",
-            buttonNeutral: "Ask Me Later",
-            buttonNegative: "Cancel",
+            title: "Permiso de ubicación",
+            message: "Esta app necesita acceder a tu ubicación",
+            buttonNeutral: "Pregúntame luego",
+            buttonNegative: "Cancelar",
             buttonPositive: "OK"
           }
         );
@@ -50,18 +60,35 @@ const Swamp: React.FC = () => {
       return true;
     }
   };
-  
-  // initial location
+
   useEffect(() => {
+    let watchId: number | null = null;
+
     const getCurrentLocation = async () => {
       const hasPermission = await requestLocationPermission();
-      if (!hasPermission) {
-        console.log("Location permission not granted");
-        return;
-      }
+      if (!hasPermission) return;
 
-      // current position
-      Geolocation.getCurrentPosition(
+      socket.on('connect',() => {
+        // current position
+        Geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setLocation((prevLocation) => ({
+              ...prevLocation,
+              latitude,
+              longitude,
+            }));
+            socket.emit('locationUpdate', { userId: userData.playerData.nickname, avatar: userData.playerData.avatar, coords: { latitude, longitude } });
+          },
+          (error) => {
+            console.error("Error getting current location:", error);
+          },
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
+        );
+      })
+      
+
+      watchId = Geolocation.watchPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
           setLocation((prevLocation) => ({
@@ -69,110 +96,181 @@ const Swamp: React.FC = () => {
             latitude,
             longitude,
           }));
+          socket.emit('locationUpdate', { userId: userData.playerData.nickname, avatar: userData.playerData.avatar, coords: { latitude, longitude } });
+          checkProximity(latitude, longitude);
         },
-        (error) => {
-          console.error("Error getting current location:", error);
-        },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
-      );
-
-      //updates
-      const watchId = Geolocation.watchPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setLocation((prevLocation) => ({
-            ...prevLocation,
-            latitude,
-            longitude,
-          }));
-        },
-        (error) => {
-          console.error("Error watching location:", error);
-        },
-        {
-          enableHighAccuracy: true,
-          distanceFilter: 10,
-          interval: 1000,
-          timeout: 10000,
-        }
+        (error) => console.error("Error watching location:", error),
+        { enableHighAccuracy: true, distanceFilter: 10, interval: 1000, timeout: 10000 }
       );
 
       return () => {
         if (watchId != null) {
           Geolocation.clearWatch(watchId);
+          socket.disconnect();
         }
       };
     };
 
-    getCurrentLocation();
+    {userData.playerData.role === 'ACOLYTE' && (getCurrentLocation())};
+
+    socket.on('deviceLocations', (locations) => {
+      setOtherAcolytes(locations);
+    });
+
+
+    return () => {
+      if (watchId !== null) {
+        Geolocation.clearWatch(watchId);
+      }
+    };
   }, []);
 
   useEffect(() => {
-    console.log(location);
+    console.log("Ubicación actualizada:", location);
   }, [location]);
 
-  const handleMapModeChange = (mode: 'northUp' | 'facing' | 'free') => {
-    setMapMode(mode);
-  };
+  useEffect(() => {
+    console.log("Other acolytes",otherAcolytes);
+  }, [otherAcolytes]);
+
 
   const mapViewRef = React.useRef<MapView | null>(null);
 
   useEffect(() => {
-    if (mapViewRef.current) {
-      let camera: Partial<Camera> = {
-        center: {
-          latitude: location.latitude,
-          longitude: location.longitude,
-        },
-        heading: 0,
-        pitch: 0,
-        zoom: 18,
-      };
+    console.log("Puntos de interés actualizados:", pointsOfInterest);
+  }, [pointsOfInterest]);
 
-      mapViewRef.current.animateCamera(camera, { duration: 1000 });
-    }
-  }, [location]);
+  const checkProximity = (latitude: number, longitude: number) => {
+    setPointsOfInterest((prevPOIs) => prevPOIs.map((poi) => {
+      const distance = getDistance(latitude, longitude, poi.latitude, poi.longitude);
+      console.log(`Distancia al POI ${poi.id}: ${distance} metros`);
+      if (distance < 50) {
+        return { ...poi, inRange: true };
+      }
+      return { ...poi, inRange: false };
+    }));
+  };
+
+  const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 6371e3; // radio de la Tierra en metros
+    const φ1 = (lat1 * Math.PI) / 180;
+    const φ2 = (lat2 * Math.PI) / 180;
+    const Δφ = ((lat2 - lat1) * Math.PI) / 180;
+    const Δλ = ((lon2 - lon1) * Math.PI) / 180;
+
+    const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+              Math.cos(φ1) * Math.cos(φ2) *
+              Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c; // devuelve la distancia en metros
+  };
 
   return (
     <View style={styles.container}>
-      <MapView
-        provider={PROVIDER_GOOGLE}
-        style={styles.map}
-        region={location}
-        showsCompass
-        showsUserLocation
-      >
-        <Marker
-          coordinate={{
-            latitude: location.latitude,
-            longitude: location.longitude,
-          }}
-          title={userData.playerData.nickname}
-          anchor={{ x: 0.5, y: 0.5 }} // Center the marker
+      <View style={styles.mapOverlay}>
+        <MapView
+          provider={PROVIDER_GOOGLE}
+          style={styles.map}
+          region={location}
+          showsCompass
+          customMapStyle={mapStyle}
         >
-          <MapMarker avatarUri={userData.playerData.avatar} />
-        </Marker>
-      </MapView>
-      <View style={styles.buttonContainer}>
-      </View>
-      <TouchableOpacity style={styles.closeButton} onPress={() => navigation.navigate('Map')}>
+          {Object.keys(otherAcolytes).map((userId:any) => {
+            const deviceLocation = otherAcolytes[userId];
+              return (
+                <Marker
+                  key={userId}
+                  title={userId}
+                  coordinate={{
+                    latitude: deviceLocation.coords.latitude,
+                    longitude: deviceLocation.coords.longitude,
+                  }}
+                >
+                  <MapMarker avatarUri={otherAcolytes[userId].avatar} />
+                </Marker>
+              );
+          })}
+          {(userData.playerData.role === 'ACOLYTE' || userData.playerData.role === 'MORTIMER') && (
+          pointsOfInterest.map((poi) =>
+            !poi.isTaken && (
+              <React.Fragment key={poi.id}>
+                <Marker
+                  coordinate={{ latitude: poi.latitude, longitude: poi.longitude }}
+                  title={`POI ${poi.id}`}
+                  onPress={() => {
+                    setPointsOfInterest((prev) =>
+                      prev.map((p) => (p.id === poi.id ? { ...p, isTaken: true } : p))
+                    );
+                    objectTaken(poi.id);
+                  }}
+                />
+                <Circle
+                  center={{ latitude: poi.latitude, longitude: poi.longitude }}
+                  radius={50} // Radio de interacción
+                  fillColor={poi.inRange ? "rgba(0, 255, 0, 0.2)" : "rgba(0, 150, 255, 0.2)"}
+                  strokeColor={poi.inRange ? "rgba(0, 255, 0, 0.5)" : "rgba(0, 150, 255, 0.5)"}
+                />
+              </React.Fragment>
+            )))}
+        </MapView>
+        <TouchableOpacity style={styles.closeButton} onPress={() => navigation.navigate('Map')}>
         <MedievalText>Close</MedievalText>
       </TouchableOpacity>
+      </View>
     </View>
   );
 };
+
+const mapStyle = [
+  {
+    "elementType": "geometry",
+    "stylers": [
+      { "color": "#212121" }
+    ]
+  },
+  {
+    "elementType": "labels.text.fill",
+    "stylers": [
+      { "color": "#757575" }
+    ]
+  },
+  {
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      { "color": "#212121" }
+    ]
+  },
+  {
+    "featureType": "water",
+    "stylers": [
+      { "color": "#0f252e" }
+    ]
+  },
+  {
+    "featureType": "landscape",
+    "stylers": [
+      { "color": "#2f3e46" }
+    ]
+  },
+];
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    borderColor: 'yellow',
-    borderWidth: 15,
-    borderRadius: 10,
+    borderColor: '#4d3e3e',
+    borderWidth: 10,
     overflow: 'hidden',
+    backgroundColor: '#1c1c1c',
   },
   map: {
     ...StyleSheet.absoluteFillObject,
+  },
+  mapOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Darkens the map a bit
+    zIndex: 1,
   },
   buttonContainer: {
     position: 'absolute',
@@ -182,20 +280,24 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   modeButton: {
-    backgroundColor: '#333',
+    backgroundColor: '#3a2b2b',
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#663a3a',
   },
   buttonText: {
-    color: 'white',
+    color: '#f2e5c4', // Light tan color for readability
   },
   closeButton: {
     position: 'absolute',
     bottom: 30,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: 'rgba(250, 250, 250, 0.4)',
     padding: 10,
     borderRadius: 5,
+    borderColor: '#999',
+    borderWidth: 1,
   },
 });
 
