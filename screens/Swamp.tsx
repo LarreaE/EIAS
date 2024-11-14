@@ -157,11 +157,9 @@ const Swamp: React.FC = () => {
         style={styles.map}
         region={location}
         showsCompass
-        showsUserLocation
       >
         {Object.keys(otherAcolytes).map((userId:any) => {
           const deviceLocation = otherAcolytes[userId];
-          if (userId !== userData.playerData.nickname) { // Exclude current user's marker
             return (
               <Marker
                 key={userId}
@@ -173,8 +171,6 @@ const Swamp: React.FC = () => {
                 <MapMarker avatarUri={otherAcolytes[userId].avatar} />
               </Marker>
             );
-          }
-          return null;
         })}
       </MapView>
       <View style={styles.buttonContainer}>
