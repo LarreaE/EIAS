@@ -27,7 +27,7 @@ type Props = {
   avatar: string
 };
 
-const MortimerLaboratoryScreen: React.FC<Props> = () => {
+const MortimerLaboratoryScreen: React.FC = () => {
 
   const navigation = useNavigation<MapScreenNavigationProp>();
 
