@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { SafeAreaView, StyleSheet, Image, Modal, TouchableOpacity, Text, View, ImageBackground, Alert, ToastAndroid } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, RouteProp } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import GoogleSignInComponent from './components/googleSingIn';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
@@ -30,6 +30,8 @@ import { saveBoolean, getBoolean } from './helper/AsyncStorage';
 import MortimerTower from './components/mortimerTower';
 import Swamp from './screens/Swamp';
 import SchoolScreen from './screens/OldSchool';
+import { RootStackParamList } from './types/types';
+import { ParamListBase } from '@react-navigation/native';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -136,7 +138,7 @@ function AppContent () {
     return <GoogleSignInComponent setIsLoged={setIsLoged} />;
   }
 
-  const screenOptions = ({ route }) => ({
+  const screenOptions = ({ route } : {route: RouteProp<RootStackParamList, keyof RootStackParamList>}) => ({
     tabBarStyle: {
       backgroundColor: 'transparent',
       borderTopWidth: 0,
@@ -403,9 +405,11 @@ function AppContent () {
       <GestureHandlerRootView style={styles.container}>
         <NavigationContainer
         onStateChange={(state) => {
-          // Get the current route's name
-          const currentRoute = state.routes[state.index];
-          setCurrentScreen(currentRoute.name);
+          if (state) {
+            // Get the current route's name
+            const currentRoute = state.routes[state.index];
+            setCurrentScreen(currentRoute.name);
+          }
         }}>
           <Stack.Navigator>
             {/* Aquí se incluyen las tabs como parte de una pantalla del stack */}
