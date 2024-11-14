@@ -1,9 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, Text, Dimensions, Vibration } from 'react-native';
 import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-camera';
 import socket from '../sockets/socketConnection';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../types/types.ts';
+import { useNavigation } from '@react-navigation/native';
+import { UserContext, UserContextType } from '../context/UserContext.tsx';
+import { sendLocation } from '../sockets/emitEvents.tsx';
+import MapButton from './MapButton.tsx';
 
 const { width, height } = Dimensions.get('window');
+
+type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'QRScanner'>;
 
 // Define los límites del QR directamente como constantes
 const qrBounds = {
@@ -20,6 +28,15 @@ const QRScanner: React.FC<{ onQRCodeScanned: (value: string) => void }> = ({ onQ
   const vibrationDuration = 250;
 
   const device = useCameraDevice('back');
+  const navigation = useNavigation<MapScreenNavigationProp>();
+
+  const context = useContext(UserContext) as UserContextType;
+  const { userData } = context;
+
+  const goToMap = () => {
+    sendLocation('School', userData.playerData.email);
+    navigation.navigate('School');
+  };
 
   // QR Scanner hook
   const codeScanner = useCodeScanner({
@@ -101,8 +118,7 @@ const QRScanner: React.FC<{ onQRCodeScanned: (value: string) => void }> = ({ onQ
         style={styles.camera}
         device={device}
         isActive={true}
-        codeScanner={scanning ? codeScanner : undefined}        
-
+        codeScanner={scanning ? codeScanner : undefined}
       />
       <View style={styles.overlay}>
         {/* Overlay superior */}
@@ -118,6 +134,12 @@ const QRScanner: React.FC<{ onQRCodeScanned: (value: string) => void }> = ({ onQ
         {/* Overlay inferior */}
         <View style={styles.bottomOverlay} />
       </View>
+
+      {/* Añadir el botón de mapa */}
+      <MapButton
+        onPress={goToMap}
+        iconImage={require('../assets/school_icon.png')}
+      />
     </View>
   );
 };
