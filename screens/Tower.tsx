@@ -49,7 +49,6 @@ const Tower: React.FC = () => {
     }
     console.log('PLayer inside: ' + player.is_inside_tower);
     sendIsInside(isInsideTower);
-    sendLocation('Tower', userData.playerData.email);
 }, [isInsideTower, player]);
 
 useEffect(() => {

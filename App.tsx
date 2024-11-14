@@ -30,6 +30,7 @@ import { saveBoolean, getBoolean } from './helper/AsyncStorage';
 import MortimerTower from './components/mortimerTower';
 import Swamp from './screens/Swamp';
 import SchoolScreen from './screens/OldSchool';
+import HallOfSages from './screens/HallOfSages';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -169,167 +170,6 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
     }
 
     switch (userData.playerData.role) {
-      case 'ISTVAN':
-        return (
-          <>
-            <Tab.Screen
-              name="Settings"
-              options={{
-                tabBarLabel: '',
-                tabBarIcon: ({ focused }) => (
-                  <View style={focused ? styles.activeTabBackground : null}>
-                    <Image source={require('./assets/setings_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
-                  </View>
-                ),
-              }}
-            >
-              {props => <ProfileScreen {...props} user={userData} setIsLoged={setIsLoged} />}
-            </Tab.Screen>
-            <Tab.Screen
-              name="QRScanner"
-              options={{
-                tabBarLabel: '',
-                tabBarIcon: ({ focused }) => (
-                  <View style={focused ? styles.activeTabBackground : null}>
-                    <Image source={require('./assets/QR_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
-                  </View>
-                ),
-              }}
-            >
-              {props => (
-                <>
-                <ImageBackground
-                      source={require('./assets/settings_background_02.png')}  // Ruta de la imagen de fondo
-                      style={styles.QRbackground}  // Aplicar estilos al contenedor de la imagen de fondo
-                      resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
-                    >
-                  <TouchableOpacity onPress={() => setIsModalVisible(true)}>
-                    <ImageBackground
-                      source={require('./assets/boton.png')}  // Ruta de la imagen de fondo
-                      style={styles.openModalButton}  // Aplicar estilos al contenedor de la imagen de fondo
-                      resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
-                    >
-                      <Text style={styles.buttonText}>Open QR Scanner</Text>
-                    </ImageBackground>
-                  </TouchableOpacity>
-
-                  <View style={styles.modalView}>
-                    <Modal
-                      animationType="slide"
-                      visible={isModalVisible}
-                    >
-                      <QRScanner {...props} onQRCodeScanned={handleQRCodeScanned} />
-
-                      <TouchableOpacity onPress={() => setIsModalVisible(false)}>
-                        <ImageBackground
-                          source={require('./assets/boton.png')}  // Ruta de la imagen de fondo
-                          style={styles.modalButton}  // Aplicar estilos al contenedor de la imagen de fondo
-                          resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
-                        >
-                          <Text style={styles.buttonText}>Close</Text>
-                        </ImageBackground>
-
-                      </TouchableOpacity>
-                    </Modal>
-                  </View>
-                  </ImageBackground>
-                </>
-              )}
-            </Tab.Screen>
-          </>
-        );
-
-      case 'MORTIMER':
-        return (
-          <>
-            <Tab.Screen
-              name="Settings"
-              options={{
-                tabBarLabel: '',
-                tabBarIcon: ({ focused }) => (
-                  <View style={focused ? styles.activeTabBackground : null}>
-                    <Image source={require('./assets/setings_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
-                  </View>
-                ),
-              }}
-            >
-              {props => <ProfileScreen {...props} user={userData} setIsLoged={setIsLoged} />}
-            </Tab.Screen>
-            
-            <Tab.Screen
-              name="Info"
-              options={{
-                tabBarLabel: '',
-                tabBarIcon: ({ focused }) => (
-                  <View style={focused ? styles.activeTabBackground : null}>
-                    <Image source={require('./assets/profile_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
-                  </View>
-                ),
-              }}
-            >
-              {props => <AcolythScreen {...props} user={userData} />}
-            </Tab.Screen>
-            
-            <Tab.Screen
-              name="Map"
-              options={{
-                tabBarLabel: '',
-                tabBarIcon: ({ focused }) => (
-                  <View style={focused ? styles.activeTabBackground : null}>
-                    <Image source={require('./assets/map_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
-                  </View>
-                ),
-              }}
-            >
-               {props => <MapScreen {...props}/>}
-            </Tab.Screen>
-          </>
-        );
-
-      case 'VILLAIN':
-        return (
-          <>
-            <Tab.Screen
-              name="Settings"
-              options={{
-                tabBarLabel: '',
-                tabBarIcon: ({ focused }) => (
-                  <View style={focused ? styles.activeTabBackground : null}>
-                    <Image source={require('./assets/setings_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
-                  </View>
-                ),
-              }}
-            >
-              {props => <ProfileScreen {...props} setIsLoged={setIsLoged} user={userData} />}
-            </Tab.Screen>
-            <Tab.Screen
-              name="HomeAcolyth"
-              options={{
-                tabBarLabel: '',
-                tabBarIcon: ({ focused }) => (
-                  <View style={focused ? styles.activeTabBackground : null}>
-                    <Image source={require('./assets/home_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
-                  </View>
-                ),
-              }}
-            >
-              {props => <HomeVillain {...props} user={userData} />}
-            </Tab.Screen>
-            <Tab.Screen
-              name="Map"
-              options={{
-                tabBarLabel: '',
-                tabBarIcon: ({ focused }) => (
-                  <View style={focused ? styles.activeTabBackground : null}>
-                    <Image source={require('./assets/map_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
-                  </View>
-                ),
-              }}
-            >
-               {props => <MapScreen {...props}/>}
-            </Tab.Screen>
-          </>
-        );
 
       default:
         return (
@@ -452,6 +292,18 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               options={{ headerShown: false }}
             >
               {props => <SchoolScreen {...props} />}
+            </Stack.Screen>
+            <Stack.Screen
+              name="HallOfSages"
+              options={{ headerShown: false }}
+            >
+              {props => <HallOfSages {...props}/>}
+            </Stack.Screen>
+            <Stack.Screen
+              name="QRScanner"
+              options={{ headerShown: false }}
+            >
+              {props => <QRScanner {...props}/>}
             </Stack.Screen>
           </Stack.Navigator>
         </NavigationContainer>

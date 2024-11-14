@@ -2,6 +2,7 @@ import React, { createContext, useState, ReactNode } from 'react';
 import { Ingredients } from '../interfaces/Ingredients';
 import { Player } from '../interfaces/Player';
 import Curse from '../components/Potions/Curse';
+import { Locations } from '../interfaces/Location';
 
 export interface UserContextType {
   userData: any | null;
@@ -24,6 +25,8 @@ export interface UserContextType {
   setCurrentScreen: React.Dispatch<React.SetStateAction<string>>;
   player: Player | null;
   setPlayer: React.Dispatch<React.SetStateAction<Player | null>>;
+  otherAcolytes: Locations[];
+  setOtherAcolytes: React.Dispatch<React.SetStateAction<Locations[]>>
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -39,6 +42,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [parchment, setParchment] = useState(false);
   const [purifyIngredients, setPurifyIngredients] = useState<Ingredients[]>([]);
   const [player, setPlayer] = useState<Player | null>(null);
+  const [otherAcolytes, setOtherAcolytes] = useState<Locations[]>([]);
 
 
   return (
@@ -53,6 +57,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
       curses, setCurses,
       currentScreen, setCurrentScreen,
       player, setPlayer,
+      otherAcolytes, setOtherAcolytes,
     }}>
       {children}
     </UserContext.Provider>

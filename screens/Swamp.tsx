@@ -19,12 +19,11 @@ type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
 const Swamp: React.FC = () => {
   const navigation = useNavigation<MapScreenNavigationProp>();
   const context = useContext(UserContext) as UserContextType;
-  const { userData } = context;
-  const [otherAcolytes, setOtherAcolytes] = useState<Locations[]>([]);
+  const { userData, otherAcolytes, setOtherAcolytes } = context;
   const [takenArtifacts, setTakenArtifacts] = useState<number[]>([]); // Lista de artefactos recogidos
   const [isBagVisible, setIsBagVisible] = useState<boolean>(false); // Estado para mostrar/ocultar la bolsa
   const [isLoading, setIsLoading] = useState(true);
-  const [loadingError, setLoadingError] = useState<string | null>(null)
+  const [loadingError, setLoadingError] = useState<string | null>(null);
   const [pointsOfInterest, setPointsOfInterest] = useState([
     { id: 1, latitude: 43.3110, longitude: -2.002, isTaken: false, inRange: false },
     { id: 2, latitude: 43.3090, longitude: -2.002, isTaken: false, inRange: false },
@@ -97,7 +96,7 @@ const Swamp: React.FC = () => {
 
     const getCurrentLocation = async () => {
       const hasPermission = await requestLocationPermission();
-      if (!hasPermission) return;
+      if (!hasPermission) {return;}
 
       socket.on('connect',() => {
         Geolocation.getCurrentPosition(
@@ -108,6 +107,7 @@ const Swamp: React.FC = () => {
               latitude,
               longitude,
             }));
+            socket.emit('locationUpdate', { userId: userData.playerData.nickname, avatar: userData.playerData.avatar, coords: { latitude, longitude } });
           },
           (error) => {
             console.error('Error getting current location:', error);
@@ -140,7 +140,7 @@ const Swamp: React.FC = () => {
       };
     };
 
-    getCurrentLocation();
+    {userData.playerData.role === 'ACOLYTE' && (getCurrentLocation());}
 
     socket.on('deviceLocations', (locations) => {
       setOtherAcolytes(locations);
@@ -212,52 +212,54 @@ const Swamp: React.FC = () => {
   }
   return (
     <View style={styles.container}>
-      <MapView
-        provider={PROVIDER_GOOGLE}
-        style={styles.map}
-        region={location}
-        showsCompass
-      >
-        {Object.keys(otherAcolytes).map((userId: any) => {
-          const deviceLocation = otherAcolytes[userId];
-          return (
-            <Marker
-              key={userId}
-              title={userId}
-              coordinate={{
-                latitude: deviceLocation.coords.latitude,
-                longitude: deviceLocation.coords.longitude,
-              }}
-            >
-              <MapMarker avatarUri={otherAcolytes[userId].avatar} />
-            </Marker>
-          );
-        })}
-        {pointsOfInterest.map((poi) =>
-          !poi.isTaken && (
-            <React.Fragment key={poi.id}>
+      <View style={styles.mapOverlay}>
+        <MapView
+          provider={PROVIDER_GOOGLE}
+          style={styles.map}
+          region={location}
+          showsCompass
+          customMapStyle={mapStyle}
+        >
+          {Object.keys(otherAcolytes).map((userId: any) => {
+            const deviceLocation = otherAcolytes[userId];
+            return (
               <Marker
-                coordinate={{ latitude: poi.latitude, longitude: poi.longitude }}
-                title={`Artefact ${poi.id}`}
-                onPress={() => {
-                  if (poi.inRange) {
-                    handleArtifactTake(poi.id);
-                  } else {
-                    ToastAndroid.show('Out of range', ToastAndroid.SHORT);
-                  }
+                key={userId}
+                title={userId}
+                coordinate={{
+                  latitude: deviceLocation.coords.latitude,
+                  longitude: deviceLocation.coords.longitude,
                 }}
-              />
-              <Circle
-                center={{ latitude: poi.latitude, longitude: poi.longitude }}
-                radius={50} // Radio de interacción
-                fillColor={poi.inRange ? 'rgba(0, 255, 0, 0.2)' : 'rgba(255, 0, 0, 0.2)'}
-                strokeColor={poi.inRange ? 'rgba(0, 255, 0, 0.5)' : 'rgba(255, 0, 0, 0.5)'}
-              />
-            </React.Fragment>
-          )
-        )}
-      </MapView>
-      
+              >
+                <MapMarker avatarUri={otherAcolytes[userId].avatar} />
+              </Marker>
+            );
+          })}
+         {(userData.playerData.role === 'ACOLYTE' || userData.playerData.role === 'MORTIMER') && (
+          pointsOfInterest.map((poi) =>
+            !poi.isTaken && (
+              <React.Fragment key={poi.id}>
+                <Marker
+                  coordinate={{ latitude: poi.latitude, longitude: poi.longitude }}
+                  title={`Artefact ${poi.id}`}
+                  onPress={() => {
+                    if (poi.inRange) {
+                      handleArtifactTake(poi.id);
+                  } else {
+                      ToastAndroid.show('Out of range', ToastAndroid.SHORT);
+                    }
+                  }}
+                />
+                <Circle
+                  center={{ latitude: poi.latitude, longitude: poi.longitude }}
+                  radius={50} // Radio de interacción
+                  fillColor={poi.inRange ? 'rgba(0, 255, 0, 0.2)' : 'rgba(255, 0, 0, 0.2)'}
+                  strokeColor={poi.inRange ? 'rgba(0, 255, 0, 0.5)' : 'rgba(255, 0, 0, 0.5)'}
+                />
+              </React.Fragment>
+            )))}
+        </MapView>
+
       {/* Botón para abrir/cerrar la bolsa */}
       <TouchableOpacity style={styles.bagButton} onPress={() => setIsBagVisible(!isBagVisible)}>
         <Text style={styles.bagButtonText}>Bag</Text>
@@ -283,21 +285,55 @@ const Swamp: React.FC = () => {
         </View>
       )}
 
-      <TouchableOpacity style={styles.closeButton} onPress={() => navigation.navigate('Map')}>
+        <TouchableOpacity style={styles.closeButton} onPress={() => navigation.navigate('Map')}>
         <MedievalText>Close</MedievalText>
       </TouchableOpacity>
+      </View>
     </View>
   );
 };
+
+const mapStyle = [
+  {
+    'elementType': 'geometry',
+    'stylers': [
+      { 'color': '#212121' },
+    ],
+  },
+  {
+    'elementType': 'labels.text.fill',
+    'stylers': [
+      { 'color': '#757575' },
+    ],
+  },
+  {
+    'elementType': 'labels.text.stroke',
+    'stylers': [
+      { 'color': '#212121' },
+    ],
+  },
+  {
+    'featureType': 'water',
+    'stylers': [
+      { 'color': '#0f252e' },
+    ],
+  },
+  {
+    'featureType': 'landscape',
+    'stylers': [
+      { 'color': '#2f3e46' },
+    ],
+  },
+];
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    borderColor: 'yellow',
-    borderWidth: 15,
-    borderRadius: 10,
+    borderColor: '#4d3e3e',
+    borderWidth: 10,
     overflow: 'hidden',
+    backgroundColor: '#1c1c1c',
   },
   map: {
     width: width,
@@ -349,33 +385,58 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  mapOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Darkens the map a bit
+    zIndex: 1,
+  },
+  buttonContainer: {
+    position: 'absolute',
+    top: 60,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+  },
+  modeButton: {
+    backgroundColor: '#3a2b2b',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#663a3a',
+  },
+  buttonText: {
+    color: '#f2e5c4', // Light tan color for readability
+  },
+  mapOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Darkens the map a bit
+    zIndex: 1,
+  },
+  buttonContainer: {
+    position: 'absolute',
+    top: 60,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+  },
+  modeButton: {
+    backgroundColor: '#3a2b2b',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#663a3a',
+  },
+  buttonText: {
+    color: '#f2e5c4', // Light tan color for readability
+  },
   closeButton: {
     position: 'absolute',
     bottom: 30,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: 'rgba(250, 250, 250, 0.4)',
     padding: 10,
     borderRadius: 5,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: 'gray',
-  },
-  errorContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  errorText: {
-    fontSize: 18,
-    color: 'red',
-    textAlign: 'center',
   },
 });
 

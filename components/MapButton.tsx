@@ -1,13 +1,15 @@
+// MapButton.tsx
 import React from 'react';
 import { Text, View, Button, StyleSheet, TouchableOpacity, Image, ImageSourcePropType } from 'react-native';
 import MedievalText from './MedievalText';
 import { Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
+
 type Props = {
   title?: string;
   onPress: () => void;
-  iconImage?: ImageSourcePropType; // Añadimos la prop para la imagen del icono
+  iconImage?: ImageSourcePropType;
 };
 
 const MapButton: React.FC<Props> = ({ title, onPress, iconImage }) => {
@@ -17,7 +19,6 @@ const MapButton: React.FC<Props> = ({ title, onPress, iconImage }) => {
         <TouchableOpacity onPress={onPress}>
           <Image source={iconImage} style={styles.iconStyle} />
           <MedievalText style={styles.text}>{title}</MedievalText>
-
         </TouchableOpacity>
       ) : (
         <Button 
@@ -36,17 +37,17 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   iconStyle: {
-    width: width * 0.18,  // Ajusta el tamaño de la imagen
-    height: height *0.1,
+    width: width * 0.18,
+    height: height * 0.1,
     alignSelf: 'center',
-
   },
   text: {
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 'bold',
+    textAlign: 'center', // Centra el texto del título
   },
-
 });
 
 export default MapButton;
+

@@ -13,10 +13,10 @@ import { Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
-type SchoolScreenNavigationProp = StackNavigationProp<RootStackParamList, 'School'>;
+type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'School'>;
 
 const SchoolScreen: React.FC = () => {
-  const navigation = useNavigation<SchoolScreenNavigationProp>();
+  const navigation = useNavigation<MapScreenNavigationProp>();
 
   const context = useContext(UserContext) as UserContextType;
 
@@ -38,6 +38,10 @@ const SchoolScreen: React.FC = () => {
     sendLocation('Map', userData.playerData.email);
     navigation.navigate('Map');
   };
+  const goToQRScanner = () => {
+    sendLocation('', userData.playerData.email);
+    navigation.navigate('QRScanner');
+  };
 
   if (isInsideLab) {
     return (
@@ -50,7 +54,7 @@ const SchoolScreen: React.FC = () => {
       return (
         <GestureHandlerRootView style={styles.container}>
           <ImageBackground
-            source={require('../assets/map.png')}  // Ruta de la imagen de fondo
+            source={require('../assets/school.png')}  // Ruta de la imagen de fondo
             style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
             resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
           >
@@ -59,7 +63,7 @@ const SchoolScreen: React.FC = () => {
               <MapButton
                 title="HallOfSages"
                 onPress={goToHallOfSages}
-                iconImage={require('../assets/home_icon.png')}
+                iconImage={require('../assets/obituary_icon.png')}
               />
             </View>
 
@@ -68,6 +72,14 @@ const SchoolScreen: React.FC = () => {
                 title="Laboratory"
                 onPress={goToLaboratoryMortimer}
                 iconImage={require('../assets/laboratory_icon.png')}
+              />
+            </View>
+
+            <View style={styles.buttonMap}>
+              <MapButton
+                title="Map"
+                onPress={goToMap}
+                iconImage={require('../assets/map_icon.png')}
               />
             </View>
 
@@ -80,25 +92,38 @@ const SchoolScreen: React.FC = () => {
       return (
         <GestureHandlerRootView style={styles.container}>
           <ImageBackground
-            source={require('../assets/map.png')}  // Ruta de la imagen de fondo
+            source={require('../assets/school.png')}  // Ruta de la imagen de fondo
             style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
             resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
           >
 
-            <View style={styles.buttonLaboratory}>
-              <MapButton
-                title="Laboratory"
-                onPress={goToLaboratory}
-                iconImage={require('../assets/laboratory_icon.png')}
-              />
-            </View>
+            
+            {userData.playerData.role != 'ISTVAN' && (
+              <View style={styles.buttonLaboratory}>
+                <MapButton
+                    title="Laboratory"
+                    onPress={goToLaboratory}
+                    iconImage={require('../assets/laboratory_icon.png')}
+                />
+              </View>
+            )}
 
-            {userData.playerData.role != 'ITSVAN' && (
+            {userData.playerData.role != 'ISTVAN' && (
               <View style={styles.buttonHallOfSages}>
                 <MapButton
-                  title="HallOfSages"
+                  title="Hall Of Sages"
                   onPress={goToHallOfSages}
-                  iconImage={require('../assets/home_icon.png')}
+                  iconImage={require('../assets/obituary_icon.png')}
+                />
+              </View>
+            )}
+
+            {userData.playerData.role === 'ISTVAN' && (
+              <View style={styles.buttonLaboratory}>
+                <MapButton
+                  title="Laboratory"
+                  onPress={goToQRScanner}
+                  iconImage={require('../assets/QR_icon.png')}
                 />
               </View>
             )}
@@ -107,7 +132,7 @@ const SchoolScreen: React.FC = () => {
               <MapButton
                 title="Map"
                 onPress={goToMap}
-                iconImage={require('../assets/laboratory_icon.png')}
+                iconImage={require('../assets/map_icon.png')}
               />
             </View>
 
@@ -129,21 +154,26 @@ const styles = StyleSheet.create({
   },
   buttonLaboratory: {
     position: 'absolute',
-    bottom: height * 0.25,
-    right: width * 0.45,
+    bottom: height * 0.1,
+    right: width * 0.29,
     alignSelf: 'center',
   },
   buttonHallOfSages: {
     position: 'absolute',
-    bottom: height*0.15,
-    right: width*0.1,
+    bottom: height*0.64,
+    right: width*0.14,
     alignSelf: 'center',
   },
   buttonMap: {
     position: 'absolute',
-    bottom: height* 0.48,
-    right: width* 0.8,
+    bottom: height* 0.0,
+    right: width* 0.485,
     alignSelf: 'center',
+  },
+  title: {
+    textAlign: 'center',    // Centra el texto horizontalmente
+    fontSize: 16,           // Tamaño de fuente ajustado
+    color: 'white',         // Color de fuente
   },
 
 });
