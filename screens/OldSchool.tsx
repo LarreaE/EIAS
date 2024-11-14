@@ -7,41 +7,36 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ImageBackground } from 'react-native';
 import MapButton from '../components/MapButton';
 import { UserContext, UserContextType } from '../context/UserContext';
+import AcolythLaboratoryScreen from '../components/acolythLaboratoryScreen';
 import { sendLocation } from '../sockets/emitEvents';
 import { Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
-type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
+type SchoolScreenNavigationProp = StackNavigationProp<RootStackParamList, 'School'>;
 
-const MapScreen: React.FC = () => {
-  const navigation = useNavigation<MapScreenNavigationProp>();
+const SchoolScreen: React.FC = () => {
+  const navigation = useNavigation<SchoolScreenNavigationProp>();
 
   const context = useContext(UserContext) as UserContextType;
 
   const { isInsideLab, userData } = context;
 
-  sendLocation("Map", userData.playerData.email)
-
-  const goToHome = () => {
-    sendLocation('Home', userData.playerData.email);
-    navigation.navigate('HomeAcolyth');
+  const goToLaboratory = () => {
+    sendLocation('Laboratory', userData.playerData.email);
+    navigation.navigate('LaboratoryAcolyth');
   };
-  const goToTower = () => {
-    sendLocation('Tower', userData.playerData.email);
-    navigation.navigate('TowerAcolyth');
+  const goToLaboratoryMortimer = () => {
+    sendLocation('Laboratory', userData.playerData.email);
+    navigation.navigate('LaboratoryMortimer');
   };
-  const goToSwamp = () => {
-    sendLocation('Swamp', userData.playerData.email);
-    navigation.navigate('Swamp');
-  };
-  const goToTowerMortimer = () => {
-    sendLocation('Tower', userData.playerData.email);
-    navigation.navigate('TowerMortimer');
-  };
-  const goToSchool = () => {
+  const goToHallOfSages = () => {
     sendLocation('School', userData.playerData.email);
-    navigation.navigate('School');
+    navigation.navigate('HallOfSages');
+  };
+  const goToMap = () => {
+    sendLocation('Map', userData.playerData.email);
+    navigation.navigate('Map');
   };
 
   if (isInsideLab) {
@@ -60,22 +55,21 @@ const MapScreen: React.FC = () => {
             resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
           >
 
-            <View style={styles.buttonTower}>
+            <View style={styles.buttonHallOfSages}>
               <MapButton
-                title="Tower"
-                onPress={goToTowerMortimer}
+                title="HallOfSages"
+                onPress={goToHallOfSages}
                 iconImage={require('../assets/home_icon.png')}
               />
             </View>
 
-            <View style={styles.buttonSchool}>
+            <View style={styles.buttonLaboratory}>
               <MapButton
-                title="School"
-                onPress={goToSchool}
-                iconImage={require('../assets/school_icon.png')}
+                title="Laboratory"
+                onPress={goToLaboratoryMortimer}
+                iconImage={require('../assets/laboratory_icon.png')}
               />
             </View>
-
 
           </ImageBackground>
         </GestureHandlerRootView>
@@ -91,36 +85,29 @@ const MapScreen: React.FC = () => {
             resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
           >
 
-            {userData.playerData.role === 'ACOLYTE' && (
-              <View style={styles.buttonTower}>
+            <View style={styles.buttonLaboratory}>
+              <MapButton
+                title="Laboratory"
+                onPress={goToLaboratory}
+                iconImage={require('../assets/laboratory_icon.png')}
+              />
+            </View>
+
+            {userData.playerData.role != 'ITSVAN' && (
+              <View style={styles.buttonHallOfSages}>
                 <MapButton
-                  title="Tower"
-                  onPress={goToTower}
+                  title="HallOfSages"
+                  onPress={goToHallOfSages}
                   iconImage={require('../assets/home_icon.png')}
                 />
               </View>
             )}
-        <View style={styles.buttonSchool}>
-            <MapButton
-              title="School"
-              onPress={goToSchool}
-              iconImage={require('../assets/school_icon.png')}
-            />
-        </View>
 
-        <View style={styles.buttonMap}>
-            <MapButton
-              title="Swamp"
-              onPress={goToSwamp}
-              iconImage={require('../assets/home_icon.png')}
-            />
-        </View>
-
-            <View style={styles.buttonHome}>
+            <View style={styles.buttonMap}>
               <MapButton
-                title="Home"
-                onPress={goToHome}
-                iconImage={require('../assets/home_icon.png')}
+                title="Map"
+                onPress={goToMap}
+                iconImage={require('../assets/laboratory_icon.png')}
               />
             </View>
 
@@ -146,7 +133,7 @@ const styles = StyleSheet.create({
     right: width * 0.45,
     alignSelf: 'center',
   },
-  buttonHome: {
+  buttonHallOfSages: {
     position: 'absolute',
     bottom: height*0.15,
     right: width*0.1,
@@ -158,19 +145,7 @@ const styles = StyleSheet.create({
     right: width* 0.8,
     alignSelf: 'center',
   },
-  buttonTower: {
-    position: 'absolute',
-    bottom: height* 0.33,
-    right: width* 0.72,
-    alignSelf: 'center',
-  },
-  buttonSchool: {
-    position: 'absolute',
-    bottom: height* 0.53,
-    right: width* 0.52,
-    alignSelf: 'center',
-  },
 
 });
 
-export default MapScreen;
+export default SchoolScreen;

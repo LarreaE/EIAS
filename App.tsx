@@ -29,6 +29,7 @@ import { checkAndRequestNotificationPermission } from './components/notification
 import { saveBoolean, getBoolean } from './helper/AsyncStorage';
 import MortimerTower from './components/mortimerTower';
 import Swamp from './screens/Swamp';
+import SchoolScreen from './screens/OldSchool';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -445,6 +446,12 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               options={{ headerShown: false }}
             >
               {props => <Swamp {...props} />}
+            </Stack.Screen>
+            <Stack.Screen
+              name="School"
+              options={{ headerShown: false }}
+            >
+              {props => <SchoolScreen {...props} />}
             </Stack.Screen>
           </Stack.Navigator>
         </NavigationContainer>
