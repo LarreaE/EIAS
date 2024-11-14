@@ -24,6 +24,7 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true // Asegúrate de incluir multidex si es necesario
+        manifestPlaceholders = [MAPS_API_KEY: "${MAPS_API_KEY}"]
     }
     signingConfigs {
         debug {
