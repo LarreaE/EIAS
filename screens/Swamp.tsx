@@ -111,7 +111,7 @@ const Swamp: React.FC = () => {
       };
     };
 
-    getCurrentLocation();
+    {userData.playerData.role === 'ACOLYTE' && (getCurrentLocation())};
 
     socket.on('deviceLocations', (locations) => {
       setOtherAcolytes(locations);
@@ -168,75 +168,136 @@ const Swamp: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <MapView
-        provider={PROVIDER_GOOGLE}
-        style={styles.map}
-        region={location}
-        showsCompass
-      >
-        {Object.keys(otherAcolytes).map((userId:any) => {
-          const deviceLocation = otherAcolytes[userId];
-            return (
-              <Marker
-                key={userId}
-                title={userId}
-                coordinate={{
-                  latitude: deviceLocation.coords.latitude,
-                  longitude: deviceLocation.coords.longitude,
-                }}
-              >
-                <MapMarker avatarUri={otherAcolytes[userId].avatar} />
-              </Marker>
-            );
-        })}
-         {pointsOfInterest.map((poi) =>
-          !poi.isTaken && (
-            <React.Fragment key={poi.id}>
-              <Marker
-                coordinate={{ latitude: poi.latitude, longitude: poi.longitude }}
-                title={`POI ${poi.id}`}
-                onPress={() => {
-                  setPointsOfInterest((prev) =>
-                    prev.map((p) => (p.id === poi.id ? { ...p, isTaken: true } : p))
-                  );
-                  objectTaken(poi.id);
-                }}
-              />
-              <Circle
-                center={{ latitude: poi.latitude, longitude: poi.longitude }}
-                radius={50} // Radio de interacción
-                fillColor={poi.inRange ? "rgba(0, 255, 0, 0.2)" : "rgba(0, 150, 255, 0.2)"}
-                strokeColor={poi.inRange ? "rgba(0, 255, 0, 0.5)" : "rgba(0, 150, 255, 0.5)"}
-              />
-            </React.Fragment>
-          )
-        )}
-      </MapView>
-      <TouchableOpacity style={styles.closeButton} onPress={() => navigation.navigate('Map')}>
+      <View style={styles.mapOverlay}>
+        <MapView
+          provider={PROVIDER_GOOGLE}
+          style={styles.map}
+          region={location}
+          showsCompass
+          customMapStyle={mapStyle}
+        >
+          {Object.keys(otherAcolytes).map((userId:any) => {
+            const deviceLocation = otherAcolytes[userId];
+              return (
+                <Marker
+                  key={userId}
+                  title={userId}
+                  coordinate={{
+                    latitude: deviceLocation.coords.latitude,
+                    longitude: deviceLocation.coords.longitude,
+                  }}
+                >
+                  <MapMarker avatarUri={otherAcolytes[userId].avatar} />
+                </Marker>
+              );
+          })}
+          {pointsOfInterest.map((poi) =>
+            !poi.isTaken && (
+              <React.Fragment key={poi.id}>
+                <Marker
+                  coordinate={{ latitude: poi.latitude, longitude: poi.longitude }}
+                  title={`POI ${poi.id}`}
+                  onPress={() => {
+                    setPointsOfInterest((prev) =>
+                      prev.map((p) => (p.id === poi.id ? { ...p, isTaken: true } : p))
+                    );
+                    objectTaken(poi.id);
+                  }}
+                />
+                <Circle
+                  center={{ latitude: poi.latitude, longitude: poi.longitude }}
+                  radius={50} // Radio de interacción
+                  fillColor={poi.inRange ? "rgba(0, 255, 0, 0.2)" : "rgba(0, 150, 255, 0.2)"}
+                  strokeColor={poi.inRange ? "rgba(0, 255, 0, 0.5)" : "rgba(0, 150, 255, 0.5)"}
+                />
+              </React.Fragment>
+            )
+          )}
+        </MapView>
+        <TouchableOpacity style={styles.closeButton} onPress={() => navigation.navigate('Map')}>
         <MedievalText>Close</MedievalText>
       </TouchableOpacity>
+      </View>
     </View>
   );
 };
+
+const mapStyle = [
+  {
+    "elementType": "geometry",
+    "stylers": [
+      { "color": "#212121" }
+    ]
+  },
+  {
+    "elementType": "labels.text.fill",
+    "stylers": [
+      { "color": "#757575" }
+    ]
+  },
+  {
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      { "color": "#212121" }
+    ]
+  },
+  {
+    "featureType": "water",
+    "stylers": [
+      { "color": "#0f252e" }
+    ]
+  },
+  {
+    "featureType": "landscape",
+    "stylers": [
+      { "color": "#2f3e46" }
+    ]
+  },
+];
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    borderColor: 'yellow',
-    borderWidth: 15,
-    borderRadius: 10,
+    borderColor: '#4d3e3e',
+    borderWidth: 10,
     overflow: 'hidden',
+    backgroundColor: '#1c1c1c',
   },
   map: {
     ...StyleSheet.absoluteFillObject,
   },
+  mapOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Darkens the map a bit
+    zIndex: 1,
+  },
+  buttonContainer: {
+    position: 'absolute',
+    top: 60,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+  },
+  modeButton: {
+    backgroundColor: '#3a2b2b',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#663a3a',
+  },
+  buttonText: {
+    color: '#f2e5c4', // Light tan color for readability
+  },
   closeButton: {
     position: 'absolute',
     bottom: 30,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: 'rgba(250, 250, 250, 0.4)',
     padding: 10,
     borderRadius: 5,
+    borderColor: '#999',
+    borderWidth: 1,
   },
 });
 
