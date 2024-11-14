@@ -11,6 +11,7 @@ import { objectTaken, requestArtifacts, restoreObjects } from '../sockets/emitEv
 import socket from '../sockets/socketConnection';
 import { Locations } from '../interfaces/Location';
 import MapMarker from '../components/MapMarker';
+import { listenToArtifactsUpdates } from '../sockets/listenEvents';
 
 const { width, height } = Dimensions.get('window');
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
@@ -24,7 +25,12 @@ const Swamp: React.FC = () => {
   const [isBagVisible, setIsBagVisible] = useState<boolean>(false); // Estado para mostrar/ocultar la bolsa
   const [isLoading, setIsLoading] = useState(true);
   const [loadingError, setLoadingError] = useState<string | null>(null)
-
+  const [pointsOfInterest, setPointsOfInterest] = useState([
+    { id: 1, latitude: 43.3110, longitude: -2.002, isTaken: false, inRange: false },
+    { id: 2, latitude: 43.3090, longitude: -2.002, isTaken: false, inRange: false },
+    { id: 3, latitude: 43.3125, longitude: -2.000, isTaken: false, inRange: false },
+    { id: 4, latitude: 43.3125, longitude: -1.999, isTaken: false, inRange: false },
+  ]);
   useEffect(() => {
 
     requestArtifacts();
@@ -32,7 +38,7 @@ const Swamp: React.FC = () => {
       setIsLoading(false);
       setLoadingError('Server error: failed to load artifacts.');
     }, 10000);
-
+    listenToArtifactsUpdates();
     socket.on('receive_artifacts', (artifacts) => {
       console.log('artifacts recived');
       console.log(artifacts);
@@ -53,12 +59,7 @@ const Swamp: React.FC = () => {
       clearTimeout(timeout);
     };
   }, []);
-  const [pointsOfInterest, setPointsOfInterest] = useState([
-    { id: 1, latitude: 43.3110, longitude: -2.002, isTaken: false, inRange: false },
-    { id: 2, latitude: 43.3090, longitude: -2.002, isTaken: false, inRange: false },
-    { id: 3, latitude: 43.3125, longitude: -2.000, isTaken: false, inRange: false },
-    { id: 4, latitude: 43.3125, longitude: -1.999, isTaken: false, inRange: false },
-  ]);
+
 
   const initialRegion: Region = {
     latitude: pointsOfInterest.reduce((sum, poi) => sum + poi.latitude, 0) / pointsOfInterest.length,
