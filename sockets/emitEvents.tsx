@@ -27,5 +27,9 @@ export const objectTaken = (objectId: Int32) => {
 export const restoreObjects = () => {
   console.log("restore_objects");
   socket.emit('restore_objects');
-  
 };
+export const requestArtifacts = () => {
+  console.log("Artefacts Requestet");
+  socket.emit('request_artifacts');
+};
+

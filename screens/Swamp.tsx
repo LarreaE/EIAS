@@ -7,7 +7,7 @@ import { UserContext, UserContextType } from '../context/UserContext';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/types';
 import MedievalText from '../components/MedievalText';
-import { objectTaken, restoreObjects } from '../sockets/emitEvents';
+import { objectTaken, requestArtifacts, restoreObjects } from '../sockets/emitEvents';
 import socket from '../sockets/socketConnection';
 import { Locations } from '../interfaces/Location';
 import MapMarker from '../components/MapMarker';
@@ -26,19 +26,25 @@ const Swamp: React.FC = () => {
   const [loadingError, setLoadingError] = useState<string | null>(null)
 
   useEffect(() => {
-    // Emitir evento para solicitar los artefactos al servidor
-    socket.emit('request_artifacts');
 
-    // Temporizador de 10 segundos para verificar si hay un timeout en la carga
+    requestArtifacts();
     const timeout = setTimeout(() => {
       setIsLoading(false);
-      setLoadingError("Server error: failed to load artifacts.");
+      setLoadingError('Server error: failed to load artifacts.');
     }, 10000);
 
-    // Escuchar la respuesta del servidor con los artefactos
     socket.on('receive_artifacts', (artifacts) => {
-      clearTimeout(timeout); // Detener el temporizador si se reciben datos
-      setPointsOfInterest(artifacts);
+      console.log('artifacts recived');
+      console.log(artifacts);
+      clearTimeout(timeout);
+      setPointsOfInterest(artifacts.map((artifact: { id: any; latitude: any; longitude: any; isTaken: any; name: any; }) => ({
+        id: artifact.id,
+        latitude: artifact.latitude,
+        longitude: artifact.longitude,
+        isTaken: artifact.isTaken,
+        inRange: false,
+        name: artifact.name,
+      })));
       setIsLoading(false);
     });
 
@@ -60,7 +66,6 @@ const Swamp: React.FC = () => {
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
   };
-  
   const [location, setLocation] = useState(initialRegion);
 
   const requestLocationPermission = async () => {
@@ -69,11 +74,11 @@ const Swamp: React.FC = () => {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
           {
-            title: "Permiso de ubicación",
-            message: "Esta app necesita acceder a tu ubicación",
-            buttonNeutral: "Pregúntame luego",
-            buttonNegative: "Cancelar",
-            buttonPositive: "OK"
+            title: 'Permiso de ubicación',
+            message: 'Esta app necesita acceder a tu ubicación',
+            buttonNeutral: 'Pregúntame luego',
+            buttonNegative: 'Cancelar',
+            buttonPositive: 'OK',
           }
         );
         return granted === PermissionsAndroid.RESULTS.GRANTED;
@@ -104,7 +109,7 @@ const Swamp: React.FC = () => {
             }));
           },
           (error) => {
-            console.error("Error getting current location:", error);
+            console.error('Error getting current location:', error);
           },
           { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
         );
@@ -122,7 +127,7 @@ const Swamp: React.FC = () => {
           socket.emit('locationUpdate', { userId: userData.playerData.nickname, avatar: userData.playerData.avatar, coords: { latitude, longitude } });
           checkProximity(latitude, longitude);
         },
-        (error) => console.error("Error watching location:", error),
+        (error) => console.error('Error watching location:', error),
         { enableHighAccuracy: true, distanceFilter: 10, interval: 1000, timeout: 10000 }
       );
 
@@ -237,15 +242,15 @@ const Swamp: React.FC = () => {
                   if (poi.inRange) {
                     handleArtifactTake(poi.id);
                   } else {
-                    ToastAndroid.show("Out of range", ToastAndroid.SHORT);
+                    ToastAndroid.show('Out of range', ToastAndroid.SHORT);
                   }
                 }}
               />
               <Circle
                 center={{ latitude: poi.latitude, longitude: poi.longitude }}
                 radius={50} // Radio de interacción
-                fillColor={poi.inRange ? "rgba(0, 255, 0, 0.2)" : "rgba(255, 0, 0, 0.2)"}
-                strokeColor={poi.inRange ? "rgba(0, 255, 0, 0.5)" : "rgba(255, 0, 0, 0.5)"}
+                fillColor={poi.inRange ? 'rgba(0, 255, 0, 0.2)' : 'rgba(255, 0, 0, 0.2)'}
+                strokeColor={poi.inRange ? 'rgba(0, 255, 0, 0.5)' : 'rgba(255, 0, 0, 0.5)'}
               />
             </React.Fragment>
           )
