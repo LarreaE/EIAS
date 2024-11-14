@@ -9,6 +9,7 @@ import MapButton from '../components/MapButton';
 import { UserContext, UserContextType } from '../context/UserContext';
 import { sendLocation } from '../sockets/emitEvents';
 import { Dimensions } from 'react-native';
+import AcolythLaboratoryScreen from '../components/acolythLaboratoryScreen';
 
 const { width, height } = Dimensions.get('window');
 
@@ -67,7 +68,13 @@ const MapScreen: React.FC = () => {
                 iconImage={require('../assets/home_icon.png')}
               />
             </View>
-
+            <View style={styles.buttonMap}>
+              <MapButton
+                title="Swamp"
+                onPress={goToSwamp}
+                iconImage={require('../assets/home_icon.png')}
+              />
+            </View>
             <View style={styles.buttonSchool}>
               <MapButton
                 title="School"
