@@ -34,9 +34,6 @@ import SchoolScreen from './screens/OldSchool';
 const Tab = createMaterialTopTabNavigator();
 
 function App() {
-  const [isLoged, setIsLoged] = useState<boolean>(false);
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-
   useEffect(() => {
     checkAndRequestNotificationPermission();
   }, []);
@@ -57,17 +54,15 @@ function App() {
 
   return (
     <UserProvider>
-      <AppContent
-        isLoged={isLoged}
-        setIsLoged={setIsLoged}
-        isModalVisible={isModalVisible}
-        setIsModalVisible={setIsModalVisible}
-      />
+      <AppContent/>
     </UserProvider>
   );
 }
 
-function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) {
+function AppContent () {
+
+  const [isLoged, setIsLoged] = useState<boolean>(false);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const context = useContext(UserContext) as UserContextType;
 
   const { userData, setUserData ,setParchment, setCurrentScreen, currentScreen , player} = context; // Usamos useContext para UserData;
@@ -237,18 +232,17 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
               )}
             </Tab.Screen>
             <Tab.Screen
-              name="Map"
-              options={{
-                tabBarLabel: '',
-                tabBarIcon: ({ focused }) => (
-                  <View style={focused ? styles.activeTabBackground : null}>
-                    <Image source={require('./assets/map_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
-                  </View>
-                ),
-              }}
-            >
-               {props => <MapScreen {...props}/>}
-            </Tab.Screen>
+            name="Map"
+            component={MapScreen} // Use component prop instead of rendering as a child
+            options={{
+              tabBarLabel: '',
+              tabBarIcon: ({ focused }) => (
+                <View style={focused ? styles.activeTabBackground : null}>
+                  <Image source={require('./assets/map_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                </View>
+              ),
+            }}
+            />
           </>
         );
 
@@ -285,6 +279,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
             
             <Tab.Screen
               name="Map"
+              component={MapScreen}
               options={{
                 tabBarLabel: '',
                 tabBarIcon: ({ focused }) => (
@@ -293,9 +288,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
                   </View>
                 ),
               }}
-            >
-               {props => <MapScreen {...props}/>}
-            </Tab.Screen>
+            />
           </>
         );
 
@@ -330,6 +323,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
             </Tab.Screen>
             <Tab.Screen
               name="Map"
+              component={MapScreen}
               options={{
                 tabBarLabel: '',
                 tabBarIcon: ({ focused }) => (
@@ -338,9 +332,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
                   </View>
                 ),
               }}
-            >
-               {props => <MapScreen {...props}/>}
-            </Tab.Screen>
+            />
           </>
         );
 
@@ -363,6 +355,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
 
             <Tab.Screen
               name="HomeAcolyth"
+              component={AcolythHomeScreen}
               options={{
                 tabBarLabel: '',
                 tabBarIcon: ({ focused }) => (
@@ -371,10 +364,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
                   </View>
                 ),
               }}
-            >
-              {props => <AcolythHomeScreen {...props} />}
-            </Tab.Screen>
-
+            />
             <Tab.Screen
               name="Info"
               options={{
@@ -391,6 +381,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
 
             <Tab.Screen
               name="Map"
+              component={MapScreen}
               options={{
                 tabBarLabel: '',
                 tabBarIcon: ({ focused }) => (
@@ -399,10 +390,7 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
                   </View>
                 ),
               }}
-            >
-              {props => <MapScreen {...props} />}
-            </Tab.Screen>
-
+            />
           </>
         );
     }
@@ -438,33 +426,29 @@ function AppContent({ isLoged, setIsLoged, isModalVisible, setIsModalVisible }) 
             </Stack.Screen>
             <Stack.Screen
               name="TowerAcolyth"
+              component={Tower}
               options={{ headerShown: false }}
-            >
-              {props => <Tower {...props} />}
-            </Stack.Screen>
+            />
             <Stack.Screen
               name="LaboratoryMortimer"
+              component={MortimerLaboratoryScreen}
               options={{ headerShown: false }}
-            >
-              {props => <MortimerLaboratoryScreen {...props} UserData={userData} />}
-            </Stack.Screen>
+            />
             <Stack.Screen
               name="TowerMortimer"
+              component={MortimerTower}
               options={{ headerShown: false }}
-            >
-              {props => <MortimerTower {...props} UserData={userData} />}
-            </Stack.Screen>
+            />
             <Stack.Screen
               name="Swamp"
+              component={Swamp}
               options={{ headerShown: false }}
-            >
-              {props => <Swamp {...props} />}
-            </Stack.Screen>
+            />
             <Stack.Screen
               name="School"
+              component={SchoolScreen}
               options={{ headerShown: false }}
             >
-              {props => <SchoolScreen {...props} />}
             </Stack.Screen>
           </Stack.Navigator>
         </NavigationContainer>
