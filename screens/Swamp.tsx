@@ -163,6 +163,7 @@ const Swamp: React.FC = () => {
             return (
               <Marker
                 key={userId}
+                title={userId}
                 coordinate={{
                   latitude: deviceLocation.coords.latitude,
                   longitude: deviceLocation.coords.longitude,
