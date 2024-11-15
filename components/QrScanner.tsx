@@ -13,7 +13,7 @@ const qrBounds = {
   height: 250,           // Tamaño del área de enfoque
 };
 
-const QRScanner: React.FC<{ onQRCodeScanned: (value: string) => void }> = ({ onQRCodeScanned }) => {
+const QRScanner: React.FC<{ onQRCodeScanned: (value: string | undefined) => void }> = ({ onQRCodeScanned }) => {
   const [hasPermission, setHasPermission] = useState(false);
   const cameraRef = useRef(null);
   const [scanning, setScanning] = useState(true);
@@ -35,13 +35,14 @@ const QRScanner: React.FC<{ onQRCodeScanned: (value: string) => void }> = ({ onQ
         console.log('Coordenadas del marco del QR:', frame);
 
         // Verifica si el QR está dentro de los límites definidos
-        const isWithinSquare =
+        if (frame) {
+          const isWithinSquare =
           frame.x >= qrBounds.x &&
           frame.x + frame.width <= qrBounds.x + qrBounds.width &&
           frame.y >= qrBounds.y &&
           frame.y + frame.height <= qrBounds.y + qrBounds.height;
 
-        console.log('Está dentro del área enfocada:', isWithinSquare);
+          console.log('Está dentro del área enfocada:', isWithinSquare);
 
         if (isWithinSquare) {
           console.log('QR dentro del área enfocada: ', code.value);
@@ -54,13 +55,13 @@ const QRScanner: React.FC<{ onQRCodeScanned: (value: string) => void }> = ({ onQ
           }, 3000);
         } else {
           console.log('QR fuera del área enfocada');
-        }
+        }}
       }
     },
   });
 
   // Función para enviar la solicitud al servidor
-  const sendQRScan = async (data: string) => {
+  const sendQRScan = async (data: string | undefined) => {
     const scannedEmail = data;
     socket.emit('scan_acolyte', { scannedEmail }); // Enviar el email al servidor
   };
