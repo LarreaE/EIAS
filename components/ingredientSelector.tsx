@@ -273,7 +273,7 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
                 </MedievalText>
               </TouchableOpacity>
               <Image
-                source={require(selectedIngredient.image)}
+                source={{uri: selectedIngredient.image}}
                 style={styles.modalImage}
               />
               <MedievalText fontSize={24} color="#ffffff" style={styles.modalTitle}>

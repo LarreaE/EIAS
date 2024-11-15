@@ -31,8 +31,8 @@ import MortimerTower from './components/mortimerTower';
 import Swamp from './screens/Swamp';
 import SchoolScreen from './screens/OldSchool';
 import HallOfSages from './screens/HallOfSages';
+import { ScreenOptions } from './interfaces/ScreenOptions';
 import { RootStackParamList } from './types/types';
-import { ParamListBase } from '@react-navigation/native';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -139,7 +139,11 @@ function AppContent () {
     return <GoogleSignInComponent setIsLoged={setIsLoged} />;
   }
 
-  const screenOptions = ({ route } : {route: RouteProp<RootStackParamList, keyof RootStackParamList>}) => ({
+  interface ScreenOptionsProps {
+    route: RouteProp<RootStackParamList, keyof RootStackParamList>;
+  }
+  
+  const screenOptions = ({ route }: ScreenOptionsProps): ScreenOptions => ({
     tabBarStyle: {
       backgroundColor: 'transparent',
       borderTopWidth: 0,
@@ -152,7 +156,7 @@ function AppContent () {
       elevation: 0,
     },
     tabBarIndicatorStyle: {
-      height: 0, // Eliminamos la barra indicadora
+      height: 0,
     },
     headerShown: false,
     swipeEnabled: route.name !== 'LaboratoryAcolyth',
