@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, StyleSheet, Text, ImageBackground } from 'react-native';
+import { View, StyleSheet, Text, ImageBackground, Dimensions } from 'react-native';
 import EquipmentSlot from '../components/Slot';
 
 type Props = {
   user: any;
 };
-
+const { width, height } = Dimensions.get('window'); // Get device dimensions
+const size = width * 0.25;
 const EquipmentScreen: React.FC<Props> = ({ user }) => {
     const player = user?.playerData || 'No player available';
 
@@ -42,20 +43,20 @@ const EquipmentScreen: React.FC<Props> = ({ user }) => {
             </View>
             <View style={styles.equipmentContainer}>
                 <View style={styles.column}>
-                  <EquipmentSlot item={elements[0].url} size={100} />
-                  <EquipmentSlot item={elements[1].url} size={100} />
-                  <EquipmentSlot item={elements[2].url} size={100} />
+                  <EquipmentSlot item={elements[0].url} size={size} />
+                  <EquipmentSlot item={elements[1].url} size={size} />
+                  <EquipmentSlot item={elements[2].url} size={size} />
                 </View>
                 <View style={styles.column}>
-                  <EquipmentSlot item={elements[3].url} size={100} />
-                  <EquipmentSlot item={elements[4].url} size={100} />
-                  <EquipmentSlot item={elements[5].url} size={100} />
-                  <EquipmentSlot item={elements[6].url} size={100} />
+                  <EquipmentSlot item={elements[3].url} size={size} />
+                  <EquipmentSlot item={elements[4].url} size={size} />
+                  <EquipmentSlot item={elements[5].url} size={size} />
+                  <EquipmentSlot item={elements[6].url} size={size} />
                 </View>
                 <View style={styles.column}>
-                  <EquipmentSlot item={elements[7].url} size={100} />
-                  <EquipmentSlot item={elements[8].url} size={100} />
-                  <EquipmentSlot item={elements[9].url} size={100} />
+                  <EquipmentSlot item={elements[7].url} size={size} />
+                  <EquipmentSlot item={elements[8].url} size={size} />
+                  <EquipmentSlot item={elements[9].url} size={size} />
                 </View>
             </View>
             <View style={styles.expContainer}>
@@ -77,33 +78,33 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       position: 'relative',
-      marginTop: 100
+      marginTop: height*0.13
     },
     classContainer: {
       position: 'absolute',
-      top: 10,
-      left: 10,
+      top: height*0.02,
+      left: width*0.02,
     },
     levelContainer: {
       position: 'absolute',
-      top: 10,
-      right: 10,
+      top: height*0.02,
+      right: width*0.02,
     },
     expContainer: {
       position: 'absolute',
-      bottom: 100,
-      left: 10,
+      bottom: height*0.15,
+      left: width * 0.02,
     },
     goldContainer: {
       position: 'absolute',
-      bottom: 100,
-      right: 10,
+      bottom: height*0.15,
+      right: width * 0.02,
     },
     cornerSquare: {
       backgroundColor: '#1a202c60',
       borderWidth: 2,
       borderColor: 'rgba(253, 224, 71, 1)',
-      padding: 10,
+      padding: width * 0.02,
       borderRadius: 5,
       minWidth: 100,
       alignItems: 'center',
@@ -117,8 +118,7 @@ const styles = StyleSheet.create({
       justifyContent: 'space-evenly',
       alignItems: 'center',
       flex: 1,
-      paddingTop: 50,
-      paddingBottom: 50,
+      paddingBottom: height * 0.09,
     },
     background: {
       flex: 1,
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
       flexDirection: 'column',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginHorizontal: 10,
+      marginHorizontal: width*0.03,
     },
   });
 
