@@ -12,14 +12,23 @@ import {
   Animated,
   Easing,
 } from 'react-native';
-import MapView, { PROVIDER_GOOGLE, Marker, Circle, Region } from 'react-native-maps';
+import MapView, {
+  PROVIDER_GOOGLE,
+  Marker,
+  Circle,
+  Region,
+} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import { useNavigation } from '@react-navigation/native';
 import { UserContext, UserContextType } from '../context/UserContext';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/types';
 import MedievalText from '../components/MedievalText';
-import { objectTaken, requestArtifacts, restoreObjects } from '../sockets/emitEvents';
+import {
+  objectTaken,
+  requestArtifacts,
+  restoreObjects,
+} from '../sockets/emitEvents';
 import socket from '../sockets/socketConnection';
 import { Locations } from '../interfaces/Location';
 import MapMarker from '../components/MapMarker';
@@ -33,33 +42,37 @@ const Swamp: React.FC = () => {
   const context = useContext(UserContext) as UserContextType;
   const { userData, otherAcolytes, setOtherAcolytes } = context;
 
-  const [takenArtifacts, setTakenArtifacts] = useState<number[]>([]); // Lista de artefactos recogidos
-  const [isBagVisible, setIsBagVisible] = useState<boolean>(false); // Estado para mostrar/ocultar la bolsa
+  // State variables
+  const [takenArtifacts, setTakenArtifacts] = useState<number[]>([]);
+  const [isBagVisible, setIsBagVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingError, setLoadingError] = useState<string | null>(null);
-
-  // Inicializamos pointsOfInterest como un array vacío
   const [pointsOfInterest, setPointsOfInterest] = useState([]);
 
-  // Animaciones
+  // Animation variables
   const [mapHeight] = useState(new Animated.Value(height));
   const [bagHeight] = useState(new Animated.Value(0));
-  const bagMaxHeight = 150; // Altura máxima de la bolsa
+  const bagMaxHeight = 150; // Maximum bag height
 
+  // Fetch artifacts from the server
   useEffect(() => {
     requestArtifacts();
     const timeout = setTimeout(() => {
       setIsLoading(false);
-      setLoadingError('Error del servidor: no se pudieron cargar los artefactos.');
+      setLoadingError('Server error: failed to load artifacts.');
     }, 10000);
     listenToArtifactsUpdates();
-
-    // Escuchar la recepción de artefactos desde el servidor
     socket.on('receive_artifacts', (artifacts) => {
-      console.log('Artefactos recibidos:', artifacts);
+      console.log('Artifacts received:', artifacts);
       clearTimeout(timeout);
       const mappedArtifacts = artifacts.map(
-        (artifact: { id: any; latitude: any; longitude: any; isTaken: any; name: any }) => ({
+        (artifact: {
+          id: any;
+          latitude: any;
+          longitude: any;
+          isTaken: any;
+          name: any;
+        }) => ({
           id: artifact.id,
           latitude: artifact.latitude,
           longitude: artifact.longitude,
@@ -78,9 +91,15 @@ const Swamp: React.FC = () => {
     });
 
     socket.on('update_artifacts', (artifacts) => {
-      console.log('Artefactos actualizados:', artifacts);
+      console.log('Artifacts updated:', artifacts);
       const mappedArtifacts = artifacts.map(
-        (artifact: { id: any; latitude: any; longitude: any; isTaken: any; name: any }) => ({
+        (artifact: {
+          id: any;
+          latitude: any;
+          longitude: any;
+          isTaken: any;
+          name: any;
+        }) => ({
           id: artifact.id,
           latitude: artifact.latitude,
           longitude: artifact.longitude,
@@ -104,7 +123,7 @@ const Swamp: React.FC = () => {
     };
   }, []);
 
-  // Definimos initialRegion con un valor por defecto
+  // Default map region
   const defaultRegion: Region = {
     latitude: 43.3110,
     longitude: -2.002,
@@ -114,16 +133,17 @@ const Swamp: React.FC = () => {
 
   const [location, setLocation] = useState<Region>(defaultRegion);
 
+  // Request location permission
   const requestLocationPermission = async () => {
     if (Platform.OS === 'android') {
       try {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
           {
-            title: 'Permiso de ubicación',
-            message: 'Esta app necesita acceder a tu ubicación',
-            buttonNeutral: 'Pregúntame luego',
-            buttonNegative: 'Cancelar',
+            title: 'Location Permission',
+            message: 'This app needs access to your location.',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
             buttonPositive: 'OK',
           }
         );
@@ -137,6 +157,7 @@ const Swamp: React.FC = () => {
     }
   };
 
+  // Get current location and watch position
   useEffect(() => {
     let watchId: number | null = null;
 
@@ -159,7 +180,7 @@ const Swamp: React.FC = () => {
           });
         },
         (error) => {
-          console.error('Error al obtener la ubicación actual:', error);
+          console.error('Error getting current location:', error);
         },
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
       );
@@ -179,8 +200,13 @@ const Swamp: React.FC = () => {
           });
           checkProximity(latitude, longitude);
         },
-        (error) => console.error('Error al vigilar la ubicación:', error),
-        { enableHighAccuracy: true, distanceFilter: 10, interval: 1000, timeout: 10000 }
+        (error) => console.error('Error watching location:', error),
+        {
+          enableHighAccuracy: true,
+          distanceFilter: 10,
+          interval: 1000,
+          timeout: 10000,
+        }
       );
     };
 
@@ -200,10 +226,16 @@ const Swamp: React.FC = () => {
     };
   }, []);
 
+  // Check proximity to artifacts
   const checkProximity = (latitude: number, longitude: number) => {
     setPointsOfInterest((prevPOIs) =>
       prevPOIs.map((poi) => {
-        const distance = getDistance(latitude, longitude, poi.latitude, poi.longitude);
+        const distance = getDistance(
+          latitude,
+          longitude,
+          poi.latitude,
+          poi.longitude
+        );
         if (distance < 50) {
           return { ...poi, inRange: true };
         }
@@ -212,8 +244,14 @@ const Swamp: React.FC = () => {
     );
   };
 
-  const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-    const R = 6371e3; // radio de la Tierra en metros
+  // Calculate distance between two coordinates
+  const getDistance = (
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ) => {
+    const R = 6371e3; // Earth's radius in meters
     const φ1 = (lat1 * Math.PI) / 180;
     const φ2 = (lat2 * Math.PI) / 180;
     const Δφ = ((lat2 - lat1) * Math.PI) / 180;
@@ -221,30 +259,40 @@ const Swamp: React.FC = () => {
 
     const a =
       Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-      Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+      Math.cos(φ1) *
+        Math.cos(φ2) *
+        Math.sin(Δλ / 2) *
+        Math.sin(Δλ / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-    return R * c; // devuelve la distancia en metros
+    return R * c; // Returns distance in meters
   };
 
+  // Handle artifact collection
   const handleArtifactTake = (id: number) => {
-    setPointsOfInterest((prev) => prev.map((p) => (p.id === id ? { ...p, isTaken: true } : p)));
+    setPointsOfInterest((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, isTaken: true } : p))
+    );
     objectTaken(id);
-    setTakenArtifacts((prev) => [...prev, id]); // Agrega el artefacto recogido a la lista
+    setTakenArtifacts((prev) => [...prev, id]);
   };
 
+  // Handle returning artifacts
   const handleReturnArtifacts = () => {
     if (takenArtifacts.length === 0) {
-      ToastAndroid.show('No hay artefactos para devolver.', ToastAndroid.SHORT);
+      ToastAndroid.show('No artifacts to return.', ToastAndroid.SHORT);
       return;
     }
     setPointsOfInterest((prev) =>
-      prev.map((p) => (takenArtifacts.includes(p.id) ? { ...p, isTaken: false } : p))
+      prev.map((p) =>
+        takenArtifacts.includes(p.id) ? { ...p, isTaken: false } : p
+      )
     );
-    setTakenArtifacts([]); // Limpia la lista de artefactos recogidos
+    setTakenArtifacts([]);
     restoreObjects();
   };
 
+  // Toggle the visibility of the bag
   const toggleBag = () => {
     setIsBagVisible(!isBagVisible);
     Animated.parallel([
@@ -263,11 +311,14 @@ const Swamp: React.FC = () => {
     ]).start();
   };
 
+  // Loading and error handling
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0000ff" />
-        <Text style={styles.loadingText}>Cargando Artefactos...</Text>
+        <Text style={styles.loadingText}>
+          Loading Artifacts...
+        </Text>
       </View>
     );
   }
@@ -301,34 +352,50 @@ const Swamp: React.FC = () => {
                   longitude: deviceLocation.coords.longitude,
                 }}
               >
-                <MapMarker avatarUri={otherAcolytes[userId].avatar} />
+                <MapMarker
+                  avatarUri={otherAcolytes[userId].avatar}
+                />
               </Marker>
             );
           })}
-          {(userData.playerData.role === 'ACOLYTE' || userData.playerData.role === 'MORTIMER') &&
+          {(userData.playerData.role === 'ACOLYTE' ||
+            userData.playerData.role === 'MORTIMER') &&
             pointsOfInterest.map(
               (poi) =>
                 !poi.isTaken && (
                   <React.Fragment key={poi.id}>
                     <Marker
-                      coordinate={{ latitude: poi.latitude, longitude: poi.longitude }}
-                      title={`Artefacto ${poi.id}`}
+                      coordinate={{
+                        latitude: poi.latitude,
+                        longitude: poi.longitude,
+                      }}
+                      title={`Artifact ${poi.id}`}
                       onPress={() => {
                         if (poi.inRange) {
                           handleArtifactTake(poi.id);
                         } else {
-                          ToastAndroid.show('Fuera de alcance', ToastAndroid.SHORT);
+                          ToastAndroid.show(
+                            'Out of range',
+                            ToastAndroid.SHORT
+                          );
                         }
                       }}
                     />
                     <Circle
-                      center={{ latitude: poi.latitude, longitude: poi.longitude }}
-                      radius={50} // Radio de interacción
+                      center={{
+                        latitude: poi.latitude,
+                        longitude: poi.longitude,
+                      }}
+                      radius={50}
                       fillColor={
-                        poi.inRange ? 'rgba(0, 255, 0, 0.2)' : 'rgba(255, 0, 0, 0.2)'
+                        poi.inRange
+                          ? 'rgba(0, 255, 0, 0.2)'
+                          : 'rgba(255, 0, 0, 0.2)'
                       }
                       strokeColor={
-                        poi.inRange ? 'rgba(0, 255, 0, 0.5)' : 'rgba(255, 0, 0, 0.5)'
+                        poi.inRange
+                          ? 'rgba(0, 255, 0, 0.5)'
+                          : 'rgba(255, 0, 0, 0.5)'
                       }
                     />
                   </React.Fragment>
@@ -337,15 +404,25 @@ const Swamp: React.FC = () => {
         </MapView>
       </Animated.View>
 
-      {/* Botón para mostrar/ocultar la bolsa */}
-      <TouchableOpacity style={styles.toggleBagButton} onPress={toggleBag}>
-        <Text style={styles.toggleBagButtonText}>{isBagVisible ? '▼' : '▲'}</Text>
+      {/* Button to show/hide the bag */}
+      <TouchableOpacity
+        style={styles.toggleBagButton}
+        onPress={toggleBag}
+      >
+        <Text style={styles.toggleBagButtonText}>
+          {isBagVisible ? '▼' : '▲'}
+        </Text>
       </TouchableOpacity>
 
-      {/* Bolsa de artefactos */}
-      <Animated.View style={[styles.bagContainer, { height: bagHeight }]}>
-        {/* Flecha para cerrar la bolsa */}
-        <TouchableOpacity style={styles.closeBagButton} onPress={toggleBag}>
+      {/* Bag of collected artifacts */}
+      <Animated.View
+        style={[styles.bagContainer, { height: bagHeight }]}
+      >
+        {/* Arrow to close the bag */}
+        <TouchableOpacity
+          style={styles.closeBagButton}
+          onPress={toggleBag}
+        >
           <Text style={styles.closeBagButtonText}>▼</Text>
         </TouchableOpacity>
 
@@ -353,19 +430,29 @@ const Swamp: React.FC = () => {
           {Array.from({ length: 4 }).map((_, index) => (
             <View key={index} style={styles.gridItem}>
               {takenArtifacts[index] ? (
-                <Text style={styles.artifactText}>Artefacto {takenArtifacts[index]}</Text>
+                <Text style={styles.artifactText}>
+                  Artifact {takenArtifacts[index]}
+                </Text>
               ) : null}
             </View>
           ))}
         </View>
-        {/* Botón para devolver artefactos al mapa */}
-        <TouchableOpacity style={styles.returnButton} onPress={handleReturnArtifacts}>
-          <Text style={styles.returnButtonText}>Devolver Artefactos</Text>
+        {/* Button to return artifacts */}
+        <TouchableOpacity
+          style={styles.returnButton}
+          onPress={handleReturnArtifacts}
+        >
+          <Text style={styles.returnButtonText}>
+            Return Artifacts
+          </Text>
         </TouchableOpacity>
       </Animated.View>
 
-      <TouchableOpacity style={styles.closeButton} onPress={() => navigation.navigate('Map')}>
-        <MedievalText>Cerrar</MedievalText>
+      <TouchableOpacity
+        style={styles.closeButton}
+        onPress={() => navigation.navigate('Map')}
+      >
+        <MedievalText>Close</MedievalText>
       </TouchableOpacity>
     </View>
   );
@@ -469,7 +556,7 @@ const styles = StyleSheet.create({
   closeButton: {
     position: 'absolute',
     top: 30,
-    left:10,
+    left: 10,
     backgroundColor: 'rgba(250, 250, 250, 0.4)',
     padding: 10,
     borderRadius: 5,
