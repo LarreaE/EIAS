@@ -13,9 +13,8 @@ import {
   Vibration,
   ToastAndroid,
 } from 'react-native';
-import { UserContext } from '../context/UserContext';
+import { UserContext, UserContextType } from '../context/UserContext';
 import { Ingredients } from '../interfaces/Ingredients';
-import LocalIngredientImage from '../assets/EIAS.png';
 import runaBackground from '../assets/runa.png';
 import createPotionButton from '../assets/boton.png';
 import SelectedIngredientsDisplay from './selectedIngredientsDisplay';
@@ -28,9 +27,11 @@ interface IngredientSelectorProps {
 }
 
 const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChange, createPotion }) => {
+
+  const context = useContext(UserContext) as UserContextType;
   const [selectedIngredients, setSelectedIngredients] = useState<{ [key: string]: number }>({});
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { ingredients, setPotionVisible } = useContext(UserContext);
+  const { ingredients, setPotionVisible } = context;
   const [modalVisible, setModalVisible] = useState(false);
   const [buttonText, setButtonText] = useState('Create Potion');
   const [selectedIngredient, setSelectedIngredient] = useState<Ingredients | null>(null);
@@ -177,7 +178,7 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
 
   // Function to check if all ingredients have the "cleanse" effect
   const checkIngredientsEffect = () => {
-    const allCleanse = ingredients.every((ingredient:Ingredient) => ingredient.effects[0] === 'cleanse_parchment');
+    const allCleanse = ingredients.every((ingredient:Ingredients) => ingredient.effects[0] === 'cleanse_parchment');
     console.log(allCleanse);
     
     setButtonText(allCleanse ? 'Purification Potion' : 'Create Potion');
@@ -272,7 +273,7 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
                 </MedievalText>
               </TouchableOpacity>
               <Image
-                source={selectedIngredient.image}
+                source={require(selectedIngredient.image)}
                 style={styles.modalImage}
               />
               <MedievalText fontSize={24} color="#ffffff" style={styles.modalTitle}>
