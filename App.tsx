@@ -2,8 +2,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { SafeAreaView, StyleSheet, Image, Modal, TouchableOpacity, Text, View, ImageBackground, Alert, ToastAndroid } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
-import { NavigationContainer, RouteProp } from '@react-navigation/native';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { NavigationContainer, ParamListBase, RouteProp } from '@react-navigation/native';
+import { createMaterialTopTabNavigator, MaterialTopTabNavigationOptions } from '@react-navigation/material-top-tabs';
 import GoogleSignInComponent from './components/googleSingIn';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
@@ -31,8 +31,6 @@ import MortimerTower from './components/mortimerTower';
 import Swamp from './screens/Swamp';
 import SchoolScreen from './screens/OldSchool';
 import HallOfSages from './screens/HallOfSages';
-import { ScreenOptions } from './interfaces/ScreenOptions';
-import { RootStackParamList } from './types/types';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -140,10 +138,11 @@ function AppContent () {
   }
 
   interface ScreenOptionsProps {
-    route: RouteProp<RootStackParamList, keyof RootStackParamList>;
+    route: RouteProp<ParamListBase, string>;
   }
   
-  const screenOptions = ({ route }: ScreenOptionsProps): ScreenOptions => ({
+
+  const screenOptions = ({ route }: ScreenOptionsProps): MaterialTopTabNavigationOptions => ({
     tabBarStyle: {
       backgroundColor: 'transparent',
       borderTopWidth: 0,
@@ -158,11 +157,8 @@ function AppContent () {
     tabBarIndicatorStyle: {
       height: 0,
     },
-    headerShown: false,
     swipeEnabled: route.name !== 'LaboratoryAcolyth',
     tabBarScrollEnabled: false,
-    shadowOpacity: 0,
-    shadowRadius: 0,
   });
 
   const renderTabs = () => {
