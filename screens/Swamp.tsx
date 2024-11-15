@@ -1,5 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View, PermissionsAndroid, Platform, Dimensions, ToastAndroid, Text, ActivityIndicator, Animated, Easing } from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  PermissionsAndroid,
+  Platform,
+  Dimensions,
+  ToastAndroid,
+  Text,
+  ActivityIndicator,
+  Animated,
+  Easing,
+} from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker, Circle, Region } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import { useNavigation } from '@react-navigation/native';
@@ -19,9 +31,8 @@ type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
 const Swamp: React.FC = () => {
   const navigation = useNavigation<MapScreenNavigationProp>();
   const context = useContext(UserContext) as UserContextType;
-  const { userData } = context;
+  const { userData, otherAcolytes, setOtherAcolytes } = context;
 
-  const [otherAcolytes, setOtherAcolytes] = useState<Locations[]>([]);
   const [takenArtifacts, setTakenArtifacts] = useState<number[]>([]); // Lista de artefactos recogidos
   const [isBagVisible, setIsBagVisible] = useState<boolean>(false); // Estado para mostrar/ocultar la bolsa
   const [isLoading, setIsLoading] = useState(true);
@@ -47,14 +58,16 @@ const Swamp: React.FC = () => {
     socket.on('receive_artifacts', (artifacts) => {
       console.log('Artefactos recibidos:', artifacts);
       clearTimeout(timeout);
-      const mappedArtifacts = artifacts.map((artifact: { id: any; latitude: any; longitude: any; isTaken: any; name: any }) => ({
-        id: artifact.id,
-        latitude: artifact.latitude,
-        longitude: artifact.longitude,
-        isTaken: artifact.isTaken,
-        inRange: false,
-        name: artifact.name,
-      }));
+      const mappedArtifacts = artifacts.map(
+        (artifact: { id: any; latitude: any; longitude: any; isTaken: any; name: any }) => ({
+          id: artifact.id,
+          latitude: artifact.latitude,
+          longitude: artifact.longitude,
+          isTaken: artifact.isTaken,
+          inRange: false,
+          name: artifact.name,
+        })
+      );
       setPointsOfInterest(mappedArtifacts);
       setIsLoading(false);
 
@@ -66,14 +79,16 @@ const Swamp: React.FC = () => {
 
     socket.on('update_artifacts', (artifacts) => {
       console.log('Artefactos actualizados:', artifacts);
-      const mappedArtifacts = artifacts.map((artifact: { id: any; latitude: any; longitude: any; isTaken: any; name: any }) => ({
-        id: artifact.id,
-        latitude: artifact.latitude,
-        longitude: artifact.longitude,
-        isTaken: artifact.isTaken,
-        inRange: false,
-        name: artifact.name,
-      }));
+      const mappedArtifacts = artifacts.map(
+        (artifact: { id: any; latitude: any; longitude: any; isTaken: any; name: any }) => ({
+          id: artifact.id,
+          latitude: artifact.latitude,
+          longitude: artifact.longitude,
+          isTaken: artifact.isTaken,
+          inRange: false,
+          name: artifact.name,
+        })
+      );
       setPointsOfInterest(mappedArtifacts);
 
       const takenArtifactIds = mappedArtifacts
@@ -137,6 +152,11 @@ const Swamp: React.FC = () => {
             latitude,
             longitude,
           }));
+          socket.emit('locationUpdate', {
+            userId: userData.playerData.nickname,
+            avatar: userData.playerData.avatar,
+            coords: { latitude, longitude },
+          });
         },
         (error) => {
           console.error('Error al obtener la ubicación actual:', error);
@@ -152,7 +172,11 @@ const Swamp: React.FC = () => {
             latitude,
             longitude,
           }));
-          socket.emit('locationUpdate', { userId: userData.playerData.nickname, avatar: userData.playerData.avatar, coords: { latitude, longitude } });
+          socket.emit('locationUpdate', {
+            userId: userData.playerData.nickname,
+            avatar: userData.playerData.avatar,
+            coords: { latitude, longitude },
+          });
           checkProximity(latitude, longitude);
         },
         (error) => console.error('Error al vigilar la ubicación:', error),
@@ -160,7 +184,9 @@ const Swamp: React.FC = () => {
       );
     };
 
-    getCurrentLocation();
+    if (userData.playerData.role === 'ACOLYTE') {
+      getCurrentLocation();
+    }
 
     socket.on('deviceLocations', (locations) => {
       setOtherAcolytes(locations);
@@ -262,6 +288,7 @@ const Swamp: React.FC = () => {
           style={styles.map}
           region={location}
           showsCompass
+          customMapStyle={mapStyle}
         >
           {Object.keys(otherAcolytes).map((userId: any) => {
             const deviceLocation = otherAcolytes[userId];
@@ -278,34 +305,35 @@ const Swamp: React.FC = () => {
               </Marker>
             );
           })}
-          {pointsOfInterest.map(
-            (poi) =>
-              !poi.isTaken && (
-                <React.Fragment key={poi.id}>
-                  <Marker
-                    coordinate={{ latitude: poi.latitude, longitude: poi.longitude }}
-                    title={`Artefacto ${poi.id}`}
-                    onPress={() => {
-                      if (poi.inRange) {
-                        handleArtifactTake(poi.id);
-                      } else {
-                        ToastAndroid.show('Fuera de alcance', ToastAndroid.SHORT);
+          {(userData.playerData.role === 'ACOLYTE' || userData.playerData.role === 'MORTIMER') &&
+            pointsOfInterest.map(
+              (poi) =>
+                !poi.isTaken && (
+                  <React.Fragment key={poi.id}>
+                    <Marker
+                      coordinate={{ latitude: poi.latitude, longitude: poi.longitude }}
+                      title={`Artefacto ${poi.id}`}
+                      onPress={() => {
+                        if (poi.inRange) {
+                          handleArtifactTake(poi.id);
+                        } else {
+                          ToastAndroid.show('Fuera de alcance', ToastAndroid.SHORT);
+                        }
+                      }}
+                    />
+                    <Circle
+                      center={{ latitude: poi.latitude, longitude: poi.longitude }}
+                      radius={50} // Radio de interacción
+                      fillColor={
+                        poi.inRange ? 'rgba(0, 255, 0, 0.2)' : 'rgba(255, 0, 0, 0.2)'
                       }
-                    }}
-                  />
-                  <Circle
-                    center={{ latitude: poi.latitude, longitude: poi.longitude }}
-                    radius={50} // Radio de interacción
-                    fillColor={
-                      poi.inRange ? 'rgba(0, 255, 0, 0.2)' : 'rgba(255, 0, 0, 0.2)'
-                    }
-                    strokeColor={
-                      poi.inRange ? 'rgba(0, 255, 0, 0.5)' : 'rgba(255, 0, 0, 0.5)'
-                    }
-                  />
-                </React.Fragment>
-              )
-          )}
+                      strokeColor={
+                        poi.inRange ? 'rgba(0, 255, 0, 0.5)' : 'rgba(255, 0, 0, 0.5)'
+                      }
+                    />
+                  </React.Fragment>
+                )
+            )}
         </MapView>
       </Animated.View>
 
@@ -343,14 +371,35 @@ const Swamp: React.FC = () => {
   );
 };
 
+const mapStyle = [
+  {
+    elementType: 'geometry',
+    stylers: [{ color: '#212121' }],
+  },
+  {
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#757575' }],
+  },
+  {
+    elementType: 'labels.text.stroke',
+    stylers: [{ color: '#212121' }],
+  },
+  {
+    featureType: 'water',
+    stylers: [{ color: '#0f252e' }],
+  },
+  {
+    featureType: 'landscape',
+    stylers: [{ color: '#2f3e46' }],
+  },
+];
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    borderColor: 'black',
-    borderWidth: 15,
-    borderRadius: 10,
     overflow: 'hidden',
+    backgroundColor: '#1c1c1c',
   },
   map: {
     width: width,
@@ -419,11 +468,13 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: 10,
-    left: 10,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    top: 30,
+    left:10,
+    backgroundColor: 'rgba(250, 250, 250, 0.4)',
     padding: 10,
     borderRadius: 5,
+    borderColor: '#999',
+    borderWidth: 1,
   },
   loadingContainer: {
     flex: 1,
