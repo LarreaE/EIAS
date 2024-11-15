@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet, Text, SafeAreaView, Image, ImageBackground } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, SafeAreaView, Image, ImageBackground, Dimensions } from 'react-native';
 import EquipmentSlot from '../components/Slot';
 import { ZoomInEasyDown } from 'react-native-reanimated';
 
@@ -7,6 +7,8 @@ type Props = {
   user: any;
 };
 
+const { width, height } = Dimensions.get('window'); // Get device dimensions
+const size = width * 0.2;
 const createInvetory = (inventory:any) => {
     let newInventory = [];
     for (const key in inventory) {
@@ -32,10 +34,10 @@ const Inventory: React.FC<Props> = ({user}) => {
       <ScrollView>
         <View style={styles.container}>
           {newInventory.map((_,index) => (
-          <EquipmentSlot key={index} item={ newInventory[index] } size={70} />
+          <EquipmentSlot key={index} item={ newInventory[index] } size={size} />
         ))}
         {slots.map((_,index) => (
-          <EquipmentSlot key={index} item={ null } size={70} />
+          <EquipmentSlot key={index} item={ null } size={size} />
         ))}
         </View>
       </ScrollView>
