@@ -3,6 +3,7 @@ import socket from './socketConnection';
 import Config from 'react-native-config';
 import { useContext } from 'react';
 import { UserContext } from '../context/UserContext';
+import { requestArtifacts } from './emitEvents';
 
 // Función para escuchar eventos del servidor
 export const listenToServerEvents = (): void => {
@@ -50,6 +51,13 @@ export const listenToServerEventsDoorOpened = (setIsDoorOpen: (isOpen: boolean) 
     console.log('Valor de door_status:', data.data);
     Vibration.vibrate(1000);
     setIsDoorOpen(data.data); // Activa el estado solo si se abre la puerta
+  });
+};
+
+export const listenToArtifactsUpdates = (): void => {
+  socket.on('update_artifacts', () => {
+    console.log('Artefactos actualizando...');
+    requestArtifacts();
   });
 };
 
