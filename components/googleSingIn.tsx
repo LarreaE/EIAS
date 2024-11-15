@@ -154,11 +154,14 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
         } catch (error) {
           console.log('An error occurred during token verification or data fetching.');
 
-          // Check if error.response and error.response.data exist
-          if (error.response && error.response.data) {
-            console.log('Error data: ', error.response.data);
+          if (axios.isAxiosError(error)) {
+            if (error.response && error.response.data) {
+              console.log('Error data: ', error.response.data);
+            } else {
+              console.log('Error: ', error.message || 'An unknown error occurred.');
+            }
           } else {
-            console.log('Error: ', error.message || 'An unknown error occurred.');
+            console.log('An unknown error occurred:', String(error));
           }
 
           // Stop any loading indicators
@@ -195,17 +198,20 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
           const emailDomain = email?.split('@')[1];
           console.log('checking email');
           
-          if (!emailDomain.includes('aeg')) {
-            Alert.alert(
-              'Access Denied',
-              'Sorry, but you do not belong to the organization to use this application.'
-            );
-            setLoading(false);
-            // Sign out to clear any session data
-            await GoogleSignin.signOut();
-            await auth().signOut();
-            return;
+          if (emailDomain) {
+            if (!emailDomain.includes('aeg')) {
+              Alert.alert(
+                'Access Denied',
+                'Sorry, but you do not belong to the organization to use this application.'
+              );
+              setLoading(false);
+              // Sign out to clear any session data
+              await GoogleSignin.signOut();
+              await auth().signOut();
+              return;
+            }
           }
+            
     console.log('SIGN IN WITH CREDENTIAL');
     console.log(signInWithCredential);
     setSpinnerMessage('Verifying credentials...');
