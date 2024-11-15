@@ -27,6 +27,9 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
         webClientId: Config.GOOGLE_WEB_CLIENT_ID, // Asegúrate de tener esto configurado
         offlineAccess: true,
       });
+        // Sign out any existing sessions upon app startup
+        await GoogleSignin.signOut();
+        await auth().signOut();
     };
 
     configureGoogleSignIn();

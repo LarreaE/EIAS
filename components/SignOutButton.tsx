@@ -2,6 +2,7 @@ import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ImageBackground } from 'react-native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import MedievalText from './MedievalText';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Props = {
   setIsLoged: (value: boolean) => void;
@@ -10,6 +11,7 @@ type Props = {
 const SignOutButton: React.FC<Props> = ({ setIsLoged }) => {
   const signOut = async () => {
     try {
+      await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
       setIsLoged(false); // Asegúrate de restablecer el estado de autenticación
     } catch (error) {
