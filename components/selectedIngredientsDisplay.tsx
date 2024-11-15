@@ -1,9 +1,13 @@
 // SelectedIngredientsDisplay.js
 import React from 'react';
 import { View, Image, Text, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
-import LocalIngredientImage from '../assets/EIAS.png'; // Imagen de respaldo
-
-const SelectedIngredientsDisplay = ({ selectedIngredients, ingredients, onDeselection }) => {
+import { Ingredients } from '../interfaces/Ingredients';
+interface Props {
+  selectedIngredients: { [key: string]: number }
+  ingredients: Ingredients[]
+  onDeselection: (ingredientId: string) => void
+}
+const SelectedIngredientsDisplay: React.FC<Props> = ({ selectedIngredients, ingredients, onDeselection }) => {
   return (
     <View style={styles.container}>
       {Object.keys(selectedIngredients).map((ingredientId) => {
