@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground, FlatList } from 'react-native';
 import AcolythCard from './acolythCard';
 import { listenToServerEventsMortimer, clearServerEvents } from '../sockets/listenEvents.tsx';
@@ -8,6 +8,8 @@ import MapButton from './MapButton.tsx';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/types.ts';
+import { sendLocation } from '../sockets/emitEvents.tsx';
+import { UserContext, UserContextType } from '../context/UserContext.tsx';
 
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'LaboratoryMortimer'>;
 
@@ -31,8 +33,13 @@ const MortimerLaboratoryScreen: React.FC = () => {
 
   const navigation = useNavigation<MapScreenNavigationProp>();
 
+  const context = useContext(UserContext) as UserContextType;
+
+  const { userData } = context;
+
   const goToMap = () => {
-    navigation.navigate('Map');
+    sendLocation('School', userData.playerData.email);
+    navigation.navigate('School');
   };
 
   const [users, setUsers] = useState<User[]>([]);
@@ -85,7 +92,7 @@ const MortimerLaboratoryScreen: React.FC = () => {
       </View>
       <MapButton
         onPress={goToMap}
-        iconImage={require('../assets/map_icon.png')}
+        iconImage={require('../assets/school_icon.png')}
       />
     </ImageBackground>
   );

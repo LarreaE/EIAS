@@ -30,6 +30,7 @@ import { saveBoolean, getBoolean } from './helper/AsyncStorage';
 import MortimerTower from './components/mortimerTower';
 import Swamp from './screens/Swamp';
 import SchoolScreen from './screens/OldSchool';
+import HallOfSages from './screens/HallOfSages';
 import { RootStackParamList } from './types/types';
 import { ParamListBase } from '@react-navigation/native';
 
@@ -452,7 +453,19 @@ function AppContent () {
               name="School"
               component={SchoolScreen}
               options={{ headerShown: false }}
+            
             >
+            </Stack.Screen>
+            <Stack.Screen
+              name="HallOfSages"
+              component={HallOfSages}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="QRScanner"
+              options={{ headerShown: false }}
+            >
+              {props => <QRScanner {...props} onQRCodeScanned={handleQRCodeScanned}/>}
             </Stack.Screen>
           </Stack.Navigator>
         </NavigationContainer>

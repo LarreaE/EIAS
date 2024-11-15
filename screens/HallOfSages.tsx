@@ -1,17 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground, Dimensions } from 'react-native';
-import AcolythCardTower from './acolythCardTower.tsx';
+import AcolythCardTower from '../components/acolythCardTower.tsx';
 import { listenToServerEventsMortimer, clearServerEvents } from '../sockets/listenEvents.tsx';
-import MedievalText from './MedievalText.tsx';
+import MedievalText from '../components/MedievalText.tsx';
 import Config from 'react-native-config';
-import MapButton from './MapButton.tsx';
+import MapButton from '../components/MapButton.tsx';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/types.ts';
 import { sendLocation } from '../sockets/emitEvents.tsx';
 import { UserContext, UserContextType } from '../context/UserContext.tsx';
 
-type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TowerMortimer'>;
+type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'HallOfSages'>;
 
 interface User {
   _id: string;
@@ -22,7 +22,7 @@ interface User {
 
 // definir tipos de datos de props
 
-const MortimerTower: React.FC = () => {
+const HallOfSages: React.FC = () => {
 
   const navigation = useNavigation<MapScreenNavigationProp>();
 
@@ -31,8 +31,8 @@ const MortimerTower: React.FC = () => {
   const { userData } = context;
 
   const goToMap = () => {
-    sendLocation('Map', userData.playerData.email);
-    navigation.navigate('Map');
+    sendLocation('School', userData.playerData.email);
+    navigation.navigate('School');
   };
 
   const [users, setUsers] = useState<User[]>([]);
@@ -84,7 +84,7 @@ const MortimerTower: React.FC = () => {
       </View>
       <MapButton
         onPress={goToMap}
-        iconImage={require('../assets/map_icon.png')}
+        iconImage={require('../assets/school_icon.png')}
       />
     </ImageBackground>
   );
@@ -117,4 +117,4 @@ const styles = StyleSheet.create({
     top: 250,
   },
 });
-export default MortimerTower;
+export default HallOfSages;

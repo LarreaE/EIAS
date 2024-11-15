@@ -42,7 +42,7 @@ import { GOOD_EFFECTS, BAD_EFFECTS, EFFECT_ICONS, EFFECT_LABELS } from './Filter
 
 type Props = { UserData: any };
 
-type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Tower'>;
+type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'LaboratoryAcolyth'>;
 
 
 const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
@@ -204,8 +204,8 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const navigation = useNavigation<MapScreenNavigationProp>();
 
   const goToMap = () => {
-    sendLocation('Map', userData.playerData.email);
-    navigation.navigate('Map');
+    sendLocation('School', userData.playerData.email);
+    navigation.navigate('School');
   };
 
   const onSelectionChange = useCallback((selected: { [key: string]: number }) => {
@@ -246,7 +246,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             style={styles.qrButton}
             >
             <ImageBackground
-              source={require('../assets/map_icon.png')}  // Ruta de la imagen
+              source={require('../assets/school_icon.png')}  // Ruta de la imagen
               style={styles.openButton}  // Aplicar estilos al contenedor
               resizeMode="cover"         // Ajuste de la imagen
             />
@@ -401,7 +401,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
           <View style={styles.buttonMap}>
           <MapButton
             onPress={goToMap}
-            iconImage={require('../assets/map_icon.png')}
+            iconImage={require('../assets/school_icon.png')}
           />
         </View>
         </>
