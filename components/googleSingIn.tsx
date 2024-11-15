@@ -51,7 +51,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
    //merge ingredients when purifyIngredients or allingredients changes
   useEffect(() => {
     const mergedIngredients = [...allIngredients, ...purifyIngredients];
-    console.log('Merged Ingreds:', mergedIngredients);
+    //console.log('Merged Ingreds:', mergedIngredients);
     setAllIngredients(mergedIngredients);
   }, [purifyIngredients]);
 
@@ -128,6 +128,8 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
             fcmToken: token,
           });
 
+          
+
           console.log('JWT TOKEN FROM EXPRESS');
 
           // If successful, update the state
@@ -168,13 +170,15 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
       };
       setLoading(true); // Iniciar el loading
       const userInfo = await GoogleSignin.signIn(); // Reemplaza esto con tu lógica de inicio de sesión
-      console.log('Usuario de Google:', userInfo);
+      //console.log('Usuario de Google:', userInfo);
       const idToken = userInfo.data?.idToken;
       const email = userInfo.data?.user.email;
       setSpinnerMessage('Signing in with Google...');
 
       if (!idToken) {
         setSpinnerMessage('idToken null');
+        setIsLoged(false);
+        setLoading(false);
         return console.error('idtoken null');
       }
       //console.log(idToken);
@@ -186,6 +190,22 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
       const signInWithCredential = await auth().signInWithCredential(
         googleCredential,
     );
+    setSpinnerMessage('Checking email domain...');
+          // **Check if email domain contains 'aeg' after '@'**
+          const emailDomain = email?.split('@')[1];
+          console.log('checking email');
+          
+          if (!emailDomain.includes('aeg')) {
+            Alert.alert(
+              'Access Denied',
+              'Sorry, but you do not belong to the organization to use this application.'
+            );
+            setLoading(false);
+            // Sign out to clear any session data
+            await GoogleSignin.signOut();
+            await auth().signOut();
+            return;
+          }
     console.log('SIGN IN WITH CREDENTIAL');
     console.log(signInWithCredential);
     setSpinnerMessage('Verifying credentials...');
