@@ -77,46 +77,55 @@ const MapScreen: React.FC = () => {
   switch (userData.playerData.role) {
     case 'MORTIMER':
       return (
-        <GestureHandlerRootView style={styles.container}>
-          <ImageBackground
-            source={require('../assets/map.png')}
-            style={styles.background}
-            resizeMode="cover"
-          >
-            <View style={styles.buttonTower}>
-              <MapButton
-                title="Tower"
-                onPress={goToTowerMortimer}
-                iconImage={require('../assets/tower_icon.png')}
-              />
-            </View>
-            <View style={styles.buttonMap}>
-              <MapButton
-                title="Swamp"
-                onPress={goToSwamp}
-                iconImage={require('../assets/swamp_icon.png')}
-              />
-            </View>
-            <View style={styles.buttonSchool}>
-              <MapButton
-                title="School"
-                onPress={goToSchool}
-                iconImage={require('../assets/school_icon.png')}
-              />
-            </View>
-            {/* Animación de los pájaros */}
-            <Animated.Image
-              source={require('../assets/animations/birds.gif')}
-              style={[
-                styles.gifStyle,
-                {
-                  transform: [{ translateX: birdPosition }, { translateY: birdYPosition }],
-                  opacity: birdOpacity,
-                },
-              ]}
-            />
-          </ImageBackground>
-        </GestureHandlerRootView>
+<GestureHandlerRootView style={styles.container}>
+  <ImageBackground
+    source={require('../assets/map.png')}
+    style={styles.background}
+    resizeMode="cover"
+  >
+    {/* Animación de los pájaros (detrás de los botones) */}
+    <Animated.Image
+      source={require('../assets/animations/birds.gif')}
+      style={[
+        styles.gifStyle,
+        {
+          transform: [{ translateX: birdPosition }, { translateY: birdYPosition }],
+          opacity: birdOpacity,
+        },
+      ]}
+    />
+
+    {/* Botones del mapa */}
+    <View style={[styles.buttonTower]}>
+      <MapButton
+        title="Tower"
+        onPress={goToTowerMortimer}
+        iconImage={require('../assets/tower_icon.png')}
+      />
+    </View>
+    <View style={[styles.buttonMap]}>
+      <MapButton
+        title="Swamp"
+        onPress={goToSwamp}
+        iconImage={require('../assets/swamp_icon.png')}
+      />
+    </View>
+    <View style={[styles.buttonSchool]}>
+      <MapButton
+        title="School"
+        onPress={goToSchool}
+        iconImage={require('../assets/school_icon.png')}
+      />
+    </View>
+    <View style={[styles.buttonHome]}>
+      <MapButton
+        title="Home"
+        onPress={goToHome}
+        iconImage={require('../assets/home_icon.png')}
+      />
+    </View>
+  </ImageBackground>
+</GestureHandlerRootView>
       );
     default:
       return (
@@ -183,34 +192,39 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  buttonHome: {
+  gifStyle: {
     position: 'absolute',
-    bottom: height * 0.05,
-    right: width * 0.77,
-    alignSelf: 'center',
-  },
-  buttonMap: {
-    position: 'absolute',
-    bottom: height * 0.33,
-    right: width * 0.7,
-    alignSelf: 'center',
+    width: 100,
+    height: 50,
+    zIndex: 0,
   },
   buttonTower: {
     position: 'absolute',
     bottom: height * 0.5,
     right: width * 0.64,
     alignSelf: 'center',
+    zIndex: 1,
+  },
+  buttonMap: {
+    position: 'absolute',
+    bottom: height * 0.33,
+    right: width * 0.7,
+    alignSelf: 'center',
+    zIndex: 1,
   },
   buttonSchool: {
     position: 'absolute',
     bottom: height * 0.1,
     right: width * 0.12,
     alignSelf: 'center',
+    zIndex: 1,
   },
-  gifStyle: {
+  buttonHome: {
     position: 'absolute',
-    width: 100,
-    height: 50,
+    bottom: height * 0.05,
+    right: width * 0.77,
+    alignSelf: 'center',
+    zIndex: 1,
   },
 });
 
