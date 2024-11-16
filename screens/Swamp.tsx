@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   Animated,
   Easing,
+  Image,
 } from 'react-native';
 import MapView, {
   PROVIDER_GOOGLE,
@@ -53,6 +54,12 @@ const Swamp: React.FC = () => {
   const [mapHeight] = useState(new Animated.Value(height));
   const [bagHeight] = useState(new Animated.Value(0));
   const bagMaxHeight = 150; // Maximum bag height
+  const artifactImages = [
+    require('../assets/artefact1.png'),
+    require('../assets/artefact2.png'),
+    require('../assets/artefact3.png'),
+    require('../assets/artefact4.png'),
+  ];
 
   // Fetch artifacts from the server
   useEffect(() => {
@@ -361,7 +368,7 @@ const Swamp: React.FC = () => {
           {(userData.playerData.role === 'ACOLYTE' ||
             userData.playerData.role === 'MORTIMER') &&
             pointsOfInterest.map(
-              (poi) =>
+              (poi,index) =>
                 !poi.isTaken && (
                   <React.Fragment key={poi.id}>
                     <Marker
@@ -379,8 +386,13 @@ const Swamp: React.FC = () => {
                             ToastAndroid.SHORT
                           );
                         }
-                      }}
-                    />
+                      }}>
+                        <Image
+                  source={artifactImages[index]}
+                  style={styles.artifactImage}
+                />
+                    </Marker>
+
                     <Circle
                       center={{
                         latitude: poi.latitude,
@@ -583,6 +595,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'red',
     textAlign: 'center',
+  },
+  artifactImage: {
+    width: 50,
+    height: 50,
+    resizeMode: 'contain',
+    top:10,
   },
 });
 
