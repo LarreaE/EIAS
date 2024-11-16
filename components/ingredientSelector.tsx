@@ -273,7 +273,7 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
                 </MedievalText>
               </TouchableOpacity>
               <Image
-                source={{uri: selectedIngredient.image}}
+                source={{uri: `https://kaotika.vercel.app/${selectedIngredient.image}`}}
                 style={styles.modalImage}
               />
               <MedievalText fontSize={24} color="#ffffff" style={styles.modalTitle}>

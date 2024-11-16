@@ -310,13 +310,11 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             <View style={styles.centeredView}>
             {potion ? (
               <>
-              <Image
-            source={{
-                uri: `https://kaotika.vercel.app/images/equipment/potions/healing/healing_3.png`,
-            }}  // Ruta de la imagen de fondo
-            resizeMode="cover"
-            style={styles.image}
-            />
+             <Image
+                source={require('../assets/animations/potion.gif')} // Ruta al GIF en tus assets
+                resizeMode="cover"
+                style={styles.image}
+              />
             <MedievalText style={styles.effectText}>{potion.name}</MedievalText>
             <MedievalText style={styles.effectText}>Value: {potion.value}</MedievalText>
             <MedievalText style={styles.effectText}>Type: {potion.type}</MedievalText>
@@ -382,9 +380,16 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
               style={styles.closeButton}
               onPress={() => setPotionVisible(false)}
             >
-              <MedievalText fontSize={16} color="#ffffff" style={styles.modalText}>
-                Close
-              </MedievalText>
+              <View style={styles.buttonContent}>
+                <Image
+                  source={require('../assets/boton.png')} // Ruta al archivo de imagen
+                  style={styles.buttonImage} // Estilo para la imagen del botón
+                  resizeMode="contain" // Ajusta cómo se muestra la imagen
+                />
+                <MedievalText fontSize={16} color="#ffffff" style={styles.buttonText}>
+                  Close
+                </MedievalText>
+              </View>
             </TouchableOpacity>
           </Modal>
 
@@ -467,10 +472,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   closeButton: {
-    backgroundColor: '#2196F3',
     borderRadius: 10,
     padding: 10,
-    marginTop: 10,
+    top: -40,
+    left:'20%',
+    width: '60%',
+    height: '20%',
+  },
+  buttonImage: {
+    width: '100%',
+    height: '100%',
   },
   image: {
     width: '40%',
@@ -582,5 +593,9 @@ const styles = StyleSheet.create({
     width: 66,
     height: 66,
     left:-30,
+  },
+  buttonText: {
+    textAlign: 'center',
+    bottom:'60%',
   },
 });
