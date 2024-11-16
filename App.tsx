@@ -181,7 +181,7 @@ function AppContent () {
                 ),
               }}
             >
-              {props => <ProfileScreen {...props} user={userData} setIsLoged={setIsLoged} />}
+              {props => <ProfileScreen {...props} user={userData} setIsLogged={setIsLoged} />}
             </Tab.Screen>
             <Tab.Screen
               name="QRScanner"
@@ -263,7 +263,7 @@ function AppContent () {
                 ),
               }}
             >
-              {props => <ProfileScreen {...props} user={userData} setIsLoged={setIsLoged} />}
+              {props => <ProfileScreen {...props} user={userData} setIsLogged={setIsLoged} />}
             </Tab.Screen>
             
             <Tab.Screen
@@ -309,7 +309,7 @@ function AppContent () {
                 ),
               }}
             >
-              {props => <ProfileScreen {...props} setIsLoged={setIsLoged} user={userData} />}
+              {props => <ProfileScreen {...props} setIsLogged={setIsLoged} user={userData} />}
             </Tab.Screen>
             <Tab.Screen
               name="HomeAcolyth"
@@ -353,7 +353,7 @@ function AppContent () {
                 ),
               }}
             >
-              {props => <ProfileScreen {...props} user={userData} setIsLoged={setIsLoged} />}
+              {props => <ProfileScreen {...props} user={userData} setIsLogged={setIsLoged} />}
             </Tab.Screen>
 
             <Tab.Screen

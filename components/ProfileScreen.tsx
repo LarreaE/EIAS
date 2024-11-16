@@ -10,7 +10,7 @@ type Props = {
 
 const ProfileScreen: React.FC<Props> = ({ user, setIsLogged }) => {
   const signOut = () => {
-    setIsLogged(false); // Change the login state
+    setIsLogged(false);
     socket.disconnect();
   };
 
