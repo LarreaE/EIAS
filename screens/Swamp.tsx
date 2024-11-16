@@ -442,9 +442,10 @@ const Swamp: React.FC = () => {
           {Array.from({ length: 4 }).map((_, index) => (
             <View key={index} style={styles.gridItem}>
               {takenArtifacts[index] ? (
-                <Text style={styles.artifactText}>
-                  Artifact {takenArtifacts[index]}
-                </Text>
+                <Image
+                        source={artifactImages[index]}
+                        style={styles.artifactImage}
+                      />
               ) : null}
             </View>
           ))}
