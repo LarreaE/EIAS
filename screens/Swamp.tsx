@@ -115,6 +115,73 @@ const Swamp: React.FC = () => {
           name: artifact.name,
         })
       );
+
+      useEffect(() => {
+        let watchId: number | null = null;
+      
+        const getCurrentLocation = async () => {
+          const hasPermission = await requestLocationPermission();
+          if (!hasPermission) return;
+      
+          Geolocation.getCurrentPosition(
+            (position) => {
+              const { latitude, longitude } = position.coords;
+              setLocation((prevLocation) => ({
+                ...prevLocation,
+                latitude,
+                longitude,
+              }));
+              socket.emit('locationUpdate', {
+                userId: userData.playerData.nickname,
+                avatar: userData.playerData.avatar,
+                coords: { latitude, longitude },
+              });
+            },
+            (error) => {
+              console.error('Error getting current location:', error);
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
+          );
+      
+          watchId = Geolocation.watchPosition(
+            (position) => {
+              const { latitude, longitude } = position.coords;
+              setLocation((prevLocation) => ({
+                ...prevLocation,
+                latitude,
+                longitude,
+              }));
+              socket.emit('locationUpdate', {
+                userId: userData.playerData.nickname,
+                avatar: userData.playerData.avatar,
+                coords: { latitude, longitude },
+              });
+              checkProximity(latitude, longitude);
+            },
+            (error) => console.error('Error watching location:', error),
+            {
+              enableHighAccuracy: true,
+              distanceFilter: 10,
+              interval: 1000,
+              timeout: 10000,
+            }
+          );
+        };
+      
+        // Get the current location on load
+        getCurrentLocation();
+      
+        socket.on('deviceLocations', (locations) => {
+          setOtherAcolytes(locations);
+        });
+      
+        return () => {
+          if (watchId !== null) {
+            Geolocation.clearWatch(watchId);
+          }
+          socket.off('deviceLocations');
+        };
+      }, []);
       setPointsOfInterest(mappedArtifacts);
 
       const takenArtifactIds = mappedArtifacts
@@ -276,13 +343,19 @@ const Swamp: React.FC = () => {
   };
 
   // Handle artifact collection
-  const handleArtifactTake = (id: number) => {
-    setPointsOfInterest((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, isTaken: true } : p))
-    );
-    objectTaken(id);
-    setTakenArtifacts((prev) => [...prev, id]);
-  };
+  // Handle artifact collection
+const handleArtifactTake = (id: number) => {
+  if (userData.playerData.role === 'MORTIMER') {
+    ToastAndroid.show('Only Acolytes can take artifacts.', ToastAndroid.SHORT);
+    return;
+  }
+
+  setPointsOfInterest((prev) =>
+    prev.map((p) => (p.id === id ? { ...p, isTaken: true } : p))
+  );
+  objectTaken(id);
+  setTakenArtifacts((prev) => [...prev, id]);
+};
 
   // Handle returning artifacts
   const handleReturnArtifacts = () => {
@@ -417,6 +490,7 @@ const Swamp: React.FC = () => {
       </Animated.View>
 
       {/* Button to show/hide the bag */}
+      {userData.playerData.role !== 'MORTIMER' && userData.playerData.role !== 'VILLAIN' && (
       <TouchableOpacity
         style={styles.toggleBagButton}
         onPress={toggleBag}
@@ -425,41 +499,44 @@ const Swamp: React.FC = () => {
           {isBagVisible ? '▼' : '▲'}
         </Text>
       </TouchableOpacity>
+)}
 
-      {/* Bag of collected artifacts */}
-      <Animated.View
-        style={[styles.bagContainer, { height: bagHeight }]}
-      >
-        {/* Arrow to close the bag */}
-        <TouchableOpacity
-          style={styles.closeBagButton}
-          onPress={toggleBag}
-        >
-          <Text style={styles.closeBagButtonText}>▼</Text>
-        </TouchableOpacity>
+{/* Bag of collected artifacts */}
+{userData.playerData.role !== 'MORTIMER' && userData.playerData.role !== 'VILLAIN' && (
+  <Animated.View
+    style={[styles.bagContainer, { height: bagHeight }]}
+  >
+    {/* Arrow to close the bag */}
+    <TouchableOpacity
+      style={styles.closeBagButton}
+      onPress={toggleBag}
+    >
+      <Text style={styles.closeBagButtonText}>▼</Text>
+    </TouchableOpacity>
 
-        <View style={styles.gridContainer}>
-          {Array.from({ length: 4 }).map((_, index) => (
-            <View key={index} style={styles.gridItem}>
-              {takenArtifacts[index] ? (
-                <Image
-                        source={artifactImages[index]}
-                        style={styles.artifactImage}
-                      />
-              ) : null}
-            </View>
-          ))}
+    <View style={styles.gridContainer}>
+      {Array.from({ length: 4 }).map((_, index) => (
+        <View key={index} style={styles.gridItem}>
+          {takenArtifacts[index] ? (
+            <Image
+              source={artifactImages[index]}
+              style={styles.artifactImage}
+            />
+          ) : null}
         </View>
-        {/* Button to return artifacts */}
-        <TouchableOpacity
-          style={styles.returnButton}
-          onPress={handleReturnArtifacts}
-        >
-          <Text style={styles.returnButtonText}>
-            Return Artifacts
-          </Text>
-        </TouchableOpacity>
-      </Animated.View>
+      ))}
+    </View>
+    {/* Button to return artifacts */}
+    <TouchableOpacity
+      style={styles.returnButton}
+      onPress={handleReturnArtifacts}
+    >
+      <Text style={styles.returnButtonText}>
+        Return Artifacts
+      </Text>
+      </TouchableOpacity>
+    </Animated.View>
+  )}
 
       <TouchableOpacity
         style={styles.closeButton}
