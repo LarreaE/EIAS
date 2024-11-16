@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   View,
   Vibration,
-  ScrollView,
   Image,
 } from 'react-native';
 import { clearServerEvents, listenToServerEventsScanAcolyte } from '../sockets/listenEvents.tsx';
@@ -416,6 +415,7 @@ export default AcolythLaboratoryScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor:'#e2d3b9',
   },
   background: {
     flex: 1,
@@ -573,6 +573,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: 66,
     height: 66,
+    top:70,
   },
   filterImage: {
     position: 'absolute',
