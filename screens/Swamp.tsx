@@ -64,14 +64,9 @@ const Swamp: React.FC = () => {
   // Fetch artifacts from the server
   useEffect(() => {
     requestArtifacts();
-    const timeout = setTimeout(() => {
-      setIsLoading(false);
-      setLoadingError('Server error: failed to load artifacts.');
-    }, 10000);
     listenToArtifactsUpdates();
     socket.on('receive_artifacts', (artifacts) => {
       console.log('Artifacts received:', artifacts);
-      clearTimeout(timeout);
       const mappedArtifacts = artifacts.map(
         (artifact: {
           id: any;
@@ -127,7 +122,6 @@ const Swamp: React.FC = () => {
       socket.off('receive_artifacts');
       socket.off('update_artifacts');
       socket.emit('delete_map_user', userData.playerData.nickname);
-      clearTimeout(timeout);
     };
   }, []);
 
