@@ -46,58 +46,83 @@ const HallOfSages: React.FC = () => {
     sendLocation('School', userData.playerData.email); // Enviar el email desde playerData
     sendIsInHall(currentUser.email, false);
     navigation.navigate('School');
-  };
-
-  const renderUserInCircle = () => {
-    const radius = 80; // Radio para el avatar
-    const centerX = 0;
-    const centerY = 0;
-
-    const angle = 0; // Solo un usuario, no necesitamos distribuir en círculo.
-    const x = centerX + radius * Math.cos(angle);
-    const y = centerY + radius * Math.sin(angle);
-
-    return (
-      <View
-        key={currentUser._id}
-        style={[
-          styles.avatarContainer,
-          { transform: [{ translateX: x }, { translateY: y }] },
-        ]}
-      >
-        <AcolythCardInHall nickname={currentUser.nickname} avatar={currentUser.avatar} />
-      </View>
-    );
+    socket.off('send_users_in_hall');
   };
 
   useEffect(() => {
     // Envía la información del usuario al servidor
     sendIsInHall(currentUser.email, true);
-  
-    // return () => {
-    //   sendIsInHall(currentUser.email, false);
-    // };
   }, []);
 
   useEffect(() => {
     const handleUsersInHall = (users: User[]) => {
+      console.log('Datos recibidos en send_users_in_hall:', users);
       setUsersInHall(users);
     };
   
     socket.on('send_users_in_hall', handleUsersInHall);
-  
-    return () => {
-      socket.off('send_users_in_hall', handleUsersInHall);
-    };
   }, []);
   
   const renderUsersInCircle = () => {
-    const radius = 80; // Radio para el círculo
-    const centerX = 0;
-    const centerY = 0;
+    const centerX = 200; // Centro del contenedor circular
+    const centerY = 200; // Centro del contenedor circular
+    const radius = 120; // Radio del círculo
+    
+    if (usersInHall.length === 1) {
+      return (
+        <View key={usersInHall[0]._id} style={styles.avatarContainer}>
+          <AcolythCardInHall 
+            nickname={usersInHall[0].nickname} 
+            avatar={usersInHall[0].avatar} 
+          />
+        </View>
+      );
+    }
+  
+    if (usersInHall.length === 2) {
+      return usersInHall.map((user, index) => {
+        const offset = 60; // Separación entre los avatares
+        const x = index === 0 ? -offset : offset;
+  
+        return (
+          <View
+            key={user._id}
+            style={[
+              styles.avatarContainer,
+              { transform: [{ translateX: x }, { translateY: 0 }] },
+            ]}
+          >
+            <AcolythCardInHall nickname={user.nickname} avatar={user.avatar} />
+          </View>
+        );
+      });
+    }
+  
+    if (usersInHall.length === 3) {
+      const trianglePoints = [
+        { x: 0, y: -radius }, // Punto superior
+        { x: -radius * Math.cos(Math.PI / 6), y: radius * Math.sin(Math.PI / 6) }, // Izquierda
+        { x: radius * Math.cos(Math.PI / 6), y: radius * Math.sin(Math.PI / 6) }, // Derecha
+      ];
+  
+      return usersInHall.map((user, index) => {
+        const { x, y } = trianglePoints[index];
+        return (
+          <View
+            key={user._id}
+            style={[
+              styles.avatarContainer,
+              { transform: [{ translateX: x }, { translateY: y }] },
+            ]}
+          >
+            <AcolythCardInHall nickname={user.nickname} avatar={user.avatar} />
+          </View>
+        );
+      });
+    }
   
     return usersInHall.map((user, index) => {
-      const angle = (2 * Math.PI * index) / usersInHall.length; // Distribuir en círculo
+      const angle = (2 * Math.PI * index) / usersInHall.length; // Distribución circular
       const x = centerX + radius * Math.cos(angle);
       const y = centerY + radius * Math.sin(angle);
   
@@ -106,7 +131,7 @@ const HallOfSages: React.FC = () => {
           key={user._id}
           style={[
             styles.avatarContainer,
-            { transform: [{ translateX: x }, { translateY: y }] },
+            { transform: [{ translateX: x - centerX }, { translateY: y - centerY }] },
           ]}
         >
           <AcolythCardInHall nickname={user.nickname} avatar={user.avatar} />
@@ -114,6 +139,7 @@ const HallOfSages: React.FC = () => {
       );
     });
   };
+  
 
   return (
     <ImageBackground
