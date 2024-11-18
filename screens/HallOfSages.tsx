@@ -12,7 +12,6 @@ import { useState } from 'react';
 import { listenToServerEvents } from '../sockets/listenEvents.tsx';
 import socket from '../sockets/socketConnection.tsx';
 
-
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'HallOfSages'>;
 
 interface User {
@@ -20,6 +19,7 @@ interface User {
   nickname: string;
   avatar: string;
   email: string;
+  role: string;  // Aquí añadimos el rol del usuario
 }
 
 const HallOfSages: React.FC = () => {
@@ -28,29 +28,26 @@ const HallOfSages: React.FC = () => {
   const { userData } = context;
   const [usersInHall, setUsersInHall] = useState<User[]>([]);
 
-
-  // Verifica si los datos de userData existen y están disponibles
   if (!userData || !userData.playerData || !userData.playerData.avatar || !userData.playerData.nickname) {
-    return <Text>Cargando...</Text>;  // Si no hay datos de usuario, muestra algo de carga
+    return <Text>Cargando...</Text>;
   }
 
-  // Asigna los datos del usuario actual desde playerData
   const currentUser: User = {
-    _id: userData.playerData._id,  // Asegúrate de obtener el _id correcto desde playerData
-    nickname: userData.playerData.nickname,  // Accede al nickname
-    avatar: userData.playerData.avatar,  // Si no hay avatar, asigna uno predeterminado
-    email: userData.playerData.email  // Accede al email
+    _id: userData.playerData._id,
+    nickname: userData.playerData.nickname,
+    avatar: userData.playerData.avatar,
+    email: userData.playerData.email,
+    role: userData.playerData.role, // Asumiendo que el rol está en playerData
   };
 
   const goToMap = () => {
-    sendLocation('School', userData.playerData.email); // Enviar el email desde playerData
+    sendLocation('School', userData.playerData.email);
     sendIsInHall(currentUser.email, false);
     navigation.navigate('School');
     socket.off('send_users_in_hall');
   };
 
   useEffect(() => {
-    // Envía la información del usuario al servidor
     sendIsInHall(currentUser.email, true);
   }, []);
 
@@ -63,27 +60,32 @@ const HallOfSages: React.FC = () => {
     socket.on('send_users_in_hall', handleUsersInHall);
   }, []);
   
+  const filteredUsers = currentUser.role === 'ACOLYTE'
+    ? usersInHall.filter(user => user.role !== 'VILLAIN')
+    : usersInHall;
+  
+
   const renderUsersInCircle = () => {
-    const centerX = 200; // Centro del contenedor circular
-    const centerY = 200; // Centro del contenedor circular
-    const radius = 120; // Radio del círculo
-    
-    if (usersInHall.length === 1) {
+    const centerX = 200; 
+    const centerY = 200;
+    const radius = 120;
+
+    if (filteredUsers.length === 1) {
       return (
-        <View key={usersInHall[0]._id} style={styles.avatarContainer}>
+        <View key={filteredUsers[0]._id} style={styles.avatarContainer}>
           <AcolythCardInHall 
-            nickname={usersInHall[0].nickname} 
-            avatar={usersInHall[0].avatar} 
+            nickname={filteredUsers[0].nickname} 
+            avatar={filteredUsers[0].avatar} 
           />
         </View>
       );
     }
-  
-    if (usersInHall.length === 2) {
-      return usersInHall.map((user, index) => {
-        const offset = 60; // Separación entre los avatares
+
+    if (filteredUsers.length === 2) {
+      return filteredUsers.map((user, index) => {
+        const offset = 60;
         const x = index === 0 ? -offset : offset;
-  
+
         return (
           <View
             key={user._id}
@@ -97,15 +99,15 @@ const HallOfSages: React.FC = () => {
         );
       });
     }
-  
-    if (usersInHall.length === 3) {
+
+    if (filteredUsers.length === 3) {
       const trianglePoints = [
-        { x: 0, y: -radius }, // Punto superior
-        { x: -radius * Math.cos(Math.PI / 6), y: radius * Math.sin(Math.PI / 6) }, // Izquierda
-        { x: radius * Math.cos(Math.PI / 6), y: radius * Math.sin(Math.PI / 6) }, // Derecha
+        { x: 0, y: -radius },
+        { x: -radius * Math.cos(Math.PI / 6), y: radius * Math.sin(Math.PI / 6) },
+        { x: radius * Math.cos(Math.PI / 6), y: radius * Math.sin(Math.PI / 6) },
       ];
-  
-      return usersInHall.map((user, index) => {
+
+      return filteredUsers.map((user, index) => {
         const { x, y } = trianglePoints[index];
         return (
           <View
@@ -120,12 +122,12 @@ const HallOfSages: React.FC = () => {
         );
       });
     }
-  
-    return usersInHall.map((user, index) => {
-      const angle = (2 * Math.PI * index) / usersInHall.length; // Distribución circular
+
+    return filteredUsers.map((user, index) => {
+      const angle = (2 * Math.PI * index) / filteredUsers.length;
       const x = centerX + radius * Math.cos(angle);
       const y = centerY + radius * Math.sin(angle);
-  
+
       return (
         <View
           key={user._id}
@@ -139,7 +141,6 @@ const HallOfSages: React.FC = () => {
       );
     });
   };
-  
 
   return (
     <ImageBackground
@@ -189,7 +190,7 @@ const styles = StyleSheet.create({
   circleContainer: {
     position: 'absolute',
     top: 300,
-    width: 200, // Tamaño reducido para que el avatar quede centrado
+    width: 200,
     height: 200,
     alignItems: 'center',
     justifyContent: 'center',
