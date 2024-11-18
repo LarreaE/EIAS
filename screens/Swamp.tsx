@@ -19,7 +19,7 @@ import MapView, {
   Circle,
   Region,
 } from 'react-native-maps';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import { useNavigation } from '@react-navigation/native';
 import { UserContext, UserContextType } from '../context/UserContext';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -89,12 +89,11 @@ const Swamp: React.FC = () => {
         })
       );
       setPointsOfInterest(mappedArtifacts);
-      setIsLoading(false);
-
       const takenArtifactIds = mappedArtifacts
         .filter((artifact: { isTaken: any }) => artifact.isTaken)
         .map((artifact: { id: any }) => artifact.id);
       setTakenArtifacts(takenArtifactIds);
+      setIsLoading(false);
     });
 
     socket.on('update_artifacts', (artifacts) => {
@@ -116,72 +115,6 @@ const Swamp: React.FC = () => {
         })
       );
 
-      useEffect(() => {
-        let watchId: number | null = null;
-      
-        const getCurrentLocation = async () => {
-          const hasPermission = await requestLocationPermission();
-          if (!hasPermission) return;
-      
-          Geolocation.getCurrentPosition(
-            (position) => {
-              const { latitude, longitude } = position.coords;
-              setLocation((prevLocation) => ({
-                ...prevLocation,
-                latitude,
-                longitude,
-              }));
-              socket.emit('locationUpdate', {
-                userId: userData.playerData.nickname,
-                avatar: userData.playerData.avatar,
-                coords: { latitude, longitude },
-              });
-            },
-            (error) => {
-              console.error('Error getting current location:', error);
-            },
-            { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
-          );
-      
-          watchId = Geolocation.watchPosition(
-            (position) => {
-              const { latitude, longitude } = position.coords;
-              setLocation((prevLocation) => ({
-                ...prevLocation,
-                latitude,
-                longitude,
-              }));
-              socket.emit('locationUpdate', {
-                userId: userData.playerData.nickname,
-                avatar: userData.playerData.avatar,
-                coords: { latitude, longitude },
-              });
-              checkProximity(latitude, longitude);
-            },
-            (error) => console.error('Error watching location:', error),
-            {
-              enableHighAccuracy: true,
-              distanceFilter: 10,
-              interval: 1000,
-              timeout: 10000,
-            }
-          );
-        };
-      
-        // Get the current location on load
-        getCurrentLocation();
-      
-        socket.on('deviceLocations', (locations) => {
-          setOtherAcolytes(locations);
-        });
-      
-        return () => {
-          if (watchId !== null) {
-            Geolocation.clearWatch(watchId);
-          }
-          socket.off('deviceLocations');
-        };
-      }, []);
       setPointsOfInterest(mappedArtifacts);
 
       const takenArtifactIds = mappedArtifacts
@@ -193,9 +126,15 @@ const Swamp: React.FC = () => {
     return () => {
       socket.off('receive_artifacts');
       socket.off('update_artifacts');
+      socket.emit('delete_map_user', userData.playerData.nickname);
       clearTimeout(timeout);
     };
   }, []);
+
+
+  useEffect(() => {
+    console.log("otherACOLYTEAS: ", otherAcolytes);    
+  }, [otherAcolytes]);
 
   // Default map region
   const defaultRegion: Region = {
@@ -279,7 +218,6 @@ const Swamp: React.FC = () => {
           enableHighAccuracy: true,
           distanceFilter: 10,
           interval: 1000,
-          timeout: 10000,
         }
       );
     };
@@ -417,16 +355,19 @@ const handleArtifactTake = (id: number) => {
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
-          region={location}
+          initialRegion={location}
           showsCompass
           customMapStyle={mapStyle}
+          googleRenderer={'LEGACY'}
         >
           {Object.keys(otherAcolytes).map((userId: any) => {
-            const deviceLocation = otherAcolytes[userId];
+            try {
+              const deviceLocation = otherAcolytes[userId];
             return (
               <Marker
                 key={userId}
                 title={userId}
+                tracksViewChanges={true}
                 coordinate={{
                   latitude: deviceLocation.coords.latitude,
                   longitude: deviceLocation.coords.longitude,
@@ -437,6 +378,10 @@ const handleArtifactTake = (id: number) => {
                 />
               </Marker>
             );
+            } catch (error) {
+              console.error('Error rendering Marker:', error);
+              return null
+            }
           })}
           {(userData.playerData.role === 'ACOLYTE' ||
             userData.playerData.role === 'MORTIMER') &&
@@ -445,25 +390,26 @@ const handleArtifactTake = (id: number) => {
                 !poi.isTaken && (
                   <React.Fragment key={poi.id}>
                     <Marker
+                      tracksViewChanges={true}
                       coordinate={{
                         latitude: poi.latitude,
                         longitude: poi.longitude,
                       }}
                       title={`Artifact ${poi.id}`}
+                      anchor={{ x: 0.5, y: 0.5 }} // Centra la imagen
                       onPress={() => {
                         if (poi.inRange) {
                           handleArtifactTake(poi.id);
                         } else {
-                          ToastAndroid.show(
-                            'Out of range',
-                            ToastAndroid.SHORT
-                          );
+                          ToastAndroid.show('Out of range', ToastAndroid.SHORT);
                         }
-                      }}>
-                        <Image
-                  source={artifactImages[index]}
-                  style={styles.artifactImage}
-                />
+                      }}
+                    >
+                      <Image
+                        source={artifactImages[index]}
+                        style={styles.artifactImage}
+                        resizeMode="contain" // Asegúrate de que la imagen no se deforme
+                      />
                     </Marker>
 
                     <Circle
@@ -490,7 +436,7 @@ const handleArtifactTake = (id: number) => {
       </Animated.View>
 
       {/* Button to show/hide the bag */}
-      {userData.playerData.role !== 'MORTIMER' && userData.playerData.role !== 'VILLAIN' && (
+      {userData.playerData.role === 'ACOLYTE' && (
       <TouchableOpacity
         style={styles.toggleBagButton}
         onPress={toggleBag}
@@ -586,7 +532,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     alignSelf: 'center',
-    backgroundColor: 'darkblue',
+    backgroundColor: 'black',
     padding: 5,
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
@@ -594,6 +540,7 @@ const styles = StyleSheet.create({
   toggleBagButtonText: {
     color: 'white',
     fontSize: 18,
+    bottom:5,
   },
   bagContainer: {
     position: 'absolute',
@@ -645,8 +592,8 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: 30,
-    left: 10,
+    top: 20,
+    right: 20,
     backgroundColor: 'rgba(250, 250, 250, 0.4)',
     padding: 10,
     borderRadius: 5,
@@ -677,8 +624,7 @@ const styles = StyleSheet.create({
   artifactImage: {
     width: 50,
     height: 50,
-    resizeMode: 'contain',
-    top:10,
+    top:0,
   },
 });
 
