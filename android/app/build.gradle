@@ -59,6 +59,9 @@ dependencies {
     implementation project(':react-native-screens')
     implementation project(':@react-native-async-storage_async-storage')
     implementation project(':@react-native-community_geolocation')
+    implementation project(':react-native-geolocation-service')
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+
     //sensors
     implementation project(':react-native-sensors')
     //firebase app    

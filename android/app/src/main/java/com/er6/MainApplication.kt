@@ -19,6 +19,7 @@ import com.swmansion.reanimated.ReanimatedPackage;
 import com.reactnativepagerview.PagerViewPackage; // Nueva importación
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
 
 
 class MainApplication : Application(), ReactApplication {
@@ -32,6 +33,7 @@ class MainApplication : Application(), ReactApplication {
               ReanimatedPackage()
               PagerViewPackage()
               VectorIconsPackage()
+              RNFusedLocationPackage()
             }
 
         override fun getJSMainModuleName(): String = "index"
