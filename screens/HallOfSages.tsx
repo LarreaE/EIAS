@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { View, StyleSheet, ImageBackground, Text } from 'react-native';
+import { View, StyleSheet, ImageBackground, Text, Dimensions } from 'react-native';
 import AcolythCardInHall from '../components/acolyteCardHall.tsx';
 import MedievalText from '../components/MedievalText.tsx';
 import MapButton from '../components/MapButton.tsx';
@@ -13,7 +13,7 @@ import { listenToServerEvents } from '../sockets/listenEvents.tsx';
 import socket from '../sockets/socketConnection.tsx';
 
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'HallOfSages'>;
-
+const { width, height } = Dimensions.get('window');
 interface User {
   _id: string;
   nickname: string;
@@ -63,7 +63,6 @@ const HallOfSages: React.FC = () => {
   const filteredUsers = currentUser.role === 'ACOLYTE'
     ? usersInHall.filter(user => user.role !== 'VILLAIN')
     : usersInHall;
-  
 
   const renderUsersInCircle = () => {
     const centerX = 200; 

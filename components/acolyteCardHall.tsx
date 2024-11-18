@@ -1,10 +1,11 @@
 import React from 'react';
-import { Image, View, StyleSheet, Text } from 'react-native';
+import { Image, View, StyleSheet, Text, Dimensions } from 'react-native';
 
 type Props = {
   nickname: string;
   avatar: string;
 };
+const { width, height } = Dimensions.get('window');
 
 const AcolythCardInHall: React.FC<Props> = ({ nickname, avatar }) => {
   return (
@@ -24,13 +25,12 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 10,
     borderRadius: 30,
-    width: 120,
-    height: 120,
+    width: width * 0.3,
     justifyContent: 'center', // Centra verticalmente si es necesario
   },
   image: {
-    width: 70,
-    height: 70,
+    width: width * 0.2,
+    height: height * 0.1,
     borderRadius: 50, // Hace la imagen circular
     marginBottom: 10,
     borderWidth: 2,
@@ -41,14 +41,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     textAlign: 'center', // Centra el texto debajo de la imagen
-    textShadowColor: 'white', // Color del reborde
-    textShadowOffset: { width: 1, height: 1 }, // Sombra en diagonal
-    textShadowRadius: 5, // Difuminación mínima
-    borderWidth: 1, // Grosor del borde
-    borderColor: 'black', // Color del borde
     borderRadius: 10, // Bordes redondeados
     backgroundColor: 'white', // Fondo blanco para mejor visibilidad
+    padding:3,
 }});
 
 export default AcolythCardInHall;
-``
