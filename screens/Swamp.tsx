@@ -427,6 +427,7 @@ const handleArtifactTake = (id: number) => {
               <Marker
                 key={userId}
                 title={userId}
+                tracksViewChanges={false}
                 coordinate={{
                   latitude: deviceLocation.coords.latitude,
                   longitude: deviceLocation.coords.longitude,
@@ -445,6 +446,7 @@ const handleArtifactTake = (id: number) => {
                 !poi.isTaken && (
                   <React.Fragment key={poi.id}>
                     <Marker
+                      tracksViewChanges={false}
                       coordinate={{
                         latitude: poi.latitude,
                         longitude: poi.longitude,
