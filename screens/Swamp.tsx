@@ -19,7 +19,7 @@ import MapView, {
   Circle,
   Region,
 } from 'react-native-maps';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import { useNavigation } from '@react-navigation/native';
 import { UserContext, UserContextType } from '../context/UserContext';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -89,12 +89,11 @@ const Swamp: React.FC = () => {
         })
       );
       setPointsOfInterest(mappedArtifacts);
-      setIsLoading(false);
-
       const takenArtifactIds = mappedArtifacts
         .filter((artifact: { isTaken: any }) => artifact.isTaken)
         .map((artifact: { id: any }) => artifact.id);
       setTakenArtifacts(takenArtifactIds);
+      setIsLoading(false);
     });
 
     socket.on('update_artifacts', (artifacts) => {
@@ -116,72 +115,6 @@ const Swamp: React.FC = () => {
         })
       );
 
-      useEffect(() => {
-        let watchId: number | null = null;
-      
-        const getCurrentLocation = async () => {
-          const hasPermission = await requestLocationPermission();
-          if (!hasPermission) return;
-      
-          Geolocation.getCurrentPosition(
-            (position) => {
-              const { latitude, longitude } = position.coords;
-              setLocation((prevLocation) => ({
-                ...prevLocation,
-                latitude,
-                longitude,
-              }));
-              socket.emit('locationUpdate', {
-                userId: userData.playerData.nickname,
-                avatar: userData.playerData.avatar,
-                coords: { latitude, longitude },
-              });
-            },
-            (error) => {
-              console.error('Error getting current location:', error);
-            },
-            { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
-          );
-      
-          watchId = Geolocation.watchPosition(
-            (position) => {
-              const { latitude, longitude } = position.coords;
-              setLocation((prevLocation) => ({
-                ...prevLocation,
-                latitude,
-                longitude,
-              }));
-              socket.emit('locationUpdate', {
-                userId: userData.playerData.nickname,
-                avatar: userData.playerData.avatar,
-                coords: { latitude, longitude },
-              });
-              checkProximity(latitude, longitude);
-            },
-            (error) => console.error('Error watching location:', error),
-            {
-              enableHighAccuracy: true,
-              distanceFilter: 10,
-              interval: 1000,
-              timeout: 10000,
-            }
-          );
-        };
-      
-        // Get the current location on load
-        getCurrentLocation();
-      
-        socket.on('deviceLocations', (locations) => {
-          setOtherAcolytes(locations);
-        });
-      
-        return () => {
-          if (watchId !== null) {
-            Geolocation.clearWatch(watchId);
-          }
-          socket.off('deviceLocations');
-        };
-      }, []);
       setPointsOfInterest(mappedArtifacts);
 
       const takenArtifactIds = mappedArtifacts
@@ -193,9 +126,15 @@ const Swamp: React.FC = () => {
     return () => {
       socket.off('receive_artifacts');
       socket.off('update_artifacts');
+      socket.emit('delete_map_user', userData.playerData.nickname);
       clearTimeout(timeout);
     };
   }, []);
+
+
+  useEffect(() => {
+    console.log("otherACOLYTEAS: ", otherAcolytes);    
+  }, [otherAcolytes]);
 
   // Default map region
   const defaultRegion: Region = {
@@ -279,7 +218,6 @@ const Swamp: React.FC = () => {
           enableHighAccuracy: true,
           distanceFilter: 10,
           interval: 1000,
-          timeout: 10000,
         }
       );
     };
@@ -417,17 +355,19 @@ const handleArtifactTake = (id: number) => {
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
-          region={location}
+          initialRegion={location}
           showsCompass
           customMapStyle={mapStyle}
+          googleRenderer={'LEGACY'}
         >
           {Object.keys(otherAcolytes).map((userId: any) => {
-            const deviceLocation = otherAcolytes[userId];
+            try {
+              const deviceLocation = otherAcolytes[userId];
             return (
               <Marker
                 key={userId}
                 title={userId}
-                tracksViewChanges={false}
+                tracksViewChanges={true}
                 coordinate={{
                   latitude: deviceLocation.coords.latitude,
                   longitude: deviceLocation.coords.longitude,
@@ -438,6 +378,10 @@ const handleArtifactTake = (id: number) => {
                 />
               </Marker>
             );
+            } catch (error) {
+              console.error('Error rendering Marker:', error);
+              return null
+            }
           })}
           {(userData.playerData.role === 'ACOLYTE' ||
             userData.playerData.role === 'MORTIMER') &&
@@ -446,7 +390,7 @@ const handleArtifactTake = (id: number) => {
                 !poi.isTaken && (
                   <React.Fragment key={poi.id}>
                     <Marker
-                      tracksViewChanges={false}
+                      tracksViewChanges={true}
                       coordinate={{
                         latitude: poi.latitude,
                         longitude: poi.longitude,
