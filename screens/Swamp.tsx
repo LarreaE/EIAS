@@ -53,7 +53,7 @@ const Swamp: React.FC = () => {
   // Animation variables
   const [mapHeight] = useState(new Animated.Value(height));
   const [bagHeight] = useState(new Animated.Value(0));
-  const bagMaxHeight = 150; // Maximum bag height
+  const bagMaxHeight = height * 0.2; // Maximum bag height
   const artifactImages = [
     require('../assets/artefact1.png'),
     require('../assets/artefact2.png'),
@@ -448,7 +448,7 @@ const handleArtifactTake = (id: number) => {
 )}
 
 {/* Bag of collected artifacts */}
-{userData.playerData.role !== 'MORTIMER' && userData.playerData.role !== 'VILLAIN' && (
+{userData.playerData.role === 'ACOLYTE' && (
   <Animated.View
     style={[styles.bagContainer, { height: bagHeight }]}
   >
@@ -473,14 +473,14 @@ const handleArtifactTake = (id: number) => {
       ))}
     </View>
     {/* Button to return artifacts */}
-    <TouchableOpacity
+    {/* <TouchableOpacity
       style={styles.returnButton}
       onPress={handleReturnArtifacts}
     >
       <Text style={styles.returnButtonText}>
         Return Artifacts
       </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </Animated.View>
   )}
 
