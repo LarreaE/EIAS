@@ -33,3 +33,7 @@ export const requestArtifacts = () => {
   socket.emit('request_artifacts');
 };
 
+export const sendIsInHall = (email: string, state: boolean): void => {
+  socket.emit('is_in_hall', { email, isInHall: state });
+};
+
