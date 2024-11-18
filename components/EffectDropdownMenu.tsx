@@ -32,7 +32,7 @@ const EffectDropdownMenu: React.FC<Props> = ({ availableEffects, toggleEffect, s
   return (
     <View style={styles.dropdownContainer}>
       <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
-        <Text style={styles.dropdownButtonText}>Select Effect</Text>
+        <MedievalText style={styles.dropdownButtonText}>Select Effect</MedievalText>
         <Icon 
           name={isDropdownOpen ? "chevron-up" : "chevron-down"} 
           size={20} 
@@ -65,7 +65,7 @@ const EffectDropdownMenu: React.FC<Props> = ({ availableEffects, toggleEffect, s
                   <View style={styles.checkbox}>
                     {rareEffects.every(effect => selectedEffects.includes(effect)) && <View style={styles.checkedBox} />}
                   </View>
-                  <MedievalText fontSize={16} color="#ffffff" style={styles.effectText}>
+                  <MedievalText fontSize={16} color="black" style={styles.effectText}>
                     Zachariah's Herbal
                   </MedievalText>
                 </TouchableOpacity>
@@ -96,7 +96,7 @@ const EffectDropdownMenu: React.FC<Props> = ({ availableEffects, toggleEffect, s
                       style={styles.effectIcon}
                     />
                   )}
-                  <MedievalText fontSize={16} color="#ffffff" style={styles.effectText}>
+                  <MedievalText fontSize={16} color="black" style={styles.effectText}>
                     {EFFECT_LABELS[effect] || effect}
                   </MedievalText>
                 </TouchableOpacity>
@@ -121,6 +121,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 20,
     width: width*0.8,
+    top:-20,
   },
   dropdownButtonText: {
     fontSize: 16,
@@ -129,14 +130,14 @@ const styles = StyleSheet.create({
   scrollView: {
     maxHeight: height * 0.4, // Set max height 
     maxWidth: width * 0.85,
-    backgroundColor: '#333', // Style as desired
+    backgroundColor: 'lightgrey', // Style as desired
     borderRadius: 20,
     marginTop: 5,
     alignContent: 'center',
   },
   sectionHeader: {
     fontSize: 18,
-    color: '#FFD700', // Gold color for rare items (adjust as needed)
+    color: 'darkblue', // Gold color for rare items (adjust as needed)
     marginTop: 10,
     marginLeft: 10,
   },
@@ -149,12 +150,12 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderWidth: 1,
-    borderColor: '#fff',
+    borderColor: 'black',
     marginRight: 10,
   },
   checkedBox: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'lightgreen',
   },
   effectIcon: {
     marginRight: 10,

@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
     borderRadius: 15, // Opcional si quieres redondear el QR
   },
   qrText: {
+    top:40,
     marginTop: 10,
     fontSize: 18,
     color: '#4b3621',
