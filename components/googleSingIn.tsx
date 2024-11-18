@@ -56,7 +56,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
   const fetchIngredients = async () => {
     try {
       console.log('Fetching ingredients...');
-      const response = await fetch(`${Config.RENDER}/ingredients`);
+      const response = await fetch(`${Config.LOCAL_HOST}/ingredients`);
       const contentType = response.headers.get('content-type');
       if (contentType && contentType.includes('application/json')) {
         const data = await response.json();
@@ -92,7 +92,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
 
     try {
       console.log('Fetching curses...');
-      const response = await fetch(`${Config.RENDER}/potions`);
+      const response = await fetch(`${Config.LOCAL_HOST}/potions`);
       const contentType = response.headers.get('content-type');
       if (contentType && contentType.includes('application/json')) {
         const data = await response.json();
@@ -118,7 +118,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
           setSpinnerMessage('Connecting...');
 
           // Perform the axios request and wait for the response
-          const response = await axios.post(`${Config.RENDER}/api/auth/verify-token`, {
+          const response = await axios.post(`${Config.LOCAL_HOST}/api/auth/verify-token`, {
             idToken: idTokenResult?.token,
             email: email,
             socketId: socket.id,

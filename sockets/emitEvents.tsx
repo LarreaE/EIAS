@@ -23,3 +23,7 @@ export const objectTaken = (objectId: Int32) => {
   console.log("object taken send");
   socket.emit('objectTaken', { id: objectId });
 };
+
+export const sendIsInHall = (email: string, state: boolean): void => {
+  socket.emit('is_in_hall', { email, isInHall: state });
+};
