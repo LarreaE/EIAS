@@ -396,20 +396,20 @@ const handleArtifactTake = (id: number) => {
                         longitude: poi.longitude,
                       }}
                       title={`Artifact ${poi.id}`}
+                      anchor={{ x: 0.5, y: 0.5 }} // Centra la imagen
                       onPress={() => {
                         if (poi.inRange) {
                           handleArtifactTake(poi.id);
                         } else {
-                          ToastAndroid.show(
-                            'Out of range',
-                            ToastAndroid.SHORT
-                          );
+                          ToastAndroid.show('Out of range', ToastAndroid.SHORT);
                         }
-                      }}>
-                        <Image
-                  source={artifactImages[index]}
-                  style={styles.artifactImage}
-                />
+                      }}
+                    >
+                      <Image
+                        source={artifactImages[index]}
+                        style={styles.artifactImage}
+                        resizeMode="contain" // Asegúrate de que la imagen no se deforme
+                      />
                     </Marker>
 
                     <Circle
@@ -436,7 +436,7 @@ const handleArtifactTake = (id: number) => {
       </Animated.View>
 
       {/* Button to show/hide the bag */}
-      {userData.playerData.role !== 'MORTIMER' && userData.playerData.role !== 'VILLAIN' && (
+      {userData.playerData.role === 'ACOLYTE' && (
       <TouchableOpacity
         style={styles.toggleBagButton}
         onPress={toggleBag}
@@ -532,7 +532,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     alignSelf: 'center',
-    backgroundColor: 'darkblue',
+    backgroundColor: 'black',
     padding: 5,
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
@@ -540,6 +540,7 @@ const styles = StyleSheet.create({
   toggleBagButtonText: {
     color: 'white',
     fontSize: 18,
+    bottom:5,
   },
   bagContainer: {
     position: 'absolute',
@@ -623,8 +624,7 @@ const styles = StyleSheet.create({
   artifactImage: {
     width: 50,
     height: 50,
-    resizeMode: 'contain',
-    top:10,
+    top:0,
   },
 });
 
