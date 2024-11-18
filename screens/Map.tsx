@@ -24,7 +24,7 @@ const MapScreen: React.FC = () => {
 
   const animateBirds = () => {
     // Generar posición aleatoria en el eje Y (toda la pantalla)
-    const randomY = Math.random() * (height - 50); // Asegura que no salga del rango vertical
+    const randomY = Math.random() * (height - 200); // Asegura que no salga del rango vertical
 
     // Configurar posición Y aleatoria
     birdYPosition.setValue(randomY);
@@ -35,15 +35,15 @@ const MapScreen: React.FC = () => {
 
     // Animar el movimiento horizontal
     Animated.timing(birdPosition, {
-      toValue: -350, // Un poco más allá del borde izquierdo
-      duration: 8000, // Duración de la animación
+      toValue: -1050, // Un poco más allá del borde izquierdo
+      duration: 9000, // Duración de la animación
       easing: Easing.linear,
       useNativeDriver: true,
     }).start(() => {
       // Hacer desaparecer el GIF cuando esté completamente fuera
       Animated.timing(birdOpacity, {
         toValue: 0,
-        duration: 500, // Tiempo para desaparecer
+        duration: 1000, // Tiempo para desaparecer
         useNativeDriver: true,
       }).start(() => animateBirds());
     });
@@ -194,8 +194,8 @@ const styles = StyleSheet.create({
   },
   gifStyle: {
     position: 'absolute',
-    width: 100,
-    height: 50,
+    width: width * 0.3,
+    height: height * 0.08,
     zIndex: 0,
   },
   buttonTower: {
