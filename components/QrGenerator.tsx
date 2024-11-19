@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
   },
   frameImage: {
     position: 'absolute',
-    width: '160%',
-    height: '160%',
+    width: '173%',
+    height: '173%',
     resizeMode: 'contain',
   },
   qrContainer: {
@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
     borderRadius: 15, // Opcional si quieres redondear el QR
   },
   qrText: {
+    top:60,
     marginTop: 10,
     fontSize: 18,
     color: '#4b3621',
