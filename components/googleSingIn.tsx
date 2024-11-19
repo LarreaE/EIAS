@@ -127,11 +127,6 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
             socketId: socket.id,
             fcmToken: token,
           });
-
-          
-
-          console.log('JWT TOKEN FROM EXPRESS');
-
           // If successful, update the state
           setSpinnerMessage('Connection established...');
           setUserData(response.data);
@@ -197,7 +192,6 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
           // **Check if email domain contains 'aeg' after '@'**
           const emailDomain = email?.split('@')[1];
           console.log('checking email');
-          
           if (emailDomain) {
             if (!emailDomain.includes('aeg')) {
               Alert.alert(
@@ -211,21 +205,16 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
               return;
             }
           }
-            
     console.log('SIGN IN WITH CREDENTIAL');
-    console.log(signInWithCredential);
+    console.log("Is the user new?:", signInWithCredential.additionalUserInfo.isNewUser ? "Yes" : "No");
+    console.log("User email:", signInWithCredential.additionalUserInfo.profile.email);
+    console.log("User name:", signInWithCredential.additionalUserInfo.profile.name);
     setSpinnerMessage('Verifying credentials...');
     //Get the token from the current User
     const idTokenResult = await auth().currentUser?.getIdTokenResult();
     //FCM token
     const token = await messaging().getToken();
-
-    console.log('USER JWT');
-    //console.log(idTokenResult);
-    console.log(email);
     console.log('socket: ' + socket.id);
-    console.log(token);
-
     await authenticate();
 
     } catch (error:any) {

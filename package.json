@@ -13,7 +13,10 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "install-and-run-android": "npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && npx react-native run-android"
+    "clean": "watchman watch-del-all && rm -rf node_modules && npm cache clean --force && rm -rf android/app/build && rm -rf ios/Pods && rm -rf ios/Podfile.lock",
+    "install-and-run-android": "npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && npx react-native run-android",
+    "build-android": "cd android && ./gradlew clean && cd .. && npx react-native run-android",
+    "deps": "npm ls --depth=0"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.24.0",

@@ -14,9 +14,6 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLogged }) => {
     socket.disconnect();
   };
 
-  useEffect(() => {
-    console.log('user:', user);
-  }, [user]);
 
   return (
     <View style={styles.container}>
