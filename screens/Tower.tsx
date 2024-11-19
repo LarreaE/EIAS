@@ -145,7 +145,7 @@ useEffect(() => {
         {userData.playerData.is_inside_tower ? (
           // inside the tower
           <ImageBackground
-          source={require('../assets/scroll.png')}
+          source={require('../assets/parchment.png')}
           style={styles.background}
           resizeMode="cover"
         >
@@ -156,37 +156,39 @@ useEffect(() => {
               <View style={styles.scrollContainer}>
               <MedievalText style={styles.text}>You have new ingredients</MedievalText>
               <ScrollView contentContainerStyle={styles.scrollContent}>
-                <MedievalText>Purified Ingredients:</MedievalText>
+                <MedievalText style={styles.text}>Purified Ingredients:</MedievalText>
                 {purifyIngredients.map((ingredient, index) => (
-                  <MedievalText key={index}>{ingredient.name}</MedievalText>
+                  <MedievalText style={styles.text} key={index}>{ingredient.name}</MedievalText>
                 ))}
               </ScrollView>
             </View>
             )}
+
             <TouchableOpacity style={styles.touchableContainer} onPress={decrypt}>
-              <Text style={styles.title}>Decypher Scroll</Text>
+              <ImageBackground
+              source={require('../assets/boton.png')}  // Path to the button image
+              style={styles.buttonImage}  // Styles for the image inside the button
+              resizeMode="contain"        // Adjust the image to fit inside the button
+              >
+                <Text style={styles.title}>Decypher Scroll</Text>
+              </ImageBackground>
+              
             </TouchableOpacity>
-            <MapButton
-              onPress={goToMap}
-              iconImage={require('../assets/map_icon.png')}
-            />
+            
           </View>
         </ImageBackground>
         ) : (
           // outside the tower
           <ImageBackground
-        source={require('../assets/tower.jpg')}  // Ruta de la imagen de fondo
+        source={require('../assets/tower_door.png')}  // Ruta de la imagen de fondo
         style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
         resizeMode="cover"
       >
-      <View style={styles.container}>
+      <View style={styles.container2}>
             <MedievalText style={styles.text}>TOWER</MedievalText>
             <MedievalText style={styles.text}>You may now activate the door</MedievalText>
-            <TouchableOpacity style={styles.touchableContainer} onPress={sendNotification}>
-              <Text>Send Automessage</Text>
-            </TouchableOpacity>
       </View>
-          <MapButton
+      <MapButton
               onPress={goToMap}
               iconImage={require('../assets/map_icon.png')}
             />
@@ -204,11 +206,32 @@ const styles = StyleSheet.create({
     padding: 20,
     opacity:0.8,
     width: width * 0.8,
-    height: height * 0.8,
+    height: height * 0.55,
+    backgroundColor: 'rgba(128, 128, 128, 0.7)',
+    borderRadius: 10,
+  },
+  container2: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    opacity:0.8,
+    width: width * 0.8,
+    height: height * 0.15,
+    backgroundColor: 'rgba(128, 128, 128, 0.7)',
+    borderRadius: 10,
+  },
+  buttonImage: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    width: width * 0.8,
+    height: height * 0.16,
+    marginTop: -60,
+    bottom:-25,
   },
   text: {
     fontSize: 24,
-    color: 'black',
+    color: 'white',
+    textAlign: 'center',
   },
   innerContainer: {
     flex: 1,
@@ -226,17 +249,9 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   touchableContainer: {
-    backgroundColor: '#2196F3',
     borderRadius: 10,
     padding: 10,
     marginTop: 10,
-  },
-  signOutButton: {
-    position: 'absolute',
-    top: 20,
-    backgroundColor: 'red',
-    padding: 10,
-    borderRadius: 5,
   },
   signOutText: {
     color: 'white',
