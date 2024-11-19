@@ -24,14 +24,14 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Centra los elementos horizontalmente
     padding: 10,
     margin: 10,
-    borderRadius: 30,
+    borderRadius: 100,
     width: width * 0.3,
     justifyContent: 'center', // Centra verticalmente si es necesario
   },
   image: {
     width: width * 0.2,
     height: height * 0.1,
-    borderRadius: 50, // Hace la imagen circular
+    borderRadius: 100, // Hace la imagen circular
     marginBottom: 10,
     borderWidth: 2,
     borderColor: 'grey', // Borde gris alrededor de la imagen
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     textAlign: 'center', // Centra el texto debajo de la imagen
-    borderRadius: 10, // Bordes redondeados
+    borderRadius: 100, // Bordes redondeados
     backgroundColor: 'white', // Fondo blanco para mejor visibilidad
     padding:3,
 }});
