@@ -62,7 +62,7 @@ export default class Potion implements Potions {
         //same effect
         if ( effectsArray.every(element => element.effect === effectsArray[0].effect)) {
             console.log('SAME EFFECT');
-            if (curse === null && effectsArray[0].effect === 'restore' || effectsArray[0].effect === 'damage') {
+            if (curse === null && (effectsArray[0].effect === 'restore' || effectsArray[0].effect === 'damage')) {
                 potion_name = 'Failed Potion';
                     console.log(potion_name);
                     type = 'Failed Potion';

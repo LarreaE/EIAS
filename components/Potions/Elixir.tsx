@@ -80,24 +80,28 @@ class Elixir implements Elixirs {
       let duration: number = 0;
 
     if ( effectArray.every(element => element.attribute === effectArray[0].attribute)) {
-        
+      
+      let durationArray: number[] = [];
+
         effectArray.forEach(effect => {
             switch (effect.potency) {
               case 'least':
-                duration += 1;
+                durationArray.push(1);
                 break;
               case 'lesser':
-                duration += 1;
+                durationArray.push(1);
                 break;
               case 'greater':
-                duration += 3;
+                durationArray.push(3);
                 break;
               default: // no potency or unknown
-                duration += 2;
+                durationArray.push(2);
                 break;
             }
           });
 
+          duration = media(durationArray)
+          duration = Math.floor(duration);
           console.log("DURATION OF ELIXIR: " + duration);
           return duration;
     }
