@@ -82,7 +82,7 @@ const HallOfSages: React.FC = () => {
 
     if (filteredUsers.length === 2) {
       return filteredUsers.map((user, index) => {
-        const offset = 60;
+        const offset = 120;
         const x = index === 0 ? -offset : offset;
 
         return (
