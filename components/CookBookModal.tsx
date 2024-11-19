@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { Modal, StyleSheet, Text, TouchableOpacity, View, ScrollView, ImageBackground, Dimensions } from "react-native";
+import { Modal, StyleSheet, TouchableOpacity, View, ScrollView, ImageBackground, Dimensions, Image } from "react-native";
 import { Curses } from "../interfaces/Curse";
+import MedievalText from "./MedievalText";
+
 
 interface Props {
     setVisible: React.Dispatch<React.SetStateAction<boolean>>,
@@ -14,7 +16,7 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
     const [selectedCurse, setSelectedCurse] = useState<number | null>(null);
 
     if (!curses || curses.length === 0) {
-        return <Text>Receiving Curses...</Text>;
+        return <MedievalText>Receiving Curses...</MedievalText>;
     }
 
     return (
@@ -33,42 +35,42 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
                     <ScrollView contentContainerStyle={styles.scrollViewContent}>
                         {selectedCurse === null ? (
                             <View style={styles.listContainer}>
-                                <Text style={styles.title}>Select a Curse</Text>
+                                <MedievalText style={styles.title}>Select a Curse</MedievalText>
                                 {curses.map((curse, index) => (
                                     <TouchableOpacity
                                         key={index}
                                         style={styles.curseButton}
                                         onPress={() => setSelectedCurse(index)}
                                     >
-                                        <Text style={styles.curseButtonText}>{curse.name}</Text>
+                                        <MedievalText style={styles.curseButtonMedievalText}>{curse.name}</MedievalText>
                                     </TouchableOpacity>
                                 ))}
                             </View>
                         ) : (
                             <View style={styles.contentContainer}>
-                                <Text style={styles.title}>{curses[selectedCurse].name}</Text>
-                                <Text style={styles.description}>{curses[selectedCurse].description}</Text>
+                                <MedievalText style={styles.title}>{curses[selectedCurse].name}</MedievalText>
+                                <MedievalText style={styles.description}>{curses[selectedCurse].description}</MedievalText>
 
                                 <View style={styles.tableContainer}>
                                     <View style={styles.tableRow}>
-                                        <Text style={styles.tableHeader}>How to Inflict</Text>
+                                        <MedievalText style={styles.tableHeader}>How to Inflict</MedievalText>
                                         {curses[selectedCurse].poison_effects.map((effect) => (
                                         <TouchableOpacity
                                             key={effect}
                                             style={styles.tableRow}
                                         >
-                                            <Text style={styles.tableData}>{effect}</Text>
+                                            <MedievalText style={styles.tableData}>{effect}</MedievalText>
                                         </TouchableOpacity>
                                         ))}
                                     </View>
                                     <View style={styles.tableRow}>
-                                        <Text style={styles.tableHeader}>How to Cure</Text>
+                                        <MedievalText style={styles.tableHeader}>How to Cure</MedievalText>
                                         {curses[selectedCurse].antidote_effects.map((effect) => (
                                         <TouchableOpacity
                                             key={effect}
                                             style={styles.tableRow}
                                         >
-                                            <Text style={styles.tableData}>{effect}</Text>
+                                            <MedievalText style={styles.tableData}>{effect}</MedievalText>
                                         </TouchableOpacity>
                                         ))}
                                     </View>
@@ -78,7 +80,7 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
                                     style={styles.backButton}
                                     onPress={() => setSelectedCurse(null)}
                                 >
-                                    <Text style={styles.buttonText}>Back to List</Text>
+                                    <MedievalText style={styles.buttonMedievalText}>Back to List</MedievalText>
                                 </TouchableOpacity>
                             </View>
                         )}
@@ -88,7 +90,16 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
                         setVisible(false);
                         setSelectedCurse(null);
                     }}>
-                        <Text style={styles.buttonText}>Close</Text>
+                       <View style={styles.buttonContent}>
+                            <Image
+                            source={require('../assets/boton.png')} // Ruta al archivo de imagen
+                            style={styles.buttonImage} // Estilo para la imagen del botón
+                            resizeMode="contain" // Ajusta cómo se muestra la imagen
+                            />
+                            <MedievalText fontSize={16} color="#ffffff" style={styles.buttonText}>
+                            Close
+                            </MedievalText>
+                        </View>
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
@@ -121,8 +132,8 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap', // Flexwrap for curses list
     },
     title: {
+        top:10,
         fontSize: 28,
-        fontWeight: 'bold',
         color: 'white',
         textAlign: 'center',
         justifyContent: 'center',
@@ -137,17 +148,16 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
     },
     curseButton: {
-        backgroundColor: '#FFD700',
+        backgroundColor: 'lightgrey',
         padding: 10,
         marginVertical: 5,
         borderRadius: 8,
         width: '90%',
         alignItems: 'center',
     },
-    curseButtonText: {
+    curseButtonMedievalText: {
         fontSize: 18,
         color: '#000',
-        fontWeight: 'bold',
     },
     contentContainer: {
         width: '100%',
@@ -168,9 +178,8 @@ const styles = StyleSheet.create({
     },
     tableHeader: {
         fontSize: 18,
-        fontWeight: 'bold',
         color: '#FFD700',
-        flexWrap: 'wrap', // Ensure long text in headers wraps
+        flexWrap: 'wrap', // Ensure long MedievalText in headers wraps
         width: '100%',
         textAlign: 'center',
     },
@@ -193,18 +202,31 @@ const styles = StyleSheet.create({
 
     },
     closeButton: {
-        backgroundColor: '#2196F3',
         borderRadius: 10,
         padding: 10,
         marginTop: 10,
-        width: '60%',
+        width: '100%',
+        height: '10%',
         alignItems: 'center',
     },
-    buttonText: {
+    buttonMedievalText: {
         color: 'white',
-        fontWeight: 'bold',
         fontSize: 16,
     },
+    buttonContent: {
+        width: '100%',
+        height: '250%',
+        bottom:'10%',
+      },
+      buttonImage: {
+        width: '100%',
+        height: '100%',
+        resizeMode:'cover',
+      },
+      buttonText: {
+        textAlign: 'center',
+        bottom:'60%',
+      },
 });
 
 export default CookBookModal;

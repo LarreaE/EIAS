@@ -257,7 +257,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             onPress={() => setCookBookModalVisible(true)}
           >
             <ImageBackground
-              source={require('../assets/info_icon.png')} // Reemplaza esta ruta con la ubicación de tu imagen
+              source={require('../assets/informacion.png')} // Reemplaza esta ruta con la ubicación de tu imagen
               style={styles.filterImage} // Aplica un estilo para ajustar el tamaño de la imagen
             />
           </TouchableOpacity>
@@ -474,8 +474,8 @@ const styles = StyleSheet.create({
   closeButton: {
     borderRadius: 10,
     padding: 10,
-    top: -40,
-    left:'20%',
+    top: -450,
+    left:'0%',
     width: '60%',
     height: '20%',
   },

@@ -325,7 +325,7 @@ const styles = StyleSheet.create({
     },
     effectOption: {
       top:10,
-      left:40,
+      left:70,
       flexDirection: 'row',
       alignItems: 'center',
       marginVertical: 5,
@@ -354,7 +354,8 @@ const styles = StyleSheet.create({
     },
     applyFiltersButton: {
       padding: 10,
-      alignItems: 'center',      
+      alignItems: 'center',
+      bottom:10,
     },
     applyFiltersText: {
       color: 'white',
