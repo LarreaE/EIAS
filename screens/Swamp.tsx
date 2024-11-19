@@ -400,9 +400,9 @@ const handleArtifactTake = (id: number) => {
                       }}
                     >
                       <Image
-                        source={artifactImages[index]}
+                        source={artifactImages[poi.id]}
                         style={styles.artifactImage}
-                        resizeMode="contain" // Asegúrate de que la imagen no se deforme
+                        resizeMode="contain"
                       />
                     </Marker>
 
