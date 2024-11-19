@@ -52,11 +52,6 @@ const MapScreen: React.FC = () => {
   useEffect(() => {
     animateBirds();
   }, []);
-
-  const goToHome = () => {
-    sendLocation('Home', userData.playerData.email);
-    navigation.navigate('HomeAcolyth');
-  };
   const goToTower = () => {
     sendLocation('Tower', userData.playerData.email);
     navigation.navigate('TowerAcolyth');
@@ -117,13 +112,6 @@ const MapScreen: React.FC = () => {
         iconImage={require('../assets/school_icon.png')}
       />
     </View>
-    <View style={[styles.buttonHome]}>
-      <MapButton
-        title="Home"
-        onPress={goToHome}
-        iconImage={require('../assets/home_icon.png')}
-      />
-    </View>
   </ImageBackground>
 </GestureHandlerRootView>
       );
@@ -156,13 +144,6 @@ const MapScreen: React.FC = () => {
                 title="Swamp"
                 onPress={goToSwamp}
                 iconImage={require('../assets/swamp_icon.png')}
-              />
-            </View>
-            <View style={styles.buttonHome}>
-              <MapButton
-                title="Home"
-                onPress={goToHome}
-                iconImage={require('../assets/home_icon.png')}
               />
             </View>
             {/* Animación de los pájaros */}
