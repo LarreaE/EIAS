@@ -55,10 +55,6 @@ function App() {
       const fullMessage = `${title}: ${message}`;
 
       ToastAndroid.show(fullMessage, ToastAndroid.LONG);
-
-      if (screen) {
-        navigateToScreen(screen);
-      }
     });
   };
 
@@ -266,7 +262,7 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
             <Stack.Screen name="LaboratoryMortimer" component={MortimerLaboratoryScreen} options={{ headerShown: false }} />
             <Stack.Screen name="TowerMortimer" component={MortimerTower} options={{ headerShown: false }} />
             <Stack.Screen name="Swamp" component={Swamp} options={{ headerShown: false }} />
-            <Stack.Screen name="OldSchool" component={SchoolScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="School" component={SchoolScreen} options={{ headerShown: false }} />
             <Stack.Screen name="HallOfSages" component={HallOfSages} options={{ headerShown: false }} />
           </Stack.Navigator>
         </NavigationContainer>
@@ -320,7 +316,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 150,
-    position: 'absolute',
+    position: 'relative',
     bottom: 0,           // Posicionado en la parte inferior
     width: '100%',       // Ancho completo para el botón
   },
