@@ -25,8 +25,11 @@ export interface UserContextType {
   setCurrentScreen: React.Dispatch<React.SetStateAction<string>>;
   player: Player | null;
   setPlayer: React.Dispatch<React.SetStateAction<Player | null>>;
+  artifacts: any | null;
+  setArtifacts: React.Dispatch<React.SetStateAction<any | null>>;
   otherAcolytes: Locations[];
   setOtherAcolytes: React.Dispatch<React.SetStateAction<Locations[]>>
+
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -42,6 +45,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [parchment, setParchment] = useState(false);
   const [purifyIngredients, setPurifyIngredients] = useState<Ingredients[]>([]);
   const [player, setPlayer] = useState<Player | null>(null);
+  const [artifacts, setArtifacts] = useState<Player | null>(null);
   const [otherAcolytes, setOtherAcolytes] = useState<Locations[]>([]);
 
 
@@ -58,6 +62,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
       currentScreen, setCurrentScreen,
       player, setPlayer,
       otherAcolytes, setOtherAcolytes,
+      artifacts,setArtifacts,
     }}>
       {children}
     </UserContext.Provider>
