@@ -1,8 +1,8 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useState, useEffect, useContext } from 'react';
-import { SafeAreaView, StyleSheet, Image, Modal, TouchableOpacity, Text, View, ImageBackground, Alert, ToastAndroid } from 'react-native';
+import { SafeAreaView, StyleSheet, Image, View, ToastAndroid } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
-import { NavigationContainer, ParamListBase, RouteProp } from '@react-navigation/native';
+import { NavigationContainer, ParamListBase, RouteProp, useNavigationContainerRef } from '@react-navigation/native';
 import { createMaterialTopTabNavigator, MaterialTopTabNavigationOptions } from '@react-navigation/material-top-tabs';
 import GoogleSignInComponent from './components/googleSingIn';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
@@ -12,6 +12,7 @@ import ProfileScreen from './components/ProfileScreen';
 import AcolythHomeScreen from './components/acolythHomeScreen';
 import AcolythLaboratoryScreen from './components/acolythLaboratoryScreen';
 import MortimerLaboratoryScreen from './components/mortimerLaboratoryScreen ';
+import MortimerTower from './components/mortimerTower';
 import HomeVillain from './components/HomeVillain';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { listenToServerEvents, clearServerEvents } from './sockets/listenEvents';
@@ -27,7 +28,6 @@ import Tower from './screens/Tower';
 import messaging from '@react-native-firebase/messaging';
 import { checkAndRequestNotificationPermission } from './components/notificationPermissions';
 import { saveBoolean, getBoolean } from './helper/AsyncStorage';
-import MortimerTower from './components/mortimerTower';
 import Swamp from './screens/Swamp';
 import SchoolScreen from './screens/OldSchool';
 import HallOfSages from './screens/HallOfSages';
@@ -35,6 +35,8 @@ import HallOfSages from './screens/HallOfSages';
 const Tab = createMaterialTopTabNavigator();
 
 function App() {
+  const navigationRef = useNavigationContainerRef(); // Referencia para navegación global
+
   useEffect(() => {
     checkAndRequestNotificationPermission();
   }, []);
@@ -42,59 +44,84 @@ function App() {
   useEffect(() => {
     onMessageReceived();
   }, []);
+
   const onMessageReceived = () => {
     messaging().onMessage(async remoteMessage => {
       console.log('Notificación recibida en primer plano:', remoteMessage);
+
       const title = remoteMessage.notification?.title || '';
       const message = remoteMessage.notification?.body || '';
-      // Concatenamos el título y el mensaje en un solo string
+      const screen = remoteMessage.data?.screen || '';
       const fullMessage = `${title}: ${message}`;
+
       ToastAndroid.show(fullMessage, ToastAndroid.LONG);
+
+      if (screen) {
+        navigateToScreen(screen);
+      }
     });
   };
 
+  const navigateToScreen = (screen: string) => {
+    switch (screen) {
+      case 'TowerAcolyth':
+        navigationRef.current?.navigate('TowerAcolyth');
+        break;
+      case 'LaboratoryAcolyth':
+        navigationRef.current?.navigate('LaboratoryAcolyth');
+        break;
+      case 'TowerMortimer':
+        navigationRef.current?.navigate('TowerMortimer');
+        break;
+      case 'LaboratoryMortimer':
+        navigationRef.current?.navigate('LaboratoryMortimer');
+        break;
+      case 'Map':
+        navigationRef.current?.navigate('MainTabs', { screen: 'Map' });
+        break;
+      case 'HallOfSages':
+        navigationRef.current?.navigate('HallOfSages');
+        break;
+      default:
+        console.warn('Pantalla no definida o inválida:', screen);
+        break;
+    }
+  };
+
+  useEffect(() => {
+    messaging().setBackgroundMessageHandler(async remoteMessage => {
+      console.log('Notification handled in the background:', remoteMessage);
+
+      const screen = remoteMessage.data?.screen || 'DefaultScreen';
+      console.log(`Screen a redirigir en background: ${screen}`);
+
+      if (screen) {
+        navigateToScreen(screen);
+      }
+    });
+  }, []);
+
   return (
     <UserProvider>
-      <AppContent/>
+      <AppContent navigationRef={navigationRef} />
     </UserProvider>
   );
 }
 
-function AppContent () {
-
+function AppContent({ navigationRef }: { navigationRef: any }) {
   const [isLoged, setIsLoged] = useState<boolean>(false);
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const context = useContext(UserContext) as UserContextType;
-
-  const { userData, setUserData ,setParchment, setCurrentScreen, currentScreen , player} = context; // Usamos useContext para UserData;
-
-  useEffect(() => {
-      // Set background message handler
-    messaging().setBackgroundMessageHandler(async remoteMessage => {
-      console.log('Notification handled in the background:', remoteMessage);
-    });
-  });
+  const { userData, setUserData, setParchment, setCurrentScreen, currentScreen, player } = context;
 
   useEffect(() => {
     const getParchment = async () => {
       setParchment(await getBoolean('parchment'));
       console.log('Parchment set');
-
     };
 
     getParchment();
   }, []);
-  useEffect(() => {
-    console.log(currentScreen);
-  }, [currentScreen]);
-  useEffect(() => {
-    console.log('CURRENT SCREEN:',currentScreen);
-    if (currentScreen === 'LaboratoryAcolyth') {
-      userData.playerData.location = 'laboratory';
-    } else if (currentScreen === 'TowerAcolyth'){
-      userData.playerData.location = 'tower';
-    }
-  }, [currentScreen]);
+
   useEffect(() => {
     socket.on('request_email', () => {
       console.log('El servidor ha solicitado el correo electrónico');
@@ -128,10 +155,6 @@ function AppContent () {
     };
   }, []);
 
-  const handleQRCodeScanned = () => {
-    setIsModalVisible(false); // Cerrar el modal después de escanear
-  };
-
   if (!isLoged) {
     socket.connect();
     return <GoogleSignInComponent setIsLoged={setIsLoged} />;
@@ -140,7 +163,6 @@ function AppContent () {
   interface ScreenOptionsProps {
     route: RouteProp<ParamListBase, string>;
   }
-  
 
   const screenOptions = ({ route }: ScreenOptionsProps): MaterialTopTabNavigationOptions => ({
     tabBarStyle: {
@@ -183,7 +205,7 @@ function AppContent () {
             >
               {props => <ProfileScreen {...props} user={userData} setIsLogged={setIsLoged} />}
             </Tab.Screen>
-            
+
             <Tab.Screen
               name="Info"
               options={{
@@ -221,15 +243,15 @@ function AppContent () {
     <SafeAreaView style={styles.container}>
       <GestureHandlerRootView style={styles.container}>
         <NavigationContainer
-        onStateChange={(state) => {
-          if (state) {
-            // Get the current route's name
-            const currentRoute = state.routes[state.index];
-            setCurrentScreen(currentRoute.name);
-          }
-        }}>
+          ref={navigationRef}
+          onStateChange={(state) => {
+            if (state) {
+              const currentRoute = state.routes[state.index];
+              setCurrentScreen(currentRoute.name);
+            }
+          }}
+        >
           <Stack.Navigator>
-            {/* Aquí se incluyen las tabs como parte de una pantalla del stack */}
             <Stack.Screen name="MainTabs" options={{ headerShown: false }}>
               {() => (
                 <Tab.Navigator initialRouteName="Settings" screenOptions={screenOptions}>
@@ -237,52 +259,15 @@ function AppContent () {
                 </Tab.Navigator>
               )}
             </Stack.Screen>
-
-            {/* Agrega la pantalla LaboratoryAcolyth fuera del Tab.Navigator */}
-            <Stack.Screen
-              name="LaboratoryAcolyth"
-              options={{ headerShown: false }}
-            >
+            <Stack.Screen name="LaboratoryAcolyth" options={{ headerShown: false }}>
               {props => <AcolythLaboratoryScreen {...props} UserData={userData} />}
             </Stack.Screen>
-            <Stack.Screen
-              name="TowerAcolyth"
-              component={Tower}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="LaboratoryMortimer"
-              component={MortimerLaboratoryScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="TowerMortimer"
-              component={MortimerTower}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Swamp"
-              component={Swamp}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="School"
-              component={SchoolScreen}
-              options={{ headerShown: false }}
-            
-            >
-            </Stack.Screen>
-            <Stack.Screen
-              name="HallOfSages"
-              component={HallOfSages}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="QRScanner"
-              options={{ headerShown: false }}
-            >
-              {props => <QRScanner {...props} onQRCodeScanned={handleQRCodeScanned}/>}
-            </Stack.Screen>
+            <Stack.Screen name="TowerAcolyth" component={Tower} options={{ headerShown: false }} />
+            <Stack.Screen name="LaboratoryMortimer" component={MortimerLaboratoryScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="TowerMortimer" component={MortimerTower} options={{ headerShown: false }} />
+            <Stack.Screen name="Swamp" component={Swamp} options={{ headerShown: false }} />
+            <Stack.Screen name="OldSchool" component={SchoolScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="HallOfSages" component={HallOfSages} options={{ headerShown: false }} />
           </Stack.Navigator>
         </NavigationContainer>
       </GestureHandlerRootView>

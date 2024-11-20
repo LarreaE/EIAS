@@ -40,7 +40,7 @@ const StatsScreen: React.FC<Props> = ({ user }) => {
         player.equipment.boot?.modifiers.constitution! +
         player.equipment.ring?.modifiers.constitution!;
       const dexterity =
-        player.attributes?.constitution +
+        player.attributes?.dexterity +
         player.equipment.helmet?.modifiers.dexterity! +
         player.equipment.weapon.modifiers.dexterity +
         player.equipment.armor.modifiers.dexterity +
@@ -49,7 +49,7 @@ const StatsScreen: React.FC<Props> = ({ user }) => {
         player.equipment.boot?.modifiers.dexterity! +
         player.equipment.ring?.modifiers.dexterity!;
       const insanity =
-        player.attributes?.constitution +
+        player.attributes?.insanity +
         player.equipment.helmet?.modifiers.insanity! +
         player.equipment.weapon.modifiers.insanity +
         player.equipment.armor.modifiers.insanity +
@@ -58,7 +58,7 @@ const StatsScreen: React.FC<Props> = ({ user }) => {
         player.equipment.boot?.modifiers.insanity! +
         player.equipment.ring?.modifiers.insanity!;
       const intelligence =
-        player.attributes?.constitution +
+        player.attributes?.intelligence +
         player.equipment.helmet?.modifiers.intelligence! +
         player.equipment.weapon.modifiers.intelligence +
         player.equipment.armor.modifiers.intelligence +
@@ -67,7 +67,7 @@ const StatsScreen: React.FC<Props> = ({ user }) => {
         player.equipment.boot?.modifiers.intelligence! +
         player.equipment.ring?.modifiers.intelligence!;
       const strength =
-        player.attributes?.constitution +
+        player.attributes?.strength +
         player.equipment.helmet?.modifiers.strength! +
         player.equipment.weapon.modifiers.strength +
         player.equipment.armor.modifiers.strength +
