@@ -11,6 +11,7 @@ import { sendLocation } from '../sockets/emitEvents.tsx';
 import { useState } from 'react';
 import { listenToServerEvents } from '../sockets/listenEvents.tsx';
 import socket from '../sockets/socketConnection.tsx';
+import AnimatedCircles from '../components/Animations/AnimatedCircles.tsx';
 
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'HallOfSages'>;
 const { width, height } = Dimensions.get('window');
@@ -27,6 +28,15 @@ const HallOfSages: React.FC = () => {
   const context = useContext(UserContext) as UserContextType;
   const { userData,artifacts } = context;
   const [usersInHall, setUsersInHall] = useState<User[]>([]);
+
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const handleStartAnimation = () => {
+    setIsAnimating(true);
+    setTimeout(() => {
+      setIsAnimating(false); // Detener la animación después de un tiempo
+    }, 10000); // Duración de la animación en milisegundos
+  };
 
   if (!userData || !userData.playerData || !userData.playerData.avatar || !userData.playerData.nickname) {
     return <Text>Cargando...</Text>;
@@ -66,6 +76,7 @@ const HallOfSages: React.FC = () => {
 
   const giveArtifactsToMortimer = () => {
     console.log('Artifacts given to Mortimer:', artifacts);
+    handleStartAnimation();
     // Lógica para enviar los artefactos
   };
   const filteredUsers = currentUser.role === 'ACOLYTE'
@@ -162,7 +173,7 @@ const HallOfSages: React.FC = () => {
       </View>
       <View style={styles.circleContainer}>{renderUsersInCircle()}</View> 
             {/* Botón para dar artefactos a Mortimer */}
-            {artifacts.length === 4 && filteredUsers.length >= 1 && userData.playerData.role === 'ACOLYTE' && (
+            {artifacts.length === 0 && filteredUsers.length >= 1 && userData.playerData.role === 'ACOLYTE' && (
         <TouchableOpacity onPress={giveArtifactsToMortimer} style={styles.artifactsButton}>
           <MedievalText style={styles.buttonText}>Give Artifacts to Mortimer</MedievalText>
         </TouchableOpacity>
@@ -171,6 +182,7 @@ const HallOfSages: React.FC = () => {
         onPress={goToMap}
         iconImage={require('../assets/school_icon.png')}
       />
+       {isAnimating && <AnimatedCircles />}
     </ImageBackground>
   );
 };
