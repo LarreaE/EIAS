@@ -27,6 +27,9 @@ export interface UserContextType {
   setPlayer: React.Dispatch<React.SetStateAction<Player | null>>;
   otherAcolytes: Locations[];
   setOtherAcolytes: React.Dispatch<React.SetStateAction<Locations[]>>
+  isHallInNeedOfMortimer: boolean;
+  setIsHallInNeedOfMortimer: React.Dispatch<React.SetStateAction<boolean>>;
+
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -43,7 +46,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [purifyIngredients, setPurifyIngredients] = useState<Ingredients[]>([]);
   const [player, setPlayer] = useState<Player | null>(null);
   const [otherAcolytes, setOtherAcolytes] = useState<Locations[]>([]);
-
+  const [isHallInNeedOfMortimer, setIsHallInNeedOfMortimer] = useState(false);
 
   return (
     <UserContext.Provider value={{
@@ -58,6 +61,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
       currentScreen, setCurrentScreen,
       player, setPlayer,
       otherAcolytes, setOtherAcolytes,
+      isHallInNeedOfMortimer,setIsHallInNeedOfMortimer,
     }}>
       {children}
     </UserContext.Provider>
