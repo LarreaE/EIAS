@@ -20,7 +20,7 @@ const SchoolScreen: React.FC = () => {
 
   const context = useContext(UserContext) as UserContextType;
 
-  const { isInsideLab, userData } = context;
+  const { isInsideLab, userData, isHallInNeedOfMortimer } = context;
 
   const goToLaboratory = () => {
     sendLocation('Laboratory', userData.playerData.email);
@@ -64,6 +64,7 @@ const SchoolScreen: React.FC = () => {
                 title="HallOfSages"
                 onPress={goToHallOfSages}
                 iconImage={require('../assets/obituary_icon.png')}
+                isGlowing={isHallInNeedOfMortimer}
               />
             </View>
 
