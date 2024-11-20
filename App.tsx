@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useState, useEffect, useContext } from 'react';
-import { SafeAreaView, StyleSheet, Image, Modal, TouchableOpacity, Text, View, ImageBackground, Alert, ToastAndroid } from 'react-native';
+import { SafeAreaView, StyleSheet, Image, Modal, TouchableOpacity, Text, View, ImageBackground, Alert, ToastAndroid, Animated, Dimensions } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer, ParamListBase, RouteProp } from '@react-navigation/native';
 import { createMaterialTopTabNavigator, MaterialTopTabNavigationOptions } from '@react-navigation/material-top-tabs';
@@ -33,25 +33,12 @@ import SchoolScreen from './screens/OldSchool';
 import HallOfSages from './screens/HallOfSages';
 
 const Tab = createMaterialTopTabNavigator();
+const { width, height } = Dimensions.get('window');
 
-function App() {
+function App() {  
   useEffect(() => {
     checkAndRequestNotificationPermission();
   }, []);
-
-  useEffect(() => {
-    onMessageReceived();
-  }, []);
-  const onMessageReceived = () => {
-    messaging().onMessage(async remoteMessage => {
-      console.log('Notificación recibida en primer plano:', remoteMessage);
-      const title = remoteMessage.notification?.title || '';
-      const message = remoteMessage.notification?.body || '';
-      // Concatenamos el título y el mensaje en un solo string
-      const fullMessage = `${title}: ${message}`;
-      ToastAndroid.show(fullMessage, ToastAndroid.LONG);
-    });
-  };
 
   return (
     <UserProvider>
@@ -66,7 +53,24 @@ function AppContent () {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const context = useContext(UserContext) as UserContextType;
 
-  const { userData, setUserData ,setParchment, setCurrentScreen, currentScreen , player} = context; // Usamos useContext para UserData;
+  const { userData, setUserData ,setParchment, setCurrentScreen, currentScreen , player, setIsHallInNeedOfMortimer, isHallInNeedOfMortimer} = context; // Usamos useContext para UserData;
+  
+  useEffect(() => {
+    onMessageReceived();
+  }, []);
+  const onMessageReceived = () => {
+    messaging().onMessage(async remoteMessage => {
+      console.log('Notificación recibida en primer plano:', remoteMessage);
+      const title = remoteMessage.notification?.title || '';
+      const message = remoteMessage.notification?.body || '';
+      // Concatenamos el título y el mensaje en un solo string
+      const fullMessage = `${title}: ${message}`;
+      ToastAndroid.show(fullMessage, ToastAndroid.LONG);
+      if (remoteMessage?.data?.screen) {
+        setIsHallInNeedOfMortimer(true);
+      }
+    });
+  };
 
   useEffect(() => {
       // Set background message handler
@@ -204,8 +208,17 @@ function AppContent () {
               options={{
                 tabBarLabel: '',
                 tabBarIcon: ({ focused }) => (
-                  <View style={focused ? styles.activeTabBackground : null}>
-                    <Image source={require('./assets/map_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                  <View style={[styles.iconContainer]}>
+                    {isHallInNeedOfMortimer && (
+                      <Animated.Image
+                        source={require('./assets/animations/bg1.gif')}
+                        style={styles.gifStyle}
+                      />
+                    )}
+                    <Image
+                      source={require('./assets/map_icon.png')}
+                      style={focused ? [styles.icon, styles.activeIcon] : styles.icon}
+                    />
                   </View>
                 ),
               }}
@@ -294,17 +307,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  iconContainer: {
+    position: 'relative', // Ensures proper positioning of children
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   icon: {
-    marginBottom: 0,
     width: 66,
     height: 66,
-    right: 20,
   },
   activeIcon: {
-    width: 76, // Más grande cuando está activo
+    width: 76,
     height: 76,
-    left:0,
   },
+  gifStyle: {
+    position: 'absolute', // Places it relative to the parent
+    zIndex: -1, // Ensures it goes behind the icon
+    width: 200, // Adjust as needed to fit correctly
+    height: 200, // Adjust as needed to fit correctly
+  },
+  
   activeTabBackground: {
     backgroundColor: 'rgba(205, 133, 63, 0.5)', // Marrón claro semitransparente
     borderRadius: 20,
