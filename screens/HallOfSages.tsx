@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { View, StyleSheet, ImageBackground, Text, Dimensions } from 'react-native';
+import { View, StyleSheet, ImageBackground, Text, Dimensions, TouchableOpacity } from 'react-native';
 import AcolythCardInHall from '../components/acolyteCardHall.tsx';
 import MedievalText from '../components/MedievalText.tsx';
 import MapButton from '../components/MapButton.tsx';
@@ -25,7 +25,7 @@ interface User {
 const HallOfSages: React.FC = () => {
   const navigation = useNavigation<MapScreenNavigationProp>();
   const context = useContext(UserContext) as UserContextType;
-  const { userData } = context;
+  const { userData,artifacts } = context;
   const [usersInHall, setUsersInHall] = useState<User[]>([]);
 
   if (!userData || !userData.playerData || !userData.playerData.avatar || !userData.playerData.nickname) {
@@ -73,16 +73,24 @@ const HallOfSages: React.FC = () => {
       console.log('Datos recibidos en send_users_in_hall:', users);
       setUsersInHall(users);
     };
-  
+
     socket.on('send_users_in_hall', handleUsersInHall);
-  }, []);
-  
+    console.log('arifacts:');
+    
+    console.log(artifacts);
+    
+    }, []);
+
+  const giveArtifactsToMortimer = () => {
+    console.log('Artifacts given to Mortimer:', artifacts);
+    // Lógica para enviar los artefactos
+  };
   const filteredUsers = currentUser.role === 'ACOLYTE'
     ? usersInHall.filter(user => user.role !== 'VILLAIN')
     : usersInHall;
 
   const renderUsersInCircle = () => {
-    const centerX = 200; 
+    const centerX = 200;
     const centerY = 200;
     const radius = 120;
 
@@ -170,6 +178,12 @@ const HallOfSages: React.FC = () => {
         <MedievalText style={styles.title}>Hall of Sages</MedievalText>
       </View>
       <View style={styles.circleContainer}>{renderUsersInCircle()}</View> 
+            {/* Botón para dar artefactos a Mortimer */}
+            {artifacts.length === 4 && filteredUsers.length >= 1 && userData.playerData.role === 'ACOLYTE' && (
+        <TouchableOpacity onPress={giveArtifactsToMortimer} style={styles.artifactsButton}>
+          <MedievalText style={styles.buttonText}>Give Artifacts to Mortimer</MedievalText>
+        </TouchableOpacity>
+      )}
       <MapButton
         onPress={goToMap}
         iconImage={require('../assets/school_icon.png')}
@@ -213,6 +227,19 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     position: 'absolute',
+  },
+  artifactsButton: {
+    backgroundColor: 'lightgrey',
+    padding: 10,
+    borderRadius: 10,
+    position: 'absolute',
+    bottom: '22%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    color: '#000',
+    fontSize: 16,
   },
 });
 
