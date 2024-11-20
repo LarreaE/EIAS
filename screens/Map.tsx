@@ -15,7 +15,7 @@ type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
 const MapScreen: React.FC = () => {
   const navigation = useNavigation<MapScreenNavigationProp>();
   const context = useContext(UserContext) as UserContextType;
-  const { userData } = context;
+  const { userData, isHallInNeedOfMortimer } = context;
 
   // Animación de los pájaros
   const birdPosition = useRef(new Animated.Value(width + 50)).current; // Inicia fuera de la pantalla por la derecha
@@ -106,6 +106,12 @@ const MapScreen: React.FC = () => {
       />
     </View>
     <View style={[styles.buttonSchool]}>
+        {isHallInNeedOfMortimer && (
+          <Animated.Image
+            source={require('../assets/animations/bg1.gif')}
+            style={styles.gifStyleButton}
+          />
+        )}
       <MapButton
         title="School"
         onPress={goToSchool}
@@ -179,6 +185,16 @@ const styles = StyleSheet.create({
     height: height * 0.08,
     zIndex: 0,
   },
+  icon: {
+    width: 66,
+    height: 66,
+  },
+  gifStyleButton: {
+    position: 'absolute', // Places it relative to the parent
+    zIndex: -1, // Ensures it goes behind the icon
+    width: 200, // Adjust as needed to fit correctly
+    height: 200, // Adjust as needed to fit correctly
+  },
   buttonTower: {
     position: 'absolute',
     bottom: height * 0.5,
@@ -199,6 +215,8 @@ const styles = StyleSheet.create({
     right: width * 0.12,
     alignSelf: 'center',
     zIndex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonHome: {
     position: 'absolute',
