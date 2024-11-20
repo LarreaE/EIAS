@@ -9,8 +9,8 @@ import { sendIsInHall } from '../sockets/emitEvents.tsx';
 import { UserContext, UserContextType } from '../context/UserContext.tsx';
 import { sendLocation } from '../sockets/emitEvents.tsx';
 import { useState } from 'react';
-import { listenToServerEvents } from '../sockets/listenEvents.tsx';
 import socket from '../sockets/socketConnection.tsx';
+import Config from 'react-native-config';
 
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'HallOfSages'>;
 const { width, height } = Dimensions.get('window');
@@ -47,6 +47,23 @@ const HallOfSages: React.FC = () => {
     socket.off('send_users_in_hall');
   };
 
+  const sendHallNotificationToMortimer = async () => {
+    console.log('Sending obituario notification to Mortimer');
+  
+    try {
+      const response = await fetch(`${Config.RENDER}/api/notifications/send-notification-obituario`);
+      
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const data = await response.json();
+      console.log('Server response:', data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+  
   useEffect(() => {
     sendIsInHall(currentUser.email, true);
   }, []);
