@@ -51,7 +51,7 @@ const MortimerLaboratoryScreen: React.FC = () => {
     // Petición a la base de datos para obtener los usuarios iniciales
     const addUsers = async () => {
       try {
-        const response = await fetch(`${Config.LOCAL_HOST}/api/players/mortimer`);
+        const response = await fetch(`${Config.RENDER}/api/players/mortimer`);
         const data: User[] = await response.json();
         setUsers(data);
       } catch (error) {

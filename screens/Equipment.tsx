@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     },
     text: {
       color: 'white',
-      fontWeight: 'bold',
+      
     },
     equipmentContainer: {
       flexDirection: 'row',

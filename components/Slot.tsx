@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     },
     modalButton: {
       color: 'black',
-      fontWeight: 'bold',
+      
       fontSize: 32,
     },
     modalView: {

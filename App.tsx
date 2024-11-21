@@ -1,3 +1,4 @@
+
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useState, useEffect, useContext } from 'react';
 import { SafeAreaView, StyleSheet, Image, Modal, TouchableOpacity, Text, View, ImageBackground, Alert, ToastAndroid, Animated, Dimensions } from 'react-native';
@@ -31,6 +32,7 @@ import { saveBoolean, getBoolean } from './helper/AsyncStorage';
 import Swamp from './screens/Swamp';
 import SchoolScreen from './screens/OldSchool';
 import HallOfSages from './screens/HallOfSages';
+import ObituaryDoor from './screens/ObituaryDoor';
 
 const Tab = createMaterialTopTabNavigator();
 const { width, height } = Dimensions.get('window');
@@ -168,22 +170,12 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
   }
 
   const screenOptions = ({ route }: ScreenOptionsProps): MaterialTopTabNavigationOptions => ({
-    tabBarStyle: {
-      backgroundColor: 'transparent',
-      borderTopWidth: 0,
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      bottom: 0,
-      paddingBottom: 0,
-      height: 80,
-      elevation: 0,
-    },
-    tabBarIndicatorStyle: {
-      height: 0,
-    },
+    tabBarStyle: styles.tabBar,
+    tabBarIndicatorStyle: styles.tabBarIndicator,
     swipeEnabled: route.name !== 'LaboratoryAcolyth',
     tabBarScrollEnabled: false,
+    tabBarActiveTintColor: '#ffffff',
+    tabBarInactiveTintColor: '#999999',
   });
 
   const renderTabs = () => {
@@ -200,7 +192,7 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
               options={{
                 tabBarLabel: '',
                 tabBarIcon: ({ focused }) => (
-                  <View style={focused ? styles.activeTabBackground : null}>
+                  <View style={focused ? styles.activeTabBackground : styles.iconContainer}>
                     <Image source={require('./assets/setings_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
                   </View>
                 ),
@@ -214,7 +206,7 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
               options={{
                 tabBarLabel: '',
                 tabBarIcon: ({ focused }) => (
-                  <View style={focused ? styles.activeTabBackground : null}>
+                  <View style={focused ? styles.activeTabBackground : styles.iconContainer}>
                     <Image source={require('./assets/profile_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
                   </View>
                 ),
@@ -280,6 +272,7 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
             <Stack.Screen name="Swamp" component={Swamp} options={{ headerShown: false }} />
             <Stack.Screen name="School" component={SchoolScreen} options={{ headerShown: false }} />
             <Stack.Screen name="HallOfSages" component={HallOfSages} options={{ headerShown: false }} />
+            <Stack.Screen name="ObituaryDoor" component={ObituaryDoor} options={{ headerShown: false }} />
           </Stack.Navigator>
         </NavigationContainer>
       </GestureHandlerRootView>
@@ -335,7 +328,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontWeight: 'bold',
   },
   modalButton: {
     justifyContent: 'center',
@@ -354,6 +346,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  tabBar: {
+    backgroundColor: 'transparent',
+    borderTopWidth: 0,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingBottom: 0,
+    height: 80,
+    elevation: 0,
+    justifyContent: 'center',
+    alignContent: 'center',
+    overflow: 'hidden',
+  },
+  tabBarIndicator: {
+    height: 0
+  },
+  tabBarLabel: {
+    fontSize: 14, // Font size for the labels
+     // Bold text
+    textTransform: 'capitalize', // Capitalize first letter
   },
 });
 

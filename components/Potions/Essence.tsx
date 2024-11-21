@@ -48,7 +48,7 @@ class Essence {
                 healValue = healValue * 1.2; // +20%
               } else if (effectArray.every(element => element.potency === effectArray[0].potency && effectArray.length === 3)) {
                 healValue = healValue * 1.4; // +40%
-              } else if (effectArray.every(element => element.potency === effectArray[0].potency && effectArray.length === 2)) {
+              } else if (effectArray.every(element => element.potency === effectArray[0].potency && effectArray.length === 4)) {
                 healValue = healValue * 1.8; // +80%
               }
               healValue = Math.ceil(healValue);
