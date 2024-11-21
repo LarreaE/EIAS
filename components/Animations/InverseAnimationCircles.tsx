@@ -6,55 +6,46 @@ import Animated, {
   withTiming,
   withDelay,
   Easing,
+  withSequence,
 } from 'react-native-reanimated';
 
 // Obtener dimensiones de la pantalla
 const { width, height } = Dimensions.get('window');
 
-const AnimatedCircles: React.FC = () => {
+const InverseAnimatedCircles: React.FC = () => {
   const angle = useSharedValue(0); // Ángulo inicial
+  const flashOpacity = useSharedValue(1); // Opacidad del pantallazo blanco (inicia en 1)
+  const imageOpacity = useSharedValue(1); // Opacidad de la imagen central (inicia en 1)
   const opacities = [
-    useSharedValue(0),
-    useSharedValue(0),
-    useSharedValue(0),
-    useSharedValue(0),
-  ]; // Opacidad de cada imagen
-  const imageOpacity = useSharedValue(0); // Opacidad de la imagen central
-  const flashOpacity = useSharedValue(0); // Opacidad del pantallazo blanco
+    useSharedValue(1),
+    useSharedValue(1),
+    useSharedValue(1),
+    useSharedValue(1),
+  ]; // Opacidad de cada imagen (inician visibles)
 
   const radius = Math.min(width, height) / 4;
 
   useEffect(() => {
-    // Aparición de las imágenes una por una
-    opacities.forEach((opacity, index) => {
-      opacity.value = withDelay(
-        index * 1000, // Retardo para cada imagen
-        withTiming(1, { duration: 500, easing: Easing.out(Easing.exp) }) // Animación de aparición
-      );
-    });
+    // Ocultar el pantallazo blanco al inicio
+    flashOpacity.value = withTiming(0, { duration: 300, easing: Easing.linear });
 
-    // Mostrar la imagen central después de 5 segundos
-    imageOpacity.value = withDelay(
-      5000, // Retardo de 5 segundos
-      withTiming(1, { duration: 500, easing: Easing.out(Easing.exp) })
+    // Iniciar rotación rápida y desacelerar
+    angle.value = withTiming(
+      360 * 75, // Rotar 5 vueltas completas
+      {
+        duration: 5000, // Duración total de la rotación rápida
+        easing: Easing.out(Easing.quad), // Desacelerar gradualmente
+      }
     );
 
-      // Comenzar la rotación después de que todos hayan aparecido
-      const totalAppearTime = opacities.length * 1000 + 500;
-      setTimeout(() => {
-        // Animar el ángulo para simular la rotación y aceleración
-        angle.value = withTiming(
-          360 * 85, // Rotar 5 vueltas completas
-          {
-            duration: 10000, // Duración total de la animación
-            easing: Easing.in(Easing.quad), // Acelerar gradualmente
-          });
+    // Desaparecer la imagen central antes de que termine la rotación
+    imageOpacity.value = withDelay(
+      4000, // Desaparece después de 1.5 segundos
+      withTiming(0, { duration: 500, easing: Easing.out(Easing.exp) })
+    );
 
-      // Mostrar el pantallazo blanco al final
-      setTimeout(() => {
-        flashOpacity.value = withTiming(1, { duration: 300, easing: Easing.linear });
-      }, 5000);
-    }, totalAppearTime);
+    // Opcional: Puedes hacer que los círculos también desaparezcan al final
+    // Aquí mantenemos los círculos visibles
   }, []);
 
   const animatedImageStyle = (initialAngle: number, opacityIndex: number) =>
@@ -164,4 +155,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AnimatedCircles;
+export default InverseAnimatedCircles;
