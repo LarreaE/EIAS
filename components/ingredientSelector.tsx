@@ -20,6 +20,7 @@ import createPotionButton from '../assets/boton.png';
 import SelectedIngredientsDisplay from './selectedIngredientsDisplay';
 import MedievalText from './MedievalText'; // Importación del componente MedievalText
 import Ingredient from './Potions/Ingredient';
+import { stringifyEffect } from '../helper/Funtions';
 
 interface IngredientSelectorProps {
   onSelectionChange: (selectedIngredients: { [key: string]: number }) => void;
@@ -164,7 +165,7 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
               {item.name}
             </MedievalText>
             <MedievalText fontSize={10} color="#ffffff" style={styles.ingredientDescription} numberOfLines={1}>
-              {item.effects[0]}
+              {stringifyEffect(item.effects[0])}
             </MedievalText>
           </ImageBackground>
         </Animated.View>

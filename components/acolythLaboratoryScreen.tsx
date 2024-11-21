@@ -325,7 +325,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
               />
             <MedievalText style={styles.effectText}>{potion.name}</MedievalText>
             <MedievalText style={styles.effectText}>Value: {potion.value}</MedievalText>
-            <MedievalText style={styles.effectText}>Type: {potion.type}</MedievalText>
             {'modifiers' in potion && (
               <>
               <MedievalText style={styles.effectText}>Modifiers:</MedievalText>

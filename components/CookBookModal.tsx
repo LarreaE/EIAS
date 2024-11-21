@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Modal, StyleSheet, TouchableOpacity, View, ScrollView, ImageBackground, Dimensions, Image } from "react-native";
 import { Curses } from "../interfaces/Curse";
 import MedievalText from "./MedievalText";
-
+import { stringifyEffect } from "../helper/Funtions";
 
 interface Props {
     setVisible: React.Dispatch<React.SetStateAction<boolean>>,
@@ -59,7 +59,7 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
                                             key={effect}
                                             style={styles.tableRow}
                                         >
-                                            <MedievalText style={styles.tableData}>{effect}</MedievalText>
+                                            <MedievalText style={styles.tableData}>{stringifyEffect(effect)}</MedievalText>
                                         </TouchableOpacity>
                                         ))}
                                     </View>
@@ -70,7 +70,7 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
                                             key={effect}
                                             style={styles.tableRow}
                                         >
-                                            <MedievalText style={styles.tableData}>{effect}</MedievalText>
+                                            <MedievalText style={styles.tableData}>{stringifyEffect(effect)}</MedievalText>
                                         </TouchableOpacity>
                                         ))}
                                     </View>
