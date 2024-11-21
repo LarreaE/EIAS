@@ -122,7 +122,7 @@ const MapScreen: React.FC = () => {
         <MapButton
           title="Obituary Door"
           onPress={goToObituaryDoor}
-          iconImage={require('../assets/informacion.png')}
+          iconImage={require('../assets/obituary_door_icon.png')}
         />
       </View>
     )}
@@ -163,9 +163,9 @@ const MapScreen: React.FC = () => {
             {userData.playerData.ArtifactsValidated && (
               <View style={styles.buttonObituaryDoor}>
                 <MapButton
-                  title="Obituary Door"
+                  title="Obituary"
                   onPress={goToObituaryDoor}
-                  iconImage={require('../assets/informacion.png')}
+                  iconImage={require('../assets/obituary_door_icon.png')}
                 />
               </View>
             )}
