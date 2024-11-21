@@ -5,7 +5,7 @@ import MedievalText from '../components/MedievalText.tsx';
 import MapButton from '../components/MapButton.tsx';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList, StackNavigationProp } from '../types/types.ts';
-import { sendIsInHall } from '../sockets/emitEvents.tsx';
+import { sendIsInHall, sendPlayAnimationAcolyte } from '../sockets/emitEvents.tsx';
 import { UserContext, UserContextType } from '../context/UserContext.tsx';
 import { sendLocation } from '../sockets/emitEvents.tsx';
 import { useState } from 'react';
@@ -55,13 +55,14 @@ const HallOfSages: React.FC = () => {
     sendIsInHall(currentUser.email, false);
     navigation.navigate('School');
     socket.off('send_users_in_hall');
+    socket.off('play_animation_all_acolytes');
   };
 
   const sendHallNotificationToMortimer = async () => {
     console.log('Sending obituario notification to Mortimer');
   
     try {
-      const response = await fetch(`${Config.RENDER}/api/notifications/send-notification-obituario`);
+      const response = await fetch(`${Config.LOCAL_HOST}/api/notifications/send-notification-obituario`);
       
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -85,15 +86,19 @@ const HallOfSages: React.FC = () => {
     };
 
     socket.on('send_users_in_hall', handleUsersInHall);
-    console.log('arifacts:');
-    
-    console.log(artifacts);
+    if(userData.playerData.role === 'ACOLYTE'){
+      socket.on('play_animation_all_acolytes', () => {
+        console.log('Playing animation');
+        handleStartAnimation();
+      });
+    }
+
     
     }, []);
 
   const giveArtifactsToMortimer = () => {
     console.log('Artifacts given to Mortimer:', artifacts);
-    handleStartAnimation();
+    sendPlayAnimationAcolyte();
     // Lógica para enviar los artefactos
   };
   const filteredUsers = currentUser.role === 'ACOLYTE'
