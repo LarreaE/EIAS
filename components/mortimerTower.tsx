@@ -42,7 +42,7 @@ const MortimerTower: React.FC = () => {
     // Obtener usuarios iniciales desde el servidor
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${Config.LOCAL_HOST}/api/players/mortimer`);
+        const response = await fetch(`${Config.RENDER}/api/players/mortimer`);
         const data = await response.json();
         const filteredUsers = data.filter((user: User) => user.is_inside_tower);
         setUsersInTower(filteredUsers);
