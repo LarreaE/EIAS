@@ -252,7 +252,7 @@ const HallOfSages: React.FC = () => {
       </View>
       <View style={styles.circleContainer}>{renderUsersInCircle()}</View> 
             {/* Botón para dar artefactos a Mortimer */}
-            {artifacts.length === 4 && filteredUsers.length >= 3 && userData.playerData.role === 'ACOLYTE' && (
+            {artifacts.length === 4 && filteredUsers.length >= 3 && userData.playerData.ArtifactsValidated === false && userData.playerData.role === 'ACOLYTE' && (
         <TouchableOpacity onPress={giveArtifactsToMortimer} style={styles.artifactsButton}>
           <MedievalText style={styles.buttonText}>Give Artifacts to Mortimer</MedievalText>
         </TouchableOpacity>

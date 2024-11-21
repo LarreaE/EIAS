@@ -117,7 +117,7 @@ const MapScreen: React.FC = () => {
         isGlowing={isHallInNeedOfMortimer}
       />
     </View>
-    {userData.playerData.ArtifactsValidated && (
+    {userData.playerData.ArtifactsValidated === true && (
       <View style={styles.buttonObituaryDoor}>
         <MapButton
           title="Obituary Door"
@@ -160,7 +160,7 @@ const MapScreen: React.FC = () => {
                 iconImage={require('../assets/swamp_icon.png')}
               />
             </View>
-            {userData.playerData.ArtifactsValidated && (
+            {userData.playerData.ArtifactsValidated  === true && (
               <View style={styles.buttonObituaryDoor}>
                 <MapButton
                   title="Obituary Door"
