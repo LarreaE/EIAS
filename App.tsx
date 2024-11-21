@@ -168,22 +168,12 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
   }
 
   const screenOptions = ({ route }: ScreenOptionsProps): MaterialTopTabNavigationOptions => ({
-    tabBarStyle: {
-      backgroundColor: 'transparent',
-      borderTopWidth: 0,
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      bottom: 0,
-      paddingBottom: 0,
-      height: 80,
-      elevation: 0,
-    },
-    tabBarIndicatorStyle: {
-      height: 0,
-    },
+    tabBarStyle: styles.tabBar,
+    tabBarIndicatorStyle: styles.tabBarIndicator,
     swipeEnabled: route.name !== 'LaboratoryAcolyth',
     tabBarScrollEnabled: false,
+    tabBarActiveTintColor: '#ffffff',
+    tabBarInactiveTintColor: '#999999',
   });
 
   const renderTabs = () => {
@@ -200,7 +190,7 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
               options={{
                 tabBarLabel: '',
                 tabBarIcon: ({ focused }) => (
-                  <View style={focused ? styles.activeTabBackground : null}>
+                  <View style={focused ? styles.activeTabBackground : styles.iconContainer}>
                     <Image source={require('./assets/setings_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
                   </View>
                 ),
@@ -214,7 +204,7 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
               options={{
                 tabBarLabel: '',
                 tabBarIcon: ({ focused }) => (
-                  <View style={focused ? styles.activeTabBackground : null}>
+                  <View style={focused ? styles.activeTabBackground : styles.iconContainer}>
                     <Image source={require('./assets/profile_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
                   </View>
                 ),
@@ -354,6 +344,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  tabBar: {
+    backgroundColor: 'transparent',
+    borderTopWidth: 0,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingBottom: 0,
+    height: 80,
+    elevation: 0,
+    justifyContent: 'center',
+    alignContent: 'center',
+    overflow: 'hidden',
+  },
+  tabBarIndicator: {
+    height: 0
+  },
+  tabBarLabel: {
+    fontSize: 14, // Font size for the labels
+    fontWeight: 'bold', // Bold text
+    textTransform: 'capitalize', // Capitalize first letter
   },
 });
 
