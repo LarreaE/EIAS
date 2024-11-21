@@ -170,7 +170,7 @@ useEffect(() => {
               style={styles.buttonImage}  // Styles for the image inside the button
               resizeMode="contain"        // Adjust the image to fit inside the button
               >
-                <Text style={styles.title}>Decypher Scroll</Text>
+                <MedievalText style={styles.title}>Decypher Scroll</MedievalText>
               </ImageBackground>
               
             </TouchableOpacity>

@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { UserContext, UserContextType } from '../context/UserContext.tsx';
 import { sendLocation } from '../sockets/emitEvents.tsx';
 import MapButton from './MapButton.tsx';
+import MedievalText from './MedievalText.tsx';
 
 const { width, height } = Dimensions.get('window');
 
@@ -97,7 +98,7 @@ const QRScanner: React.FC<{ onQRCodeScanned: (value: string | undefined) => void
   if (!hasPermission) {
     return (
       <View style={styles.container}>
-        <Text>No camera permission. Please grant camera access in settings.</Text>
+        <MedievalText>No camera permission. Please grant camera access in settings.</MedievalText>
       </View>
     );
   }
@@ -106,7 +107,7 @@ const QRScanner: React.FC<{ onQRCodeScanned: (value: string | undefined) => void
   if (device == null) {
     return (
       <View style={styles.container}>
-        <Text>Loading camera...</Text>
+        <MedievalText>Loading camera...</MedievalText>
       </View>
     );
   }

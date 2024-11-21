@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text, ImageBackground, Dimensions } from 'react-native';
 import EquipmentSlot from '../components/Slot';
+import MedievalText from '../components/MedievalText';
 
 type Props = {
   user: any;
@@ -33,12 +34,12 @@ const EquipmentScreen: React.FC<Props> = ({ user }) => {
         <View style={styles.container}>
             <View style={styles.classContainer}>
               <View style={styles.cornerSquare}>
-                <Text style={styles.text}>Class: {player.profile.name}</Text>
+                <MedievalText style={styles.text}>Class: {player.profile.name}</MedievalText>
               </View>
             </View>
             <View style={styles.levelContainer}>
               <View style={styles.cornerSquare}>
-                <Text style={styles.text}>Level: {player.level}</Text>
+                <MedievalText style={styles.text}>Level: {player.level}</MedievalText>
               </View>
             </View>
             <View style={styles.equipmentContainer}>
@@ -61,12 +62,12 @@ const EquipmentScreen: React.FC<Props> = ({ user }) => {
             </View>
             <View style={styles.expContainer}>
               <View style={styles.cornerSquare}>
-                <Text style={styles.text}>Exp: {player.experience}</Text>
+                <MedievalText style={styles.text}>Exp: {player.experience}</MedievalText>
               </View>
             </View>
             <View style={styles.goldContainer}>
               <View style={styles.cornerSquare}>
-                <Text style={styles.text}>Gold: {player.gold}</Text>
+                <MedievalText style={styles.text}>Gold: {player.gold}</MedievalText>
               </View>
             </View>
         </View>

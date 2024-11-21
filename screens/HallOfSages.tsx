@@ -39,7 +39,7 @@ const HallOfSages: React.FC = () => {
   };
 
   if (!userData || !userData.playerData || !userData.playerData.avatar || !userData.playerData.nickname) {
-    return <Text>Cargando...</Text>;
+    return <MedievalText>Cargando...</MedievalText>;
   }
 
   const currentUser: User = {

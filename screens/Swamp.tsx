@@ -335,9 +335,9 @@ const handleArtifactTake = (id: number) => {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0000ff" />
-        <Text style={styles.loadingText}>
+        <MedievalText style={styles.loadingText}>
           Loading Artifacts...
-        </Text>
+        </MedievalText>
       </View>
     );
   }
@@ -345,7 +345,7 @@ const handleArtifactTake = (id: number) => {
   if (loadingError) {
     return (
       <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>{loadingError}</Text>
+        <MedievalText style={styles.errorText}>{loadingError}</MedievalText>
       </View>
     );
   }
@@ -442,9 +442,9 @@ const handleArtifactTake = (id: number) => {
         style={styles.toggleBagButton}
         onPress={toggleBag}
       >
-        <Text style={styles.toggleBagButtonText}>
+        <MedievalText style={styles.toggleBagButtonText}>
           {isBagVisible ? '▼' : '▲'}
-        </Text>
+        </MedievalText>
       </TouchableOpacity>
 )}
 
@@ -458,7 +458,7 @@ const handleArtifactTake = (id: number) => {
       style={styles.closeBagButton}
       onPress={toggleBag}
     >
-      <Text style={styles.closeBagButtonText}>▼</Text>
+      <MedievalText style={styles.closeBagButtonText}>▼</MedievalText>
     </TouchableOpacity>
 
     <View style={styles.gridContainer}>

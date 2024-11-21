@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ImageBackground, Image} from 'react-native';
 import * as Progress from 'react-native-progress';  // Importar la librería de progreso
 
 import { Modifier } from '../interfaces/Modifier';
+import MedievalText from '../components/MedievalText';
 
 type Props = {
   user: any;
@@ -87,9 +88,9 @@ const StatsScreen: React.FC<Props> = ({ user }) => {
     >
     <View style={styles.container}>
       <Image source={{ uri: image }} style={styles.profilePhoto} />
-      <Text style={styles.header}>{role}</Text>
-      <Text style={styles.header}>Name: {userName}</Text>
-      <Text style={styles.header}></Text>
+      <MedievalText style={styles.header}>{role}</MedievalText>
+      <MedievalText style={styles.header}>Name: {userName}</MedievalText>
+      <MedievalText style={styles.header}></MedievalText>
       {currentAttributes ? (
         <View style={styles.statsContainer}>
           <StatBar label="Charisma" value={currentAttributes.charisma} />
@@ -100,7 +101,7 @@ const StatsScreen: React.FC<Props> = ({ user }) => {
           <StatBar label="Strength" value={currentAttributes.strength} />
         </View>
       ) : (
-        <Text style={styles.statLabel}>No stats available</Text>
+        <MedievalText style={styles.statLabel}>No stats available</MedievalText>
       )}
     </View>
     </ImageBackground>
@@ -110,7 +111,7 @@ const StatsScreen: React.FC<Props> = ({ user }) => {
 const StatBar: React.FC<{ label: string, value: number }> = ({ label, value }) => {
   return (
     <View style={styles.statRow}>
-      <Text style={styles.statLabel}>{label}</Text>
+      <MedievalText style={styles.statLabel}>{label}</MedievalText>
       <Progress.Bar
         progress={value / 1000}
         width={150}
@@ -120,7 +121,7 @@ const StatBar: React.FC<{ label: string, value: number }> = ({ label, value }) =
         borderColor="#fcd34d"
         style={styles.progressBar}  // Añadido estilo para margen
       />
-      <Text style={styles.statValue}>{value}</Text>
+      <MedievalText style={styles.statValue}>{value}</MedievalText>
     </View>
   );
 };
