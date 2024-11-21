@@ -68,6 +68,10 @@ const MapScreen: React.FC = () => {
     sendLocation('School', userData.playerData.email);
     navigation.navigate('School');
   };
+  const goToObituaryDoor = () => {
+    sendLocation('ObituaryDoor', userData.playerData.email);
+    navigation.navigate('ObituaryDoor');
+  };
 
   switch (userData.playerData.role) {
     case 'MORTIMER':
@@ -113,6 +117,15 @@ const MapScreen: React.FC = () => {
         isGlowing={isHallInNeedOfMortimer}
       />
     </View>
+    {userData.playerData.ArtifactsValidated && (
+      <View style={styles.buttonObituaryDoor}>
+        <MapButton
+          title="Obituary Door"
+          onPress={goToObituaryDoor}
+          iconImage={require('../assets/informacion.png')}
+        />
+      </View>
+    )}
   </ImageBackground>
 </GestureHandlerRootView>
       );
@@ -147,6 +160,16 @@ const MapScreen: React.FC = () => {
                 iconImage={require('../assets/swamp_icon.png')}
               />
             </View>
+            {userData.playerData.ArtifactsValidated && (
+              <View style={styles.buttonObituaryDoor}>
+                <MapButton
+                  title="Obituary Door"
+                  onPress={goToObituaryDoor}
+                  iconImage={require('../assets/informacion.png')}
+                />
+              </View>
+            )}
+
             {/* Animación de los pájaros */}
             <Animated.Image
               source={require('../assets/animations/birds.gif')}
@@ -212,6 +235,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     zIndex: 1,
   },
+  buttonObituaryDoor:{
+    position: 'absolute',
+    bottom: height * 0.45,
+    right: width * 0.25,
+    alignSelf: 'center',
+    zIndex: 1,
+  }
 });
 
 export default MapScreen;

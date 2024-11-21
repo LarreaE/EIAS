@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   nickname: {
     color: 'black', // Color principal del texto
     fontSize: 12,
-    fontWeight: 'bold',
+    
     textAlign: 'center', // Centra el texto debajo de la imagen
     borderRadius: 100, // Bordes redondeados
     backgroundColor: 'white', // Fondo blanco para mejor visibilidad

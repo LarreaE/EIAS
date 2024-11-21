@@ -451,7 +451,7 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     color: 'white',
-    fontWeight: 'bold',
+    
     textAlign: 'center',
   },
   centeredView: {
@@ -532,7 +532,7 @@ const styles = StyleSheet.create({
   },
   filterButtonText: {
     color: 'black',
-    fontWeight: 'bold',
+    
     marginLeft: 5,
   },
   // Estilos para el modal de filtros
@@ -554,7 +554,7 @@ const styles = StyleSheet.create({
     top:10,
     left:10,
     fontSize: 20,
-    fontWeight: 'bold',
+    
     marginBottom: 10,
     textAlign: 'center',
     color: 'white',
@@ -595,7 +595,7 @@ const styles = StyleSheet.create({
   },
   applyFiltersText: {
     color: 'white',
-    fontWeight: 'bold',
+    
     fontSize: 16,
     height:100,
     width: 180,

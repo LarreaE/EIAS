@@ -1,3 +1,4 @@
+
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useState, useEffect, useContext } from 'react';
 import { SafeAreaView, StyleSheet, Image, Modal, TouchableOpacity, Text, View, ImageBackground, Alert, ToastAndroid, Animated, Dimensions } from 'react-native';
@@ -31,6 +32,7 @@ import { saveBoolean, getBoolean } from './helper/AsyncStorage';
 import Swamp from './screens/Swamp';
 import SchoolScreen from './screens/OldSchool';
 import HallOfSages from './screens/HallOfSages';
+import ObituaryDoor from './screens/ObituaryDoor';
 
 const Tab = createMaterialTopTabNavigator();
 const { width, height } = Dimensions.get('window');
@@ -270,6 +272,7 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
             <Stack.Screen name="Swamp" component={Swamp} options={{ headerShown: false }} />
             <Stack.Screen name="School" component={SchoolScreen} options={{ headerShown: false }} />
             <Stack.Screen name="HallOfSages" component={HallOfSages} options={{ headerShown: false }} />
+            <Stack.Screen name="ObituaryDoor" component={ObituaryDoor} options={{ headerShown: false }} />
           </Stack.Navigator>
         </NavigationContainer>
       </GestureHandlerRootView>
@@ -325,7 +328,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontWeight: 'bold',
   },
   modalButton: {
     justifyContent: 'center',
@@ -364,7 +366,7 @@ const styles = StyleSheet.create({
   },
   tabBarLabel: {
     fontSize: 14, // Font size for the labels
-    fontWeight: 'bold', // Bold text
+     // Bold text
     textTransform: 'capitalize', // Capitalize first letter
   },
 });

@@ -224,15 +224,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: 'rgba(128, 128, 128, 0.7)',
     width: 220,
-    height: 120,
+    height: 130,
     borderRadius: 10,
   },
   title: {
     top: -100,
-    fontSize: 35,
+    fontSize: 33,
     paddingHorizontal: 10,
     paddingVertical: 25,
     textAlign: 'center',
+    color: 'white'
   },
   circleContainer: {
     position: 'absolute',
