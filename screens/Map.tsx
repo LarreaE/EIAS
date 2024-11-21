@@ -106,16 +106,11 @@ const MapScreen: React.FC = () => {
       />
     </View>
     <View style={[styles.buttonSchool]}>
-        {isHallInNeedOfMortimer && (
-          <Animated.Image
-            source={require('../assets/animations/bg1.gif')}
-            style={styles.gifStyleButton}
-          />
-        )}
       <MapButton
         title="School"
         onPress={goToSchool}
         iconImage={require('../assets/school_icon.png')}
+        isGlowing={isHallInNeedOfMortimer}
       />
     </View>
   </ImageBackground>
@@ -189,12 +184,6 @@ const styles = StyleSheet.create({
     width: 66,
     height: 66,
   },
-  gifStyleButton: {
-    position: 'absolute', // Places it relative to the parent
-    zIndex: -1, // Ensures it goes behind the icon
-    width: 200, // Adjust as needed to fit correctly
-    height: 200, // Adjust as needed to fit correctly
-  },
   buttonTower: {
     position: 'absolute',
     bottom: height * 0.5,
@@ -215,8 +204,6 @@ const styles = StyleSheet.create({
     right: width * 0.12,
     alignSelf: 'center',
     zIndex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   buttonHome: {
     position: 'absolute',
