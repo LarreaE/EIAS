@@ -143,7 +143,7 @@ const FilterModal: React.FC<Props> = ({ visible, setVisible, availableEffects, s
                 style={styles.filterModalView} // Estilos para el contenedor del modal
                 resizeMode="stretch" // Ajuste de la imagen
               >
-                {filterByEffect && (
+                {filterByEffect ? (
                     <View style={styles.filterOverlay}>
                     <MedievalText fontSize={20} color="#ffffff" style={styles.filterModalTitle}>
                     Select Effects
@@ -173,48 +173,55 @@ const FilterModal: React.FC<Props> = ({ visible, setVisible, availableEffects, s
                         </TouchableOpacity>
                     ))}
                     </ScrollView>
-                    <TouchableOpacity
-                    style={styles.applyFiltersButton}
-                    onPress={applyFilters}
-                    >
-                        <MedievalText fontSize={16} color="#ffffff" style={styles.applyFiltersText}>
-                        Apply Filters
-                        </MedievalText>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                    onPress={() => {setFilterbyEffect(!filterByEffect)}}
-                    style={styles.applyFiltersButton}
-                    >
-                        <MedievalText fontSize={16} color="#ffffff" style={styles.applyFiltersText}>
-                        Filter by Rarity
-                        </MedievalText>
-                    </TouchableOpacity>
+                    <View style={styles.filterButtonContainer}>
+                      <TouchableOpacity
+                      style={styles.applyFiltersButton}
+                      onPress={applyFilters}
+                      >
+                          <MedievalText fontSize={16} color="#ffffff" style={styles.applyFiltersText}>
+                          Apply Filters
+                          </MedievalText>
+                      </TouchableOpacity>
                     </View>
-                )}
-                {!filterByEffect && (
+                    <View style={styles.applyFiltersButtoncontainer}>
+                      <TouchableOpacity
+                          style={styles.applyFiltersButton2}
+                          onPress={() => {setFilterbyEffect(!filterByEffect)}}
+                        >
+                            <MedievalText fontSize={16} color="#ffffff" style={styles.applyFiltersText2}>
+                            Filter by Rarity
+                            </MedievalText>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                ) : (
                     <View style={styles.filterOverlay}>
-                    <MedievalText fontSize={20} color="#ffffff" style={styles.filterModalTitle}>
-                    Select Rarity
-                    </MedievalText>
-                    <EffectDropdownMenu availableEffects={availableEffects} toggleEffect={toggleEffect} selectedEffects={selectedEffects} setSelectedEffects={setSelectedEffect}/>
-                    <TouchableOpacity
-                    style={styles.applyFiltersButton}
-                    onPress={applyFilters}
-                    >
-                    
-                        <MedievalText fontSize={16} color="#ffffff" style={styles.applyFiltersText}>
-                        Apply Filters
+                      <View style={styles.raritiesSelection}>
+                        <MedievalText fontSize={20} color="#ffffff" style={styles.filterModalTitle}>
+                          Select Rarity
                         </MedievalText>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                    style={styles.applyFiltersButton}
-                    onPress={() => {setFilterbyEffect(!filterByEffect)}}
-                    >
-                    
-                        <MedievalText fontSize={16} color="#ffffff" style={styles.applyFiltersText}>
-                        Filter by Effect
-                        </MedievalText>
-                    </TouchableOpacity>
+                        <EffectDropdownMenu availableEffects={availableEffects} toggleEffect={toggleEffect} selectedEffects={selectedEffects} setSelectedEffects={setSelectedEffect}/>
+                      </View>
+                      <View style={styles.filterButtonContainer}>
+                        <TouchableOpacity
+                          style={styles.applyFiltersButton}
+                          onPress={applyFilters}
+                          >
+                            <MedievalText fontSize={16} color="#ffffff" style={styles.applyFiltersText}>
+                            Apply Filters
+                            </MedievalText>
+                        </TouchableOpacity>
+                      </View>
+                      <View style={styles.applyFiltersButtoncontainer}>
+                      <TouchableOpacity
+                          style={styles.applyFiltersButton2}
+                          onPress={() => {setFilterbyEffect(!filterByEffect)}}
+                        >
+                            <MedievalText fontSize={16} color="#ffffff" style={styles.applyFiltersText2}>
+                            Filter by Effect
+                            </MedievalText>
+                        </TouchableOpacity>
+                      </View>
                     </View>
                 )}
               </ImageBackground>
@@ -289,11 +296,18 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     // Estilos para el botón de filtros
+    filterButtonContainer: {
+      padding: 0,
+      borderRadius: 8,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
     filterButton: {
       position: 'absolute',
       top: 50,
       right: 20,
-      padding: 10,
+      padding: 30,
       borderRadius: 8,
       flexDirection: 'row',
       alignItems: 'center',
@@ -311,8 +325,8 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     filterModalView: {
-      width: '110%',
-      maxHeight: '80%',
+      width: width*1.1,
+      maxHeight: height*0.9,
       padding: 20,
     },
     scrollView: {
@@ -357,11 +371,29 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       bottom:10,
     },
+    applyFiltersButtoncontainer: {
+      alignItems: 'center',
+      bottom: 10,
+    },
+    applyFiltersButton2: {
+      padding: 0,
+      left: width * 0.25,
+      alignItems: 'center',
+    },
     applyFiltersText: {
       color: 'white',
-      fontSize: 16,
+      fontSize: 20,
+      padding: 18,
       textAlign: 'center',
       width: width*0.4,
+      backgroundColor: '#333',
+      borderRadius: 30,
+    },
+    applyFiltersText2: {
+      color: 'white',
+      fontSize: 14,
+      padding: 3,
+      textAlign: 'center',
       backgroundColor: '#333',
       borderRadius: 30,
     },
@@ -380,6 +412,9 @@ const styles = StyleSheet.create({
       left:-30,
     },
     filterOverlay: {
+    },
+    raritiesSelection: {
+     
     },
   });
 

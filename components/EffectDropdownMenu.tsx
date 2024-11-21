@@ -32,7 +32,7 @@ const EffectDropdownMenu: React.FC<Props> = ({ availableEffects, toggleEffect, s
   return (
     <View style={styles.dropdownContainer}>
       <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
-        <MedievalText style={styles.dropdownButtonText}>Select Effect</MedievalText>
+        <MedievalText style={styles.dropdownButtonText}>Rarities</MedievalText>
         <Icon 
           name={isDropdownOpen ? "chevron-up" : "chevron-down"} 
           size={20} 
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ddd',
     padding: 10,
     borderRadius: 20,
-    width: width*0.8,
+    width: width*0.4,
     top:-20,
   },
   dropdownButtonText: {
