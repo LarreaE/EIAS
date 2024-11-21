@@ -328,7 +328,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontWeight: 'bold',
   },
   modalButton: {
     justifyContent: 'center',
@@ -367,7 +366,7 @@ const styles = StyleSheet.create({
   },
   tabBarLabel: {
     fontSize: 14, // Font size for the labels
-    fontWeight: 'bold', // Bold text
+     // Bold text
     textTransform: 'capitalize', // Capitalize first letter
   },
 });

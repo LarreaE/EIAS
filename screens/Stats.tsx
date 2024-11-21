@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 24,
-    fontWeight: 'bold',
+    
     color: '#fcd34d',
     marginBottom: 20,
   },

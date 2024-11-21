@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   },
   splashText: {
     fontSize: 24,
-    fontWeight: 'bold',
+    
     color: '#000000',
   },
   splashImage: {

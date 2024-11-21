@@ -117,6 +117,15 @@ const MapScreen: React.FC = () => {
         isGlowing={isHallInNeedOfMortimer}
       />
     </View>
+    {userData.playerData.ArtifactsValidated && (
+      <View style={styles.buttonObituaryDoor}>
+        <MapButton
+          title="Obituary Door"
+          onPress={goToObituaryDoor}
+          iconImage={require('../assets/informacion.png')}
+        />
+      </View>
+    )}
   </ImageBackground>
 </GestureHandlerRootView>
       );
@@ -154,7 +163,7 @@ const MapScreen: React.FC = () => {
             {userData.playerData.ArtifactsValidated && (
               <View style={styles.buttonObituaryDoor}>
                 <MapButton
-                  title="ObituaryDoor"
+                  title="Obituary Door"
                   onPress={goToObituaryDoor}
                   iconImage={require('../assets/informacion.png')}
                 />
@@ -229,7 +238,7 @@ const styles = StyleSheet.create({
   buttonObituaryDoor:{
     position: 'absolute',
     bottom: height * 0.45,
-    right: width * 0.20,
+    right: width * 0.25,
     alignSelf: 'center',
     zIndex: 1,
   }

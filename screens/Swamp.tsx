@@ -588,7 +588,7 @@ const styles = StyleSheet.create({
   },
   returnButtonText: {
     color: 'white',
-    fontWeight: 'bold',
+    
     textAlign: 'center',
   },
   closeButton: {
