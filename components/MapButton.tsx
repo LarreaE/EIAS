@@ -16,12 +16,14 @@ type Props = {
 const MapButton: React.FC<Props> = ({ title, onPress, iconImage, isGlowing }) => {
   return (
     <View style={styles.buttonContainer}>
+      <View style={styles.gifContainer}>
       {isGlowing ? (
           <Animated.Image
             source={require('../assets/animations/bg1.gif')}
-            style={styles.gifStyleButton}
+            style={styles.gifStyle}
           />
         ) : (<></>)}
+      </View>
       {iconImage ? (
         <TouchableOpacity onPress={onPress}>
           <Image source={iconImage} style={styles.iconStyle} />
@@ -57,12 +59,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center', // Centra el texto del título
   },
-  gifStyleButton: {
-    position: 'absolute', // Places it relative to the parent
-    zIndex: -1, // Ensures it goes behind the icon
-    width: 200, // Adjust as needed to fit correctly
-    height: 200, // Adjust as needed to fit correctly
-    bottom: -height * 0.07,
+  gifContainer: {
+    position: 'absolute',
+    zIndex: -1,
+    width: width*0.44, // Define the visible area of the GIF
+    height: height*0.24, // Define the visible area of the GIF
+    overflow: 'hidden', // Clips any content outside this boundary
+    alignItems: 'center', // Center align GIF content
+    justifyContent: 'center', // Center align GIF content
+  },
+  gifStyle: {
+    bottom: height*0.02
   },
 });
 
