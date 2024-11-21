@@ -10,6 +10,7 @@ import {
   View,
   Vibration,
   Image,
+  Dimensions,
 } from 'react-native';
 import { clearServerEvents, listenToServerEventsScanAcolyte } from '../sockets/listenEvents.tsx';
 import IngredientSelector from './ingredientSelector.tsx';
@@ -40,6 +41,8 @@ import FilterModal from './FilterModal.tsx';
 import { GOOD_EFFECTS, BAD_EFFECTS, EFFECT_ICONS, EFFECT_LABELS } from './FilterModal.tsx';
 
 type Props = { UserData: any };
+
+const { width, height } = Dimensions.get('window');
 
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'LaboratoryAcolyth'>;
 
@@ -292,6 +295,11 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
                   style={styles.closeButton}
                   onPress={() => setModalVisible(false)}
                 >
+                  <Image
+                    source={require('../assets/boton.png')} // Ruta al archivo de imagen
+                    style={styles.buttonImage} // Estilo para la imagen del botón
+                    resizeMode="contain" // Ajusta cómo se muestra la imagen
+                  />
                   <MedievalText fontSize={16} color="#ffffff" style={styles.modalText}>
                     Close
                   </MedievalText>
@@ -377,16 +385,16 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
           ) : <View style={styles.container}/>}
             </View>
             <TouchableOpacity
-              style={styles.closeButton}
+              style={styles.closePotionButton}
               onPress={() => setPotionVisible(false)}
             >
               <View style={styles.buttonContent}>
                 <Image
                   source={require('../assets/boton.png')} // Ruta al archivo de imagen
-                  style={styles.buttonImage} // Estilo para la imagen del botón
+                  style={styles.potionbuttonImage} // Estilo para la imagen del botón
                   resizeMode="contain" // Ajusta cómo se muestra la imagen
                 />
-                <MedievalText fontSize={16} color="#ffffff" style={styles.buttonText}>
+                <MedievalText fontSize={16} color="#ffffff" style={styles.potionbuttonText}>
                   Close
                 </MedievalText>
               </View>
@@ -467,21 +475,37 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   modalText: {
-    marginBottom: 15,
+    padding: 10,
     textAlign: 'center',
-    fontSize: 18,
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    bottom: height *0.18,
+    fontSize: 28,
   },
   closeButton: {
     borderRadius: 10,
-    padding: 10,
-    top: -450,
-    left:'0%',
-    width: '60%',
-    height: '20%',
+    width: width* 0.5,
+    height: height * 0.1,
+    top: height * 0.1,
+  },
+  closePotionButton: {
+    borderRadius: 10,
+    overflow: 'hidden',
+    width: width,
+    height: height * 0.2,
+  },
+  buttonContent: {
   },
   buttonImage: {
-    width: '100%',
-    height: '100%',
+    bottom: height * 0.05,
+    width: width* 0.5,
+    height: height* 0.2,
+  },
+  potionbuttonImage: {
+    bottom: height * 0.1,
+    width: width,
+    height: height* 0.4,
   },
   image: {
     width: '40%',
@@ -595,7 +619,17 @@ const styles = StyleSheet.create({
     left:-30,
   },
   buttonText: {
+    padding: 10,
     textAlign: 'center',
-    bottom:'60%',
+    justifyContent: 'center',
+    fontSize: 30,
+    bottom: height*0.16,
+  },
+  potionbuttonText: {
+    padding: 10,
+    textAlign: 'center',
+    justifyContent: 'center',
+    fontSize: 30,
+    bottom: height*0.33,
   },
 });

@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { Modal, StyleSheet, Text, TouchableOpacity, View, ScrollView, ImageBackground, Dimensions } from "react-native";
+import { Modal, StyleSheet, Text, TouchableOpacity, View, ScrollView, ImageBackground, Dimensions, Switch } from "react-native";
 import { Curses } from "../interfaces/Curse";
 import MedievalText from "./MedievalText";
 import EffectArray from "../interfaces/EffectArray";
@@ -184,14 +184,21 @@ const FilterModal: React.FC<Props> = ({ visible, setVisible, availableEffects, s
                       </TouchableOpacity>
                     </View>
                     <View style={styles.applyFiltersButtoncontainer}>
-                      <TouchableOpacity
-                          style={styles.applyFiltersButton2}
-                          onPress={() => {setFilterbyEffect(!filterByEffect)}}
-                        >
-                            <MedievalText fontSize={16} color="#ffffff" style={styles.applyFiltersText2}>
-                            Filter by Rarity
-                            </MedievalText>
-                        </TouchableOpacity>
+                      <View style={styles.switchRow}>
+                          <Text style={[styles.label, filterByEffect ? styles.inactiveText : styles.activeText]}>
+                            Rarity
+                          </Text>
+                          <Switch
+                            trackColor={{ false: '#767577', true: '#767577' }} // Customize track colors
+                            thumbColor={filterByEffect ? '#f4f3f4' : '#f4f3f4'} // Customize thumb color
+                            ios_backgroundColor="#3e3e3e" // Background color for iOS
+                            onValueChange={() => {setFilterbyEffect(!filterByEffect)}} // Toggles the state
+                            value={filterByEffect} // Sets the value of the switch
+                          />
+                          <Text style={[styles.label, filterByEffect ? styles.activeText : styles.inactiveText]}>
+                            Effect
+                          </Text>
+                        </View>
                       </View>
                     </View>
                 ) : (
@@ -213,14 +220,21 @@ const FilterModal: React.FC<Props> = ({ visible, setVisible, availableEffects, s
                         </TouchableOpacity>
                       </View>
                       <View style={styles.applyFiltersButtoncontainer}>
-                      <TouchableOpacity
-                          style={styles.applyFiltersButton2}
-                          onPress={() => {setFilterbyEffect(!filterByEffect)}}
-                        >
-                            <MedievalText fontSize={16} color="#ffffff" style={styles.applyFiltersText2}>
-                            Filter by Effect
-                            </MedievalText>
-                        </TouchableOpacity>
+                        <View style={styles.switchRow}>
+                          <Text style={[styles.label, filterByEffect ? styles.inactiveText : styles.activeText]}>
+                            Rarity
+                          </Text>
+                          <Switch
+                            trackColor={{ false: '#767577', true: '#767577' }} // Customize track colors
+                            thumbColor={filterByEffect ? '#f4f3f4' : '#f4f3f4'} // Customize thumb color
+                            ios_backgroundColor="#3e3e3e" // Background color for iOS
+                            onValueChange={() => {setFilterbyEffect(!filterByEffect)}} // Toggles the state
+                            value={filterByEffect} // Sets the value of the switch
+                          />
+                          <Text style={[styles.label, filterByEffect ? styles.activeText : styles.inactiveText]}>
+                            Effect
+                          </Text>
+                        </View>
                       </View>
                     </View>
                 )}
@@ -238,6 +252,21 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    switchRow: {
+      flexDirection: 'row', // Align items horizontally
+      alignItems: 'center', // Center vertically
+    },
+    label: {
+      fontSize: 18,
+      marginHorizontal: 10, // Space between the text and the switch
+    },
+    activeText: {
+      color: 'green', // Active text color
+      fontWeight: 'bold',
+    },
+    inactiveText: {
+      color: 'red', // Inactive text color
     },
     openButton: {
       padding: 10,
@@ -374,10 +403,10 @@ const styles = StyleSheet.create({
     applyFiltersButtoncontainer: {
       alignItems: 'center',
       bottom: 10,
+      left: width * 0.2,
     },
     applyFiltersButton2: {
       padding: 0,
-      left: width * 0.25,
       alignItems: 'center',
     },
     applyFiltersText: {
