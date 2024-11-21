@@ -31,54 +31,10 @@ const EffectDropdownMenu: React.FC<Props> = ({ availableEffects, toggleEffect, s
 
   return (
     <View style={styles.dropdownContainer}>
-      <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
-        <MedievalText style={styles.dropdownButtonText}>Rarities</MedievalText>
-        <Icon 
-          name={isDropdownOpen ? "chevron-up" : "chevron-down"} 
-          size={20} 
-          color="black" 
-        />
-      </TouchableOpacity>
-      {isDropdownOpen && (
         <ScrollView style={styles.scrollView}>
-          {/* Rare */}
-          {rareEffects.length > 0 && (
-            <>
-              {rareEffects.length > 0 && (
-              <>
-                <Text style={styles.sectionHeader}>Rare</Text>
-
-                <TouchableOpacity
-                  style={styles.effectOption}
-                  onPress={() => {
-                    // check if all rare effects are selected
-                    const allSelected = rareEffects.every(effect => selectedEffects.includes(effect));
-                    if (allSelected) { // all are selected
-                      //deselect all
-                      setSelectedEffects(selectedEffects.filter((effect: any) => !rareEffects.includes(effect)));
-                    } else { // not all selected
-                      // sellect all rare effects
-                      setSelectedEffects([...selectedEffects, ...rareEffects.filter(effect => !selectedEffects.includes(effect))]);
-                    }
-                  }}
-                >
-                  <View style={styles.checkbox}>
-                    {rareEffects.every(effect => selectedEffects.includes(effect)) && <View style={styles.checkedBox} />}
-                  </View>
-                  <MedievalText fontSize={16} color="black" style={styles.effectText}>
-                    Zachariah's Herbal
-                  </MedievalText>
-                </TouchableOpacity>
-              </>
-)}
-
-            </>
-          )}
-
           {/* Common */}
           {commonEffects.length > 0 && (
             <>
-              <Text style={styles.sectionHeader}>Common</Text>
               {commonEffects.map((effect) => (
                 <TouchableOpacity
                   key={effect}
@@ -103,8 +59,46 @@ const EffectDropdownMenu: React.FC<Props> = ({ availableEffects, toggleEffect, s
               ))}
             </>
           )}
+          {/* Rare */}
+          {rareEffects.length > 0 && (
+            <>
+              {rareEffects.length > 0 && (
+              <>
+                <TouchableOpacity
+                  style={styles.effectOption}
+                  onPress={() => {
+                    // check if all rare effects are selected
+                    const allSelected = rareEffects.every(effect => selectedEffects.includes(effect));
+                    if (allSelected) { // all are selected
+                      //deselect all
+                      setSelectedEffects(selectedEffects.filter((effect: any) => !rareEffects.includes(effect)));
+                    } else { // not all selected
+                      // sellect all rare effects
+                      setSelectedEffects([...selectedEffects, ...rareEffects.filter(effect => !selectedEffects.includes(effect))]);
+                    }
+                  }}
+                >
+                  <View style={styles.checkbox}>
+                    {rareEffects.every(effect => selectedEffects.includes(effect)) && <View style={styles.checkedBox} />}
+                  </View>
+                  {EFFECT_ICONS['rare'] && (
+                    <Icon
+                      name={EFFECT_ICONS['rare']}
+                      size={20}
+                      color="yellow"
+                      style={styles.effectIcon}
+                    />
+                  )}
+                  <MedievalText fontSize={16} color="black" style={styles.effectText}>
+                    Rare
+                  </MedievalText>
+                </TouchableOpacity>
+              </>
+)}
+
+            </>
+          )}
         </ScrollView>
-      )}
     </View>
   );
 };
@@ -128,11 +122,10 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   scrollView: {
-    maxHeight: height * 0.4, // Set max height 
+    maxHeight: height * 0.45, // Set max height 
     maxWidth: width * 0.85,
-    backgroundColor: 'lightgrey', // Style as desired
+    backgroundColor: 'transparent', // Style as desired
     borderRadius: 20,
-    marginTop: 5,
     alignContent: 'center',
   },
   sectionHeader: {
