@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { View, StyleSheet, ImageBackground, Text, Dimensions } from 'react-native';
+import { View, StyleSheet, ImageBackground, Text, Dimensions, TouchableOpacity } from 'react-native';
 import AcolythCardInHall from '../components/acolyteCardHall.tsx';
 import MedievalText from '../components/MedievalText.tsx';
 import MapButton from '../components/MapButton.tsx';
@@ -9,8 +9,9 @@ import { sendIsInHall } from '../sockets/emitEvents.tsx';
 import { UserContext, UserContextType } from '../context/UserContext.tsx';
 import { sendLocation } from '../sockets/emitEvents.tsx';
 import { useState } from 'react';
-import { listenToServerEvents } from '../sockets/listenEvents.tsx';
 import socket from '../sockets/socketConnection.tsx';
+import AnimatedCircles from '../components/Animations/AnimatedCircles.tsx';
+import Config from 'react-native-config';
 
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'HallOfSages'>;
 const { width, height } = Dimensions.get('window');
@@ -25,8 +26,17 @@ interface User {
 const HallOfSages: React.FC = () => {
   const navigation = useNavigation<MapScreenNavigationProp>();
   const context = useContext(UserContext) as UserContextType;
-  const { userData } = context;
+  const { userData,artifacts } = context;
   const [usersInHall, setUsersInHall] = useState<User[]>([]);
+
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const handleStartAnimation = () => {
+    setIsAnimating(true);
+    setTimeout(() => {
+      setIsAnimating(false); // Detener la animación después de un tiempo
+    }, 10000); // Duración de la animación en milisegundos
+  };
 
   if (!userData || !userData.playerData || !userData.playerData.avatar || !userData.playerData.nickname) {
     return <Text>Cargando...</Text>;
@@ -47,6 +57,23 @@ const HallOfSages: React.FC = () => {
     socket.off('send_users_in_hall');
   };
 
+  const sendHallNotificationToMortimer = async () => {
+    console.log('Sending obituario notification to Mortimer');
+  
+    try {
+      const response = await fetch(`${Config.RENDER}/api/notifications/send-notification-obituario`);
+      
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const data = await response.json();
+      console.log('Server response:', data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+  
   useEffect(() => {
     sendIsInHall(currentUser.email, true);
   }, []);
@@ -56,16 +83,25 @@ const HallOfSages: React.FC = () => {
       console.log('Datos recibidos en send_users_in_hall:', users);
       setUsersInHall(users);
     };
-  
+
     socket.on('send_users_in_hall', handleUsersInHall);
-  }, []);
-  
+    console.log('arifacts:');
+    
+    console.log(artifacts);
+    
+    }, []);
+
+  const giveArtifactsToMortimer = () => {
+    console.log('Artifacts given to Mortimer:', artifacts);
+    handleStartAnimation();
+    // Lógica para enviar los artefactos
+  };
   const filteredUsers = currentUser.role === 'ACOLYTE'
     ? usersInHall.filter(user => user.role !== 'VILLAIN')
     : usersInHall;
 
   const renderUsersInCircle = () => {
-    const centerX = 200; 
+    const centerX = 200;
     const centerY = 200;
     const radius = 120;
 
@@ -153,10 +189,17 @@ const HallOfSages: React.FC = () => {
         <MedievalText style={styles.title}>Hall of Sages</MedievalText>
       </View>
       <View style={styles.circleContainer}>{renderUsersInCircle()}</View> 
+            {/* Botón para dar artefactos a Mortimer */}
+            {artifacts.length === 0 && filteredUsers.length >= 1 && userData.playerData.role === 'ACOLYTE' && (
+        <TouchableOpacity onPress={giveArtifactsToMortimer} style={styles.artifactsButton}>
+          <MedievalText style={styles.buttonText}>Give Artifacts to Mortimer</MedievalText>
+        </TouchableOpacity>
+      )}
       <MapButton
         onPress={goToMap}
         iconImage={require('../assets/school_icon.png')}
       />
+       {isAnimating && <AnimatedCircles />}
     </ImageBackground>
   );
 };
@@ -196,6 +239,19 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     position: 'absolute',
+  },
+  artifactsButton: {
+    backgroundColor: 'lightgrey',
+    padding: 10,
+    borderRadius: 10,
+    position: 'absolute',
+    bottom: '22%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    color: '#000',
+    fontSize: 16,
   },
 });
 

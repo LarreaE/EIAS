@@ -41,7 +41,7 @@ type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Map'>;
 const Swamp: React.FC = () => {
   const navigation = useNavigation<MapScreenNavigationProp>();
   const context = useContext(UserContext) as UserContextType;
-  const { userData, otherAcolytes, setOtherAcolytes } = context;
+  const { userData, otherAcolytes, setOtherAcolytes,setArtifacts } = context;
 
   // State variables
   const [takenArtifacts, setTakenArtifacts] = useState<number[]>([]);
@@ -66,6 +66,13 @@ const Swamp: React.FC = () => {
     requestArtifacts();
     listenToArtifactsUpdates();
     socket.on('receive_artifacts', (artifacts) => {
+
+      if(artifacts.length === 4){
+        console.log('artifacts set');
+        
+        setArtifacts(artifacts);
+
+      }
       console.log('Artifacts received:', artifacts);
       const mappedArtifacts = artifacts.map(
         (artifact: {
@@ -400,7 +407,7 @@ const handleArtifactTake = (id: number) => {
                       }}
                     >
                       <Image
-                        source={artifactImages[poi.id]}
+                        source={artifactImages[poi.id - 1]}
                         style={styles.artifactImage}
                         resizeMode="contain"
                       />

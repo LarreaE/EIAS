@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useState, useEffect, useContext } from 'react';
-import { SafeAreaView, StyleSheet, Image, View, ToastAndroid } from 'react-native';
+import { SafeAreaView, StyleSheet, Image, Modal, TouchableOpacity, Text, View, ImageBackground, Alert, ToastAndroid, Animated, Dimensions } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer, ParamListBase, RouteProp, useNavigationContainerRef } from '@react-navigation/native';
 import { createMaterialTopTabNavigator, MaterialTopTabNavigationOptions } from '@react-navigation/material-top-tabs';
@@ -33,19 +33,34 @@ import SchoolScreen from './screens/OldSchool';
 import HallOfSages from './screens/HallOfSages';
 
 const Tab = createMaterialTopTabNavigator();
+const { width, height } = Dimensions.get('window');
 
-function App() {
+function App() {  
   const navigationRef = useNavigationContainerRef(); // Referencia para navegación global
+  
 
   useEffect(() => {
     checkAndRequestNotificationPermission();
   }, []);
 
-  useEffect(() => {
+  return (
+    <UserProvider>
+      <AppContent navigationRef={navigationRef} />
+    </UserProvider>
+  );
+}
+
+function AppContent({ navigationRef }: { navigationRef: any }) {
+  const [isLoged, setIsLoged] = useState<boolean>(false);
+  const context = useContext(UserContext) as UserContextType;
+  const { userData, setUserData ,setParchment, setCurrentScreen, currentScreen , player, setIsHallInNeedOfMortimer, isHallInNeedOfMortimer} = context;
+   // Usamos useContext para UserData;
+
+   useEffect(() => {
     onMessageReceived();
   }, []);
 
-  const onMessageReceived = () => {
+   const onMessageReceived = () => {
     messaging().onMessage(async remoteMessage => {
       console.log('Notificación recibida en primer plano:', remoteMessage);
 
@@ -55,6 +70,10 @@ function App() {
       const fullMessage = `${title}: ${message}`;
 
       ToastAndroid.show(fullMessage, ToastAndroid.LONG);
+      
+      if (remoteMessage?.data?.screen) {
+        setIsHallInNeedOfMortimer(true);
+      }
     });
   };
 
@@ -88,7 +107,7 @@ function App() {
     messaging().setBackgroundMessageHandler(async remoteMessage => {
       console.log('Notification handled in the background:', remoteMessage);
 
-      const screen = remoteMessage.data?.screen || 'DefaultScreen';
+      const screen = remoteMessage.data?.screen || '';
       console.log(`Screen a redirigir en background: ${screen}`);
 
       if (screen) {
@@ -96,18 +115,6 @@ function App() {
       }
     });
   }, []);
-
-  return (
-    <UserProvider>
-      <AppContent navigationRef={navigationRef} />
-    </UserProvider>
-  );
-}
-
-function AppContent({ navigationRef }: { navigationRef: any }) {
-  const [isLoged, setIsLoged] = useState<boolean>(false);
-  const context = useContext(UserContext) as UserContextType;
-  const { userData, setUserData, setParchment, setCurrentScreen, currentScreen, player } = context;
 
   useEffect(() => {
     const getParchment = async () => {
@@ -222,8 +229,17 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
               options={{
                 tabBarLabel: '',
                 tabBarIcon: ({ focused }) => (
-                  <View style={focused ? styles.activeTabBackground : null}>
-                    <Image source={require('./assets/map_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                  <View style={[styles.iconContainer]}>
+                    {isHallInNeedOfMortimer && (
+                      <Animated.Image
+                        source={require('./assets/animations/bg1.gif')}
+                        style={styles.gifStyle}
+                      />
+                    )}
+                    <Image
+                      source={require('./assets/map_icon.png')}
+                      style={focused ? [styles.icon, styles.activeIcon] : styles.icon}
+                    />
                   </View>
                 ),
               }}
@@ -275,17 +291,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  iconContainer: {
+    position: 'relative', // Ensures proper positioning of children
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   icon: {
-    marginBottom: 0,
     width: 66,
     height: 66,
-    right: 20,
   },
   activeIcon: {
-    width: 76, // Más grande cuando está activo
+    width: 76,
     height: 76,
-    left:0,
   },
+  gifStyle: {
+    position: 'absolute', // Places it relative to the parent
+    zIndex: -1, // Ensures it goes behind the icon
+    width: 200, // Adjust as needed to fit correctly
+    height: 200, // Adjust as needed to fit correctly
+  },
+  
   activeTabBackground: {
     backgroundColor: 'rgba(205, 133, 63, 0.5)', // Marrón claro semitransparente
     borderRadius: 20,
