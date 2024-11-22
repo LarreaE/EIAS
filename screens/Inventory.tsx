@@ -23,7 +23,7 @@ const Inventory: React.FC<Props> = ({user}) => {
     const player = user?.playerData || 'No player available';
     const inventory = player.inventory;
     const newInventory = createInvetory(inventory);
-    const slots = Array.from({length: 200});
+    const slots = Array.from({length: 50});
     slots.length -= newInventory.length;
     return (
 <ImageBackground
@@ -31,7 +31,7 @@ const Inventory: React.FC<Props> = ({user}) => {
       style={styles.background}
       resizeMode="cover"
     >
-      <ScrollView>
+      <ScrollView style={styles.scrollview}>
         <View style={styles.container}>
           {newInventory.map((_,index) => (
           <EquipmentSlot key={index} item={ newInventory[index] } size={size} />
@@ -52,7 +52,9 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap', // This will allow the slots to wrap to the next row
         justifyContent: 'center', // Center the equipment slots
         alignItems: 'center',
-        marginTop: 100
+        marginTop: 100,
+      },
+      scrollview: {
       },
       background: {
         flex: 1,
