@@ -150,6 +150,7 @@ const HallOfSages: React.FC = () => {
       console.log('validation ok');
       setSpinner(false);
       userData.playerData.ArtifactsValidated = true;
+      setArtifacts([]);
     };
     const validationNotOk = () => {
       console.log('validation  not ok');
