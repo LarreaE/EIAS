@@ -29,7 +29,7 @@ interface User {
 const HallOfSages: React.FC = () => {
   const navigation = useNavigation<MapScreenNavigationProp>();
   const context = useContext(UserContext) as UserContextType;
-  const { userData,artifacts } = context;
+  const { userData, artifacts, setArtifacts } = context;
   const [usersInHall, setUsersInHall] = useState<User[]>([]);
 
   const [isAnimating, setIsAnimating] = useState(false);
@@ -156,6 +156,7 @@ const HallOfSages: React.FC = () => {
       setSpinner(false);
       ToastAndroid.show('Validation refused', ToastAndroid.SHORT);
       restoreObjects();  
+      setArtifacts([]);
     };
 
   const giveArtifactsToMortimer = () => {
@@ -264,9 +265,9 @@ const HallOfSages: React.FC = () => {
       )}
       {artifacts.length === 4 && filteredUsers.length >= 3 && userData.playerData.ArtifactsValidated === false && userData.playerData.role === 'ACOLYTE' && mortimerInside === true && (
               <MapButton
-              onPress={ sendHallNotificationToMortimer()}
-              iconImage={require('../assets/bell_icon.png')}
-            />
+                onPress={ sendHallNotificationToMortimer()}
+                iconImage={require('../assets/bell_icon.png')}
+              />
       )}
       <MapButton
         onPress={goToMap}

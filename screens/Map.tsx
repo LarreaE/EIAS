@@ -120,7 +120,7 @@ const MapScreen: React.FC = () => {
     {userData.playerData.ArtifactsValidated === true && (
       <View style={styles.buttonObituaryDoor}>
         <MapButton
-          title="Obituary Door"
+          title="Obituary"
           onPress={goToObituaryDoor}
           iconImage={require('../assets/obituary_door_icon.png')}
         />
