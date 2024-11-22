@@ -255,18 +255,20 @@ const HallOfSages: React.FC = () => {
         <MedievalText style={styles.title}>Ancestral</MedievalText>
         <MedievalText style={styles.title}>Hall of Sages</MedievalText>
       </View>
+      {artifacts.length === 4 && filteredUsers.length >= 3 && userData.playerData.ArtifactsValidated === false && userData.playerData.role === 'ACOLYTE' && mortimerInside === false && (
+              <View style={styles.bellButton}>
+                <MapButton
+                  onPress={ sendHallNotificationToMortimer}
+                  iconImage={require('../assets/bell_icon.png')}
+                />
+              </View>
+      )}
       <View style={styles.circleContainer}>{renderUsersInCircle()}</View> 
             {/* Botón para dar artefactos a Mortimer */}
             {artifacts.length === 4 && filteredUsers.length >= 3 && userData.playerData.ArtifactsValidated === false && userData.playerData.role === 'ACOLYTE' && mortimerInside === true &&  (
         <TouchableOpacity onPress={giveArtifactsToMortimer} style={styles.artifactsButton}>
           <MedievalText style={styles.buttonText}>Give Artifacts to Mortimer</MedievalText>
         </TouchableOpacity>
-      )}
-      {artifacts.length === 4 && filteredUsers.length >= 3 && userData.playerData.ArtifactsValidated === false && userData.playerData.role === 'ACOLYTE' && mortimerInside === true && (
-              <MapButton
-              onPress={ sendHallNotificationToMortimer()}
-              iconImage={require('../assets/bell_icon.png')}
-            />
       )}
       <MapButton
         onPress={goToMap}
@@ -306,6 +308,17 @@ const styles = StyleSheet.create({
     paddingVertical: 25,
     textAlign: 'center',
     color: 'white'
+  },
+  bellButton: {
+    position: 'absolute',
+    top: height*0.5,
+    width: width*0.2,
+    height: height* 0.3,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignSelf: 'center',
+
   },
   circleContainer: {
     position: 'absolute',
