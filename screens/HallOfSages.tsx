@@ -36,6 +36,7 @@ const HallOfSages: React.FC = () => {
   const [isAnimatingMortimer, setIsAnimatingMortimer] = useState(false);
   const [isAnimatingFade, setIsAnimatingFade] = useState(false);
   const [spinner, setSpinner] = useState(false);
+  const [mortimerInside, setMortimerInside] = useState(false);
 
   const handleStartAnimation = () => {
     setIsAnimating(true);
@@ -114,6 +115,10 @@ const HallOfSages: React.FC = () => {
     const handleUsersInHall = (users: User[]) => {
       console.log('Datos recibidos en send_users_in_hall:', users);
       setUsersInHall(users);
+
+      const mortimerPresent = users.some(user => user.role === 'MORTIMER');
+      setMortimerInside(mortimerPresent);
+      
     };
 
     socket.on('send_users_in_hall', handleUsersInHall);
@@ -252,15 +257,22 @@ const HallOfSages: React.FC = () => {
       </View>
       <View style={styles.circleContainer}>{renderUsersInCircle()}</View> 
             {/* Botón para dar artefactos a Mortimer */}
-            {artifacts.length === 4 && filteredUsers.length >= 3 && userData.playerData.ArtifactsValidated === false && userData.playerData.role === 'ACOLYTE' && (
+            {artifacts.length === 4 && filteredUsers.length >= 3 && userData.playerData.ArtifactsValidated === false && userData.playerData.role === 'ACOLYTE' && mortimerInside === true &&  (
         <TouchableOpacity onPress={giveArtifactsToMortimer} style={styles.artifactsButton}>
           <MedievalText style={styles.buttonText}>Give Artifacts to Mortimer</MedievalText>
         </TouchableOpacity>
+      )}
+      {artifacts.length === 4 && filteredUsers.length >= 3 && userData.playerData.ArtifactsValidated === false && userData.playerData.role === 'ACOLYTE' && mortimerInside === true && (
+              <MapButton
+              onPress={ sendHallNotificationToMortimer()}
+              iconImage={require('../assets/bell_icon.png')}
+            />
       )}
       <MapButton
         onPress={goToMap}
         iconImage={require('../assets/school_icon.png')}
       />
+       {}
        {isAnimating && <AnimatedCircles />}
        {spinner && <Spinner message='Waiting for validation...' />}
        {isAnimatingMortimer && <InverseAnimatedCircles />}
