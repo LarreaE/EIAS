@@ -25,6 +25,7 @@ export interface Player{
     socketId: String,
     location: String,
     is_inside_tower:boolean,
+    ArtifactsValidated: Boolean,
     equipment: {
       weapon: Weapon,
       armor: Armor,

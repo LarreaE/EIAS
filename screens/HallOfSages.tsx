@@ -1,17 +1,20 @@
 import React, { useContext, useEffect } from 'react';
-import { View, StyleSheet, ImageBackground, Text, Dimensions, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, ImageBackground, Text, Dimensions, TouchableOpacity, ToastAndroid } from 'react-native';
 import AcolythCardInHall from '../components/acolyteCardHall.tsx';
 import MedievalText from '../components/MedievalText.tsx';
 import MapButton from '../components/MapButton.tsx';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList, StackNavigationProp } from '../types/types.ts';
-import { sendIsInHall, sendPlayAnimationAcolyte } from '../sockets/emitEvents.tsx';
+import { restoreObjects, searchValidated, sendAnimationMortimer, sendIsInHall, sendPlayAnimationAcolyte } from '../sockets/emitEvents.tsx';
 import { UserContext, UserContextType } from '../context/UserContext.tsx';
 import { sendLocation } from '../sockets/emitEvents.tsx';
 import { useState } from 'react';
 import socket from '../sockets/socketConnection.tsx';
 import AnimatedCircles from '../components/Animations/AnimatedCircles.tsx';
+import InverseAnimatedCircles from '../components/Animations/InverseAnimationCircles.tsx';
+import FadeInArtefacts from '../components/Animations/FadeInArtefacts.tsx';
 import Config from 'react-native-config';
+import Spinner from '../components/Spinner.tsx';
 
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'HallOfSages'>;
 const { width, height } = Dimensions.get('window');
@@ -30,13 +33,39 @@ const HallOfSages: React.FC = () => {
   const [usersInHall, setUsersInHall] = useState<User[]>([]);
 
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isAnimatingMortimer, setIsAnimatingMortimer] = useState(false);
+  const [isAnimatingFade, setIsAnimatingFade] = useState(false);
+  const [spinner, setSpinner] = useState(false);
 
   const handleStartAnimation = () => {
     setIsAnimating(true);
     setTimeout(() => {
       setIsAnimating(false); // Detener la animación después de un tiempo
+      setSpinner(true);
+      sendAnimationMortimer();
     }, 10000); // Duración de la animación en milisegundos
   };
+  const handleStartAnimationMortimer = () => {
+    setIsAnimatingMortimer(true);
+    setTimeout(() => {
+      setIsAnimatingMortimer(false); // Detener la animación después de un tiempo
+      setIsAnimatingFade(true);
+    }, 10000); // Duración de la animación en milisegundos
+  };
+
+    // Función que se ejecuta cuando se valida la búsqueda
+    const handleValidateSearch = () => {
+      console.log('search validated');
+      setIsAnimatingFade(false);
+      searchValidated(true);
+    };
+  
+    // Función que se ejecuta cuando se reinicia la búsqueda
+    const handleRestartSearch = () => {
+      console.log('restart search');
+      setIsAnimatingFade(false);
+      searchValidated(false);
+    };
 
   if (!userData || !userData.playerData || !userData.playerData.avatar || !userData.playerData.nickname) {
     return <MedievalText>Cargando...</MedievalText>;
@@ -56,6 +85,8 @@ const HallOfSages: React.FC = () => {
     navigation.navigate('School');
     socket.off('send_users_in_hall');
     socket.off('play_animation_all_acolytes');
+    socket.off('play_animation_all_mortimers');
+    socket.off('Validation_acolytes');
   };
 
   const sendHallNotificationToMortimer = async () => {
@@ -91,10 +122,36 @@ const HallOfSages: React.FC = () => {
         console.log('Playing animation');
         handleStartAnimation();
       });
+      socket.on('Validation_acolytes', (validation) => {
+        console.log('validation arrived from server');
+        if (validation === true) {
+          validationOk();
+        }
+        else{
+          validationNotOk();
+        }
+      });
     }
-
-    
+    else if(userData.playerData.role === 'MORTIMER'){
+      socket.on('play_animation_all_mortimers', () => {
+        console.log('Playing animation mortimer');
+        handleStartAnimationMortimer();
+      });
+    }    
     }, []);
+
+
+    const validationOk = () => {
+      console.log('validation ok');
+      setSpinner(false);
+      userData.playerData.ArtifactsValidated = true;
+    };
+    const validationNotOk = () => {
+      console.log('validation  not ok');
+      setSpinner(false);
+      ToastAndroid.show('Validation refused', ToastAndroid.SHORT);
+      restoreObjects();  
+    };
 
   const giveArtifactsToMortimer = () => {
     console.log('Artifacts given to Mortimer:', artifacts);
@@ -195,7 +252,7 @@ const HallOfSages: React.FC = () => {
       </View>
       <View style={styles.circleContainer}>{renderUsersInCircle()}</View> 
             {/* Botón para dar artefactos a Mortimer */}
-            {artifacts.length === 0 && filteredUsers.length >= 1 && userData.playerData.role === 'ACOLYTE' && (
+            {artifacts.length === 4 && filteredUsers.length >= 3 && userData.playerData.ArtifactsValidated === false && userData.playerData.role === 'ACOLYTE' && (
         <TouchableOpacity onPress={giveArtifactsToMortimer} style={styles.artifactsButton}>
           <MedievalText style={styles.buttonText}>Give Artifacts to Mortimer</MedievalText>
         </TouchableOpacity>
@@ -205,6 +262,9 @@ const HallOfSages: React.FC = () => {
         iconImage={require('../assets/school_icon.png')}
       />
        {isAnimating && <AnimatedCircles />}
+       {spinner && <Spinner message='Waiting for validation...' />}
+       {isAnimatingMortimer && <InverseAnimatedCircles />}
+       {isAnimatingFade && <FadeInArtefacts onValidateSearch={handleValidateSearch} onRestartSearch={handleRestartSearch}/>}
     </ImageBackground>
   );
 };
