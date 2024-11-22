@@ -29,7 +29,7 @@ interface User {
 const HallOfSages: React.FC = () => {
   const navigation = useNavigation<MapScreenNavigationProp>();
   const context = useContext(UserContext) as UserContextType;
-  const { userData, artifacts, setArtifacts } = context;
+  const { userData, artifacts, setArtifacts, setIsHallInNeedOfMortimer } = context;
   const [usersInHall, setUsersInHall] = useState<User[]>([]);
 
   const [isAnimating, setIsAnimating] = useState(false);
@@ -48,6 +48,7 @@ const HallOfSages: React.FC = () => {
   };
   const handleStartAnimationMortimer = () => {
     setIsAnimatingMortimer(true);
+    setIsHallInNeedOfMortimer(false);
     setTimeout(() => {
       setIsAnimatingMortimer(false); // Detener la animación después de un tiempo
       setIsAnimatingFade(true);

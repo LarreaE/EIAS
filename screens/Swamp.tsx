@@ -61,78 +61,92 @@ const Swamp: React.FC = () => {
     require('../assets/artefact4.png'),
   ];
 
-  // Fetch artifacts from the server
-  useEffect(() => {
-    requestArtifacts();
-    listenToArtifactsUpdates();
-    socket.on('receive_artifacts', (artifacts) => {
+ // Fetch artifacts from the server
+useEffect(() => {
+  requestArtifacts();
+  listenToArtifactsUpdates();
 
-      if(artifacts.length === 4){
-        console.log('artifacts set');
-        
-        setArtifacts(artifacts);
+  socket.on('receive_artifacts', (artifacts) => {
+    if (artifacts.length === 4) {
+      console.log('artifacts set');
+      setArtifacts(artifacts);
+    }
+    console.log('Artifacts received:', artifacts);
 
-      }
-      console.log('Artifacts received:', artifacts);
-      const mappedArtifacts = artifacts.map(
-        (artifact: {
-          id: any;
-          latitude: any;
-          longitude: any;
-          isTaken: any;
-          name: any;
-          image: any;
-        }, index: number) => ({
-          id: artifact.id,
-          latitude: artifact.latitude,
-          longitude: artifact.longitude,
-          isTaken: artifact.isTaken,
-          inRange: false,
-          name: artifact.name,
-          image: index,
-        })
-      );
-      setPointsOfInterest(mappedArtifacts);
-      const takenArtifactIds = mappedArtifacts
-        .filter((artifact: { isTaken: any }) => artifact.isTaken)
-        .map((artifact: { id: any }) => artifact.id);
-      setTakenArtifacts(takenArtifactIds);
-      setIsLoading(false);
-    });
+    const mappedArtifacts = artifacts.map(
+      (artifact: {
+        id: any;
+        latitude: any;
+        longitude: any;
+        isTaken: any;
+        name: any;
+        image: any;
+      }, index: number) => ({
+        id: artifact.id,
+        latitude: artifact.latitude,
+        longitude: artifact.longitude,
+        isTaken: artifact.isTaken,
+        inRange: true,
+        name: artifact.name,
+        image: index,
+      })
+    );
 
-    socket.on('update_artifacts', (artifacts) => {
-      console.log('Artifacts updated:', artifacts);
-      const mappedArtifacts = artifacts.map(
-        (artifact: {
-          id: any;
-          latitude: any;
-          longitude: any;
-          isTaken: any;
-          name: any;
-        }) => ({
-          id: artifact.id,
-          latitude: artifact.latitude,
-          longitude: artifact.longitude,
-          isTaken: artifact.isTaken,
-          inRange: false,
-          name: artifact.name,
-        })
-      );
+    setPointsOfInterest(mappedArtifacts);
 
-      setPointsOfInterest(mappedArtifacts);
+    // Recalcular proximidad si la ubicación está disponible
+    if (location && location.latitude && location.longitude) {
+      checkProximity(location.latitude, location.longitude);
+    }
 
-      const takenArtifactIds = mappedArtifacts
-        .filter((artifact: { isTaken: any }) => artifact.isTaken)
-        .map((artifact: { id: any }) => artifact.id);
-      setTakenArtifacts(takenArtifactIds);
-    });
+    const takenArtifactIds = mappedArtifacts
+      .filter((artifact) => artifact.isTaken)
+      .map((artifact) => artifact.id);
+    setTakenArtifacts(takenArtifactIds);
+    setIsLoading(false);
+  });
 
-    return () => {
-      socket.off('receive_artifacts');
-      socket.off('update_artifacts');
-      socket.emit('delete_map_user', userData.playerData.nickname);
-    };
-  }, []);
+  socket.on('update_artifacts', (artifacts) => {
+    console.log('Artifacts updated:',artifacts);
+    const mappedArtifacts = artifacts.map(
+      (artifact: {
+        id: any;
+        latitude: any;
+        longitude: any;
+        isTaken: any;
+        name: any;
+        image: any;
+        inRange: any;
+      }, index: number) => ({
+        id: artifact.id,
+        latitude: artifact.latitude,
+        longitude: artifact.longitude,
+        isTaken: artifact.isTaken,
+        inRange: true,
+        name: artifact.name,
+        image: index,
+      })
+    );
+
+    setPointsOfInterest(mappedArtifacts);
+
+    // Recalcular proximidad si la ubicación está disponible
+    if (location && location.latitude && location.longitude) {
+      checkProximity(location.latitude, location.longitude);
+    }
+
+    const takenArtifactIds = mappedArtifacts
+      .filter((artifact) => artifact.isTaken)
+      .map((artifact) => artifact.id);
+    setTakenArtifacts(takenArtifactIds);
+  });
+
+  return () => {
+    socket.off('receive_artifacts');
+    socket.off('update_artifacts');
+    socket.emit('delete_map_user', userData.playerData.nickname);
+  };
+}, [location]); // Añade `location` como dependencia
 
 
   useEffect(() => {
@@ -254,7 +268,7 @@ const Swamp: React.FC = () => {
         if (distance < 50) {
           return { ...poi, inRange: true };
         }
-        return { ...poi, inRange: false };
+        return { ...poi, inRange: true };
       })
     );
   };
@@ -283,20 +297,22 @@ const Swamp: React.FC = () => {
     return R * c; // Returns distance in meters
   };
 
-  // Handle artifact collection
-  // Handle artifact collection
-const handleArtifactTake = (id: number) => {
-  if (userData.playerData.role === 'MORTIMER') {
-    ToastAndroid.show('Only Acolytes can take artifacts.', ToastAndroid.SHORT);
-    return;
-  }
-
-  setPointsOfInterest((prev) =>
-    prev.map((p) => (p.id === id ? { ...p, isTaken: true } : p))
-  );
-  objectTaken(id);
-  setTakenArtifacts((prev) => [...prev, id]);
-};
+  const handleArtifactTake = (id: number) => {
+    if (userData.playerData.role === 'MORTIMER') {
+      ToastAndroid.show('Only Acolytes can take artifacts.', ToastAndroid.SHORT);
+      return;
+    }
+  
+    // Marcar el artefacto como tomado
+    setPointsOfInterest((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, isTaken: true } : p))
+    );
+    objectTaken(id); // Notificar al servidor
+    setTakenArtifacts((prev) => [...prev, id]); // Actualizar artefactos tomados
+  
+    // Recalcular proximidad después de tomar un artefacto
+    checkProximity(location.latitude, location.longitude);
+  };
 
   // Handle returning artifacts
   const handleReturnArtifacts = () => {
