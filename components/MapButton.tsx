@@ -7,7 +7,7 @@ const { width, height } = Dimensions.get('window');
 
 type Props = {
   title?: string;
-  onPress: any;
+  onPress: () => void | Promise<void>;
   iconImage?: ImageSourcePropType;
   isGlowing?: boolean;
 };
