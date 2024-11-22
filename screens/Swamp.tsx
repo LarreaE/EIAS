@@ -81,13 +81,15 @@ const Swamp: React.FC = () => {
           longitude: any;
           isTaken: any;
           name: any;
-        }) => ({
+          image: any;
+        }, index: number) => ({
           id: artifact.id,
           latitude: artifact.latitude,
           longitude: artifact.longitude,
           isTaken: artifact.isTaken,
           inRange: false,
           name: artifact.name,
+          image: index,
         })
       );
       setPointsOfInterest(mappedArtifacts);
@@ -335,9 +337,9 @@ const handleArtifactTake = (id: number) => {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0000ff" />
-        <Text style={styles.loadingText}>
+        <MedievalText style={styles.loadingText}>
           Loading Artifacts...
-        </Text>
+        </MedievalText>
       </View>
     );
   }
@@ -345,7 +347,7 @@ const handleArtifactTake = (id: number) => {
   if (loadingError) {
     return (
       <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>{loadingError}</Text>
+        <MedievalText style={styles.errorText}>{loadingError}</MedievalText>
       </View>
     );
   }
@@ -407,7 +409,7 @@ const handleArtifactTake = (id: number) => {
                       }}
                     >
                       <Image
-                        source={artifactImages[poi.id - 1]}
+                        source={artifactImages[poi.image]}
                         style={styles.artifactImage}
                         resizeMode="contain"
                       />
@@ -442,9 +444,9 @@ const handleArtifactTake = (id: number) => {
         style={styles.toggleBagButton}
         onPress={toggleBag}
       >
-        <Text style={styles.toggleBagButtonText}>
+        <MedievalText style={styles.toggleBagButtonText}>
           {isBagVisible ? '▼' : '▲'}
-        </Text>
+        </MedievalText>
       </TouchableOpacity>
 )}
 
@@ -458,21 +460,26 @@ const handleArtifactTake = (id: number) => {
       style={styles.closeBagButton}
       onPress={toggleBag}
     >
-      <Text style={styles.closeBagButtonText}>▼</Text>
+      <MedievalText style={styles.closeBagButtonText}>▼</MedievalText>
     </TouchableOpacity>
 
     <View style={styles.gridContainer}>
-      {Array.from({ length: 4 }).map((_, index) => (
-        <View key={index} style={styles.gridItem}>
-          {takenArtifacts[index] ? (
-            <Image
-              source={artifactImages[index]}
-              style={styles.artifactImage}
-            />
-          ) : null}
-        </View>
-      ))}
-    </View>
+  {takenArtifacts.map((artifactId, index) => {
+    // Encontrar el artefacto correspondiente en pointsOfInterest
+    const artifact = pointsOfInterest.find((poi) => poi.id === artifactId);
+
+    return (
+      <View key={index} style={styles.gridItem}>
+        {artifact ? (
+          <Image
+            source={artifactImages[artifact.image]} // Usar la propiedad `image` del artefacto
+            style={styles.artifactImage}
+          />
+        ) : null}
+      </View>
+    );
+  })}
+</View>
     {/* Button to return artifacts */}
     {/* <TouchableOpacity
       style={styles.returnButton}

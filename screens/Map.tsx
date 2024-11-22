@@ -117,12 +117,12 @@ const MapScreen: React.FC = () => {
         isGlowing={isHallInNeedOfMortimer}
       />
     </View>
-    {userData.playerData.ArtifactsValidated && (
+    {userData.playerData.ArtifactsValidated === true && (
       <View style={styles.buttonObituaryDoor}>
         <MapButton
-          title="Obituary Door"
+          title="Obituary"
           onPress={goToObituaryDoor}
-          iconImage={require('../assets/informacion.png')}
+          iconImage={require('../assets/obituary_door_icon.png')}
         />
       </View>
     )}
@@ -160,12 +160,12 @@ const MapScreen: React.FC = () => {
                 iconImage={require('../assets/swamp_icon.png')}
               />
             </View>
-            {userData.playerData.ArtifactsValidated && (
+            {userData.playerData.ArtifactsValidated  === true && (
               <View style={styles.buttonObituaryDoor}>
                 <MapButton
-                  title="Obituary Door"
+                  title="Obituary"
                   onPress={goToObituaryDoor}
-                  iconImage={require('../assets/informacion.png')}
+                  iconImage={require('../assets/obituary_door_icon.png')}
                 />
               </View>
             )}

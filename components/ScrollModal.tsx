@@ -35,7 +35,7 @@ const ScrollModal: React.FC<Props> = ({ visible, setVisible }) => {
                     <TouchableOpacity style={styles.closeButton} onPress={() => {
                         setVisible(false);
                     }}>
-                        <Text style={styles.buttonText}>Close</Text>
+                        <MedievalText style={styles.buttonText}>Close</MedievalText>
                     </TouchableOpacity>
                 </View>
             </ImageBackground>

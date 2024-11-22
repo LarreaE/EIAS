@@ -20,16 +20,16 @@ export const sendIsInside = (state: boolean): void => {
 };
 
 export const objectTaken = (objectId: Int32) => {
-  console.log("object taken send");
+  console.log('object taken send');
   socket.emit('objectTaken', { id: objectId });
 };
 
 export const restoreObjects = () => {
-  console.log("restore_objects");
+  console.log('restore_objects');
   socket.emit('restore_objects');
 };
 export const requestArtifacts = () => {
-  console.log("Artefacts Requestet");
+  console.log('Artefacts Requestet');
   socket.emit('request_artifacts');
 };
 
@@ -37,6 +37,15 @@ export const sendIsInHall = (email: string, state: boolean): void => {
   socket.emit('is_in_hall', { email, isInHall: state });
 };
 export const sendPlayAnimationAcolyte = (): void => {
-  console.log("enviado");
+  console.log('Aniomation send acolytes');
   socket.emit('play_animation_acolytes');
 };
+export const sendAnimationMortimer = (): void => {
+  console.log('Animation send Mortimer');
+  socket.emit('play_animation_mortimer');
+};
+export const searchValidated = (validation:boolean): void => {
+  console.log('SearchValidated');
+  socket.emit('search_validation',validation);
+};
+

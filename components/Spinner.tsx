@@ -6,7 +6,7 @@ interface SpinnerProps {
   message?: string;
 }
 
-const Spinner: React.FC<SpinnerProps> = ({ message = 'Loading...' }) => {
+const Spinner: React.FC<SpinnerProps> = ({ message }) => {
   return (
     <View style={styles.container}>
       <ActivityIndicator size="large" color="#4285F4" />
