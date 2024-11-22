@@ -271,11 +271,13 @@ const HallOfSages: React.FC = () => {
           <MedievalText style={styles.buttonText}>Give Artifacts to Mortimer</MedievalText>
         </TouchableOpacity>
       )}
-      {artifacts.length === 4 && filteredUsers.length >= 3 && userData.playerData.ArtifactsValidated === false && userData.playerData.role === 'ACOLYTE' && mortimerInside === true && (
-              <MapButton
-                onPress={ sendHallNotificationToMortimer()}
-                iconImage={require('../assets/bell_icon.png')}
-              />
+      {artifacts.length === 4 && filteredUsers.length >= 3 && userData.playerData.ArtifactsValidated === false && userData.playerData.role === 'ACOLYTE' && mortimerInside === false && (
+              <View style={styles.bellButton}>
+                <MapButton
+                  onPress={ sendHallNotificationToMortimer}
+                  iconImage={require('../assets/bell_icon.png')}
+                />
+              </View>
       )}
       <MapButton
         onPress={goToMap}
