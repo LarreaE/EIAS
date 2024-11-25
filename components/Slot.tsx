@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Image, StyleSheet, TouchableOpacity, Modal, Text, Dimensions } from "react-native";
+import { View, Image, StyleSheet, TouchableOpacity, Modal, Text, Dimensions, Animated } from "react-native";
 import MedievalText from "./MedievalText";
 import Item from "../interfaces/Item";
 
@@ -53,6 +53,18 @@ const EquipmentSlot: React.FC<Slot> = ({ item, size }) => {
           onRequestClose={() => setIsModalVisible(false)}
         >
           <View style={styles.modalOverlay}>
+            {item?.isUnique && (
+              <>
+              <Animated.Image
+                source={require('../assets/animations/sparkle.gif')}
+                style={[styles.sparkle,
+                  {
+                    opacity: 0.6,
+                  },
+                ]}
+              />
+              </>
+            )}
             <View style={styles.modalContent}>
               <View style={styles.equipment}>
                 {item?.isUnique ? (
@@ -130,6 +142,13 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     alignItems: "center",
+  },
+  sparkle: {
+    position: "absolute",
+    left: 0,
+    alignItems: "center",
+    width: width,
+    height: height,    
   },
   itemName: {
     fontSize: 14,
