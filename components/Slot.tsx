@@ -53,6 +53,7 @@ const EquipmentSlot: React.FC<Slot> = ({ item, size }) => {
           onRequestClose={() => setIsModalVisible(false)}
         >
           <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
             {item?.isUnique && (
               <>
               <Animated.Image
@@ -65,7 +66,6 @@ const EquipmentSlot: React.FC<Slot> = ({ item, size }) => {
               />
               </>
             )}
-            <View style={styles.modalContent}>
               <View style={styles.equipment}>
                 {item?.isUnique ? (
                   <Image
@@ -87,12 +87,12 @@ const EquipmentSlot: React.FC<Slot> = ({ item, size }) => {
                 <MedievalText style={styles.modalTitle}>{item.name}</MedievalText>
                 <MedievalText style={styles.modalDescription}>{item.description}</MedievalText>
                 <View style={styles.statsContainer}>
-                {item?.modifiers ? (
+                {item?.modifiers && (
                   <>
                     {Object.entries(item.modifiers).map(([name, value], index) => (
                     <View
                       key={name}
-                      style={[styles.stat, index % 2 === 0 ? styles.statLeft : styles.statRight]}
+                      style={[styles.stat]}
                     >
                       <MedievalText style={styles.statText}>
                         {name}: {value}
@@ -100,7 +100,7 @@ const EquipmentSlot: React.FC<Slot> = ({ item, size }) => {
                     </View>
                   ))}
                   </>
-                ) : (<></>)}
+                )}
                 </View>
               </View>
               <TouchableOpacity
@@ -148,7 +148,8 @@ const styles = StyleSheet.create({
     left: 0,
     alignItems: "center",
     width: width,
-    height: height,    
+    height: height,
+    zIndex: 1,
   },
   itemName: {
     fontSize: 14,
@@ -236,6 +237,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
+    zIndex: 99,
   },
   modalButton: {
     fontSize: 16,
