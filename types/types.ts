@@ -20,4 +20,5 @@ export type RootStackParamList = {
     LaboratoryMortimer: undefined;
     ObituaryDoor: undefined;
     Swamp: undefined;
+    THOS: undefined;
   };

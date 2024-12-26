@@ -33,6 +33,7 @@ import Swamp from './screens/Swamp';
 import SchoolScreen from './screens/OldSchool';
 import HallOfSages from './screens/HallOfSages';
 import ObituaryDoor from './screens/ObituaryDoor';
+import TheHollowOfStages from './screens/TheHollowOfStages';
 
 const Tab = createMaterialTopTabNavigator();
 const { width, height } = Dimensions.get('window');
@@ -273,6 +274,7 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
             <Stack.Screen name="School" component={SchoolScreen} options={{ headerShown: false }} />
             <Stack.Screen name="HallOfSages" component={HallOfSages} options={{ headerShown: false }} />
             <Stack.Screen name="ObituaryDoor" component={ObituaryDoor} options={{ headerShown: false }} />
+            <Stack.Screen name="THOS" component={TheHollowOfStages} options={{ headerShown: false }} />
           </Stack.Navigator>
         </NavigationContainer>
       </GestureHandlerRootView>

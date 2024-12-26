@@ -95,7 +95,7 @@ const HallOfSages: React.FC = () => {
     console.log('Sending obituario notification to Mortimer');
   
     try {
-      const response = await fetch(`${Config.RENDER}/api/notifications/send-notification-obituario`);
+      const response = await fetch(`${Config.LOCAL_HOST}/api/notifications/send-notification-obituario`);
       
       if (!response.ok) {
         throw new Error('Network response was not ok');

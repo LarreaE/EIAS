@@ -60,6 +60,10 @@ const MapScreen: React.FC = () => {
     sendLocation('Swamp', userData.playerData.email);
     navigation.navigate('Swamp');
   };
+  const goToTHOS = () => {
+    sendLocation('THOS', userData.playerData.email);
+    navigation.navigate('THOS');
+  };
   const goToTowerMortimer = () => {
     sendLocation('Tower', userData.playerData.email);
     navigation.navigate('TowerMortimer');
@@ -169,6 +173,13 @@ const MapScreen: React.FC = () => {
                 />
               </View>
             )}
+            <View style={styles.buttonMapTHOS}>
+              <MapButton
+                title="The hollow of the lost"
+                onPress={goToTHOS}
+                iconImage={require('../assets/THOS-icon.png')}
+              />
+            </View>
 
             {/* Animación de los pájaros */}
             <Animated.Image
@@ -221,6 +232,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     zIndex: 1,
   },
+  buttonMapTHOS: {
+    position: 'absolute',
+    bottom: height * 0.70,
+    right: width * 0.65,
+    alignSelf: 'center',
+    zIndex: 1,
+  },
   buttonSchool: {
     position: 'absolute',
     bottom: height * 0.1,
@@ -241,7 +259,7 @@ const styles = StyleSheet.create({
     right: width * 0.25,
     alignSelf: 'center',
     zIndex: 1,
-  }
+  },
 });
 
 export default MapScreen;
