@@ -64,6 +64,10 @@ const MapScreen: React.FC = () => {
     sendLocation('THOS', userData.playerData.email);
     navigation.navigate('THOS');
   };
+  const goToTIOTF = () => {
+    sendLocation('TIOTF', userData.playerData.email);
+    navigation.navigate('TIOTF');
+  };
   const goToTowerMortimer = () => {
     sendLocation('Tower', userData.playerData.email);
     navigation.navigate('TowerMortimer');
@@ -180,6 +184,13 @@ const MapScreen: React.FC = () => {
                 iconImage={require('../assets/THOS-icon.png')}
               />
             </View>
+            <View style={styles.buttonMapTIOTF}>
+              <MapButton
+                title="The Inn of the Forgotten"
+                onPress={goToTIOTF}
+                iconImage={require('../assets/TIOTF-icon.png')}
+              />
+            </View>
 
             {/* Animación de los pájaros */}
             <Animated.Image
@@ -236,6 +247,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: height * 0.70,
     right: width * 0.65,
+    alignSelf: 'center',
+    zIndex: 1,
+  },
+  buttonMapTIOTF: {
+    position: 'absolute',
+    bottom: height * 0.17,
+    right: width * 0.77,
     alignSelf: 'center',
     zIndex: 1,
   },

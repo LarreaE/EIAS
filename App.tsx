@@ -1,20 +1,17 @@
 
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useState, useEffect, useContext } from 'react';
-import { SafeAreaView, StyleSheet, Image, Modal, TouchableOpacity, Text, View, ImageBackground, Alert, ToastAndroid, Animated, Dimensions } from 'react-native';
+import { SafeAreaView, StyleSheet, Image, View, ToastAndroid, Animated, Dimensions } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer, ParamListBase, RouteProp, useNavigationContainerRef } from '@react-navigation/native';
 import { createMaterialTopTabNavigator, MaterialTopTabNavigationOptions } from '@react-navigation/material-top-tabs';
 import GoogleSignInComponent from './components/googleSingIn';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
-import QRScanner from './components/QrScanner';
 import ProfileScreen from './components/ProfileScreen';
-import AcolythHomeScreen from './components/acolythHomeScreen';
 import AcolythLaboratoryScreen from './components/acolythLaboratoryScreen';
 import MortimerLaboratoryScreen from './components/mortimerLaboratoryScreen ';
 import MortimerTower from './components/mortimerTower';
-import HomeVillain from './components/HomeVillain';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { listenToServerEvents, clearServerEvents } from './sockets/listenEvents';
 import socket from './sockets/socketConnection';
@@ -22,18 +19,18 @@ import { sendUserEMail } from './sockets/emitEvents';
 import { UserContextType, UserProvider } from './context/UserContext'; // Importa el proveedor
 import { UserContext } from './context/UserContext'; // Importa el contexto
 import AcolythScreen from './screens/Info';
-import { Player } from './interfaces/Player';
 import MapScreen from './screens/Map';
 import { createStackNavigator } from '@react-navigation/stack';
 import Tower from './screens/Tower';
 import messaging from '@react-native-firebase/messaging';
 import { checkAndRequestNotificationPermission } from './components/notificationPermissions';
-import { saveBoolean, getBoolean } from './helper/AsyncStorage';
+import { getBoolean } from './helper/AsyncStorage';
 import Swamp from './screens/Swamp';
 import SchoolScreen from './screens/OldSchool';
 import HallOfSages from './screens/HallOfSages';
 import ObituaryDoor from './screens/ObituaryDoor';
 import TheHollowOfStages from './screens/TheHollowOfStages';
+import TheInnOfTheForgotten from './screens/TheInnOfTheForgotten';
 
 const Tab = createMaterialTopTabNavigator();
 const { width, height } = Dimensions.get('window');
@@ -275,6 +272,7 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
             <Stack.Screen name="HallOfSages" component={HallOfSages} options={{ headerShown: false }} />
             <Stack.Screen name="ObituaryDoor" component={ObituaryDoor} options={{ headerShown: false }} />
             <Stack.Screen name="THOS" component={TheHollowOfStages} options={{ headerShown: false }} />
+            <Stack.Screen name="TIOTF" component={TheInnOfTheForgotten} options={{ headerShown: false }} />
           </Stack.Navigator>
         </NavigationContainer>
       </GestureHandlerRootView>

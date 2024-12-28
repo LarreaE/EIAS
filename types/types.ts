@@ -21,4 +21,5 @@ export type RootStackParamList = {
     ObituaryDoor: undefined;
     Swamp: undefined;
     THOS: undefined;
+    TIOTF: undefined;
   };
