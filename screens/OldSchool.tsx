@@ -42,6 +42,10 @@ const SchoolScreen: React.FC = () => {
     sendLocation('', userData.playerData.email);
     navigation.navigate('QRScanner');
   };
+  const goToDungeon = () => {
+    sendLocation('', userData.playerData.email);
+    navigation.navigate('Dungeon');
+  };
 
   if (isInsideLab) {
     return (
@@ -84,9 +88,17 @@ const SchoolScreen: React.FC = () => {
               />
             </View>
 
+            <View style={styles.buttonDungeon}>
+              <MapButton
+                title="Dungeon"
+                onPress={goToDungeon}
+                iconImage={require('../assets/OSD-icon.png')}
+              />
+            </View>
+
           </ImageBackground>
         </GestureHandlerRootView>
-      )
+      );
 
     default:
 
@@ -136,6 +148,13 @@ const SchoolScreen: React.FC = () => {
                 iconImage={require('../assets/map_icon.png')}
               />
             </View>
+            <View style={styles.buttonDungeon}>
+              <MapButton
+                title="Dungeon"
+                onPress={goToDungeon}
+                iconImage={require('../assets/OSD-icon.png')}
+              />
+            </View>
 
           </ImageBackground>
         </GestureHandlerRootView>
@@ -161,14 +180,20 @@ const styles = StyleSheet.create({
   },
   buttonHallOfSages: {
     position: 'absolute',
-    bottom: height*0.64,
-    right: width*0.14,
+    bottom: height * 0.64,
+    right: width * 0.14,
     alignSelf: 'center',
   },
   buttonMap: {
     position: 'absolute',
-    bottom: height* 0.0,
-    right: width* 0.485,
+    bottom: height * 0.0,
+    right: width * 0.485,
+    alignSelf: 'center',
+  },
+  buttonDungeon: {
+    position: 'absolute',
+    bottom: height * 0.35,
+    right: width * 0.2,
     alignSelf: 'center',
   },
   title: {

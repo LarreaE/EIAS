@@ -22,4 +22,5 @@ export type RootStackParamList = {
     Swamp: undefined;
     THOS: undefined;
     TIOTF: undefined;
+    Dungeon: undefined;
   };
