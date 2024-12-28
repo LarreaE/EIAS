@@ -48,4 +48,7 @@ export const searchValidated = (validation:boolean): void => {
   console.log('SearchValidated');
   socket.emit('search_validation',validation);
 };
-
+export const sendBetrayer = (decision:boolean,email: string): void => {
+  console.log('Sending betaryer');
+  socket.emit('Betrayer',decision,email);
+};
