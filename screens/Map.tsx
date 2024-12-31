@@ -21,9 +21,6 @@ const MapScreen: React.FC = () => {
   ? require('../assets/map-betrayer.png')
   : require('../assets/map.png');
 
-  console.log(userData.playerData.isbetrayer);
-  
-
   // Animación de los pájaros
   const birdPosition = useRef(new Animated.Value(width + 50)).current; // Inicia fuera de la pantalla por la derecha
   const birdYPosition = useRef(new Animated.Value(height * 0.5)).current; // Posición vertical inicial
