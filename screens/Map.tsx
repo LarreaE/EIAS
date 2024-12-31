@@ -17,6 +17,13 @@ const MapScreen: React.FC = () => {
   const context = useContext(UserContext) as UserContextType;
   const { userData, isHallInNeedOfMortimer } = context;
 
+  const backgroundSource = userData.playerData.isbetrayer
+  ? require('../assets/map-betrayer.png')
+  : require('../assets/map.png');
+
+  console.log(userData.playerData.isbetrayer);
+  
+
   // Animación de los pájaros
   const birdPosition = useRef(new Animated.Value(width + 50)).current; // Inicia fuera de la pantalla por la derecha
   const birdYPosition = useRef(new Animated.Value(height * 0.5)).current; // Posición vertical inicial
@@ -141,7 +148,7 @@ const MapScreen: React.FC = () => {
       return (
         <GestureHandlerRootView style={styles.container}>
           <ImageBackground
-            source={require('../assets/map.png')}
+            source={backgroundSource}
             style={styles.background}
             resizeMode="cover"
           >
