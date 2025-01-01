@@ -52,3 +52,22 @@ export const sendBetrayer = (decision:boolean,email: string): void => {
   console.log('Sending betaryer');
   socket.emit('Betrayer',decision,email);
 };
+export const angeloFound = (): void => {
+  console.log('AngeloFound');
+  socket.emit('AngeloFound');
+};
+// Iniciar la batalla con Angelo
+export const startAngeloBattle = (): void => {
+  socket.emit('start_angelo_battle');
+};
+
+// Reducir a Angelo (un ataque)
+export const reduceAngelo = (value: number = 5): void => {
+  socket.emit('reduce_angelo', { value });
+};
+
+// Cancelar la batalla (o rendirse)
+export const cancelBattle = (): void => {
+  socket.emit('cancel_battle');
+};
+

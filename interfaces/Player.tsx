@@ -26,6 +26,7 @@ export interface Player{
     location: String,
     is_inside_tower:boolean,
     ArtifactsValidated: Boolean,
+    AngeloReduced: Boolean,
     equipment: {
       weapon: Weapon,
       armor: Armor,

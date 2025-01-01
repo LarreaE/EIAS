@@ -1,9 +1,19 @@
 import { Alert, Vibration,ToastAndroid } from 'react-native';
 import socket from './socketConnection';
 import Config from 'react-native-config';
-import { useContext } from 'react';
-import { UserContext } from '../context/UserContext';
 import { requestArtifacts } from './emitEvents';
+
+// Interfaces opcionales para tus datos
+interface BattleData {
+  progress: SetStateAction<number>;
+  acolytePower: number;
+  angeloPower: number;
+}
+
+interface BattleEndData {
+  result: string;
+  message: string;
+}
 
 // Función para escuchar eventos del servidor
 export const listenToServerEvents = (): void => {
@@ -60,6 +70,30 @@ export const listenToArtifactsUpdates = (): void => {
     requestArtifacts();
   });
 };
+export const listenToTIOTF = (onAngeloFoundCallback: () => void): void => {
+  socket.on('AngeloWasFound', () => {
+    console.log('Angelo Was Found by Other Player');
+    onAngeloFoundCallback();
+
+  });
+};
+export const listenToBattleEvents = (
+  onBattleStarted: (data: BattleData) => void,
+  onBattleUpdate: (data: BattleData) => void,
+  onBattleEnd: (data: BattleEndData) => void
+): void => {
+  socket.on('battle_started', (data: BattleData) => {
+    onBattleStarted(data);
+  });
+
+  socket.on('battle_update', (data: BattleData) => {
+    onBattleUpdate(data);
+  });
+
+  socket.on('battle_end', (data: BattleEndData) => {
+    onBattleEnd(data);
+  });
+};
 
 
 // Función para limpiar los eventos cuando el componente se desmonte
@@ -71,6 +105,12 @@ export const clearServerEvents = (): void => {
   socket.off('qr_scanned');
   socket.off('pushNotification');
   socket.off('door_status');
+  socket.off('AngeloWasFound');
+};
+export const clearBattleEvents = (): void => {
+  socket.off('battle_started');
+  socket.off('battle_update');
+  socket.off('battle_end');
 };
 
 const sendNotification = async (email: any) => {
