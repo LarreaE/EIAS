@@ -1,5 +1,11 @@
 import React, { useContext } from 'react';
-import {  StyleSheet,  ImageBackground, Dimensions, View } from 'react-native';
+import {
+  StyleSheet,
+  ImageBackground,
+  Dimensions,
+  View,
+  Image, // ← Asegúrate de importar Image
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/types';
@@ -13,46 +19,47 @@ type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Dungeon'
 const { width, height } = Dimensions.get('window');
 
 const Dungeon: React.FC = () => {
-
   const context = useContext(UserContext) as UserContextType;
-  const {userData } = context;
+  const { userData } = context;
   const navigation = useNavigation<MapScreenNavigationProp>();
 
   const goToSchool = () => {
     sendLocation('', userData.playerData.email);
     navigation.navigate('School');
   };
-    return (
-      <>
-          <ImageBackground
-          source={require('../assets/OSD-bg.png')}
-          style={styles.background}
-          resizeMode="cover"
-          >
-            <View style={styles.titleContainer}>
-                <View style={styles.titleBackground} />
-                <MedievalText style={styles.title}>The Old School Dungeon</MedievalText>
-            </View>
-            <MapButton
-                onPress={goToSchool}
-                iconImage={require('../assets/map_icon.png')}
-            />
-          </ImageBackground>
-      </>
-    );
+
+  // Verificamos si Angelo ha sido "Deliverado"
+  const isAngeloDelivered = userData?.playerData?.angeloDelivered === true;
+
+  return (
+    <ImageBackground
+      source={require('../assets/OSD-bg.png')}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      <View style={styles.titleContainer}>
+        <View style={styles.titleBackground} />
+        <MedievalText style={styles.title}>The Old School Dungeon</MedievalText>
+      </View>
+
+      {/* Si AngeloDelivered es true, mostramos su imagen en la mazmorra */}
+      {isAngeloDelivered && (
+        <Image
+          source={require('../assets/angelo_dungeon.png')}
+          style={styles.angeloDungeon}
+          resizeMode="contain"
+        />
+      )}
+
+      <MapButton
+        onPress={goToSchool}
+        iconImage={require('../assets/map_icon.png')}
+      />
+    </ImageBackground>
+  );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    opacity:0.8,
-    width: width * 0.8,
-    height: height * 0.55,
-    backgroundColor: 'rgba(128, 128, 128, 0.7)',
-    borderRadius: 10,
-  },
   background: {
     flex: 1,
     justifyContent: 'center',
@@ -79,8 +86,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
   },
+  // Estilo de la imagen de Angelo en la mazmorra
+  angeloDungeon: {
+    position: 'absolute',
+    bottom: 120,
+    width: 200,
+    height: 300,
+  },
 });
 
 export default Dungeon;
-
-
