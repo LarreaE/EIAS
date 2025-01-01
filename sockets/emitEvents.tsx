@@ -70,4 +70,6 @@ export const reduceAngelo = (value: number = 5): void => {
 export const cancelBattle = (): void => {
   socket.emit('cancel_battle');
 };
-
+export const AngeloDelivered = (): void => {
+  socket.emit('Angelo_delivered');
+};
