@@ -1,7 +1,19 @@
+// MortimerLaboratoryScreen.tsx
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground, FlatList } from 'react-native';
-import AcolythCard from './acolythCard';
-import { listenToServerEventsMortimer, clearServerEvents } from '../sockets/listenEvents.tsx';
+import {
+  View,
+  StyleSheet,
+  ImageBackground,
+  Image,
+  Modal,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
+import AcolythCard from './AcolythCard';
+import {
+  listenToServerEventsMortimer,
+  clearServerEvents,
+} from '../sockets/listenEvents.tsx';
 import MedievalText from './MedievalText.tsx';
 import Config from 'react-native-config';
 import MapButton from './MapButton.tsx';
@@ -11,44 +23,45 @@ import { RootStackParamList } from '../types/types.ts';
 import { sendLocation } from '../sockets/emitEvents.tsx';
 import { UserContext, UserContextType } from '../context/UserContext.tsx';
 
-type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'LaboratoryMortimer'>;
+// Helper para crear el badge (color + letra)
+function DiseaseBadge({ color, letter }: { color: string; letter: string }) {
+  return (
+    <View style={[styles.badge, { backgroundColor: color }]}>
+      <Text style={styles.badgeText}>{letter}</Text>
+    </View>
+  );
+}
 
-// define la interfaz para el tipo de datos de usuario
+type MapScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'LaboratoryMortimer'
+>;
+
 interface User {
   _id: string;
   nickname: string;
   is_active: boolean;
-  avatar: string
+  avatar: string;
+  disease?: string | null;
+  ethaziumCursed?: boolean;
 }
 
-// definir tipos de datos de props
-type Props = {
-  _id: string;
-  nickname: string;
-  is_active: boolean;
-  avatar: string
-};
-
 const MortimerLaboratoryScreen: React.FC = () => {
-
   const navigation = useNavigation<MapScreenNavigationProp>();
-
   const context = useContext(UserContext) as UserContextType;
-
   const { userData } = context;
+
+  const [users, setUsers] = useState<User[]>([]);
+  const [infoModalVisible, setInfoModalVisible] = useState(false);
 
   const goToMap = () => {
     sendLocation('School', userData.playerData.email);
     navigation.navigate('School');
   };
 
-  const [users, setUsers] = useState<User[]>([]);
-
   useEffect(() => {
-    // Escuchar eventos del servidor y actualizar el estado de users
     listenToServerEventsMortimer(setUsers);
 
-    // Petición a la base de datos para obtener los usuarios iniciales
     const addUsers = async () => {
       try {
         const response = await fetch(`${Config.LOCAL_HOST}/api/players/mortimer`);
@@ -61,7 +74,6 @@ const MortimerLaboratoryScreen: React.FC = () => {
 
     addUsers();
 
-    // Limpiar eventos cuando el componente se desmonte
     return () => {
       clearServerEvents();
     };
@@ -75,28 +87,95 @@ const MortimerLaboratoryScreen: React.FC = () => {
     >
       <View style={styles.titleContainer}>
         <View style={styles.titleBackground} />
-        <MedievalText style={styles.title}>
-          Laboratory
-        </MedievalText>
+        <MedievalText style={styles.title}>Laboratory</MedievalText>
+
+        {/* Botón de información (arriba y más a la derecha) */}
+        <TouchableOpacity
+          style={styles.infoButton}
+          onPress={() => setInfoModalVisible(true)}
+        >
+          <Image
+            source={require('../assets/info_icon.png')}
+            style={styles.infoIcon}
+          />
+        </TouchableOpacity>
       </View>
+
       <View style={styles.users}>
-        {/* mapear array users */}
         {users.map((user) => (
           <AcolythCard
             key={user._id}
             nickname={user.nickname}
             is_active={user.is_active}
             avatar={user.avatar}
+            disease={user.disease}
+            ethaziumCursed={user.ethaziumCursed}
           />
         ))}
       </View>
+
       <MapButton
         onPress={goToMap}
         iconImage={require('../assets/school_icon.png')}
       />
+
+      {/* Modal explicando los iconos con sus badges */}
+      <Modal
+        visible={infoModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setInfoModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <MedievalText style={styles.modalTitle}>Icons Legend</MedievalText>
+
+            {/* Putrid Plague */}
+            <View style={styles.modalRow}>
+              <DiseaseBadge color="purple" letter="P" />
+              <MedievalText style={styles.modalText}>
+                : Putrid Plague (Intelligence -75%)
+              </MedievalText>
+            </View>
+
+            {/* Epic Weakness */}
+            <View style={styles.modalRow}>
+              <DiseaseBadge color="blue" letter="E" />
+              <MedievalText style={styles.modalText}>
+                : Epic Weakness (Strength -60%)
+              </MedievalText>
+            </View>
+
+            {/* Medular Apocalypse */}
+            <View style={styles.modalRow}>
+              <DiseaseBadge color="green" letter="M" />
+              <MedievalText style={styles.modalText}>
+                : Medular Apocalypse (Constitution -30%)
+              </MedievalText>
+            </View>
+
+            {/* Ethazium Curse */}
+            <View style={styles.modalRow}>
+              <DiseaseBadge color="red" letter="C" />
+              <MedievalText style={styles.modalText}>
+                : Ethazium Curse (All attributes -40%)
+              </MedievalText>
+            </View>
+
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setInfoModalVisible(false)}
+            >
+              <MedievalText style={styles.closeButtonText}>Close</MedievalText>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ImageBackground>
   );
 };
+
+export default MortimerLaboratoryScreen;
 
 const styles = StyleSheet.create({
   background: {
@@ -107,6 +186,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 130,
     alignItems: 'center',
+    width: '100%', // Para que ocupe todo el ancho, facilitando posicionar la infoButton
   },
   titleBackground: {
     position: 'absolute',
@@ -118,12 +198,77 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 35,
     paddingHorizontal: 10,
-    paddingVertical: 25,  // Añade padding vertical para evitar el corte
+    paddingVertical: 25,
     textAlign: 'center',
+  },
+  infoButton: {
+    position: 'absolute',
+    top: -110,    // Un poco más arriba
+    right: 10,  // Más a la esquina
+    padding: 10,
+  },
+  infoIcon: {
+    width: 60,
+    height: 60,
   },
   users: {
     top: 250,
   },
-});
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    width: 320,
+    backgroundColor: '#444',
+    padding: 20,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#888',
+  },
+  modalTitle: {
+    fontSize: 20,
+    color: '#fff',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  modalRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  modalText: {
+    color: '#ddd',
+    fontSize: 14,
+    marginLeft: 5,
+  },
+  closeButton: {
+    backgroundColor: '#222',
+    marginTop: 15,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 5,
+    alignSelf: 'center',
+  },
+  closeButtonText: {
+    color: '#fff',
+    fontSize: 14,
+  },
 
-export default MortimerLaboratoryScreen;
+  // Badge para el modal (idéntico o muy parecido al de la tarjeta)
+  badge: {
+    width: 25,
+    height: 25,
+    borderRadius: 12.5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#fff',
+  },
+  badgeText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+});

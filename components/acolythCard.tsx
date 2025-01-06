@@ -1,24 +1,80 @@
+// AcolythCard.tsx
 import React from 'react';
-import { Image, View, StyleSheet } from 'react-native';
+import { Image, View, StyleSheet, Text } from 'react-native';
 import MedievalText from './MedievalText';
 
 type Props = {
   nickname: string;
   is_active: boolean;
   avatar: string;
+  disease?: string | null;
+  ethaziumCursed?: boolean;
 };
 
-const AcolythCard: React.FC<Props> = ({ nickname, is_active, avatar }) => {
+// Helper para decidir color e inicial de la enfermedad
+function getDiseaseBadgeInfo(disease: string) {
+  switch (disease) {
+    case 'PUTRID PLAGUE':
+      return { color: 'purple', letter: 'P' };
+    case 'EPIC WEAKNESS':
+      return { color: 'blue', letter: 'E' };
+    case 'MEDULAR APOCALYPSE':
+      return { color: 'green', letter: 'M' };
+    default:
+      return { color: 'transparent', letter: '' };
+  }
+}
+
+const AcolythCard: React.FC<Props> = ({
+  nickname,
+  is_active,
+  avatar,
+  disease,
+  ethaziumCursed,
+}) => {
+  // Borde según is_active
+  const borderStyle = is_active ? styles.activeBorder : styles.inactiveBorder;
+
+  // Determinar diseaseBadge
+  let diseaseBadge = null;
+  if (disease && disease !== null) {
+    const { color, letter } = getDiseaseBadgeInfo(disease);
+    diseaseBadge = (
+      <View style={[styles.badge, { backgroundColor: color }]}>
+        <Text style={styles.badgeText}>{letter}</Text>
+      </View>
+    );
+  }
+
+  // Determinar curseBadge (Ethazium)
+  let curseBadge = null;
+  if (ethaziumCursed) {
+    curseBadge = (
+      <View style={[styles.badge, { backgroundColor: 'red' }]}>
+        <Text style={styles.badgeText}>C</Text>
+      </View>
+    );
+  }
+
+  // Si queremos mostrar los badges en una fila, debajo del nickname
+  // Crearemos un contenedor 'badgesRow' para agruparlos
   return (
     <View style={styles.container}>
-      <Image
-        source={{ uri: avatar }}
-        style={[styles.image, is_active ? styles.activeBorder : styles.inactiveBorder]}
-      />
-      <MedievalText style={styles.MedievalText}>{nickname}</MedievalText>
+      <Image source={{ uri: avatar }} style={[styles.image, borderStyle]} />
+      <View style={styles.infoColumn}>
+        <MedievalText style={styles.text}>{nickname}</MedievalText>
+
+        {/* Contenedor para los badges, estilo horizontal */}
+        <View style={styles.badgesRow}>
+          {diseaseBadge}
+          {curseBadge}
+        </View>
+      </View>
     </View>
   );
 };
+
+export default AcolythCard;
 
 const styles = StyleSheet.create({
   container: {
@@ -31,9 +87,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgrey',
     borderRadius: 30,
     alignItems: 'center',
-    width:320,
+    width: 320,
   },
-  MedievalText: {
+  infoColumn: {
+    flexDirection: 'column',
+  },
+  text: {
     color: 'black',
   },
   image: {
@@ -41,7 +100,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     marginRight: 10,
-    borderWidth: 2, // Grosor del borde
+    borderWidth: 2,
   },
   activeBorder: {
     borderColor: 'green',
@@ -49,6 +108,22 @@ const styles = StyleSheet.create({
   inactiveBorder: {
     borderColor: 'red',
   },
+  badgesRow: {
+    flexDirection: 'row',
+    marginTop: 4, // Espacio entre nickname y badges
+  },
+  badge: {
+    width: 25,
+    height: 25,
+    borderRadius: 12.5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#fff',
+    marginRight: 5, // Espacio entre badges
+  },
+  badgeText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
 });
-
-export default AcolythCard;
