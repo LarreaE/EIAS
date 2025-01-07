@@ -4,6 +4,7 @@ import Config from 'react-native-config';
 import { requestArtifacts } from './emitEvents';
 import { SetStateAction } from 'react';
 
+
 // Interfaces opcionales para tus datos
 interface BattleData {
   progress: SetStateAction<number>;
@@ -139,6 +140,67 @@ export const listenToDiseasesEvents = (
           }));
         }
       });
+};
+
+interface AppliedCursePayload {
+  playerId: string;
+  curse: boolean; // p.ej. true/false para Ethazium
+}
+
+interface AppliedDiseasePayload {
+  playerId: string;
+  disease: string; // "PUTRID PLAGUE", "EPIC WEAKNESS", "MEDULAR APOCALYPSE"
+  applied: boolean; // p.ej. true si se aplica, false si se retira
+}
+
+/**
+ * Suscribirse a eventos relacionados con maldiciones/enfermedades.
+ * @param updateLocal - función para actualizar localmente la info del jugador (p.ej. setUserData)
+ * @param showDiseaseModal - función que dispara el modal Disease en el front
+ * @param showEthaziumModal - función que dispara el modal Ethazium en el front
+ */
+export const listenToCurseDiseaseEvents = (
+  updateLocal: (playerId: string, changes: any) => void,
+  showDiseaseModal: (disease: string) => void,
+  showEthaziumModal: () => void,
+) => {
+  // Ethazium Curse
+  socket.on('applied_curse', (payload: AppliedCursePayload) => {
+    // El servidor indica que se ha aplicado/retirado la maldición a un player
+    const { playerId, curse } = payload;
+
+    // 1) Actualizar local => si el player actual es el afectado, p.ej. { ethaziumCursed: curse }
+    updateLocal(playerId, { ethaziumCursed: curse });
+
+    // 2) Si se ha aplicado (curse === true), mostramos el modal
+    if (curse) {
+      showEthaziumModal();
+    }
+    // Si se ha retirado (curse === false), no mostramos nada o, si lo deseas, cierras el modal
+  });
+
+  // Disease
+  socket.on('applied_disease', (payload: AppliedDiseasePayload) => {
+    const { playerId, disease, applied } = payload;
+
+    // Actualizar local => por ejemplo, si el player admite multiples diseases,
+    // agregas o quitas esa disease de un array; si solo admite 1 disease, la pones en .disease
+    // Ejemplo simple: un player solo tiene disease: string | null
+    updateLocal(playerId, { disease: applied ? disease : null });
+
+    // Si se ha aplicado => showDiseaseModal(disease)
+    if (applied) {
+      showDiseaseModal(disease);
+    }
+  });
+};
+
+/**
+ * Limpieza de listeners
+ */
+export const clearCurseDiseaseEvents = () => {
+  socket.off('applied_curse');
+  socket.off('applied_disease');
 };
 
 // Función para limpiar los eventos cuando el componente se desmonte

@@ -76,7 +76,7 @@ export const cancelBattle = (): void => {
 export const AngeloDelivered = (): void => {
   socket.emit('Angelo_delivered');
 };
-export const setCursesAndDisaeses = (playerId: string,localCursed:boolean,localDiseases:DiseaseType): void => {
+export const setCursesAndDisaeses = (playerId: string,localCursed:boolean,localDiseases:DiseaseType[]): void => {
  // 2) Emitir socket / Llamar a tu emitEvent
  socket.emit('player_update_curse_disease', {
   playerId,

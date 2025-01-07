@@ -13,7 +13,7 @@ import AcolythLaboratoryScreen from './components/acolythLaboratoryScreen';
 import MortimerLaboratoryScreen from './components/mortimerLaboratoryScreen ';
 import MortimerTower from './components/mortimerTower';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { listenToServerEvents, clearServerEvents } from './sockets/listenEvents';
+import { listenToServerEvents, clearServerEvents, listenToCurseDiseaseEvents } from './sockets/listenEvents';
 import socket from './sockets/socketConnection';
 import { sendUserEMail } from './sockets/emitEvents';
 import { UserContextType, UserProvider } from './context/UserContext'; // Importa el proveedor
@@ -33,6 +33,7 @@ import TheHollowOfStages from './screens/TheHollowOfStages';
 import TheInnOfTheForgotten from './screens/TheInnOfTheForgotten';
 import Dungeon from './screens/Dungeon';
 import GlobalModals from './components/GlobalModals';
+import { updateCurrentUser } from '@react-native-firebase/auth';
 
 const Tab = createMaterialTopTabNavigator();
 const { width, height } = Dimensions.get('window');
@@ -154,6 +155,7 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
 
   useEffect(() => {
     listenToServerEvents();
+    listenToCurseDiseaseEvents();
     return () => {
       clearServerEvents();
       socket.disconnect();
@@ -168,6 +170,12 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
   interface ScreenOptionsProps {
     route: RouteProp<ParamListBase, string>;
   }
+
+  const updateLocal = (playerId: string, changes: any) => {
+    // p.ej. si tuviéramos un array "users", lo mapeamos
+    // setUsers((prev) => prev.map(...))
+    // o si solo tienes un "playerData" y coincide con playerId => setPlayerData((prev) => {...})
+  };
 
   const screenOptions = ({ route }: ScreenOptionsProps): MaterialTopTabNavigationOptions => ({
     tabBarStyle: styles.tabBar,
