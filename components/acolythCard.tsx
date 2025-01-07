@@ -1,6 +1,6 @@
 // AcolythCard.tsx
 import React from 'react';
-import { Image, View, StyleSheet, Text } from 'react-native';
+import { Image, View, StyleSheet, TouchableOpacity } from 'react-native';
 import MedievalText from './MedievalText';
 
 type Props = {
@@ -9,6 +9,7 @@ type Props = {
   avatar: string;
   disease?: string | null;
   ethaziumCursed?: boolean;
+  onPress?: () => void;
 };
 
 // Helper para decidir color e inicial de la enfermedad
@@ -31,6 +32,7 @@ const AcolythCard: React.FC<Props> = ({
   avatar,
   disease,
   ethaziumCursed,
+  onPress,
 }) => {
   // Borde según is_active
   const borderStyle = is_active ? styles.activeBorder : styles.inactiveBorder;
@@ -41,7 +43,7 @@ const AcolythCard: React.FC<Props> = ({
     const { color, letter } = getDiseaseBadgeInfo(disease);
     diseaseBadge = (
       <View style={[styles.badge, { backgroundColor: color }]}>
-        <Text style={styles.badgeText}>{letter}</Text>
+        <MedievalText style={styles.badgeText}>{letter}</MedievalText>
       </View>
     );
   }
@@ -51,14 +53,12 @@ const AcolythCard: React.FC<Props> = ({
   if (ethaziumCursed) {
     curseBadge = (
       <View style={[styles.badge, { backgroundColor: 'red' }]}>
-        <Text style={styles.badgeText}>C</Text>
+        <MedievalText style={styles.badgeText}>C</MedievalText>
       </View>
     );
   }
-
-  // Si queremos mostrar los badges en una fila, debajo del nickname
-  // Crearemos un contenedor 'badgesRow' para agruparlos
   return (
+    <TouchableOpacity style={styles.container} onPress={onPress}>
     <View style={styles.container}>
       <Image source={{ uri: avatar }} style={[styles.image, borderStyle]} />
       <View style={styles.infoColumn}>
@@ -71,6 +71,7 @@ const AcolythCard: React.FC<Props> = ({
         </View>
       </View>
     </View>
+    </TouchableOpacity>
   );
 };
 
@@ -87,7 +88,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgrey',
     borderRadius: 30,
     alignItems: 'center',
-    width: 320,
+    width: 280,
+    height: 70,
   },
   infoColumn: {
     flexDirection: 'column',
@@ -123,7 +125,6 @@ const styles = StyleSheet.create({
     marginRight: 5, // Espacio entre badges
   },
   badgeText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: '#FFF',
   },
 });

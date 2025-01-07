@@ -6,10 +6,9 @@ import {
   ImageBackground,
   Image,
   Modal,
-  Text,
   TouchableOpacity,
 } from 'react-native';
-import AcolythCard from './AcolythCard';
+import AcolythCard from './AcolythCard.tsx';
 import {
   listenToServerEventsMortimer,
   clearServerEvents,
@@ -22,12 +21,13 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/types.ts';
 import { sendLocation } from '../sockets/emitEvents.tsx';
 import { UserContext, UserContextType } from '../context/UserContext.tsx';
+import MortimerActionsModal from './MortimerActionsModal';
 
 // Helper para crear el badge (color + letra)
 function DiseaseBadge({ color, letter }: { color: string; letter: string }) {
   return (
     <View style={[styles.badge, { backgroundColor: color }]}>
-      <Text style={styles.badgeText}>{letter}</Text>
+      <MedievalText style={styles.badgeText}>{letter}</MedievalText>
     </View>
   );
 }
@@ -54,10 +54,44 @@ const MortimerLaboratoryScreen: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [infoModalVisible, setInfoModalVisible] = useState(false);
 
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  type DiseaseType = 'PUTRID PLAGUE' | 'EPIC WEAKNESS' | 'MEDULAR APOCALYPSE';
+
+
+  const handleCardPress = (user: User) => {
+    // Guardas la info de ese jugador en local
+    setSelectedUser(user);
+    setModalVisible(true);
+  };
+
   const goToMap = () => {
     sendLocation('School', userData.playerData.email);
     navigation.navigate('School');
   };
+
+  // Callback local para “Apply” (actualiza el user en local)
+const handleApplyLocalChanges = (changes: { diseases: string[]; ethaziumCursed: boolean }) => {
+  if (!selectedUser) return;
+
+  // 1) Actualizar local: Reemplazar en tu 'users' array
+  setUsers((prevUsers) =>
+      prevUsers.map((u) => {
+        if (u._id === selectedUser._id) {
+          // Cambiamos disease y ethaziumCursed
+          return {
+            ...u,
+            disease: changes.diseases.length > 0 ? changes.diseases[0] : null, 
+            // O si aceptas múltiples diseases, ajusta la interfaz y tu card 
+            ethaziumCursed: changes.ethaziumCursed,
+          };
+        }
+        return u;
+      })
+    );
+  };
+
 
   useEffect(() => {
     listenToServerEventsMortimer(setUsers);
@@ -110,6 +144,7 @@ const MortimerLaboratoryScreen: React.FC = () => {
             avatar={user.avatar}
             disease={user.disease}
             ethaziumCursed={user.ethaziumCursed}
+            onPress={() => handleCardPress(user)}
           />
         ))}
       </View>
@@ -171,6 +206,22 @@ const MortimerLaboratoryScreen: React.FC = () => {
           </View>
         </View>
       </Modal>
+      {/* RENDERIZA EL MODAL */}
+      {selectedUser && (
+        <MortimerActionsModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          playerId={selectedUser?._id || ''}
+          nickname={selectedUser?.nickname || ''}
+          initialEthaziumCursed={selectedUser?.ethaziumCursed || false}
+          initialDiseases={
+            selectedUser?.disease 
+              ? [selectedUser.disease as DiseaseType] 
+              : []
+          }
+          onApplyLocal={handleApplyLocalChanges}
+        />
+      )}
     </ImageBackground>
   );
 };
@@ -269,6 +320,6 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     color: '#fff',
-    fontWeight: 'bold',
+    bottom:3,
   },
 });

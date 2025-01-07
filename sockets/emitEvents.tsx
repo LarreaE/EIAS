@@ -1,6 +1,9 @@
 import { Int32 } from 'react-native/Libraries/Types/CodegenTypes';
 import socket from './socketConnection';
 
+type DiseaseType = 'PUTRID PLAGUE' | 'EPIC WEAKNESS' | 'MEDULAR APOCALYPSE';
+
+
 // Tipamos el parámetro scannedEmail
 export const sendQRScan = (scannedEmail: string): void => {
   socket.emit('scan_acolyte', { scannedEmail });
@@ -73,3 +76,14 @@ export const cancelBattle = (): void => {
 export const AngeloDelivered = (): void => {
   socket.emit('Angelo_delivered');
 };
+export const setCursesAndDisaeses = (playerId: string,localCursed:boolean,localDiseases:DiseaseType): void => {
+ // 2) Emitir socket / Llamar a tu emitEvent
+ socket.emit('player_update_curse_disease', {
+  playerId,
+  diseases: localDiseases,
+  ethaziumCursed: localCursed,
+});
+};
+
+
+
