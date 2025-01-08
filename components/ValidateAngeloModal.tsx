@@ -11,12 +11,14 @@ import {
 import socket from '../sockets/socketConnection.tsx';
 import MedievalText from './MedievalText'; // tu componente, opcional
 
-interface ValidateAngeloModalProps {}
+interface ValidateAngeloModalProps {
+    spinner: () => void; 
+}
 
-const ValidateAngeloModal: React.FC<ValidateAngeloModalProps> = () => {
+const ValidateAngeloModal: React.FC<ValidateAngeloModalProps> = ({spinner}) => {
   // Controla visibilidad del modal
   const [visible, setVisible] = useState(false);
-
+    spinner();
   // Opcional: si quieres guardar algo del payload (nombre, etc.)
   const [angeloData, setAngeloData] = useState<any>(null);
 

@@ -63,7 +63,8 @@ const HallOfSages: React.FC = () => {
         setAngeloIsSuccess(isSuccess);
         setAngeloResultVisible(true);
       },
-      userData.playerData.role
+      () => setSpinner(false),
+      userData.playerData.role,
     );
 
     return () => {
@@ -126,6 +127,7 @@ const handleMortimerInside = (users) => {
   // Función para "entregar" a Angelo a Mortimer (por ejemplo, animación).
   const deliverAngeloToMortimer = () => {
     console.log('Angelo delivered to Mortimer...');
+    setSpinner(true);
     AngeloDelivered();
   };
 
@@ -186,7 +188,7 @@ const handleMortimerInside = (users) => {
   const sendHallNotificationToMortimer = async () => {
     console.log('Sending obituario notification to Mortimer');
     try {
-      const response = await fetch(`${Config.LOCAL_HOST}/api/notifications/send-notification-obituario`);
+      const response = await fetch(`${Config.RENDER}/api/notifications/send-notification-obituario`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -196,8 +198,6 @@ const handleMortimerInside = (users) => {
       console.error('Error:', error);
     }
   };
-
-  
 
   const validationOk = () => {
     console.log('validation ok');
@@ -385,7 +385,8 @@ const handleMortimerInside = (users) => {
         />
       )}
       {userData.playerData.role === 'MORTIMER' &&
-       <ValidateAngeloModal />}
+       <ValidateAngeloModal
+       />}
        {userData.playerData.role === 'ACOLYTE' &&
           <AngeloValidationResultModal
           visible={angeloResultVisible}

@@ -144,6 +144,7 @@ export const listenToDiseasesEvents = (
 
 export const listenToAngeloDelivery = (
   showResultModal: (isSuccess: boolean) => void,
+  spinner: (status:boolean) => void,
   role: string
 ) => {
   // Caso de éxito
@@ -152,6 +153,7 @@ export const listenToAngeloDelivery = (
     if (role === 'ACOLYTE') {
       console.log('Cliente recibió "AngeloDeliveredSuccesfully"');
       showResultModal(true);
+      spinner(false);
     }
   });
 
@@ -161,6 +163,7 @@ export const listenToAngeloDelivery = (
     if (role === 'ACOLYTE') {
       console.log('Cliente recibió "AngeloDeliveredFailed"');
       showResultModal(false);
+      spinner();
     }
   });
 };
@@ -250,7 +253,7 @@ const sendNotification = async (email: any) => {
   console.log('Sending notification with email and screen:', email);
 
   try {
-    const response = await fetch(`${Config.LOCAL_HOST}/api/notifications/send-notification`, {
+    const response = await fetch(`${Config.RENDER}/api/notifications/send-notification`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -276,7 +279,7 @@ const sendNotification = async (email: any) => {
  async function checkIfInsideTower(email: any) {
   try {
     console.log('FEtchint');
-    const response = await fetch(`${Config.LOCAL_HOST}/api/auth/isInsideTower`, {
+    const response = await fetch(`${Config.RENDER}/api/auth/isInsideTower`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
