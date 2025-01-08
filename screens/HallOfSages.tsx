@@ -45,6 +45,8 @@ const HallOfSages: React.FC = () => {
   const [spinner, setSpinner] = useState(false);
   const [mortimerInside, setMortimerInside] = useState(false);
 
+  const isAngeloDelivered = userData?.playerData?.AngeloDelivered === true;
+
 
   useEffect(() => {
     sendIsInHall(currentUser.email, true);
@@ -338,6 +340,7 @@ const handleMortimerInside = (users) => {
       {/* NUEVO: Botón para entregar a Angelo a Mortimer (si ambos dentro y AngeloReduced = true) */}
       {userData.playerData.AngeloReduced === true &&
        userData.playerData.role === 'ACOLYTE' &&
+       !isAngeloDelivered &&
        mortimerInside && (
         <TouchableOpacity onPress={deliverAngeloToMortimer} style={styles.artifactsButton}>
           <MedievalText style={styles.buttonText}>Deliver Angelo to Mortimer</MedievalText>
