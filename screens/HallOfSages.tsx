@@ -5,13 +5,13 @@ import MedievalText from '../components/MedievalText.tsx';
 import MapButton from '../components/MapButton.tsx';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList, StackNavigationProp } from '../types/types.ts';
-import { 
+import {
   AngeloDelivered,
-  restoreObjects, 
-  searchValidated, 
-  sendAnimationMortimer, 
-  sendIsInHall, 
-  sendPlayAnimationAcolyte 
+  restoreObjects,
+  searchValidated,
+  sendAnimationMortimer,
+  sendIsInHall,
+  sendPlayAnimationAcolyte
 } from '../sockets/emitEvents.tsx';
 import { UserContext, UserContextType } from '../context/UserContext.tsx';
 import { sendLocation } from '../sockets/emitEvents.tsx';
@@ -21,6 +21,9 @@ import InverseAnimatedCircles from '../components/Animations/InverseAnimationCir
 import FadeInArtefacts from '../components/Animations/FadeInArtefacts.tsx';
 import Config from 'react-native-config';
 import Spinner from '../components/Spinner.tsx';
+import ValidateAngeloModal from '../components/ValidateAngeloModal.tsx';
+import { clearAngeloDelivery, listenToAngeloDelivery } from '../sockets/listenEvents.tsx';
+import AngeloValidationResultModal from '../components/AngeloValidationResultModal.tsx';
 
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'HallOfSages'>;
 const { width, height } = Dimensions.get('window');
@@ -45,8 +48,28 @@ const HallOfSages: React.FC = () => {
   const [spinner, setSpinner] = useState(false);
   const [mortimerInside, setMortimerInside] = useState(false);
 
+  // Estado para AngeloValidationResultModal
+  const [angeloResultVisible, setAngeloResultVisible] = useState(false);
+  const [angeloIsSuccess, setAngeloIsSuccess] = useState(false);
+
   const isAngeloDelivered = userData?.playerData?.AngeloDelivered === true;
 
+
+  useEffect(() => {
+    // Registrar listeners con la función "showResultModal"
+    listenToAngeloDelivery(
+      (isSuccess) => {
+        // Actualizamos estado
+        setAngeloIsSuccess(isSuccess);
+        setAngeloResultVisible(true);
+      },
+      userData.playerData.role
+    );
+
+    return () => {
+      clearAngeloDelivery();
+    };
+  }, [userData.playerData.role]);
 
   useEffect(() => {
     sendIsInHall(currentUser.email, true);
@@ -74,7 +97,7 @@ const handleMortimerInside = (users) => {
     };
 
     socket.on('send_users_in_hall', handleUsersInHall);
-    socket.on('AngeloDeliveredSuccesfullly', () => {
+    socket.on('AngeloDeliveredSuccesfully', () => {
       console.log('Angelo delivered to Mortimer and changed on DB');
       userData.playerData.AngeloDelivered = true;
     });
@@ -163,7 +186,7 @@ const handleMortimerInside = (users) => {
   const sendHallNotificationToMortimer = async () => {
     console.log('Sending obituario notification to Mortimer');
     try {
-      const response = await fetch(`${Config.RENDER}/api/notifications/send-notification-obituario`);
+      const response = await fetch(`${Config.LOCAL_HOST}/api/notifications/send-notification-obituario`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -340,7 +363,7 @@ const handleMortimerInside = (users) => {
       {/* NUEVO: Botón para entregar a Angelo a Mortimer (si ambos dentro y AngeloReduced = true) */}
       {userData.playerData.AngeloReduced === true &&
        userData.playerData.role === 'ACOLYTE' &&
-       !isAngeloDelivered &&
+       isAngeloDelivered &&
        mortimerInside && (
         <TouchableOpacity onPress={deliverAngeloToMortimer} style={styles.artifactsButton}>
           <MedievalText style={styles.buttonText}>Deliver Angelo to Mortimer</MedievalText>
@@ -361,6 +384,17 @@ const handleMortimerInside = (users) => {
           onRestartSearch={handleRestartSearch}
         />
       )}
+      {userData.playerData.role === 'MORTIMER' &&
+       <ValidateAngeloModal />}
+       {userData.playerData.role === 'ACOLYTE' &&
+          <AngeloValidationResultModal
+          visible={angeloResultVisible}
+          isSuccess={angeloIsSuccess}
+          onClose={() => setAngeloResultVisible(false)}
+          />
+        }
+
+
     </ImageBackground>
   );
 };

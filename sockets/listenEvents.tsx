@@ -142,6 +142,34 @@ export const listenToDiseasesEvents = (
       });
 };
 
+export const listenToAngeloDelivery = (
+  showResultModal: (isSuccess: boolean) => void,
+  role: string
+) => {
+  // Caso de éxito
+  socket.on('AngeloDeliveredSuccesfully', () => {
+    // Solo si el role es ACOLYTE
+    if (role === 'ACOLYTE') {
+      console.log('Cliente recibió "AngeloDeliveredSuccesfully"');
+      showResultModal(true);
+    }
+  });
+
+  // Caso de fracaso
+  socket.on('AngeloDeliveredFailed', () => {
+    // Solo si el role es ACOLYTE
+    if (role === 'ACOLYTE') {
+      console.log('Cliente recibió "AngeloDeliveredFailed"');
+      showResultModal(false);
+    }
+  });
+};
+
+export const clearAngeloDelivery = () => {
+  socket.off('AngeloDeliveredSuccesfully');
+  socket.off('AngeloDeliveredFailed');
+};
+
 interface AppliedCursePayload {
   playerId: string;
   curse: boolean; // p.ej. true/false para Ethazium
@@ -222,7 +250,7 @@ const sendNotification = async (email: any) => {
   console.log('Sending notification with email and screen:', email);
 
   try {
-    const response = await fetch(`${Config.RENDER}/api/notifications/send-notification`, {
+    const response = await fetch(`${Config.LOCAL_HOST}/api/notifications/send-notification`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -248,7 +276,7 @@ const sendNotification = async (email: any) => {
  async function checkIfInsideTower(email: any) {
   try {
     console.log('FEtchint');
-    const response = await fetch(`${Config.RENDER}/api/auth/isInsideTower`, {
+    const response = await fetch(`${Config.LOCAL_HOST}/api/auth/isInsideTower`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
