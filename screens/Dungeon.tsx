@@ -29,7 +29,7 @@ const Dungeon: React.FC = () => {
   };
 
   // Verificamos si Angelo ha sido "Deliverado"
-  const isAngeloDelivered = userData?.playerData?.angeloDelivered === true;
+  const isAngeloDelivered = userData?.playerData?.AngeloDelivered === true;
 
   return (
     <ImageBackground

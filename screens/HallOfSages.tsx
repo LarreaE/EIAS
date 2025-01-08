@@ -45,24 +45,58 @@ const HallOfSages: React.FC = () => {
   const [spinner, setSpinner] = useState(false);
   const [mortimerInside, setMortimerInside] = useState(false);
 
-  // NUEVO: Estado para controlar si Angelo está en la sala
-  const [angeloInside, setAngeloInside] = useState(false);
 
-  // Función para llamar a Angelo (similar a como llamas a Mortimer).
-  // Ajusta el endpoint a tu API real.
-  const sendHallNotificationToAngelo = async () => {
-    console.log('Sending obituario notification to Angelo');
-    try {
-      const response = await fetch(`${Config.RENDER}/api/notifications/send-notification-angelo`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      console.log('Server response (Angelo):', data);
-    } catch (error) {
-      console.error('Error sending notification to Angelo:', error);
+  useEffect(() => {
+    sendIsInHall(currentUser.email, true);
+  }, []);
+
+// Ejemplo de uso en un efecto o en una función
+const handleMortimerInside = (users) => {
+  for (let i = 0; i < users.length; i++) {
+    console.log(users[i].role);
+    if (users[i].role === 'MORTIMER') {
+      setMortimerInside(true);
+      console.log('Mortimer is inside');
+      return; // Interrumpe el bucle en cuanto lo encontramos
     }
-  };
+  }
+};
+  useEffect(() => {
+    const handleUsersInHall = (users: User[]) => {
+      console.log('Datos recibidos en send_users_in_hall:');
+      setUsersInHall(users);
+      // Detectar si Mortimer está
+      handleMortimerInside(users);
+
+      console.log('Mortimer status:' + mortimerInside);
+    };
+
+    socket.on('send_users_in_hall', handleUsersInHall);
+    socket.on('AngeloDeliveredSuccesfullly', () => {
+      console.log('Angelo delivered to Mortimer and changed on DB');
+      userData.playerData.AngeloDelivered = true;
+    });
+
+    if (userData.playerData.role === 'ACOLYTE') {
+      socket.on('play_animation_all_acolytes', () => {
+        console.log('Playing animation');
+        handleStartAnimation();
+      });
+      socket.on('Validation_acolytes', (validation) => {
+        console.log('validation arrived from server');
+        if (validation === true) {
+          validationOk();
+        } else {
+          validationNotOk();
+        }
+      });
+    } else if (userData.playerData.role === 'MORTIMER') {
+      socket.on('play_animation_all_mortimers', () => {
+        console.log('Playing animation mortimer');
+        handleStartAnimationMortimer();
+      });
+    }
+  }, []);
 
   // Función para "entregar" a Angelo a Mortimer (por ejemplo, animación).
   const deliverAngeloToMortimer = () => {
@@ -73,10 +107,10 @@ const HallOfSages: React.FC = () => {
   const handleStartAnimation = () => {
     setIsAnimating(true);
     setTimeout(() => {
-      setIsAnimating(false); 
+      setIsAnimating(false);
       setSpinner(true);
       sendAnimationMortimer();
-    }, 10000); 
+    }, 10000);
   };
 
   const handleStartAnimationMortimer = () => {
@@ -138,46 +172,7 @@ const HallOfSages: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    sendIsInHall(currentUser.email, true);
-  }, []);
-
-  useEffect(() => {
-    const handleUsersInHall = (users: User[]) => {
-      console.log('Datos recibidos en send_users_in_hall:', users);
-      setUsersInHall(users);
-
-      // Detectar si Mortimer está
-      const mortimerPresent = users.some(user => user.role === 'MORTIMER');
-      setMortimerInside(mortimerPresent);
-
-      // Detectar si Angelo está
-      const angeloPresent = users.some(user => user.role === 'ANGELO');
-      setAngeloInside(angeloPresent);
-    };
-
-    socket.on('send_users_in_hall', handleUsersInHall);
-
-    if (userData.playerData.role === 'ACOLYTE') {
-      socket.on('play_animation_all_acolytes', () => {
-        console.log('Playing animation');
-        handleStartAnimation();
-      });
-      socket.on('Validation_acolytes', (validation) => {
-        console.log('validation arrived from server');
-        if (validation === true) {
-          validationOk();
-        } else {
-          validationNotOk();
-        }
-      });
-    } else if (userData.playerData.role === 'MORTIMER') {
-      socket.on('play_animation_all_mortimers', () => {
-        console.log('Playing animation mortimer');
-        handleStartAnimationMortimer();
-      });
-    }
-  }, []);
+  
 
   const validationOk = () => {
     console.log('validation ok');
@@ -331,7 +326,7 @@ const HallOfSages: React.FC = () => {
       {userData.playerData.AngeloReduced === true &&
        userData.playerData.role === 'ACOLYTE' &&
        filteredUsers.length >= 1 &&
-       !angeloInside && (
+       !mortimerInside && (
         <View style={styles.bellButton}>
           <MapButton
             onPress={sendHallNotificationToMortimer}
@@ -341,9 +336,8 @@ const HallOfSages: React.FC = () => {
       )}
 
       {/* NUEVO: Botón para entregar a Angelo a Mortimer (si ambos dentro y AngeloReduced = true) */}
-      {userData.playerData.angeloReduced === true &&
+      {userData.playerData.AngeloReduced === true &&
        userData.playerData.role === 'ACOLYTE' &&
-       angeloInside &&
        mortimerInside && (
         <TouchableOpacity onPress={deliverAngeloToMortimer} style={styles.artifactsButton}>
           <MedievalText style={styles.buttonText}>Deliver Angelo to Mortimer</MedievalText>
