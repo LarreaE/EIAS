@@ -1,5 +1,3 @@
-// components/IngredientSelector.tsx
-
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import {
   Animated,
@@ -18,8 +16,7 @@ import { Ingredients } from '../interfaces/Ingredients';
 import runaBackground from '../assets/runa.png';
 import createPotionButton from '../assets/boton.png';
 import SelectedIngredientsDisplay from './selectedIngredientsDisplay';
-import MedievalText from './MedievalText'; // Importación del componente MedievalText
-import Ingredient from './Potions/Ingredient';
+import MedievalText from './MedievalText';
 import { stringifyEffect } from '../helper/Funtions';
 
 interface IngredientSelectorProps {
@@ -176,8 +173,6 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
   useEffect(() => {
     checkIngredientsEffect();
   }, [ingredients]);
-
-  // Function to check if all ingredients have the "cleanse" effect
   const checkIngredientsEffect = () => {
     const allCleanse = ingredients.every((ingredient:Ingredients) => ingredient.effects[0] === 'cleanse_parchment');
     console.log(allCleanse);
@@ -190,7 +185,6 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
   const ITEM_SIZE = ITEM_WIDTH + ITEM_MARGIN * 2;
   const { width: WIDTH } = Dimensions.get('window');
 
-  // Verificación de si hay al menos dos ingredientes seleccionados
   const totalSelectedCount = Object.values(selectedIngredients).reduce((a, b) => a + b, 0);
   const hasAtLeastTwoSelected = totalSelectedCount >= 2;
 
@@ -226,18 +220,16 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
         ingredients={ingredients}
         onDeselection={deselectIngredient}
       />
-
-      {/* Create Potion Button */}
       {hasAtLeastTwoSelected && (
         <TouchableOpacity 
           style={styles.createPotionButtonContainer} 
           onPress={() => {
             createPotion(selectedIngredients);
-            setSelectedIngredients({}); // Deselecciona todos los ingredientes
-            onSelectionChange({}); // Actualiza los cambios en otros componentes
+            setSelectedIngredients({});
+            onSelectionChange({});
             setPotionVisible(true);
           }}
-        >
+        >d
           <ImageBackground
             source={createPotionButton}
             style={styles.createPotionButton}
