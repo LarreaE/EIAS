@@ -161,8 +161,6 @@ interface AppliedDiseasePayload {
  */
 export const listenToCurseDiseaseEvents = (
   updateLocal: (playerId: string, changes: any) => void,
-  showDiseaseModal: (disease: string) => void,
-  showEthaziumModal: () => void,
 ) => {
   // Ethazium Curse
   socket.on('applied_curse', (payload: AppliedCursePayload) => {
@@ -224,7 +222,7 @@ const sendNotification = async (email: any) => {
   console.log('Sending notification with email and screen:', email);
 
   try {
-    const response = await fetch(`${Config.LOCAL_HOST}/api/notifications/send-notification`, {
+    const response = await fetch(`${Config.RENDER}/api/notifications/send-notification`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -250,7 +248,7 @@ const sendNotification = async (email: any) => {
  async function checkIfInsideTower(email: any) {
   try {
     console.log('FEtchint');
-    const response = await fetch(`${Config.LOCAL_HOST}/api/auth/isInsideTower`, {
+    const response = await fetch(`${Config.RENDER}/api/auth/isInsideTower`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

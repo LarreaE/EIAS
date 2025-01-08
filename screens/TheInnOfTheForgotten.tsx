@@ -60,6 +60,8 @@ const TheInnOfTheForgotten: React.FC = () => {
 
   useEffect(() => {
     listenToTIOTF(() => {
+      console.log('Battle started');
+      
       setBattleStarted(true);
     });
     return () => { clearServerEvents()};
@@ -212,7 +214,7 @@ const TheInnOfTheForgotten: React.FC = () => {
           </View>
         </View>
       </Modal>
-      {userData.playerData.angeloReduced && (
+      {!userData.playerData.angeloReduced && (
         <BattleModal
           visible={battleStarted}
           onClose={() => setBattleStarted(false)}

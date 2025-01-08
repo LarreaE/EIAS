@@ -13,7 +13,7 @@ import AcolythLaboratoryScreen from './components/acolythLaboratoryScreen';
 import MortimerLaboratoryScreen from './components/mortimerLaboratoryScreen ';
 import MortimerTower from './components/mortimerTower';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { listenToServerEvents, clearServerEvents, listenToCurseDiseaseEvents } from './sockets/listenEvents';
+import { listenToServerEvents, clearServerEvents, listenToCurseDiseaseEvents, clearCurseDiseaseEvents } from './sockets/listenEvents';
 import socket from './sockets/socketConnection';
 import { sendUserEMail } from './sockets/emitEvents';
 import { UserContextType, UserProvider } from './context/UserContext'; // Importa el proveedor
@@ -153,11 +153,13 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
     });
   }, []);
 
+
   useEffect(() => {
     listenToServerEvents();
-    listenToCurseDiseaseEvents();
+    listenToCurseDiseaseEvents(updateLocal);
     return () => {
       clearServerEvents();
+      clearCurseDiseaseEvents();
       socket.disconnect();
     };
   }, []);
