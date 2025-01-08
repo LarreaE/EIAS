@@ -12,7 +12,6 @@ import socket from '../sockets/socketConnection.tsx';
 import MedievalText from './MedievalText'; // tu componente, opcional
 
 interface ValidateAngeloModalProps {
-    spinner: () => void; 
 }
 
 const ValidateAngeloModal: React.FC<ValidateAngeloModalProps> = ({spinner}) => {

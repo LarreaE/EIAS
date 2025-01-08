@@ -363,7 +363,7 @@ const handleMortimerInside = (users) => {
       {/* NUEVO: Botón para entregar a Angelo a Mortimer (si ambos dentro y AngeloReduced = true) */}
       {userData.playerData.AngeloReduced === true &&
        userData.playerData.role === 'ACOLYTE' &&
-       isAngeloDelivered &&
+       !isAngeloDelivered &&
        mortimerInside && (
         <TouchableOpacity onPress={deliverAngeloToMortimer} style={styles.artifactsButton}>
           <MedievalText style={styles.buttonText}>Deliver Angelo to Mortimer</MedievalText>
