@@ -161,8 +161,6 @@ interface AppliedDiseasePayload {
  */
 export const listenToCurseDiseaseEvents = (
   updateLocal: (playerId: string, changes: any) => void,
-  showDiseaseModal: (disease: string) => void,
-  showEthaziumModal: () => void,
 ) => {
   // Ethazium Curse
   socket.on('applied_curse', (payload: AppliedCursePayload) => {

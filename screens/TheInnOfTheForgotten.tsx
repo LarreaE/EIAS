@@ -60,6 +60,8 @@ const TheInnOfTheForgotten: React.FC = () => {
 
   useEffect(() => {
     listenToTIOTF(() => {
+      console.log('Battle started');
+      
       setBattleStarted(true);
     });
     return () => { clearServerEvents()};
