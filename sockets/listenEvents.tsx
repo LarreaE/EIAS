@@ -225,20 +225,21 @@ export const listenToCurseDiseaseEvents = (
 };
 
 interface RestAppliedPayload {
-  playerId: string;
+  email: string;
   newResistance: number;
 }
 
 export const listenToRestEvents = (
-  updateLocal: (playerId: string, changes: Record<string, any>) => void
+  updateLocal: (email: string, changes: Record<string, any>) => void
 ) => {
   socket.on('rest_applied', (payload: RestAppliedPayload) => {
     console.log('Cliente recibió "rest_applied":', payload);
 
-    const { playerId, newResistance } = payload;
+    const { email, newResistance } = payload;
+    console.log('PlayerId:', email);
 
     // Llamamos a updateLocal para poner resistance = newResistance
-    updateLocal(playerId, { resistance: newResistance });
+    updateLocal(email, { resistance: newResistance });
   });
 };
 
@@ -275,7 +276,7 @@ const sendNotification = async (email: any) => {
   console.log('Sending notification with email and screen:', email);
 
   try {
-    const response = await fetch(`${Config.RENDER}/api/notifications/send-notification`, {
+    const response = await fetch(`${Config.LOCAL_HOST}/api/notifications/send-notification`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -301,7 +302,7 @@ const sendNotification = async (email: any) => {
  async function checkIfInsideTower(email: any) {
   try {
     console.log('FEtchint');
-    const response = await fetch(`${Config.RENDER}/api/auth/isInsideTower`, {
+    const response = await fetch(`${Config.LOCAL_HOST}/api/auth/isInsideTower`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -34,6 +34,9 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLogged }) => {
     // Definir la función updateLocal para modificar la data del jugador actual
     const updateLocal = (playerId: string, changes: Record<string, any>) => {
       // Si tuviéramos un "userData.playerData._id"
+      console.log(playerId);
+      
+      if(playerId === userData.playerData.email){
         setUserData((prev) => {
           setLoading(false);
           if (!prev) return prev;
@@ -45,7 +48,7 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLogged }) => {
             },
           };
         });
-      
+      }
     };
     // Registrar listeners
     listenToRestEvents(updateLocal);
