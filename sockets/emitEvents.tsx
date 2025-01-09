@@ -78,6 +78,8 @@ export const AngeloDelivered = (): void => {
 };
 export const setCursesAndDisaeses = (playerId: string,localCursed:boolean,localDiseases:DiseaseType[]): void => {
  // 2) Emitir socket / Llamar a tu emitEvent
+ console.log(playerId);
+ 
  socket.emit('player_update_curse_disease', {
   playerId,
   diseases: localDiseases,
@@ -89,5 +91,10 @@ export const sendRest = (email:string): void => {
   socket.emit('rest_request', { email: email });
 };
 
+export const requestAcolythes = (): void => {
+  // Desde el cliente, solicita la lista de jugadores
+  console.log('Requesting acolytes');
+  socket.emit('getPlayers');
+};
 
 

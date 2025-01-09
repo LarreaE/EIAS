@@ -8,16 +8,21 @@ import {
 } from 'react-native';
 import socket from '../sockets/socketConnection';
 import MedievalText from './MedievalText';
-import { sendRest } from '../sockets/emitEvents';
-import { clearRestEvents, listenToRestEvents } from '../sockets/listenEvents';
+import { requestAcolythes, sendRest } from '../sockets/emitEvents';
+import { clearRestEvents, listenToPlayerList, listenToRestEvents } from '../sockets/listenEvents';
 import { UserContext, UserContextType } from '../context/UserContext.tsx';
 import Spinner from './Spinner.tsx';
-
+import IstvanActionsModal from './IstvanActionsModal';  // Importación del modal
 
 type Props = {
-  user: any;  // User data passed as a prop from the main screen
+  user: any;
   setIsLogged: (value: boolean) => void;
 };
+interface User {
+  id: string;
+  name: string;
+  ethaziumCursed: boolean;
+}
 
 const { width } = Dimensions.get('window');
 
@@ -26,17 +31,24 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLogged }) => {
     setIsLogged(false);
     socket.disconnect();
   };
-    const context = useContext(UserContext) as UserContextType;
-    const { userData,setUserData } = context;
-     const [loading, setLoading] = useState(false); // Estado para el loading
+  const context = useContext(UserContext) as UserContextType;
+  const { userData, setUserData } = context;
+  const [loading, setLoading] = useState(false);
+  const [isIstvanModalVisible, setIsIstvanModalVisible] = useState(false);
+  const [allUsers, setAllUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    // Definir la función updateLocal para modificar la data del jugador actual
+    requestAcolythes();
+     listenToPlayerList(setAllUsers);
+    return () => {
+      socket.off('Player_list');
+    };
+  }, []);
+
+  useEffect(() => {
     const updateLocal = (playerId: string, changes: Record<string, any>) => {
-      // Si tuviéramos un "userData.playerData._id"
       console.log(playerId);
-      
-      if(playerId === userData.playerData.email){
+      if (playerId === userData.playerData.email) {
         setUserData((prev) => {
           setLoading(false);
           if (!prev) return prev;
@@ -50,30 +62,22 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLogged }) => {
         });
       }
     };
-    // Registrar listeners
     listenToRestEvents(updateLocal);
-    // Limpieza
     return () => {
       clearRestEvents();
     };
   }, [userData, setUserData]);
 
-  // 1. Obtenemos la resistencia
   const resistance: number = user.playerData.resistance ?? 100;
-  // 2. Determinamos color según el valor
   let barColor = 'green';
   if (resistance <= 50) {
     barColor = 'red';
   } else if (resistance <= 75) {
     barColor = 'yellow';
   }
-
-  // 3. Ancho proporcional a la resistencia (0 a 100) si deseas
-  // Por ejemplo, un máximo de 200 px
   const maxBarWidth = 200;
   const barWidth = Math.max(0, Math.min(100, resistance)) * (maxBarWidth / 100);
 
-  // 4. Manejar el botón "Rest"
   const handleRest = () => {
     sendRest(user.playerData.email);
     setLoading(true);
@@ -86,7 +90,6 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLogged }) => {
         style={styles.background}
         resizeMode="cover"
       >
-        {/* Centered welcome text */}
         <View style={styles.welcomeContainer}>
           <MedievalText style={styles.welcomeText}>
             {`Welcome back, ${user.playerData.role}`}
@@ -95,23 +98,37 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLogged }) => {
             {`\nUser identity:\n${user.playerData.name}`}
           </MedievalText>
 
-          {/* Barra de Resistencia */}
           <View style={styles.resistanceContainer}>
             <MedievalText style={styles.welcomeText}>
               {`Resistance: ${resistance}%`}
             </MedievalText>
             <View style={styles.barBackground}>
-              <View style={[styles.barFill, { width: barWidth, backgroundColor: barColor }]} />
+              <View
+                style={[
+                  styles.barFill,
+                  { width: barWidth, backgroundColor: barColor },
+                ]}
+              />
             </View>
           </View>
 
-          {/* Botón "Rest" / "Descansar" */}
           <TouchableOpacity onPress={handleRest} style={styles.restButton}>
             <MedievalText style={styles.restButtonText}>Rest</MedievalText>
           </TouchableOpacity>
+
+          {/* Botón para aplicar Ethazium Curse visible solo para ISTVAN */}
+          {user.playerData.role === 'ISTVAN' && (
+            <TouchableOpacity
+              onPress={() => setIsIstvanModalVisible(true)}
+              style={styles.applyEthaziumButton}
+            >
+              <MedievalText style={styles.applyEthaziumButtonText}>
+                Apply Ethazium Curse
+              </MedievalText>
+            </TouchableOpacity>
+          )}
         </View>
 
-        {/* Sign Out Button */}
         <TouchableOpacity onPress={signOut} style={styles.signOutButton}>
           <ImageBackground
             source={require('../assets/boton.png')}
@@ -123,6 +140,13 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLogged }) => {
         </TouchableOpacity>
       </ImageBackground>
       {loading && <Spinner />}
+
+      {/* Modal de Istvan */}
+      <IstvanActionsModal
+        visible={isIstvanModalVisible}
+        onClose={() => setIsIstvanModalVisible(false)}
+        users={allUsers}  // Passa a lista de usuários para o modal
+      />
     </View>
   );
 };
@@ -152,26 +176,22 @@ const styles = StyleSheet.create({
     fontSize: 24,
     textAlign: 'center',
   },
-  // Contenedor general de la barra
   resistanceContainer: {
     marginTop: 20,
     alignItems: 'center',
   },
-  // Fondo de la barra
   barBackground: {
-    width: 200,  // Máximo ancho de la barra
+    width: 200,
     height: 20,
     backgroundColor: '#555',
     borderRadius: 10,
     marginTop: 8,
     overflow: 'hidden',
   },
-  // Parte rellena de la barra
   barFill: {
     height: '100%',
     borderRadius: 10,
   },
-  // Botón "Rest"
   restButton: {
     backgroundColor: '#4a4',
     borderRadius: 8,
@@ -183,7 +203,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
   },
-  // Sign Out
   signOutButton: {
     position: 'absolute',
     bottom: 100,
@@ -199,6 +218,17 @@ const styles = StyleSheet.create({
   },
   signOutText: {
     color: 'white',
+    fontSize: 18,
+  },
+  applyEthaziumButton: {
+    backgroundColor: '#cc0000',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+    marginTop: 20,
+  },
+  applyEthaziumButtonText: {
+    color: '#fff',
     fontSize: 18,
   },
 });
