@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useRef } from 'react';
-import { View, StyleSheet, Dimensions, ImageBackground, Animated, Easing } from 'react-native';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { View, StyleSheet, Dimensions, ImageBackground, Animated, Easing, ToastAndroid } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/types';
@@ -7,6 +7,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import MapButton from '../components/MapButton';
 import { UserContext, UserContextType } from '../context/UserContext';
 import { sendLocation } from '../sockets/emitEvents';
+import BetrayerModal from '../components/BetrayerModal';
 
 const { width, height } = Dimensions.get('window');
 
@@ -25,6 +26,8 @@ const MapScreen: React.FC = () => {
   const birdPosition = useRef(new Animated.Value(width + 50)).current; // Inicia fuera de la pantalla por la derecha
   const birdYPosition = useRef(new Animated.Value(height * 0.5)).current; // Posición vertical inicial
   const birdOpacity = useRef(new Animated.Value(1)).current; // Controla la opacidad del GIF
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   const animateBirds = () => {
     // Generar posición aleatoria en el eje Y (toda la pantalla)
@@ -77,8 +80,12 @@ const MapScreen: React.FC = () => {
     navigation.navigate('TowerMortimer');
   };
   const goToSchool = () => {
-    sendLocation('School', userData.playerData.email);
-    navigation.navigate('School');
+    if (!userData.playerData.isbetrayer) {
+      sendLocation('School', userData.playerData.email);
+      navigation.navigate('School');
+    } else {
+      setModalVisible(true);
+    }
   };
   const goToObituaryDoor = () => {
     sendLocation('ObituaryDoor', userData.playerData.email);
@@ -206,6 +213,10 @@ const MapScreen: React.FC = () => {
                   opacity: birdOpacity,
                 },
               ]}
+            />
+            <BetrayerModal 
+              visible={modalVisible} 
+              onClose={() => setModalVisible(false)} 
             />
           </ImageBackground>
         </GestureHandlerRootView>
