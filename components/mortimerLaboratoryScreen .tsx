@@ -38,6 +38,7 @@ type MapScreenNavigationProp = StackNavigationProp<
 >;
 
 interface User {
+  isbetrayer: any;
   _id: string;
   nickname: string;
   is_active: boolean;
@@ -136,17 +137,20 @@ const handleApplyLocalChanges = (changes: { diseases: string[]; ethaziumCursed: 
       </View>
 
       <View style={styles.users}>
-        {users.map((user) => (
-          <AcolythCard
-            key={user._id}
-            nickname={user.nickname}
-            is_active={user.is_active}
-            avatar={user.avatar}
-            disease={user.disease}
-            ethaziumCursed={user.ethaziumCursed}
-            onPress={() => handleCardPress(user)}
-          />
-        ))}
+          {users
+            .filter(user => !user.isbetrayer) // Filtra los usuarios que NO son traidores
+            .map(user => (
+              <AcolythCard
+                key={user._id}
+                nickname={user.nickname}
+                is_active={user.is_active}
+                avatar={user.avatar}
+                disease={user.disease}
+                ethaziumCursed={user.ethaziumCursed}
+                onPress={() => handleCardPress(user)}
+              />
+            ))
+          }
       </View>
 
       <MapButton

@@ -58,6 +58,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     marginHorizontal: 30,
+    borderWidth: 2,
+    borderColor: '#a6824c',
   },
   modalText: {
     fontSize: 18,

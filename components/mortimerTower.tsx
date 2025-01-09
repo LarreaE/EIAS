@@ -14,6 +14,7 @@ import AcolythCardInHall from './acolyteCardHall.tsx';
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TowerMortimer'>;
 
 interface User {
+  isbetrayer: boolean;
   _id: string;
   nickname: string;
   is_inside_tower: boolean;
@@ -35,7 +36,7 @@ const MortimerTower: React.FC = () => {
   useEffect(() => {
     // Escuchar eventos del servidor
     listenToServerEventsMortimer((users) => {
-      const filteredUsers = users.filter((user) => user.is_inside_tower);
+      const filteredUsers = users.filter((user) => user.is_inside_tower  && user.isbetrayer === false);
       setUsersInTower(filteredUsers);
     });
 
@@ -44,7 +45,7 @@ const MortimerTower: React.FC = () => {
       try {
         const response = await fetch(`${Config.LOCAL_HOST}/api/players/mortimer`);
         const data = await response.json();
-        const filteredUsers = data.filter((user: User) => user.is_inside_tower);
+        const filteredUsers = data.filter((user: User) => user.is_inside_tower && user.isbetrayer === false);
         setUsersInTower(filteredUsers);
       } catch (error) {
         console.error('Error al obtener los datos:', error);
