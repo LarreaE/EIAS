@@ -51,7 +51,7 @@ const IstvanActionsModal: React.FC<IstvanActionsModalProps> = ({
                       style={styles.applyCurseButton}
                       onPress={() => {
                         // Aplicar la maldición al usuario específico
-                        setCursesAndDisaeses(user.id, true, []);
+                        setCursesAndDisaeses(user._id, true, []);
                         setIsCursed(true); // Actualizar el estado local
                       }}
                     >
