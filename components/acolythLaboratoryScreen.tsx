@@ -33,6 +33,7 @@ import ScrollModal from './ScrollModal.tsx';
 import { sendLocation } from '../sockets/emitEvents.tsx';
 import FilterModal from './FilterModal.tsx';
 import { GOOD_EFFECTS, BAD_EFFECTS, EFFECT_ICONS, EFFECT_LABELS } from './FilterModal.tsx';
+import axios from 'axios';
 
 type Props = { UserData: any };
 
@@ -110,8 +111,43 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
     };
   }, [player.is_active, player.email, setIsInsideLab]);
 
-   const createPotion = useCallback((selectedIngredients: { [key: string]: number }) => {
+   const createPotion = useCallback(async (selectedIngredients: { [key: string]: number }) => {
     console.log('createPotion called with:', selectedIngredients);
+
+    const removeIngredients = (ingredients:any, player:any) => {
+      // Ensure player and inventory are valid
+            
+      // Create a map of ingredient counts from the used ingredients array
+      const ingredientsToRemove = ingredients.reduce((acc:any, ingredient:any) => {
+          acc[ingredient._id] = (acc[ingredient._id] || 0) + 1; // Count each ingredient by its `_id`
+          return acc;
+      }, {});
+  
+      // Iterate through player's ingredients and update the inventory
+      player.inventory.ingredients = player.inventory.ingredients.reduce((updatedInventory:any, ingredient:any) => {
+          if (ingredientsToRemove[ingredient._id]) {
+              // Reduce the count of this ingredient
+              if (ingredient.quantity > ingredientsToRemove[ingredient._id]) {
+                  updatedInventory.push({
+                      ...ingredient,
+                      quantity: ingredient.quantity - ingredientsToRemove[ingredient._id],
+                  });
+              }
+              // Remove the ingredient completely if the count is equal or less
+              ingredientsToRemove[ingredient._id] -= ingredient.quantity;
+              if (ingredientsToRemove[ingredient._id] <= 0) {
+                  delete ingredientsToRemove[ingredient._id];
+              }
+          } else {
+              // If the ingredient isn't in the removal list, keep it as-is
+              updatedInventory.push(ingredient);
+          }
+          return updatedInventory;
+      }, []);
+  
+      return player.inventory.ingredients
+  };
+
 
     const potionIngredients = Object.keys(selectedIngredients).flatMap(id => {
       const ingredient = allIngredients.find(ing => ing._id === id);
@@ -127,6 +163,12 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
     try {
       const newpotion = Potion.create(potionIngredients, curses);
       console.log('Created Potion:', newpotion);
+      userData.playerData.inventory.ingredients = removeIngredients(potionIngredients,userData.playerData)
+      // Update the player in the database
+      console.log('Updating player data in the database...');
+      await axios.put(`${Config.RENDER}/api/players/update`, userData.playerData);
+
+      console.log('Player data successfully updated in the database.');
       setPotionCreated(true);
       setPotion(newpotion);
       setPotionVisible(true);
@@ -292,7 +334,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             {potion ? (
               <>
              <Image
-                source={require('../assets/animations/potion.gif')}s
+                source={require('../assets/animations/potion.gif')}
                 resizeMode="cover"
                 style={styles.image}
               />

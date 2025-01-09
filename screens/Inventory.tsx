@@ -23,7 +23,7 @@ const Inventory: React.FC<Props> = ({user}) => {
     const player = user?.playerData || 'No player available';
     const inventory = player.inventory;
     const newInventory = createInvetory(inventory);
-    const slots = Array.from({length: 50});
+    const slots = Array.from({length: 250});
     slots.length -= newInventory.length;
     return (
 <ImageBackground
