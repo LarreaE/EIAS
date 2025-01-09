@@ -59,9 +59,9 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [selectedEffects, setSelectedEffects] = useState<string[]>([]);
 
-  const role = player.role;
+  const role = player.isbetrayer;
 
-  const availableEffects = role === 'ACOLYTE' ? GOOD_EFFECTS : BAD_EFFECTS;
+  const availableEffects = role === false ? GOOD_EFFECTS : BAD_EFFECTS;
   useEffect(() => {
     setModalVisible(false);
   }, [isInsideLab]);

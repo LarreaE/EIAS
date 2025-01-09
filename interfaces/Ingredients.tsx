@@ -1,5 +1,6 @@
 export interface Ingredients {
     _id: string,
+    qty: number,
 	description: string,
     effects: string[],
     image: string,
