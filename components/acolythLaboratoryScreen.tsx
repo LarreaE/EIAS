@@ -1,5 +1,3 @@
-// components/AcolythLaboratoryScreen.tsx
-
 import React, { useEffect, useState, useContext, useCallback } from 'react';
 import QRGenerator from './QrGenerator.tsx';
 import {
@@ -14,17 +12,13 @@ import {
 } from 'react-native';
 import { clearServerEvents, listenToServerEventsScanAcolyte } from '../sockets/listenEvents.tsx';
 import IngredientSelector from './ingredientSelector.tsx';
-import { UserContext, UserContextType } from '../context/UserContext'; // Importa el contexto
+import { UserContext, UserContextType } from '../context/UserContext'; 
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/types';
 import MapButton from './MapButton.tsx';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons.js';
 import Potion from './Potions/Potion.tsx';
-import Ingredient from './Potions/Ingredient.tsx';
-import Curse from './Potions/Curse.tsx';
 import Essence from './Potions/Essence.tsx';
-import { Ingredients } from '../interfaces/Ingredients.tsx';
 import Antidote from './Potions/Antidote.tsx';
 import Elixir from './Potions/Elixir.tsx';
 import Poison from './Potions/Poison.tsx';
@@ -32,7 +26,7 @@ import Stench from './Potions/Stench.tsx';
 import Venom from './Potions/Venom.tsx';
 import Spinner from './Spinner.tsx';
 import CookBookModal from './CookBookModal.tsx';
-import MedievalText from './MedievalText'; // Importación del componente MedievalText
+import MedievalText from './MedievalText';
 import Config from 'react-native-config';
 import Cleanse from './Potions/Cleanse.tsx';
 import ScrollModal from './ScrollModal.tsx';
@@ -62,15 +56,12 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const player = UserData.UserData.playerData;
   const vibrationDuration = 250;
 
-  // Estado para los filtros
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [selectedEffects, setSelectedEffects] = useState<string[]>([]);
 
-  // Obtener el rol del personaje
-  const role = player.role; // Asegúrate de que 'role' está definido en player
+  const role = player.isbetrayer;
 
-  // Determinar los efectos disponibles según el rol
-  const availableEffects = role === 'ACOLYTE' ? GOOD_EFFECTS : BAD_EFFECTS;
+  const availableEffects = role === false ? GOOD_EFFECTS : BAD_EFFECTS;
   useEffect(() => {
     setModalVisible(false);
   }, [isInsideLab]);
@@ -119,17 +110,13 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
     };
   }, [player.is_active, player.email, setIsInsideLab]);
 
-  // Usa useCallback para evitar re-renderizados innecesarios
-   // Función para crear poción (Enfoque 1: Expandir el arreglo)
    const createPotion = useCallback((selectedIngredients: { [key: string]: number }) => {
     console.log('createPotion called with:', selectedIngredients);
 
-    // Convertir el objeto a un array de ingredientes con cantidades individuales
     const potionIngredients = Object.keys(selectedIngredients).flatMap(id => {
       const ingredient = allIngredients.find(ing => ing._id === id);
       const quantity = selectedIngredients[id];
       if (ingredient) {
-        // Crear un arreglo con múltiples instancias del ingrediente
         return Array(quantity).fill({ ...ingredient });
       }
       return [];
@@ -149,14 +136,11 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   }, [allIngredients, curses, setPotion, setPotionVisible]);
 
 
-  // Función para manejar la selección de efectos
   const toggleEffect = (effect: string) => {
     setSelectedEffects(prevSelectedEffects => {
       if (prevSelectedEffects.includes(effect)) {
-        // Si ya está seleccionado, lo elimina
         return prevSelectedEffects.filter(e => e !== effect);
       } else {
-        // Si no está seleccionado, lo añade
         return [...prevSelectedEffects, effect];
       }
     });
@@ -164,43 +148,37 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
   const applyFilters = () => {
     if (selectedEffects.length === 0) {      
-      // No se han seleccionado filtros, aplicar filtro por rol
       if (role === 'ACOLYTE') {
-        // Filtrar ingredientes con efectos buenos
         const goodIngredients = allIngredients.filter(ingredient =>
           ingredient.effects.some(effect => GOOD_EFFECTS.includes(effect))
         );
         setIngredients(goodIngredients);
       } else if (role === 'VILLAIN') {
-        // Filtrar ingredientes con efectos malos
         const badIngredients = allIngredients.filter(ingredient =>
           ingredient.effects.some(effect => BAD_EFFECTS.includes(effect))
         );
         setIngredients(badIngredients);
       } else {
-        // En caso de que el rol no sea ni 'ACOLYTE' ni 'VILLAIN', mostrar todos los ingredientes
         setIngredients(allIngredients);
       }
     } else {
-      // Se han seleccionado filtros, aplicar filtrado basado en los efectos seleccionados
       const filtered = allIngredients.filter(ingredient =>
         ingredient.effects.some(effect =>
           selectedEffects.some(selectedEffect =>
-            effect.toLowerCase().includes(selectedEffect.toLowerCase()) // Coincidencia de substring, case-insensitive
+            effect.toLowerCase().includes(selectedEffect.toLowerCase())
           )
         )
       );
       setIngredients(filtered);
     }
-    setFilterModalVisible(false); // Cierra el modal de filtros
+    setFilterModalVisible(false);
   };
 
   const applyFiltersAtStart = (callback:any) => {
     useEffect(() => {
       callback();
-    }, []); // limpia array dependendias
+    }, []);
   };
-  //execute the filter once
   applyFiltersAtStart(applyFilters);
 
   const navigation = useNavigation<MapScreenNavigationProp>();
@@ -218,27 +196,25 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
     <View style={styles.container}>
       {isInsideLab || userData.playerData.role === 'VILLAIN' ? (
         <ImageBackground
-          source={require('../assets/laboratory.png')}  // Ruta de la imagen
-          style={styles.background}  // Aplicar estilos al contenedor
-          resizeMode="cover"         // Ajuste de la imagen
+          source={require('../assets/laboratory.png')}
+          style={styles.background}
+          resizeMode="cover"
         >
 
           {!cursesRetrieved && !ingredientsRetrieved && <Spinner message={spinnerMessage} />}
-          {/* Selector de Ingredientes Filtrados */}
           <IngredientSelector 
             onSelectionChange={onSelectionChange}  
             createPotion={createPotion} 
           />
-          {/* Botón para mostrar el QR */}
           {userData.playerData.role === 'ACOLYTE' && (
             <TouchableOpacity
             onPress={() => setModalVisible(true)}
             style={styles.qrButton}
             >
             <ImageBackground
-              source={require('../assets/QR_icon.png')}  // Ruta de la imagen
-              style={styles.openButton}  // Aplicar estilos al contenedor
-              resizeMode="cover"         // Ajuste de la imagen
+              source={require('../assets/QR_icon.png')}
+              style={styles.openButton}
+              resizeMode="cover"
             />
             </TouchableOpacity>
           )}
@@ -248,37 +224,34 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             style={styles.qrButton}
             >
             <ImageBackground
-              source={require('../assets/school_icon.png')}  // Ruta de la imagen
-              style={styles.openButton}  // Aplicar estilos al contenedor
-              resizeMode="cover"         // Ajuste de la imagen
+              source={require('../assets/school_icon.png')}
+              style={styles.openButton}
+              resizeMode="cover"
             />
             </TouchableOpacity>
           )}
-          {/* Botón de Cookbook */}
           <TouchableOpacity
             style={styles.cookBookButton}
             onPress={() => setCookBookModalVisible(true)}
           >
             <ImageBackground
-              source={require('../assets/informacion.png')} // Reemplaza esta ruta con la ubicación de tu imagen
-              style={styles.filterImage} // Aplica un estilo para ajustar el tamaño de la imagen
+              source={require('../assets/informacion.png')}
+              style={styles.filterImage}
             />
           </TouchableOpacity>
 
-          {/* Botón de Filtros */}
           <TouchableOpacity
             style={styles.filterButton}
             onPress={() => setFilterModalVisible(true)}
           >
             <ImageBackground
-              source={require('../assets/filter_icon.png')} // Reemplaza esta ruta con la ubicación de tu imagen
-              style={styles.filterImage} // Aplica un estilo para ajustar el tamaño de la imagen
+              source={require('../assets/filter_icon.png')}
+              style={styles.filterImage}
             />
           </TouchableOpacity>
           <CookBookModal key={1} visible={cookBookModalVisible} setVisible={setCookBookModalVisible} curses={curses}/>
           <ScrollModal key={2} visible={scrollModalVisible} setVisible={setScrollModalVisible}/>
 
-          {/* Modal para mostrar detalles del QR */}
           <Modal
             animationType="slide"
             transparent={true}
@@ -296,9 +269,9 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
                   onPress={() => setModalVisible(false)}
                 >
                   <Image
-                    source={require('../assets/boton.png')} // Ruta al archivo de imagen
-                    style={styles.buttonImage} // Estilo para la imagen del botón
-                    resizeMode="contain" // Ajusta cómo se muestra la imagen
+                    source={require('../assets/boton.png')}
+                    style={styles.buttonImage}
+                    resizeMode="contain"
                   />
                   <MedievalText fontSize={16} color="#ffffff" style={styles.modalText}>
                     Close
@@ -319,7 +292,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             {potion ? (
               <>
              <Image
-                source={require('../assets/animations/potion.gif')} // Ruta al GIF en tus assets
+                source={require('../assets/animations/potion.gif')}s
                 resizeMode="cover"
                 style={styles.image}
               />
@@ -389,9 +362,9 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             >
               <View style={styles.buttonContent}>
                 <Image
-                  source={require('../assets/boton.png')} // Ruta al archivo de imagen
-                  style={styles.potionbuttonImage} // Estilo para la imagen del botón
-                  resizeMode="contain" // Ajusta cómo se muestra la imagen
+                  source={require('../assets/boton.png')}
+                  style={styles.potionbuttonImage}
+                  resizeMode="contain"
                 />
                 <MedievalText fontSize={16} color="#ffffff" style={styles.potionbuttonText}>
                   Close
@@ -423,7 +396,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
 export default AcolythLaboratoryScreen;
 
-// Estilos actualizados
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -520,7 +492,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  // Estilos para el botón de filtros
   filterButton: {
     position: 'absolute',
     top: 50,
@@ -535,7 +506,6 @@ const styles = StyleSheet.create({
     
     marginLeft: 5,
   },
-  // Estilos para el modal de filtros
   filterModalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',

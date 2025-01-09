@@ -1,25 +1,11 @@
-// components/IngredientSelector.tsx
-
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import {
-  Animated,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  Dimensions,
-  View,
-  ImageBackground,
-  Modal,
-  Vibration,
-  ToastAndroid,
-} from 'react-native';
+import { Animated, TouchableOpacity, Image, StyleSheet, Dimensions, View, ImageBackground, Modal, Vibration, ToastAndroid } from 'react-native';
 import { UserContext, UserContextType } from '../context/UserContext';
 import { Ingredients } from '../interfaces/Ingredients';
 import runaBackground from '../assets/runa.png';
 import createPotionButton from '../assets/boton.png';
 import SelectedIngredientsDisplay from './selectedIngredientsDisplay';
-import MedievalText from './MedievalText'; // Importación del componente MedievalText
-import Ingredient from './Potions/Ingredient';
+import MedievalText from './MedievalText';
 import { stringifyEffect } from '../helper/Funtions';
 
 interface IngredientSelectorProps {
@@ -28,19 +14,22 @@ interface IngredientSelectorProps {
 }
 
 const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChange, createPotion }) => {
-
   const context = useContext(UserContext) as UserContextType;
   const [selectedIngredients, setSelectedIngredients] = useState<{ [key: string]: number }>({});
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { ingredients, setPotionVisible } = context;
+  const { userData, setPotionVisible } = context;
   const [modalVisible, setModalVisible] = useState(false);
   const [buttonText, setButtonText] = useState('Create Potion');
   const [selectedIngredient, setSelectedIngredient] = useState<Ingredients | null>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
 
-  const showToastWithGravityAndOffset = () => {
+  // const ingredients = userData.playerData.inventory.ingredients;
+  const ingredients = [{ "_id": "6702b39d76863c206a48cccb", "qty": "2", "description": "A sacred flower that boosts one's health noticeably.", "effects": ["increase_hit_points"], "image": "/images/ingredients/increase/increase_2.webp", "name": "Crimson Lotus", "type": "ingredient", "value": 110 }, { "_id": "6702b44f76863c206a48ccdc", "description": "A rare blood known for its ability to enhance strength tremendously.", "effects": ["restore_strength"], "image": "/images/ingredients/restore/restore_7.webp", "name": "Titan's Blood", "type": "ingredient", "value": 75 }, { "_id": "6702b44f76863c206a48ccdf", "description": "A soothing ointment that effectively restores hit points.", "effects": ["restore_hit_points"], "image": "/images/ingredients/restore/restore_10.webp", "name": "Healing Ointment", "type": "ingredient", "value": 65 }, { "_id": "6702b44f76863c206a48cce6", "description": "A bloom that invigorates the constitution and instills bravery.", "effects": ["restore_constitution"], "image": "/images/ingredients/restore/restore_17.webp", "name": "Courageous Bloom", "type": "ingredient", "value": 105 }, { "_id": "6702b44f76863c206a48ccd8", "description": "A thorny plant that boosts dexterity and agility in its users.", "effects": ["restore_dexterity"], "image": "/images/ingredients/restore/restore_3.webp", "name": "Swifthorn", "type": "ingredient", "value": 55 }, { "_id": "6702b44f76863c206a48ccd7", "description": "A golden liquid that enhances intelligence and sharpens the mind.", "effects": ["restore_intelligence"], "image": "/images/ingredients/restore/restore_2.webp", "name": "Wisdom's Nectar", "type": "ingredient", "value": 85 }, { "_id": "6702b44f76863c206a48cceb", "description": "A shimmering potion that boosts the charm of those who drink it.", "effects": ["restore_charisma"], "image": "/images/ingredients/restore/restore_22.webp", "name": "Elixir of Charisma", "type": "ingredient", "value": 85 }, { "_id": "6702b44f76863c206a48ccf0", "description": "A delicate flower that soothes the mind and restores sanity.", "effects": ["restore_insanity"], "image": "/images/ingredients/restore/restore_27.webp", "name": "Calm Blossom", "type": "ingredient", "value": 6 }, { "_id": "6702b4f876863c206a48cd1f", "description": "A crackling herb that boosts constitution.", "effects": ["boost_constitution"], "image": "/images/ingredients/boost/boost_12.webp", "name": "Willow Spark", "type": "ingredient", "value": 45 }, { "_id": "6702b4f876863c206a48cd24", "description": "A fiery petal that enhances strength when consumed.", "effects": ["boost_strength"], "image": "/images/ingredients/boost/boost_17.webp", "name": "Firepetal", "type": "ingredient", "value": 44 }, { "_id": "6702b4f876863c206a48cd21", "description": "A leaf that enhances strength with each thunderstorm.", "effects": ["boost_strength"], "image": "/images/ingredients/boost/boost_14.webp", "name": "Thunderleaf", "type": "ingredient", "value": 105 }, { "_id": "6702b4f876863c206a48cd23", "description": "A glowing bloom that enhances dexterity.", "effects": ["boost_dexterity"], "image": "/images/ingredients/boost/boost_16.webp", "name": "Amber Bloom", "type": "ingredient", "value": 50 }, { "_id": "6702b4f876863c206a48cd1d", "description": "A rare blossom that boosts intelligence when night falls.", "effects": ["boost_intelligence"], "image": "/images/ingredients/boost/boost_10.webp", "name": "Starfall Blossom", "type": "ingredient", "value": 68 }, { "_id": "6702b4f876863c206a48cd16", "description": "A golden root that enhances physical vitality.", "effects": ["boost_constitution"], "image": "/images/ingredients/boost/boost_3.webp", "name": "Golden Ginseng", "type": "ingredient", "value": 85 }, { "_id": "6702b4f876863c206a48cd26", "description": "A dewdrop that enhances charisma and inspires dreams.", "effects": ["boost_charisma"], "image": "/images/ingredients/boost/boost_19.webp", "name": "Dreamer's Dew", "type": "ingredient", "value": 72 }, { "_id": "6702b4f876863c206a48cd18", "description": "A magical vine that grants increased agility.", "effects": ["boost_dexterity"], "image": "/images/ingredients/boost/boost_5.webp", "name": "Elven Vine", "type": "ingredient", "value": 95 }, { "_id": "6702b4f876863c206a48cd1a", "description": "A spicy pepper that boosts constitution and endurance.", "effects": ["boost_constitution"], "image": "/images/ingredients/boost/boost_7.webp", "name": "Dwarven Pepper", "type": "ingredient", "value": 55 }, { "_id": "6702b56a76863c206a48cd44", "description": "A calming leaf that restores clarity and reduces madness.", "effects": ["calm"], "image": "/images/ingredients/calm/calm_2.webp", "name": "Tranquil Leaf", "type": "ingredient", "value": 78 }]
+
+
+  const showToastWithGravityAndOffset = (message: string) => {
     ToastAndroid.showWithGravityAndOffset(
-      'Has alcanzado el máximo de ingredientes',
+      message,
       ToastAndroid.LONG,
       ToastAndroid.BOTTOM,
       25,
@@ -53,17 +42,19 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
       const totalSelections = Object.values(prevSelectedIngredients).reduce((a, b) => a + b, 0);
       const currentCount = prevSelectedIngredients[ingredient._id] || 0;
 
-      if (totalSelections < 4) {
+      if (totalSelections < 4 && currentCount < ingredient.qty) {
         const updatedSelection = {
           ...prevSelectedIngredients,
           [ingredient._id]: currentCount + 1,
         };
         onSelectionChange(updatedSelection);
         return updatedSelection;
+      } else if (currentCount >= ingredient.qty) {
+        showToastWithGravityAndOffset('You cannot add more of this ingredient');
       } else {
-        showToastWithGravityAndOffset();
-        return prevSelectedIngredients;
+        showToastWithGravityAndOffset('You have reached the maximum ingredients');
       }
+      return prevSelectedIngredients;
     });
   };
 
@@ -80,9 +71,8 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
         }
         onSelectionChange(updatedSelection);
         return updatedSelection;
-      } else {
-        return prevSelectedIngredients;
       }
+      return prevSelectedIngredients;
     });
   };
 
@@ -156,10 +146,10 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
                 </MedievalText>
               </View>
             )}
-            <Image 
+            <Image
               source={{
-                      uri: `https://kaotika.vercel.app/${item.image}`,
-                  }}  
+                uri: `https://kaotika.vercel.app/${item.image}`,
+              }}
               style={styles.ingredientImage} />
             <MedievalText fontSize={16} color="#ffffff" style={styles.ingredientName} numberOfLines={1}>
               {item.name}
@@ -177,11 +167,8 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
     checkIngredientsEffect();
   }, [ingredients]);
 
-  // Function to check if all ingredients have the "cleanse" effect
   const checkIngredientsEffect = () => {
-    const allCleanse = ingredients.every((ingredient:Ingredients) => ingredient.effects[0] === 'cleanse_parchment');
-    console.log(allCleanse);
-    
+    const allCleanse = ingredients.every((ingredient: Ingredients) => ingredient.effects[0] === 'cleanse_parchment');
     setButtonText(allCleanse ? 'Purification Potion' : 'Create Potion');
   };
 
@@ -189,126 +176,82 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
   const ITEM_MARGIN = 5;
   const ITEM_SIZE = ITEM_WIDTH + ITEM_MARGIN * 2;
   const { width: WIDTH } = Dimensions.get('window');
-
-  // Verificación de si hay al menos dos ingredientes seleccionados
   const totalSelectedCount = Object.values(selectedIngredients).reduce((a, b) => a + b, 0);
   const hasAtLeastTwoSelected = totalSelectedCount >= 2;
 
   return (
-    <View style={{ flex: 1 }}>
-      <Animated.FlatList
-        data={ingredients}
-        keyExtractor={(item) => item._id}
-        renderItem={renderIngredient}
-        horizontal
-        contentContainerStyle={{
-          alignItems: 'center',
-          paddingHorizontal: (WIDTH - ITEM_SIZE) / 2,
-        }}
-        showsHorizontalScrollIndicator={false}
-        snapToInterval={ITEM_SIZE}
-        decelerationRate="fast"
-        bounces={false}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          { useNativeDriver: true }
-        )}
-        scrollEventThrottle={16}
-        onMomentumScrollEnd={(event) => {
-          const offsetX = event.nativeEvent.contentOffset.x;
-          const index = Math.round(offsetX / ITEM_SIZE);
-          setCurrentIndex(index);
-        }}
-      />
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      {ingredients.length === 0 ? (
+        <View style={{ alignItems: 'center', backgroundColor: "rgba(105,105,105,0.7)", padding: 10, borderRadius: 20, }}>
+          <MedievalText fontSize={16} color="white" style={{ marginBottom: 20 }}>
+            You don't have any ingredients available.
+          </MedievalText>
+          <MedievalText fontSize={16} color="white">
+            Go to Kaotika web store to buy some ingredients.
+          </MedievalText>
+        </View>
+      ) : (
+        <>
+          <Animated.FlatList
+            data={ingredients}
+            keyExtractor={(item) => item._id}
+            renderItem={renderIngredient}
+            horizontal
+            contentContainerStyle={{
+              alignItems: 'center',
+              paddingHorizontal: (WIDTH - ITEM_SIZE) / 2,
+            }}
+            showsHorizontalScrollIndicator={false}
+            snapToInterval={ITEM_SIZE}
+            decelerationRate="fast"
+            bounces={false}
+            onScroll={Animated.event(
+              [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+              { useNativeDriver: true }
+            )}
+            scrollEventThrottle={16}
+            onMomentumScrollEnd={(event) => {
+              const offsetX = event.nativeEvent.contentOffset.x;
+              const index = Math.round(offsetX / ITEM_SIZE);
+              setCurrentIndex(index);
+            }}
+          />
 
-      <SelectedIngredientsDisplay
-        selectedIngredients={selectedIngredients}
-        ingredients={ingredients}
-        onDeselection={deselectIngredient}
-      />
-
-      {/* Create Potion Button */}
-      {hasAtLeastTwoSelected && (
-        <TouchableOpacity 
-          style={styles.createPotionButtonContainer} 
-          onPress={() => {
-            createPotion(selectedIngredients);
-            setSelectedIngredients({}); // Deselecciona todos los ingredientes
-            onSelectionChange({}); // Actualiza los cambios en otros componentes
-            setPotionVisible(true);
-          }}
-        >
-          <ImageBackground
-            source={createPotionButton}
-            style={styles.createPotionButton}
-            imageStyle={{ borderRadius: 10 }}
-            resizeMode="stretch"
-          >
-            <MedievalText fontSize={18} color="#ffffff" style={styles.createPotionButtonText}>
-              {buttonText}
-            </MedievalText>
-          </ImageBackground>
-        </TouchableOpacity>
-      )}
-
-      {selectedIngredient && (
-        <Modal
-          visible={modalVisible}
-          transparent
-          animationType="fade"
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={styles.modalOverlay}>
-            <ImageBackground
-              source={runaBackground}
-              style={styles.modalContent}
-              imageStyle={{ borderRadius: 10 }}
-              resizeMode="stretch"
+          <SelectedIngredientsDisplay
+            selectedIngredients={selectedIngredients}
+            ingredients={ingredients}
+            onDeselection={deselectIngredient}
+          />
+          {hasAtLeastTwoSelected && (
+            <TouchableOpacity
+              style={styles.createPotionButtonContainer}
+              onPress={() => {
+                createPotion(selectedIngredients);
+                setSelectedIngredients({});
+                onSelectionChange({});
+                setPotionVisible(true);
+              }}
             >
-              <TouchableOpacity
-                style={styles.modalCloseButton}
-                onPress={() => setModalVisible(false)}
+              <ImageBackground
+                source={createPotionButton}
+                style={styles.createPotionButton}
+                imageStyle={{ borderRadius: 10 }}
+                resizeMode="stretch"
               >
-                <MedievalText fontSize={16} color="#ffffff" style={styles.modalCloseButtonText}>
-                  X
+                <MedievalText fontSize={18} color="#ffffff" style={styles.createPotionButtonText}>
+                  {buttonText}
                 </MedievalText>
-              </TouchableOpacity>
-              <Image
-                source={{uri: `https://kaotika.vercel.app/${selectedIngredient.image}`}}
-                style={styles.modalImage}
-              />
-              <MedievalText fontSize={24} color="#ffffff" style={styles.modalTitle}>
-                {selectedIngredient.name}
-              </MedievalText>
-              <MedievalText fontSize={16} color="#ffff00" style={styles.modalAtribute}>
-                DESCRIPCIÓN:
-              </MedievalText>
-              <MedievalText fontSize={16} color="#ffffff" style={styles.modalDescription}>
-                {selectedIngredient.description}
-              </MedievalText>
-              <MedievalText fontSize={16} color="#ffff00" style={styles.modalAtribute}>
-                VALOR:
-              </MedievalText>
-              <MedievalText fontSize={16} color="#ffffff" style={styles.modalDescription}>
-                {selectedIngredient.value}
-              </MedievalText>
-              <MedievalText fontSize={16} color="#ffff00" style={styles.modalAtribute}>
-                EFECTOS:
-              </MedievalText>
-              <MedievalText fontSize={16} color="#ffffff" style={styles.modalDescription}>
-                {selectedIngredient.effects.join(', ')}
-              </MedievalText>
-            </ImageBackground>
-          </View>
-        </Modal>
+              </ImageBackground>
+            </TouchableOpacity>
+          )}
+        </>
       )}
     </View>
   );
 };
 
-export default IngredientSelector;
 
-// Estilos (sin cambios, pero asegúrate de que sean consistentes)
+export default IngredientSelector;
 const styles = StyleSheet.create({
   ingredientItemContainer: {
     width: 150,
@@ -338,11 +281,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   ingredientName: {
-    // fontSize y color se manejan por el componente MedievalText
     textAlign: 'center',
   },
   ingredientDescription: {
-    // fontSize y color se manejan por el componente MedievalText
     textAlign: 'center',
   },
   countBadge: {
@@ -355,11 +296,9 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   countText: {
-    // fontSize y color se manejan por el componente MedievalText
   },
   createPotionButtonContainer: {
     position: 'absolute',
-    bottom: 100, // Ajusta la posición según sea necesario
     alignSelf: 'center',
     width: 200,
     height: 100,
@@ -374,7 +313,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   createPotionButtonText: {
-    // fontSize y color se manejan por el componente MedievalText
   },
   modalOverlay: {
     flex: 1,
@@ -397,17 +335,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   modalTitle: {
-    // fontSize y color se manejan por el componente MedievalText
     marginBottom: 10,
   },
   modalDescription: {
-    // fontSize y color se manejan por el componente MedievalText
     textAlign: 'center',
     maxWidth: 200,
     marginTop: 10,
   },
   modalAtribute: {
-    // fontSize y color se manejan por el componente MedievalText
     marginTop: 10,
   },
   modalCloseButton: {
@@ -419,7 +354,6 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   modalCloseButtonText: {
-    // fontSize y color se manejan por el componente MedievalText
   },
   decreaseButton: {
     position: 'absolute',
@@ -434,6 +368,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   decreaseButtonText: {
-    // fontSize y color se manejan por el componente MedievalText
   },
 });
