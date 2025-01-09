@@ -84,6 +84,10 @@ export const setCursesAndDisaeses = (playerId: string,localCursed:boolean,localD
   ethaziumCursed: localCursed,
 });
 };
+export const sendRest = (email:string): void => {
+  console.log('Rest Request');
+  socket.emit('rest_request', { email: email });
+};
 
 
 

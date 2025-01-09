@@ -9,6 +9,7 @@ import { Profile } from './Profile.tsx';
 import { Task } from './Task.tsx';
 
 export interface Player {
+  playerData: any;
   _id: string;
   name: string;
   nickname: string;
