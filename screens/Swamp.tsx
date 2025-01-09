@@ -150,7 +150,7 @@ useEffect(() => {
 
 
   useEffect(() => {
-    console.log("otherACOLYTEAS: ", otherAcolytes);    
+    console.log("otherACOLYTEAS: ", otherAcolytes);
   }, [otherAcolytes]);
 
   // Default map region
@@ -207,6 +207,7 @@ useEffect(() => {
             userId: userData.playerData.nickname,
             avatar: userData.playerData.avatar,
             coords: { latitude, longitude },
+            isbetrayer: userData.playerData.isbetrayer,
           });
         },
         (error) => {
