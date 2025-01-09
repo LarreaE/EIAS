@@ -84,11 +84,8 @@ const TiredModal: React.FC<TiredModalProps> = ({ visible, onClose }) => {
             Your Resistance is at 30 or below.
             You can only recover fully if Mortimer applies a cataplasma.
           </MedievalText>
-          {/* Botón para cerrar localmente 
+          {/* Botón para cerrar localmente
               (La resistencia sigue baja hasta que se use cataplasma) */}
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <MedievalText style={{ color: '#fff' }}>OK</MedievalText>
-          </TouchableOpacity>
         </View>
       </View>
     </Modal>
