@@ -242,6 +242,12 @@ export const listenToRestEvents = (
     updateLocal(email, { resistance: newResistance });
   });
 };
+export const listenToPlayerList = (setPlayers: (players: any) => void): void => {
+  socket.on('Player_list', (data: { players: any }) => {
+    console.log('Jugadores recibidos del servidor:', data.players);
+    setPlayers(data.players);
+  });
+};
 
 export const clearRestEvents = () => {
   socket.off('rest_applied');
