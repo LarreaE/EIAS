@@ -379,29 +379,32 @@ useEffect(() => {
           customMapStyle={mapStyle}
           googleRenderer={'LEGACY'}
         >
-          {Object.keys(otherAcolytes).map((userId: any) => {
-            try {
-              const deviceLocation = otherAcolytes[userId];
-            return (
-              <Marker
-                key={userId}
-                title={userId}
-                tracksViewChanges={true}
-                coordinate={{
-                  latitude: deviceLocation.coords.latitude,
-                  longitude: deviceLocation.coords.longitude,
-                }}
-              >
-                <MapMarker
-                  avatarUri={otherAcolytes[userId].avatar}
-                />
-              </Marker>
-            );
-            } catch (error) {
-              console.error('Error rendering Marker:', error);
-              return null
-            }
-          })}
+          {Object.keys(otherAcolytes)
+            .filter(userId => !otherAcolytes[userId].isbetrayer)  // Excluye traidores
+            .map((userId: any) => {
+              try {
+                const deviceLocation = otherAcolytes[userId];
+                return (
+                  <Marker
+                    key={userId}
+                    title={userId}
+                    tracksViewChanges={true}
+                    coordinate={{
+                      latitude: deviceLocation.coords.latitude,
+                      longitude: deviceLocation.coords.longitude,
+                    }}
+                  >
+                    <MapMarker
+                      avatarUri={otherAcolytes[userId].avatar}
+                    />
+                  </Marker>
+                );
+              } catch (error) {
+                console.error(error);
+                return null;
+              }
+            })
+          }
           {(userData.playerData.role === 'ACOLYTE' ||
             userData.playerData.role === 'MORTIMER') &&
             pointsOfInterest.map(
