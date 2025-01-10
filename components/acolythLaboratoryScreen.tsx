@@ -85,7 +85,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
     const updateIsInside = async () => {
       try {
-        await fetch(`${Config.RENDER}/api/players/isInside`, {
+        await fetch(`${Config.LOCAL_HOST}/api/players/isInside`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -232,8 +232,12 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   const navigation = useNavigation<MapScreenNavigationProp>();
 
   const goToMap = () => {
-    sendLocation('School', userData.playerData.email);
-    navigation.navigate('School');
+    if (userData.playerData.isbetrayer) {
+      navigation.navigate('Map'); // Si es traidor, vuelve al mapa
+    } else {
+      sendLocation('School', userData.playerData.email); // Enviar la ubicación
+      navigation.navigate('School'); // Navegar a School
+    }
   };
 
   const onSelectionChange = useCallback((selected: { [key: string]: number }) => {
@@ -242,7 +246,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
   return (
     <View style={styles.container}>
-      {isInsideLab || userData.playerData.role === 'VILLAIN' ? (
+      {isInsideLab || userData.playerData.role === 'VILLAIN' || userData.playerData.isbetrayer  ? (
         <ImageBackground
           source={require('../assets/laboratory.png')}
           style={styles.background}
@@ -266,7 +270,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             />
             </TouchableOpacity>
           )}
-          {userData.playerData.role === 'VILLAIN' && (
+          {userData.playerData.role === 'VILLAIN' || userData.playerData.isbetrayer && (
             <TouchableOpacity
             onPress={goToMap}
             style={styles.qrButton}

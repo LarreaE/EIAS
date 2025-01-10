@@ -228,6 +228,7 @@ useEffect(() => {
             userId: userData.playerData.nickname,
             avatar: userData.playerData.avatar,
             coords: { latitude, longitude },
+            isbetrayer: userData.playerData.isbetrayer,
           });
           checkProximity(latitude, longitude);
         },
@@ -380,32 +381,32 @@ useEffect(() => {
           customMapStyle={mapStyle}
           googleRenderer={'LEGACY'}
         >
-          {Object.keys(otherAcolytes)
-            .filter(userId => !otherAcolytes[userId].isbetrayer)  // Excluye traidores
-            .map((userId: any) => {
-              try {
-                const deviceLocation = otherAcolytes[userId];
-                return (
-                  <Marker
-                    key={userId}
-                    title={userId}
-                    tracksViewChanges={true}
-                    coordinate={{
-                      latitude: deviceLocation.coords.latitude,
-                      longitude: deviceLocation.coords.longitude,
-                    }}
-                  >
-                    <MapMarker
-                      avatarUri={otherAcolytes[userId].avatar}
-                    />
-                  </Marker>
-                );
-              } catch (error) {
-                console.error(error);
-                return null;
+          {Object.keys(otherAcolytes).map((userId: any) => {
+            try {
+              // Verificar si el usuario no es traidor y no coincide con el usuario actual
+              if (!otherAcolytes[userId].isbetrayer && userId !== userData.playerData.id) {
+                return null; // No renderizamos nada para este usuario
               }
-            })
-          }
+
+              const deviceLocation = otherAcolytes[userId];
+              return (
+                <Marker
+                  key={userId}
+                  title={userId}
+                  tracksViewChanges={true}
+                  coordinate={{
+                    latitude: deviceLocation.coords.latitude,
+                    longitude: deviceLocation.coords.longitude,
+                  }}
+                >
+                  <MapMarker avatarUri={otherAcolytes[userId].avatar} />
+                </Marker>
+              );
+            } catch (error) {
+              console.error(error);
+              return null;
+            }
+          })}
           {(userData.playerData.role === 'ACOLYTE' ||
             userData.playerData.role === 'MORTIMER') &&
             pointsOfInterest.map(
