@@ -79,7 +79,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
     const updateIsInside = async () => {
       try {
-        await fetch(`${Config.LOCAL_HOST}/api/players/isInside`, {
+        await fetch(`${Config.RENDER}/api/players/isInside`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -373,7 +373,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             </TouchableOpacity>
           </Modal>
 
-          {/* Modal de Filtros */}
         <FilterModal  setVisible={setFilterModalVisible} visible={filterModalVisible} 
                       availableEffects={availableEffects} selectedEffects={selectedEffects} 
                       applyFilters={applyFilters} toggleEffect={toggleEffect} setSelectedEffect={setSelectedEffects}/>

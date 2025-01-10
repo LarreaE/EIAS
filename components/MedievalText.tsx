@@ -30,7 +30,7 @@ const MedievalText: React.FC<MedievalTextProps> = ({ fontSize, color, style, chi
 const styles = StyleSheet.create({
   medievalText: {
     fontFamily: 'MedievalSharp-Regular',
-    lineHeight: 24,
+
   },
 });
 
