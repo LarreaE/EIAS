@@ -47,7 +47,7 @@ const IstvanActionsModal: React.FC<IstvanActionsModalProps> = ({
                 const [isCursed, setIsCursed] = useState(user.ethaziumCursed);
 
                 return (
-                  <View key={user.id} style={styles.row}>
+                  <View key={user._id} style={styles.row}>
                     <MedievalText style={styles.label}>{user.name}</MedievalText>
                     {!isCursed ? (
                       <TouchableOpacity

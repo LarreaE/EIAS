@@ -198,6 +198,7 @@ export const listenToCurseDiseaseEvents = (
   // Ethazium Curse
   socket.on('applied_curse', (payload: AppliedCursePayload) => {
     // El servidor indica que se ha aplicado/retirado la maldición a un player
+    console.log('Cliente recibió "applied_curse":', payload);
     const { playerId, curse } = payload;
 
     // 1) Actualizar local => si el player actual es el afectado
@@ -272,7 +273,7 @@ const sendNotification = async (email: any) => {
   console.log('Sending notification with email and screen:', email);
 
   try {
-    const response = await fetch(`${Config.RENDER}/api/notifications/send-notification`, {
+    const response = await fetch(`${Config.LOCAL_HOST}/api/notifications/send-notification`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -298,7 +299,7 @@ const sendNotification = async (email: any) => {
  async function checkIfInsideTower(email: any) {
   try {
     console.log('FEtchint');
-    const response = await fetch(`${Config.RENDER}/api/auth/isInsideTower`, {
+    const response = await fetch(`${Config.LOCAL_HOST}/api/auth/isInsideTower`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

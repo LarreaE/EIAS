@@ -80,6 +80,7 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
       }
     });
   };
+  
 
   const navigateToScreen = (screen: string) => {
     switch (screen) {
@@ -105,6 +106,24 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
         console.warn('Pantalla no definida o inválida:', screen);
         break;
     }
+  };
+  const updateLocal = (playerId: string, changes: any) => {
+    console.log('Updating local, player:', playerId);
+    setUserData((prev) => {
+      if (!prev) return prev;
+      // Si el playerId coincide con el ID del player actual, actualizamos
+      if (playerId === prev.playerData.email) {
+        console.log('Player matched! Applying changes:', changes);
+        return {
+          ...prev,
+          playerData: {
+            ...prev.playerData,
+            ...changes,
+          },
+        };
+      }
+      return prev;
+    });
   };
 
   useEffect(() => {
@@ -173,28 +192,6 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
   interface ScreenOptionsProps {
     route: RouteProp<ParamListBase, string>;
   }
-
-  const updateLocal = (playerId: string, changes: any) => {
-    console.log('Updating local, player:', playerId);
-  
-    setUserData((prev) => {
-      if (!prev) return prev;
-  
-      // Si el playerId coincide con el ID del player actual, actualizamos
-      if (playerId === prev.playerData._id) {
-        console.log('Player matched! Applying changes:', changes);
-        return {
-          ...prev,
-          playerData: {
-            ...prev.playerData,
-            ...changes,
-          },
-        };
-      }
-  
-      return prev;
-    });
-  };
 
   const screenOptions = ({ route }: ScreenOptionsProps): MaterialTopTabNavigationOptions => ({
     tabBarStyle: styles.tabBar,
