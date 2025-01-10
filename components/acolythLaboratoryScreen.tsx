@@ -68,6 +68,11 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
   }, [isInsideLab]);
 
   useEffect(() => {
+    setAllIngredients(userData.playerData.inventory.ingredients)
+    console.log('Ingredients updated')
+  }, [userData.playerData.inventory.ingredients]);
+
+  useEffect(() => {
     console.log("POTION CREATED");
     
     if (potion?.type === 'Cleanse') {
@@ -166,12 +171,13 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
       userData.playerData.inventory.ingredients = removeIngredients(potionIngredients,userData.playerData)
       // Update the player in the database
       console.log('Updating player data in the database...');
-      await axios.put(`${Config.RENDER}/api/players/update`, userData.playerData);
+      const response = await axios.put(`${Config.RENDER}/api/players/update`, userData.playerData);
 
-      console.log('Player data successfully updated in the database.');
+      console.log('Player data successfully updated in the database.', response.data.player.inventory.ingredients);
       setPotionCreated(true);
       setPotion(newpotion);
       setPotionVisible(true);
+      setAllIngredients(userData.playerData.inventory.ingredients)
     } catch (error) {
       console.error('Error creating potion:', error);
     }

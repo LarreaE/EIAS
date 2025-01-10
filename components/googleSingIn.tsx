@@ -134,7 +134,8 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
 
           // Fetch ingredients and curses in sequence
           setSpinnerMessage('Fetching Ingredients...');
-          await fetchIngredients();
+          // await fetchIngredients();
+          setAllIngredients(response.data.playerData.inventory.ingredients)
 
           setSpinnerMessage('Fetching Curses...');
           await fetchCurses();

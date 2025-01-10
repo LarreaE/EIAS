@@ -35,7 +35,7 @@ export default class Potion implements Potions {
 
         let value = calculateValue(ingredients);
         let description;
-        let image = 'no images yet';
+        let image = 'assets/animations/potion.gif';
         let type = 'Potion';
         let curse = seekCurse(ingredients , curses);
         let modifiers = null;
