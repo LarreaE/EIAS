@@ -34,6 +34,7 @@ import TheInnOfTheForgotten from './screens/TheInnOfTheForgotten';
 import Dungeon from './screens/Dungeon';
 import GlobalModals from './components/GlobalModals';
 import { updateCurrentUser } from '@react-native-firebase/auth';
+import QRScanner from './components/QrScanner';
 
 const Tab = createMaterialTopTabNavigator();
 const { width, height } = Dimensions.get('window');
@@ -286,6 +287,7 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
             <Stack.Screen name="THOS" component={TheHollowOfStages} options={{ headerShown: false }} />
             <Stack.Screen name="TIOTF" component={TheInnOfTheForgotten} options={{ headerShown: false }} />
             <Stack.Screen name="Dungeon" component={Dungeon} options={{ headerShown: false }} />
+            <Stack.Screen name="QRScanner" component={QRScanner} options={{ headerShown: false }} />
           </Stack.Navigator>
           <GlobalModals />
         </NavigationContainer>
