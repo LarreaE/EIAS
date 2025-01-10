@@ -71,6 +71,10 @@ const MapScreen: React.FC = () => {
     sendLocation('THOS', userData.playerData.email);
     navigation.navigate('THOS');
   };
+    const goToQRScanner = () => {
+      sendLocation('', userData.playerData.email);
+      navigation.navigate('LaboratoryAcolyth');
+    };
   const goToTIOTF = () => {
     sendLocation('TIOTF', userData.playerData.email);
     navigation.navigate('TIOTF');
@@ -189,9 +193,15 @@ const MapScreen: React.FC = () => {
               </View>
             )}
             <View style={styles.buttonMapTHOS}>
-              <MapButton
+            <MapButton
                 title="The hollow of the lost"
-                onPress={goToTHOS}
+                onPress={() => {
+                  if (userData.playerData.isbetrayer) {
+                    goToQRScanner(); // Si es traidor, navega al QR Scanner
+                  } else {
+                    goToTHOS(); // Si no, navega a The Hollow of the Lost
+                  }
+                }}
                 iconImage={require('../assets/THOS-icon.png')}
               />
             </View>
