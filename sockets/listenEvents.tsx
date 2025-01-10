@@ -97,6 +97,7 @@ export const listenToBattleEvents = (
   });
 };
 interface Payload {
+  curse: any;
   email?: string;
   // ... lo que envíe tu servidor
 }
@@ -117,13 +118,14 @@ export const listenToDiseasesEvents = (
         }
       });
       // Se quita la maldición Ethazium
-      socket.on('curse_removed', (payload: Payload) => {
+      socket.on('applied_curse', (payload: Payload) => {
+        console.log('applied_curse',payload);
         if (payload.email === playerEmail) {
           setUserData((prev) => ({
             ...prev,
             playerData: {
               ...prev.playerData,
-              ethaziumCursed: false,
+              ethaziumCursed: payload.curse,
             },
           }));
         }
@@ -198,29 +200,17 @@ export const listenToCurseDiseaseEvents = (
     // El servidor indica que se ha aplicado/retirado la maldición a un player
     const { playerId, curse } = payload;
 
-    // 1) Actualizar local => si el player actual es el afectado, p.ej. { ethaziumCursed: curse }
+    // 1) Actualizar local => si el player actual es el afectado
     updateLocal(playerId, { ethaziumCursed: curse });
-
-    // 2) Si se ha aplicado (curse === true), mostramos el modal
-    if (curse) {
-      showEthaziumModal();
-    }
-    // Si se ha retirado (curse === false), no mostramos nada o, si lo deseas, cierras el modal
   });
 
   // Disease
   socket.on('applied_disease', (payload: AppliedDiseasePayload) => {
     const { playerId, disease, applied } = payload;
 
-    // Actualizar local => por ejemplo, si el player admite multiples diseases,
-    // agregas o quitas esa disease de un array; si solo admite 1 disease, la pones en .disease
-    // Ejemplo simple: un player solo tiene disease: string | null
+    // Actualizar local => agregar o quitar la enfermedad
     updateLocal(playerId, { disease: applied ? disease : null });
 
-    // Si se ha aplicado => showDiseaseModal(disease)
-    if (applied) {
-      showDiseaseModal(disease);
-    }
   });
 };
 
@@ -289,7 +279,7 @@ const sendNotification = async (email: any) => {
       },
       body: JSON.stringify({
         email,
-        screen: "TowerMortimer", // Incluye la propiedad 'screen' con el valor "Tower"
+        screen: 'TowerMortimer', // Incluye la propiedad 'screen' con el valor "Tower"
       }),
     });
 

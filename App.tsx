@@ -175,9 +175,25 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
   }
 
   const updateLocal = (playerId: string, changes: any) => {
-    // p.ej. si tuviéramos un array "users", lo mapeamos
-    // setUsers((prev) => prev.map(...))
-    // o si solo tienes un "playerData" y coincide con playerId => setPlayerData((prev) => {...})
+    console.log('Updating local, player:', playerId);
+  
+    setUserData((prev) => {
+      if (!prev) return prev;
+  
+      // Si el playerId coincide con el ID del player actual, actualizamos
+      if (playerId === prev.playerData._id) {
+        console.log('Player matched! Applying changes:', changes);
+        return {
+          ...prev,
+          playerData: {
+            ...prev.playerData,
+            ...changes,
+          },
+        };
+      }
+  
+      return prev;
+    });
   };
 
   const screenOptions = ({ route }: ScreenOptionsProps): MaterialTopTabNavigationOptions => ({
