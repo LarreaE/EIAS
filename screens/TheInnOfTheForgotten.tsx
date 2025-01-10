@@ -53,17 +53,19 @@ const TheInnOfTheForgotten: React.FC = () => {
 
   useEffect(() => {
     // Mostrar el modal de traición (sólo si isbetrayer === null)
-    if (userData.playerData.isbetrayer === null) {
+    if (userData.playerData.isbetrayer === null || userData.playerData.isbetrayer === false) {
       setShowBetrayModal(true);
     }
   }, [userData.playerData.isbetrayer]);
 
   useEffect(() => {
-    listenToTIOTF(() => {
-      console.log('Battle started');
-      
-      setBattleStarted(true);
-    });
+    if(userData.playerData.isbetrayer === false){
+      listenToTIOTF(() => {
+        console.log('Battle started');
+        setBattleStarted(true);
+      });
+    }
+
     return () => { clearServerEvents()};
   }, []);
 
