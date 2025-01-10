@@ -12,9 +12,10 @@ import MedievalText from './MedievalText';
 import { setCursesAndDisaeses } from '../sockets/emitEvents';
 
 interface User {
-  id: string;
+  _id: string;
   name: string;
   ethaziumCursed: boolean;
+  isbetrayer: boolean;
 }
 
 interface IstvanActionsModalProps {
@@ -39,33 +40,37 @@ const IstvanActionsModal: React.FC<IstvanActionsModalProps> = ({
         <View style={styles.container}>
           <MedievalText style={styles.title}>Apply Ethazium Curse</MedievalText>
           <ScrollView style={styles.userList}>
-            {users.map((user) => {
-              // Estado local para cada usuario
-              const [isCursed, setIsCursed] = useState(user.ethaziumCursed);
+            {users
+              .filter((user) => !user.isbetrayer) // Filtramos a los traidores
+              .map((user) => {
+                // Estado local para cada usuario
+                const [isCursed, setIsCursed] = useState(user.ethaziumCursed);
 
-              return (
-                <View key={user.id} style={styles.row}>
-                  <Text style={styles.label}>{user.name}</Text>
-                  {!isCursed ? (
-                    <TouchableOpacity
-                      style={styles.applyCurseButton}
-                      onPress={() => {
-                        // Aplicar la maldición al usuario específico
-                        setCursesAndDisaeses(user._id, true, []);
-                        setIsCursed(true); // Actualizar el estado local
-                      }}
-                    >
-                      <Text style={styles.buttonText}>Apply Curse</Text>
-                    </TouchableOpacity>
-                  ) : (
-                    <Text style={styles.alreadyCursedLabel}>Already cursed</Text>
-                  )}
-                </View>
-              );
-            })}
+                return (
+                  <View key={user.id} style={styles.row}>
+                    <MedievalText style={styles.label}>{user.name}</MedievalText>
+                    {!isCursed ? (
+                      <TouchableOpacity
+                        style={styles.applyCurseButton}
+                        onPress={() => {
+                          // Aplicar la maldición al usuario específico
+                          setCursesAndDisaeses(user._id, true, []);
+                          setIsCursed(true); // Actualizar el estado local
+                        }}
+                      >
+                        <MedievalText style={styles.buttonText}>Apply Curse</MedievalText>
+                      </TouchableOpacity>
+                    ) : (
+                      <MedievalText style={styles.alreadyCursedLabel}>
+                        Already cursed
+                      </MedievalText>
+                    )}
+                  </View>
+                );
+              })}
           </ScrollView>
           <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
-            <Text style={styles.buttonText}>Close</Text>
+            <MedievalText style={styles.buttonText}>Close</MedievalText>
           </TouchableOpacity>
         </View>
       </View>
@@ -119,7 +124,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   applyCurseButton: {
-    backgroundColor: '#cc0000',
+    backgroundColor: '#890000',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 6,
