@@ -242,6 +242,7 @@ const handleApplyLocalChanges = (changes: { diseases: string[]; ethaziumCursed: 
           nickname={selectedUser?.nickname || ''}
           initialEthaziumCursed={selectedUser?.ethaziumCursed || false}
           email={selectedUser.email}
+          avatar={selectedUser.avatar}
           initialDiseases={
             selectedUser?.disease
               ? [selectedUser.disease as DiseaseType]

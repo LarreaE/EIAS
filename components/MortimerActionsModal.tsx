@@ -1,11 +1,10 @@
-// MortimerActionsModal.tsx
 import React, { useState, useEffect } from 'react';
 import {
   Modal,
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import MedievalText from './MedievalText';
 import { sendRest, setCursesAndDisaeses } from '../sockets/emitEvents';
@@ -20,6 +19,7 @@ interface MortimerActionsModalProps {
   initialEthaziumCursed: boolean;
   initialDiseases: DiseaseType[];
   email: string;
+  avatar: string;
   onApplyLocal: (changes: {
     diseases: DiseaseType[];
     ethaziumCursed: boolean;
@@ -34,33 +34,43 @@ const MortimerActionsModal: React.FC<MortimerActionsModalProps> = ({
   initialEthaziumCursed,
   initialDiseases,
   email,
+  avatar,
   onApplyLocal,
 }) => {
   const [localCursed, setLocalCursed] = useState<boolean>(initialEthaziumCursed);
   const [localDiseases, setLocalDiseases] = useState<DiseaseType[]>(initialDiseases);
+  const [diseasesToCure, setDiseasesToCure] = useState<DiseaseType[]>([]);
 
   useEffect(() => {
     if (visible) {
       setLocalCursed(initialEthaziumCursed);
       setLocalDiseases(initialDiseases);
+      setDiseasesToCure([]);
     }
   }, [visible, initialEthaziumCursed, initialDiseases]);
 
-  const cureDisease = (disease: DiseaseType) => {
-    setLocalDiseases((prev) => prev.filter((d) => d !== disease));
+  const toggleCureDisease = (disease: DiseaseType) => {
+    if (diseasesToCure.includes(disease)) {
+      setDiseasesToCure((prev) => prev.filter((d) => d !== disease));
+    } else {
+      setDiseasesToCure((prev) => [...prev, disease]);
+    }
   };
 
   const restAcolyte = (email: string) => {
     sendRest(email);
   };
-  const hasDisease = (disease: DiseaseType) => localDiseases.includes(disease);
 
   const handleApplyChanges = () => {
+    const updatedDiseases = localDiseases.filter(
+      (disease) => !diseasesToCure.includes(disease)
+    );
+
     onApplyLocal({
-      diseases: localDiseases,
+      diseases: updatedDiseases,
       ethaziumCursed: localCursed,
     });
-    setCursesAndDisaeses(playerId, localCursed, localDiseases);
+    setCursesAndDisaeses(playerId, localCursed, updatedDiseases);
     onClose();
   };
 
@@ -73,81 +83,58 @@ const MortimerActionsModal: React.FC<MortimerActionsModalProps> = ({
     >
       <View style={styles.overlay}>
         <View style={styles.container}>
+          <Image source={{ uri: avatar }} style={styles.avatar} />
           <MedievalText style={styles.title}>Actions for {nickname}</MedievalText>
 
-          {/* Mostrar botón "Cure" para Ethazium Curse si está activo */}
           {localCursed && (
             <View style={styles.row}>
-              <Text style={styles.label}>Ethazium Curse</Text>
+              <MedievalText style={styles.label}>Ethazium Curse</MedievalText>
               <TouchableOpacity
                 style={styles.cureButton}
                 onPress={() => setLocalCursed(false)}
               >
-                <Text style={styles.buttonText}>Cure</Text>
+                <MedievalText style={styles.buttonText}>Cure</MedievalText>
               </TouchableOpacity>
             </View>
           )}
 
-          {/* Mostrar título "Diseases" si hay alguna activa */}
-          {localDiseases.length > 0 && (
-            <Text style={[styles.label, { marginVertical: 10 }]}>Diseases</Text>
+          {localDiseases.length > 0 ? (
+            <MedievalText style={styles.diseaseTitle}>Diseases</MedievalText>
+          ) : (
+            <MedievalText style={styles.noDiseasesText}>
+              The Acolyte is Healthy and Strong!
+            </MedievalText>
           )}
 
-          {/* Botones para curar enfermedades activas */}
-          {hasDisease('PUTRID PLAGUE') && (
-            <View style={styles.row}>
-              <Text style={styles.label2}>Putrid Plague</Text>
-              <TouchableOpacity
-                style={styles.cureButton}
-                onPress={() => cureDisease('PUTRID PLAGUE')}
-              >
-                <Text style={styles.buttonText}>Cure</Text>
-              </TouchableOpacity>
+          {localDiseases.map((disease) => (
+            <View key={disease} style={styles.row}>
+              <MedievalText style={styles.label2}>
+                {getDiseaseIcon(disease)} {disease}
+              </MedievalText>
+              {disease === 'EXHAUSTED' ? (
+                <MedievalText style={styles.noCureText}>No Cure</MedievalText>
+              ) : (
+                <TouchableOpacity
+                  style={[
+                    styles.cureButton,
+                    diseasesToCure.includes(disease) && styles.readyToCureButton,
+                  ]}
+                  onPress={() => toggleCureDisease(disease)}
+                >
+                  <MedievalText style={styles.buttonText}>
+                    {diseasesToCure.includes(disease) ? 'Pending' : 'Cure'}
+                  </MedievalText>
+                </TouchableOpacity>
+              )}
             </View>
-          )}
+          ))}
 
-          {hasDisease('EPIC WEAKNESS') && (
-            <View style={styles.row}>
-              <Text style={styles.label2}>Epic Weakness</Text>
-              <TouchableOpacity
-                style={styles.cureButton}
-                onPress={() => cureDisease('EPIC WEAKNESS')}
-              >
-                <Text style={styles.buttonText}>Cure</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-
-          {hasDisease('MEDULAR APOCALYPSE') && (
-            <View style={styles.row}>
-              <Text style={styles.label2}>Medular Apocalypse</Text>
-              <TouchableOpacity
-                style={styles.cureButton}
-                onPress={() => cureDisease('MEDULAR APOCALYPSE')}
-              >
-                <Text style={styles.buttonText}>Cure</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-          {hasDisease('EXHAUSTED') && (
-            <View style={styles.row}>
-              <Text style={styles.label2}>Medular Apocalypse</Text>
-              <TouchableOpacity
-                style={styles.cureButton}
-                onPress={() => restAcolyte(email)}
-              >
-                <Text style={styles.buttonText}>Cure</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-
-          {/* Botones de Cancel y Apply */}
           <View style={styles.buttonRow}>
             <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
-              <Text style={styles.buttonText}>Cancel</Text>
+              <MedievalText style={styles.buttonText}>Cancel</MedievalText>
             </TouchableOpacity>
             <TouchableOpacity style={styles.applyButton} onPress={handleApplyChanges}>
-              <Text style={styles.buttonText}>Apply</Text>
+              <MedievalText style={styles.buttonText}>Apply</MedievalText>
             </TouchableOpacity>
           </View>
         </View>
@@ -158,62 +145,111 @@ const MortimerActionsModal: React.FC<MortimerActionsModalProps> = ({
 
 export default MortimerActionsModal;
 
+const getDiseaseIcon = (disease: DiseaseType) => {
+  switch (disease) {
+    case 'PUTRID PLAGUE':
+      return '🦠';
+    case 'EPIC WEAKNESS':
+      return '💀';
+    case 'MEDULAR APOCALYPSE':
+      return '☠️';
+    case 'EXHAUSTED':
+      return '😩';
+    default:
+      return '';
+  }
+};
+
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.7)',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   container: {
-    width: 300,
-    backgroundColor: '#444',
+    width: 320,
+    backgroundColor: '#333',
     padding: 20,
-    borderRadius: 8,
+    borderRadius: 12,
     borderWidth: 2,
     borderColor: '#888',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.8,
+    shadowRadius: 6,
+  },
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    alignSelf: 'center',
+    marginBottom: 15,
+    borderColor: '#555',
+    borderWidth: 2,
   },
   title: {
-    fontSize: 18,
+    fontSize: 22,
     color: '#fff',
-    marginBottom: 15,
+    marginBottom: 20,
     textAlign: 'center',
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 12,
     justifyContent: 'space-between',
   },
   label: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
   },
   label2: {
     color: '#ccc',
-    fontSize: 14,
+    fontSize: 16,
+  },
+  diseaseTitle: {
+    fontSize: 20,
+    color: '#e5e5e5',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  noDiseasesText: {
+    fontSize: 18,
+    color: '#aaa',
+    marginBottom: 10,
+    textAlign: 'center',
   },
   cureButton: {
-    backgroundColor: '#006600',
+    backgroundColor: '#5a0a0a',
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 6,
+    borderRadius: 8,
+  },
+  readyToCureButton: {
+    backgroundColor: '#003300',
+    borderColor: '#004400',
+    borderWidth: 2,
+  },
+  noCureText: {
+    color: '#888',
+    fontSize: 16,
   },
   buttonRow: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    marginTop: 15,
+    marginTop: 20,
   },
   cancelButton: {
     backgroundColor: '#666',
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderRadius: 6,
   },
   applyButton: {
-    backgroundColor: '#006600',
+    backgroundColor: '#004400',
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderRadius: 6,
   },
   buttonText: {
