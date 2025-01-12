@@ -7,6 +7,7 @@ import createPotionButton from '../assets/boton.png';
 import SelectedIngredientsDisplay from './selectedIngredientsDisplay';
 import MedievalText from './MedievalText';
 import { stringifyEffect } from '../helper/Funtions';
+import IngredientDetailModal from './IngredientDetailModal';
 
 interface IngredientSelectorProps {
   onSelectionChange: (selectedIngredients: { [key: string]: number }) => void;
@@ -235,6 +236,7 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
               </ImageBackground>
             </TouchableOpacity>
           )}
+          <IngredientDetailModal visible={modalVisible} ingredient={selectedIngredient} onClose={() => setModalVisible(false)} />
         </>
       )}
     </View>
