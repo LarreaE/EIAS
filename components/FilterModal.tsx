@@ -139,12 +139,7 @@ const FilterModal: React.FC<Props> = ({ visible, setVisible, availableEffects, s
             }}
           >
             <View style={styles.filterModalOverlay}>
-              {/* ImageBackground para el fondo del modal de filtros */}
-              <ImageBackground
-                source={require('../assets/runa.png')} // Ruta de la imagen de fondo para filtros
-                style={styles.filterModalView} // Estilos para el contenedor del modal
-                resizeMode="stretch" // Ajuste de la imagen
-              >
+              <View style={styles.modalContainer}>
                 {filterByEffect ? (
                     <View style={styles.filterOverlay}>
                     <MedievalText fontSize={20} color="#ffffff" style={styles.filterModalTitle}>
@@ -165,7 +160,7 @@ const FilterModal: React.FC<Props> = ({ visible, setVisible, availableEffects, s
                             <Icon
                             name={EFFECT_ICONS[effect]}
                             size={20}
-                            color="black"
+                            color="#cc9a52"
                             style={styles.effectIcon}
                             />
                         )}
@@ -205,7 +200,7 @@ const FilterModal: React.FC<Props> = ({ visible, setVisible, availableEffects, s
                     </View>
                 ) : (
                     <View style={styles.filterOverlay}>
-                      <View style={styles.raritiesSelection}>
+                      <View >
                         <MedievalText fontSize={20} color="#ffffff" style={styles.filterModalTitle}>
                           Select Rarity
                         </MedievalText>
@@ -240,7 +235,7 @@ const FilterModal: React.FC<Props> = ({ visible, setVisible, availableEffects, s
                       </View>
                     </View>
                 )}
-              </ImageBackground>
+                </View>
             </View>
         </Modal>
     );
@@ -258,6 +253,7 @@ const styles = StyleSheet.create({
     switchRow: {
       flexDirection: 'row', // Align items horizontally
       alignItems: 'center', // Center vertically
+      left: -80,
     },
     label: {
       fontSize: 18,
@@ -279,7 +275,6 @@ const styles = StyleSheet.create({
     },
     textStyle: {
       color: 'white',
-      
       textAlign: 'center',
     },
     centeredView: {
@@ -326,6 +321,15 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
     },
+    modalContainer: {
+      width: "85%",
+      backgroundColor: "#2a2a2a",
+      padding: 20,
+      borderRadius: 12,
+      borderWidth: 2,
+      borderColor: "#cc9a52",
+      alignItems: "center",
+    },
     // Estilos para el botón de filtros
     filterButtonContainer: {
       padding: 0,
@@ -362,6 +366,8 @@ const styles = StyleSheet.create({
     },
     scrollView: {
       height:300,
+      left: -40,
+      width: width*0.8,
     },
     filterModalTitle: {
       padding: 30,
@@ -445,7 +451,7 @@ const styles = StyleSheet.create({
     filterOverlay: {
     },
     raritiesSelection: {
-     
+      color: '#cc9a52',
     },
   });
 

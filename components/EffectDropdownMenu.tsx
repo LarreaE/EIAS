@@ -48,11 +48,11 @@ const EffectDropdownMenu: React.FC<Props> = ({ availableEffects, toggleEffect, s
                     <Icon
                       name={EFFECT_ICONS[effect]}
                       size={20}
-                      color="black"
+                      color="#cc9a52"
                       style={styles.effectIcon}
                     />
                   )}
-                  <MedievalText fontSize={16} color="black" style={styles.effectText}>
+                  <MedievalText fontSize={16} color="white" style={styles.effectText}>
                     {EFFECT_LABELS[effect] || effect}
                   </MedievalText>
                 </TouchableOpacity>
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: 'white',
     marginRight: 10,
   },
   checkedBox: {
