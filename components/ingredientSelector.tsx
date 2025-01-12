@@ -82,27 +82,27 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
 
   const renderIngredient = ({ item, index }: { item: Ingredients; index: number }) => {
     const selectedCount = selectedIngredients[item._id] || 0;
-
+  
     const inputRange = [
       (index - 1) * ITEM_SIZE,
       index * ITEM_SIZE,
       (index + 1) * ITEM_SIZE,
     ];
-
+  
     const translateY = scrollX.interpolate({
       inputRange,
       outputRange: [0, -50, 0],
       extrapolate: 'clamp',
     });
-
+  
     const opacity = scrollX.interpolate({
       inputRange,
       outputRange: [0.8, 1, 0.8],
       extrapolate: 'clamp',
     });
-
+  
     const isCentered = index === currentIndex;
-
+  
     return (
       <TouchableOpacity
         onPress={() => toggleSelection(item)}
@@ -121,43 +121,34 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
             !isCentered && styles.disabledItem,
           ]}
         >
-          <ImageBackground
-            source={runaBackground}
+          <View
             style={[
-              styles.gradientBackground,
+              styles.ingredientCard,
               selectedCount > 0 && styles.selectedItem,
             ]}
-            imageStyle={{ borderRadius: 10 }}
           >
             {selectedCount > 0 && (
               <TouchableOpacity
                 style={styles.decreaseButton}
                 onPress={() => decreaseSelection(item._id)}
               >
-                <MedievalText fontSize={20} color="#ffffff" style={styles.decreaseButtonText}>
-                  -
-                </MedievalText>
+                <MedievalText style={styles.decreaseButtonText}>-</MedievalText>
               </TouchableOpacity>
             )}
             {selectedCount > 0 && (
               <View style={styles.countBadge}>
-                <MedievalText fontSize={14} color="#ffffff" style={styles.countText}>
-                  {selectedCount}
-                </MedievalText>
+                <MedievalText style={styles.countText}>{selectedCount}</MedievalText>
               </View>
             )}
             <Image
-              source={{
-                uri: `https://kaotika.vercel.app/${item.image}`,
-              }}
-              style={styles.ingredientImage} />
-            <MedievalText fontSize={16} color="#ffffff" style={styles.ingredientName} numberOfLines={1}>
-              {item.name}
-            </MedievalText>
-            <MedievalText fontSize={10} color="#ffffff" style={styles.ingredientDescription} numberOfLines={1}>
+              source={{ uri: `https://kaotika.vercel.app/${item.image}` }}
+              style={styles.ingredientImage}
+            />
+            <MedievalText style={styles.ingredientName}>{item.name}</MedievalText>
+            <MedievalText style={styles.ingredientDescription}>
               {stringifyEffect(item.effects[0])}
             </MedievalText>
-          </ImageBackground>
+          </View>
         </Animated.View>
       </TouchableOpacity>
     );
@@ -172,7 +163,7 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
     setButtonText(allCleanse ? 'Purification Potion' : 'Create Potion');
   };
 
-  const ITEM_WIDTH = 150;
+  const ITEM_WIDTH = 160;
   const ITEM_MARGIN = 5;
   const ITEM_SIZE = ITEM_WIDTH + ITEM_MARGIN * 2;
   const { width: WIDTH } = Dimensions.get('window');
@@ -255,9 +246,17 @@ export default IngredientSelector;
 const styles = StyleSheet.create({
   ingredientItemContainer: {
     width: 150,
-    marginHorizontal: 5,
+    marginHorizontal: 10,
     height: 200,
-    top: '-20%',
+  },
+  ingredientCard: {
+    backgroundColor: '#2a2a2a', // Fondo oscuro
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#cc9a52', // Borde amarillo cobre
+    padding: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   gradientBackground: {
     flex: 1,
@@ -268,34 +267,43 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   selectedItem: {
-    borderWidth: 0,
-    borderColor: '#cc9a52',
+    borderColor: '#ffcc33', // Borde más brillante cuando está seleccionado
   },
   disabledItem: {
     opacity: 0.5,
   },
   ingredientImage: {
-    width: 70,
-    height: 70,
+    width: 80,
+    height: 80,
     borderRadius: 40,
     marginBottom: 10,
   },
   ingredientName: {
+    color: '#fff',
+    fontSize: 16,
     textAlign: 'center',
   },
   ingredientDescription: {
+    color: '#ccc',
+    fontSize: 12,
     textAlign: 'center',
   },
   countBadge: {
     position: 'absolute',
-    top: 20,
-    right: 5,
-    backgroundColor: '#ff6f61',
-    borderRadius: 50,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    top: -12,
+    right: -12,
+    backgroundColor: '#2a2a2a',
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: '#cc9a52', // Borde dorado
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   countText: {
+    color: '#fff',
+    fontSize: 14,
   },
   createPotionButtonContainer: {
     position: 'absolute',
@@ -357,16 +365,22 @@ const styles = StyleSheet.create({
   },
   decreaseButton: {
     position: 'absolute',
-    top: 10,
-    left: 10,
-    backgroundColor: '#ff6f61',
-    borderRadius: 15,
+    top: -12,
+    left: -12,
+    backgroundColor: '#2a2a2a',
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: '#cc9a52', // Borde dorado
     padding: 5,
-    height: 30,
     width: 30,
+    height: 30,
     alignItems: 'center',
     justifyContent: 'center',
   },
   decreaseButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    bottom: 5,
   },
+  
 });

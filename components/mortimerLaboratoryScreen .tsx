@@ -115,7 +115,6 @@ const handleApplyLocalChanges = (changes: { diseases: string[]; ethaziumCursed: 
           }
           return user;
         });
-        // ✅ Establecer los usuarios actualizados en el estado
         setUsers(updatedUsers);
       } catch (error) {
         console.error('Error al obtener los datos:', error);
