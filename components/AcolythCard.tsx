@@ -14,6 +14,8 @@ type Props = {
 
 // Helper para decidir color e inicial de la enfermedad
 function getDiseaseBadgeInfo(disease: string) {
+  console.log(disease);
+  
   switch (disease) {
     case 'PUTRID PLAGUE':
       return { color: 'purple', letter: 'P' };
@@ -21,6 +23,8 @@ function getDiseaseBadgeInfo(disease: string) {
       return { color: 'blue', letter: 'E' };
     case 'MEDULAR APOCALYPSE':
       return { color: 'green', letter: 'M' };
+    case 'EXHAUSTED':
+        return { color: 'purple', letter: 'z' };
     default:
       return { color: 'transparent', letter: '' };
   }

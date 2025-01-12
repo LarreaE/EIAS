@@ -8,9 +8,9 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import MedievalText from './MedievalText';
-import { setCursesAndDisaeses } from '../sockets/emitEvents';
+import { sendRest, setCursesAndDisaeses } from '../sockets/emitEvents';
 
-type DiseaseType = 'PUTRID PLAGUE' | 'EPIC WEAKNESS' | 'MEDULAR APOCALYPSE';
+type DiseaseType = 'PUTRID PLAGUE' | 'EPIC WEAKNESS' | 'MEDULAR APOCALYPSE' | 'EXHAUSTED';
 
 interface MortimerActionsModalProps {
   visible: boolean;
@@ -19,6 +19,7 @@ interface MortimerActionsModalProps {
   nickname: string;
   initialEthaziumCursed: boolean;
   initialDiseases: DiseaseType[];
+  email: string;
   onApplyLocal: (changes: {
     diseases: DiseaseType[];
     ethaziumCursed: boolean;
@@ -32,6 +33,7 @@ const MortimerActionsModal: React.FC<MortimerActionsModalProps> = ({
   nickname,
   initialEthaziumCursed,
   initialDiseases,
+  email,
   onApplyLocal,
 }) => {
   const [localCursed, setLocalCursed] = useState<boolean>(initialEthaziumCursed);
@@ -48,6 +50,9 @@ const MortimerActionsModal: React.FC<MortimerActionsModalProps> = ({
     setLocalDiseases((prev) => prev.filter((d) => d !== disease));
   };
 
+  const restAcolyte = (email: string) => {
+    sendRest(email);
+  };
   const hasDisease = (disease: DiseaseType) => localDiseases.includes(disease);
 
   const handleApplyChanges = () => {
@@ -119,6 +124,17 @@ const MortimerActionsModal: React.FC<MortimerActionsModalProps> = ({
               <TouchableOpacity
                 style={styles.cureButton}
                 onPress={() => cureDisease('MEDULAR APOCALYPSE')}
+              >
+                <Text style={styles.buttonText}>Cure</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          {hasDisease('EXHAUSTED') && (
+            <View style={styles.row}>
+              <Text style={styles.label2}>Medular Apocalypse</Text>
+              <TouchableOpacity
+                style={styles.cureButton}
+                onPress={() => restAcolyte(email)}
               >
                 <Text style={styles.buttonText}>Cure</Text>
               </TouchableOpacity>

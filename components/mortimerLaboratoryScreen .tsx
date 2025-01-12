@@ -38,6 +38,8 @@ type MapScreenNavigationProp = StackNavigationProp<
 >;
 
 interface User {
+  email: string;
+  resistance: number;
   isbetrayer: any;
   _id: string;
   nickname: string;
@@ -101,7 +103,20 @@ const handleApplyLocalChanges = (changes: { diseases: string[]; ethaziumCursed: 
       try {
         const response = await fetch(`${Config.LOCAL_HOST}/api/players/mortimer`);
         const data: User[] = await response.json();
-        setUsers(data);
+
+        const updatedUsers = data.map((user) => {
+          console.log('User Resistance:', user);
+          
+          if (user.resistance <= 30) {
+            return {
+              ...user,
+              disease: user.disease ? `${user.disease}, EXHAUSTED` : 'EXHAUSTED',
+            };
+          }
+          return user;
+        });
+        // ✅ Establecer los usuarios actualizados en el estado
+        setUsers(updatedUsers);
       } catch (error) {
         console.error('Error al obtener los datos:', error);
       }
@@ -193,6 +208,14 @@ const handleApplyLocalChanges = (changes: { diseases: string[]; ethaziumCursed: 
               </MedievalText>
             </View>
 
+            {/* EXHAUSTED */}
+            <View style={styles.modalRow}>
+              <DiseaseBadge color="purpel" letter="Z" />
+              <MedievalText style={styles.modalText}>
+                : EXHAUSTED
+              </MedievalText>
+            </View>
+
             {/* Ethazium Curse */}
             <View style={styles.modalRow}>
               <DiseaseBadge color="red" letter="C" />
@@ -218,9 +241,10 @@ const handleApplyLocalChanges = (changes: { diseases: string[]; ethaziumCursed: 
           playerId={selectedUser?._id || ''}
           nickname={selectedUser?.nickname || ''}
           initialEthaziumCursed={selectedUser?.ethaziumCursed || false}
+          email={selectedUser.email}
           initialDiseases={
-            selectedUser?.disease 
-              ? [selectedUser.disease as DiseaseType] 
+            selectedUser?.disease
+              ? [selectedUser.disease as DiseaseType]
               : []
           }
           onApplyLocal={handleApplyLocalChanges}

@@ -294,6 +294,12 @@ const sendNotification = async (email: any) => {
     console.error('Error:', error);
   }
 };
+export const updateLocalResistance = (updateLocalResistancePLayeData:any) => {
+  socket.on('updateResistance', () => {
+    console.log('Cliente recibió "updateResistance"');
+    updateLocalResistancePLayeData();
+  });
+};
 
 
  async function checkIfInsideTower(email: any) {

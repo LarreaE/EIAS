@@ -13,7 +13,7 @@ import AcolythLaboratoryScreen from './components/acolythLaboratoryScreen';
 import MortimerLaboratoryScreen from './components/mortimerLaboratoryScreen ';
 import MortimerTower from './components/mortimerTower';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { listenToServerEvents, clearServerEvents, listenToCurseDiseaseEvents, clearCurseDiseaseEvents } from './sockets/listenEvents';
+import { listenToServerEvents, clearServerEvents, listenToCurseDiseaseEvents, clearCurseDiseaseEvents, updateLocalResistance } from './sockets/listenEvents';
 import socket from './sockets/socketConnection';
 import { sendUserEMail } from './sockets/emitEvents';
 import { UserContextType, UserProvider } from './context/UserContext'; // Importa el proveedor
@@ -33,16 +33,13 @@ import TheHollowOfStages from './screens/TheHollowOfStages';
 import TheInnOfTheForgotten from './screens/TheInnOfTheForgotten';
 import Dungeon from './screens/Dungeon';
 import GlobalModals from './components/GlobalModals';
-import { updateCurrentUser } from '@react-native-firebase/auth';
 import QRScanner from './components/QrScanner';
 
 const Tab = createMaterialTopTabNavigator();
 const { width, height } = Dimensions.get('window');
 
-function App() {  
+function App() {
   const navigationRef = useNavigationContainerRef(); // Referencia para navegación global
-  
-
   useEffect(() => {
     checkAndRequestNotificationPermission();
   }, []);
@@ -74,13 +71,11 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
       const fullMessage = `${title}: ${message}`;
 
       ToastAndroid.show(fullMessage, ToastAndroid.LONG);
-      
       if (remoteMessage?.data?.screen) {
         setIsHallInNeedOfMortimer(true);
       }
     });
   };
-  
 
   const navigateToScreen = (screen: string) => {
     switch (screen) {
@@ -126,6 +121,24 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
     });
   };
 
+  const updateLocalResistancePLayeData = (playerId: string) => {
+    console.log('Updating resistance for player:', playerId);
+    setUserData((prev) => {
+      if (!prev) return prev;
+      // Verificamos que el playerId coincida con el player actual
+        console.log('Player matched! Reducing resistance by 10.');
+        return {
+          ...prev,
+          playerData: {
+            ...prev.playerData,
+            resistance: Math.max(prev.playerData.resistance - 10, 0),
+          },
+        };
+
+    });
+  };
+
+
   useEffect(() => {
     messaging().setBackgroundMessageHandler(async remoteMessage => {
       console.log('Notification handled in the background:', remoteMessage);
@@ -144,10 +157,16 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
       setParchment(await getBoolean('parchment'));
       console.log('Parchment set');
     };
-
     getParchment();
   }, []);
 
+  useEffect(() => {
+    updateLocalResistance(updateLocalResistancePLayeData);
+    // Limpieza para evitar múltiples listeners
+    return () => {
+      socket.off('updateResistance');
+    };
+  }, [socket]);
   useEffect(() => {
     socket.on('request_email', () => {
       console.log('El servidor ha solicitado el correo electrónico');
