@@ -1,12 +1,11 @@
-// IstvanActionsModal.tsx
 import React, { useState, useEffect } from 'react';
 import {
   Modal,
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Image,
 } from 'react-native';
 import MedievalText from './MedievalText';
 import { setCursesAndDisaeses } from '../sockets/emitEvents';
@@ -16,6 +15,7 @@ interface User {
   name: string;
   ethaziumCursed: boolean;
   isbetrayer: boolean;
+  avatar: string; // Agregado para mostrar avatar
 }
 
 interface IstvanActionsModalProps {
@@ -48,6 +48,7 @@ const IstvanActionsModal: React.FC<IstvanActionsModalProps> = ({
 
                 return (
                   <View key={user._id} style={styles.row}>
+                    <Image source={{ uri: user.avatar }} style={styles.avatar} />
                     <MedievalText style={styles.label}>{user.name}</MedievalText>
                     {!isCursed ? (
                       <TouchableOpacity
@@ -62,7 +63,7 @@ const IstvanActionsModal: React.FC<IstvanActionsModalProps> = ({
                       </TouchableOpacity>
                     ) : (
                       <MedievalText style={styles.alreadyCursedLabel}>
-                        Already cursed
+                        💀 Cursed
                       </MedievalText>
                     )}
                   </View>
@@ -90,16 +91,20 @@ const styles = StyleSheet.create({
   container: {
     width: 350,
     maxHeight: '80%',
-    backgroundColor: '#444',
+    backgroundColor: '#333',
     padding: 20,
-    borderRadius: 8,
+    borderRadius: 12,
     borderWidth: 2,
     borderColor: '#888',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.8,
+    shadowRadius: 6,
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
     color: '#fff',
-    marginBottom: 15,
+    marginBottom: 20,
     textAlign: 'center',
   },
   userList: {
@@ -107,17 +112,31 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#666',
+    marginBottom: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    backgroundColor: '#444',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#555',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.7,
+    shadowRadius: 4,
+  },
+  avatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 10,
+    borderWidth: 2,
+    borderColor: '#555',
   },
   label: {
     color: '#fff',
     fontSize: 18,
     flex: 1,
-    marginRight: 10,
   },
   alreadyCursedLabel: {
     color: '#ccc',
@@ -128,17 +147,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 4,
   },
   cancelButton: {
     backgroundColor: '#666',
     paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 6,
+    paddingVertical: 10,
+    borderRadius: 8,
     alignSelf: 'center',
-    marginTop: 10,
+    marginTop: 15,
   },
   buttonText: {
     color: '#fff',
   },
 });
-
