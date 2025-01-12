@@ -270,7 +270,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             />
             </TouchableOpacity>
           )}
-          {userData.playerData.role === 'VILLAIN' || userData.playerData.isbetrayer && (
+          {userData.playerData.role === 'VILLAIN' && (
             <TouchableOpacity
             onPress={goToMap}
             style={styles.qrButton}
