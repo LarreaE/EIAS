@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { View, Image, StyleSheet, TouchableOpacity, Modal, Text, Dimensions, Animated } from "react-native";
 import MedievalText from "./MedievalText";
 import Item from "../interfaces/Item";
+import { Ingredients } from "../interfaces/Ingredients";
 
 interface Slot {
-  item: Item | null;
+  item: Item | null | Ingredients;
   size: number;
 }
 
@@ -12,6 +13,16 @@ const { width, height } = Dimensions.get("window");
 
 const EquipmentSlot: React.FC<Slot> = ({ item, size }) => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
+  // Type guard to check if the item is an Ingredient
+  const isIngredient = (item: Item | Ingredients): item is Ingredients => {
+    return (item as Ingredients).qty !== undefined;
+  };
+
+  // Type guard to check if the item is an Item
+  const isItem = (item: Item | Ingredients): item is Item => {
+    return (item as Item).modifiers !== undefined;
+  };
 
   return (
     <>
@@ -22,7 +33,7 @@ const EquipmentSlot: React.FC<Slot> = ({ item, size }) => {
             { 
               width: size, 
               height: size, 
-              borderColor: item?.isUnique ? "#FFD700" : "rgb(205, 168, 130)" //gold for unique, default common
+              borderColor: item && isItem(item) && item.isUnique ? "#FFD700" : "rgb(205, 168, 130)" // Gold for unique items, default for others
             }
           ]}
         >
@@ -35,6 +46,11 @@ const EquipmentSlot: React.FC<Slot> = ({ item, size }) => {
                 resizeMode="cover"
                 style={styles.image}
               />
+               {isIngredient(item) && (
+                <View style={styles.qtyBadge}>
+                  <Text style={styles.qtyText}>{item.qty}</Text>
+                </View>
+              )}
               <View style={styles.nameContainer}>
               </View>
             </>
@@ -44,7 +60,6 @@ const EquipmentSlot: React.FC<Slot> = ({ item, size }) => {
         </View>
       </TouchableOpacity>
 
-      
       {item && (
         <Modal
           animationType="slide"
@@ -54,20 +69,14 @@ const EquipmentSlot: React.FC<Slot> = ({ item, size }) => {
         >
           <View style={styles.modalOverlay}>
             <View style={styles.modalContent}>
-            {item?.isUnique && (
-              <>
-              <Animated.Image
-                source={require('../assets/animations/sparkle.gif')}
-                style={[styles.sparkle,
-                  {
-                    opacity: 0.6,
-                  },
-                ]}
-              />
-              </>
-            )}
+              {isItem(item) && item.isUnique && (
+                <Animated.Image
+                  source={require('../assets/animations/sparkle.gif')}
+                  style={[styles.sparkle, { opacity: 0.6 }]}
+                />
+              )}
               <View style={styles.equipment}>
-                {item?.isUnique ? (
+                {isItem(item) && item.isUnique ? (
                   <Image
                     source={{
                       uri: `https://kaotika.vercel.app${item.image}`,
@@ -87,20 +96,22 @@ const EquipmentSlot: React.FC<Slot> = ({ item, size }) => {
                 <MedievalText style={styles.modalTitle}>{item.name}</MedievalText>
                 <MedievalText style={styles.modalDescription}>{item.description}</MedievalText>
                 <View style={styles.statsContainer}>
-                {item?.modifiers && (
-                  <>
-                    {Object.entries(item.modifiers).map(([name, value], index) => (
-                    <View
-                      key={name}
-                      style={[styles.stat]}
-                    >
+                  {isItem(item) && item.modifiers && (
+                    Object.entries(item.modifiers).map(([name, value]) => (
+                      <View key={name} style={styles.stat}>
+                        <MedievalText style={styles.statText}>
+                          {name}: {value}
+                        </MedievalText>
+                      </View>
+                    ))
+                  )}
+                  {isIngredient(item) && (
+                    <View style={styles.stat}>
                       <MedievalText style={styles.statText}>
-                        {name}: {value}
+                        Quantity: {item.qty}
                       </MedievalText>
                     </View>
-                  ))}
-                  </>
-                )}
+                  )}
                 </View>
               </View>
               <TouchableOpacity
@@ -127,21 +138,30 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     borderRadius: 8,
   },
-  uniqueContainer: {
-    borderWidth: 2,
-    borderColor: "#FFEA00",
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
-    justifyContent: "center",
-    alignItems: "center",
-    overflow: "hidden",
-    borderRadius: 8,
-  },
   nameContainer: {
     position: "absolute",
     bottom: -25,
     left: 0,
     right: 0,
     alignItems: "center",
+  },
+  qtyBadge: {
+    position: "absolute",
+    top: 5,
+    right: 5,
+    backgroundColor: "#498900",
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: 'white',
+  },
+  qtyText: {
+    color: "white",
+    fontSize: 12,
+    fontWeight: "bold",
   },
   sparkle: {
     position: "absolute",
@@ -151,16 +171,11 @@ const styles = StyleSheet.create({
     height: height,
     zIndex: 1,
   },
-  itemName: {
-    fontSize: 14,
-    color: "#d4af37", // Gold-like color for text
-    textAlign: "center",
-  },
   image: {
     width: "100%",
     height: "100%",
     borderWidth: 2,
-    borderColor: "#4a3820", // Dark decorative border
+    borderColor: "#4a3820",
     borderRadius: 8,
   },
   modalOverlay: {
@@ -171,7 +186,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: "90%",
-    backgroundColor: "#1a1a1a", // Dark modal background
+    backgroundColor: "#1a1a1a",
     borderRadius: 10,
     padding: 20,
     alignItems: "center",
@@ -217,19 +232,12 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   stat: {
-    width: "36%",
+    width: "48%",
     marginBottom: 10,
-    marginLeft: 20
   },
   statText: {
     fontSize: 14,
     color: "#d4af37",
-  },
-  statLeft: {
-    textAlign: "left",
-  },
-  statRight: {
-    textAlign: "right",
   },
   closeButton: {
     marginTop: 20,
