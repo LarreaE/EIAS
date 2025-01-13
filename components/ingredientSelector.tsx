@@ -2,7 +2,6 @@ import React, { useState, useRef, useContext, useEffect } from 'react';
 import { Animated, TouchableOpacity, Image, StyleSheet, Dimensions, View, ImageBackground, Modal, Vibration, ToastAndroid } from 'react-native';
 import { UserContext, UserContextType } from '../context/UserContext';
 import { Ingredients } from '../interfaces/Ingredients';
-import runaBackground from '../assets/runa.png';
 import createPotionButton from '../assets/boton.png';
 import SelectedIngredientsDisplay from './selectedIngredientsDisplay';
 import MedievalText from './MedievalText';

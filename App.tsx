@@ -121,8 +121,8 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
     });
   };
 
-  const updateLocalResistancePLayeData = (playerId: string) => {
-    console.log('Updating resistance for player:', playerId);
+  const updateLocalResistancePLayeData = () => {
+    console.log('Updating resistance for player:');
     setUserData((prev) => {
       if (!prev) return prev;
       // Verificamos que el playerId coincida con el player actual
@@ -162,7 +162,6 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
 
   useEffect(() => {
     updateLocalResistance(updateLocalResistancePLayeData);
-    // Limpieza para evitar múltiples listeners
     return () => {
       socket.off('updateResistance');
     };

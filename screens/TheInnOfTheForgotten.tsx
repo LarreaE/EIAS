@@ -86,6 +86,9 @@ const TheInnOfTheForgotten: React.FC = () => {
       },
     });
     setShowBetrayModal(false);
+
+    //add KAOTIKA betray request
+    
   };
 
   // Acción cuando se RECHAZA la traición
