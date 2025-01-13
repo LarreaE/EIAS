@@ -46,6 +46,11 @@ const EquipmentSlot: React.FC<Slot> = ({ item, size }) => {
                 resizeMode="cover"
                 style={styles.image}
               />
+               {isIngredient(item) && (
+                <View style={styles.qtyBadge}>
+                  <Text style={styles.qtyText}>{item.qty}</Text>
+                </View>
+              )}
               <View style={styles.nameContainer}>
               </View>
             </>
@@ -139,6 +144,24 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     alignItems: "center",
+  },
+  qtyBadge: {
+    position: "absolute",
+    top: 5,
+    right: 5,
+    backgroundColor: "#498900",
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: 'white',
+  },
+  qtyText: {
+    color: "white",
+    fontSize: 12,
+    fontWeight: "bold",
   },
   sparkle: {
     position: "absolute",
