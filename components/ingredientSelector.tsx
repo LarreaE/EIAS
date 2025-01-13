@@ -21,13 +21,13 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
   const context = useContext(UserContext) as UserContextType;
   const [selectedIngredients, setSelectedIngredients] = useState<{ [key: string]: number }>({});
   const [currentIndex, setCurrentIndex] = useState(0);
-  const {curses, userData, setPotionVisible } = context;
+  const { curses, userData, setPotionVisible } = context;
   const [modalVisible, setModalVisible] = useState(false);
   const [buttonText, setButtonText] = useState('Create Potion');
   const [selectedIngredient, setSelectedIngredient] = useState<Ingredients | null>(null);
   const [selectedCurse, setSelectedCurse] = useState(null);
   const scrollX = useRef(new Animated.Value(0)).current;
-  const [users, setUsers] = useState<User[]>([]); 
+  const [users, setUsers] = useState<User[]>([]);
   const [selectedAcolyte, setSelectedAcolyte] = useState<string | null>(null);
 
   const ingredients = userData.playerData.inventory.ingredients;
@@ -63,9 +63,12 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
     });
   };
 
+console.log(users);
+
+
   useEffect(() => {
     listenToServerEventsMortimer(setUsers);
-  
+
     const addUsers = async () => {
       try {
         const response = await fetch(`${Config.RENDER}/api/players/mortimer`);
@@ -75,18 +78,18 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
         console.error('Error al obtener los datos:', error);
       }
     };
-  
+
     addUsers();
-  
+
     return () => {
       clearServerEvents();
     };
   }, []);
-  
+
 
   const applyCurse = async (curseName: string, acolyteNickName: string) => {
     console.log(`Applying curse: ${curseName} to acolyte: ${acolyteNickName}`);
-  
+
     try {
       const response = await fetch(`${Config.RENDER}/api/players/applyCurse/${acolyteNickName}`, {
         method: 'POST',
@@ -97,19 +100,27 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
           curse: curseName,
         }),
       });
-  
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-  
+
       const data = await response.json();
       console.log('Server response:', data); // Si la respuesta es exitosa, mostramos los datos del servidor
     } catch (error) {
       console.error('Error applying curse:', error); // En caso de error, mostramos el mensaje de error
     }
   };
+
+  const filteredUsers = users.filter(
+    user => 
+      !user.isbetrayer ||
+      user.role !== "MORTIMER" || 
+      user.role !== "VILLAIN" || 
+      user.role !== "ISTVAN"
+  );
   
-  const filteredUsers = users.filter(user => !user.isbetrayer);
+  
 
   const decreaseSelection = (ingredientId: string) => {
     setSelectedIngredients((prevSelectedIngredients) => {
@@ -277,7 +288,7 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
                 setCurrentIndex(index);
               }}
             />
-  
+
             <SelectedIngredientsDisplay
               selectedIngredients={selectedIngredients}
               ingredients={ingredients}
@@ -336,13 +347,23 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
                 <TouchableOpacity
                   style={styles.curseItem}
                   onPress={() => {
-                    setSelectedCurse(item);
+                    setSelectedCurse(item); // Configura la maldición seleccionada
                   }}
                 >
-                  <View style={styles.curseContent}>
-                    <MedievalText fontSize={16} color="#ffffff">
+                  <View style={[styles.curseContent, { alignItems: 'center' }]}>
+                    <MedievalText fontSize={26} color="#ffffff">
                       {item.name}
                     </MedievalText>
+                    <View style={{ marginTop: 5, alignItems: 'center' }}>
+                      <MedievalText fontSize={20} color="#ffffff">
+                        Effects
+                      </MedievalText>
+                      {item.poison_effects.map((effect, index) => (
+                        <MedievalText key={index} fontSize={14} color="#ffffff">
+                          {effect.replace(/_/g, ' ')}
+                        </MedievalText>
+                      ))}
+                    </View>
                   </View>
                 </TouchableOpacity>
               )}
@@ -358,20 +379,20 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
             />
             {selectedCurse && (
               <TouchableOpacity
-              style={styles.createPotionButtonContainer}
-              onPress={() => setModalVisible(true)}
-            >
-              <ImageBackground
-                source={createPotionButton}
-                style={styles.createPotionButton}
-                imageStyle={{ borderRadius: 10 }}
-                resizeMode="stretch"
+                style={styles.createPotionButtonContainer}
+                onPress={() => setModalVisible(true)}
               >
-                <MedievalText fontSize={18} color="#ffffff" style={styles.createPotionButtonText}>
-                  Apply Curse
-                </MedievalText>
-              </ImageBackground>
-            </TouchableOpacity>
+                <ImageBackground
+                  source={createPotionButton}
+                  style={styles.createPotionButton}
+                  imageStyle={{ borderRadius: 10 }}
+                  resizeMode="stretch"
+                >
+                  <MedievalText fontSize={18} color="#ffffff" style={styles.createPotionButtonText}>
+                    Apply Curse
+                  </MedievalText>
+                </ImageBackground>
+              </TouchableOpacity>
             )}
           </View>
         )
@@ -408,8 +429,8 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
               onPress={() => {
                 const selectedAcolyteData = filteredUsers.find(user => user._id === selectedAcolyte);
                 if (selectedAcolyteData) {
-                  
-                  applyCurse( selectedCurse.name ,selectedAcolyteData.nickname);
+
+                  applyCurse(selectedCurse.name, selectedAcolyteData.nickname);
                   setModalVisible(false);
                 } else {
                   showToastWithGravityAndOffset('Please select an acolyte');
@@ -454,17 +475,18 @@ const IngredientSelector: React.FC<IngredientSelectorProps> = ({ onSelectionChan
 
 export default IngredientSelector;
 const styles = StyleSheet.create({
-  modalTopText:{
-    top: "-45%"  },
-  modalContainer:{
+  modalTopText: {
+    top: "-45%"
+  },
+  modalContainer: {
     width: "90%",
-    height: "90%",
+    height: "80%",
     backgroundColor: 'rgba(125,125,125,0.9)',
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 30,
-    margin: 50
+    margin: 100
   },
   closeButton: {
     position: 'absolute',
@@ -499,6 +521,10 @@ const styles = StyleSheet.create({
     padding: 10,
     marginHorizontal: 5,
     alignItems: 'center',
+    borderColor: 'gold',
+    borderWidth: 3,
+    width: 300,
+    height: 160
   },
   curseContent: {
     alignItems: 'center',
