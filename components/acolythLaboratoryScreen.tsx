@@ -425,7 +425,6 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             </TouchableOpacity>
           </Modal>
 
-          {/* Modal de Filtros */}
         <FilterModal  setVisible={setFilterModalVisible} visible={filterModalVisible} 
                       availableEffects={availableEffects} selectedEffects={selectedEffects} 
                       applyFilters={applyFilters} toggleEffect={toggleEffect} setSelectedEffect={setSelectedEffects}/>
