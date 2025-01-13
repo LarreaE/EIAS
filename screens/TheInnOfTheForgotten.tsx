@@ -87,7 +87,7 @@ const TheInnOfTheForgotten: React.FC = () => {
     });
     setShowBetrayModal(false);
 
-    //updateLoyaltyPoints(userData.playerData.email);
+    updateLoyaltyPoints(userData.playerData.email);
   };
 
   // Acción cuando se RECHAZA la traición

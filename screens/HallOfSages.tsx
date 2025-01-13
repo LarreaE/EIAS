@@ -95,6 +95,8 @@ const handleMortimerInside = (users) => {
       handleMortimerInside(users);
 
       console.log('Mortimer status:' + mortimerInside);
+      console.log(userData.playerData.angeloReduced);
+      
     };
 
     socket.on('send_users_in_hall', handleUsersInHall);
@@ -348,7 +350,7 @@ const handleMortimerInside = (users) => {
       )}
 
       {/* NUEVO: Botón para llamar a Angelo (si está reducido pero no está presente) */}
-      {userData.playerData.AngeloReduced === true &&
+      {userData.playerData.angeloReduced === true &&
        userData.playerData.role === 'ACOLYTE' &&
        filteredUsers.length >= 1 &&
        !mortimerInside && (
@@ -361,7 +363,7 @@ const handleMortimerInside = (users) => {
       )}
 
       {/* NUEVO: Botón para entregar a Angelo a Mortimer (si ambos dentro y AngeloReduced = true) */}
-      {userData.playerData.AngeloReduced === true &&
+      {userData.playerData.angeloReduced === true &&
        userData.playerData.role === 'ACOLYTE' &&
        !isAngeloDelivered &&
        mortimerInside && (
