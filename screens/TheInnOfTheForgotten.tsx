@@ -104,14 +104,14 @@ const TheInnOfTheForgotten: React.FC = () => {
   };
   const updateLoyaltyPoints = async (email:string) => {
     try {
-        const response = await fetch(`https://kaotika-server.fly.dev/loyalty/email/${email}`, {
+        const response = await fetch(`https://kaotika-server.fly.dev/players/loyalty/email/${email}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
             },
         });
 
-        const data = await response.json();
+        const data = await response.data.json();
         console.log('User updated:', data);
     } catch (error) {
         console.error('Error:', error);
