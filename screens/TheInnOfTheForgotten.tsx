@@ -87,8 +87,7 @@ const TheInnOfTheForgotten: React.FC = () => {
     });
     setShowBetrayModal(false);
 
-    //add KAOTIKA betray request
-    
+    //updateLoyaltyPoints(userData.playerData.email);
   };
 
   // Acción cuando se RECHAZA la traición
@@ -103,6 +102,21 @@ const TheInnOfTheForgotten: React.FC = () => {
     });
     setShowBetrayModal(false);
   };
+  const updateLoyaltyPoints = async (email:string) => {
+    try {
+        const response = await fetch(`https://kaotika-server.fly.dev/loyalty/email/${email}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        const data = await response.json();
+        console.log('User updated:', data);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
 
   // Maneja el toque en cada zona
   const handlePressZone = (zoneNumber: number) => {

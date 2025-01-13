@@ -14,10 +14,10 @@ import MedievalText from './MedievalText'; // tu componente, opcional
 interface ValidateAngeloModalProps {
 }
 
-const ValidateAngeloModal: React.FC<ValidateAngeloModalProps> = ({spinner}) => {
+const ValidateAngeloModal: React.FC<ValidateAngeloModalProps> = () => {
   // Controla visibilidad del modal
   const [visible, setVisible] = useState(false);
-    spinner();
+
   // Opcional: si quieres guardar algo del payload (nombre, etc.)
   const [angeloData, setAngeloData] = useState<any>(null);
 
