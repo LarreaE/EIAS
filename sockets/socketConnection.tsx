@@ -2,7 +2,7 @@ import { io, Socket } from 'socket.io-client';
 import Config from 'react-native-config';
 
 // Tipamos la variable de socket
-const socket: Socket = io(Config.RENDER, {
+const socket: Socket = io(Config.LOCAL_HOST, {
   transports: ['websocket'], // Fuerza el uso de WebSocket
   autoConnect: true,
 });

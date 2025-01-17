@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert, ImageBackground } from 'react-native';
 import Spinner from './Spinner'; // Importa el Spinner
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
@@ -7,8 +7,10 @@ import auth from '@react-native-firebase/auth';
 import axios from 'axios';
 import socket from '../sockets/socketConnection';
 import { UserContext, UserContextType } from '../context/UserContext'; // Importa el contexto
-import messaging from'@react-native-firebase/messaging';
+import messaging from '@react-native-firebase/messaging';
 import Ingredient from './Potions/Ingredient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 interface Props {
@@ -17,7 +19,7 @@ interface Props {
 
 const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
   const context = useContext(UserContext) as UserContextType;
-  const { setUserData, setIsInsideLab, setAllIngredients, setPurifyIngredients, setCurses, parchment, allIngredients, purifyIngredients } = context;
+  const { userData, setUserData, setIsInsideLab, setAllIngredients, setPurifyIngredients, setCurses, parchment, allIngredients, purifyIngredients } = context;
   const [loading, setLoading] = useState(false); // Estado para el loading
   const [socketId, setSocketId] = useState<string | null>(null); // Estado para almacenar el socket ID
   const [spinnerMessage, setSpinnerMessage] = useState('Connecting...');
@@ -27,9 +29,9 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
         webClientId: Config.GOOGLE_WEB_CLIENT_ID, // Asegúrate de tener esto configurado
         offlineAccess: true,
       });
-        // Sign out any existing sessions upon app startup
-        await GoogleSignin.signOut();
-        await auth().signOut();
+      // Sign out any existing sessions upon app startup
+      await GoogleSignin.signOut();
+      await auth().signOut();
     };
 
     configureGoogleSignIn();
@@ -48,7 +50,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
     };
   }, []);
 
-   //merge ingredients when purifyIngredients or allingredients changes
+  //merge ingredients when purifyIngredients or allingredients changes
   useEffect(() => {
     const mergedIngredients = [...allIngredients, ...purifyIngredients];
     //console.log('Merged Ingreds:', mergedIngredients);
@@ -59,7 +61,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
   const fetchIngredients = async () => {
     try {
       console.log('Fetching ingredients...');
-      const response = await fetch(`${Config.RENDER}/ingredients`);
+      const response = await fetch(`${Config.LOCAL_HOST}/ingredients`);
       const contentType = response.headers.get('content-type');
       if (contentType && contentType.includes('application/json')) {
         const data = await response.json();
@@ -83,7 +85,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
       const ingredients = response.data.data["Zachariah's herbal"].ingredients;
       let ingredientsArray = [];
       for (let index = 0; index < ingredients.length; index++) {
-        let ingredient = new Ingredient(ingredients[index]._id,ingredients[index].name,ingredients[index].effects,ingredients[index].value,ingredients[index].type,ingredients[index].image,ingredients[index].description);
+        let ingredient = new Ingredient(ingredients[index]._id, ingredients[index].name, ingredients[index].effects, ingredients[index].value, ingredients[index].type, ingredients[index].image, ingredients[index].description);
         ingredientsArray.push(ingredient);
       }
       setPurifyIngredients(ingredientsArray);
@@ -91,11 +93,42 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
       console.error('Failed to fetch ingredients:', error);
     }
   };
+  async function getToken(id:String, email:String) {
+    try {
+      // Crear el cuerpo de la solicitud con los datos
+      const body = JSON.stringify({ id, email });
+
+      // Realizar la petición POST
+      const response = await fetch(`${Config.LOCAL_HOST}/api/auth/get-token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: body,
+      });
+
+      // Verificar si la respuesta es exitosa
+      if (!response.ok) {
+        throw new Error(`Failed to generate token: ${response.statusText}`);
+      }
+
+      // Procesar la respuesta JSON
+      const data = await response.json();
+      console.log('Token:', data.token);
+
+      // Guardar el token en localStorage
+      AsyncStorage.setItem('token', data.token);
+
+      return data.token; // Retornar el token si es necesario
+    } catch (error) {
+      console.error('Error getting token:', error.message);
+    }
+  }
   const fetchCurses = async () => {
 
     try {
       console.log('Fetching curses...');
-      const response = await fetch(`${Config.RENDER}/potions`);
+      const response = await fetch(`${Config.LOCAL_HOST}/potions`);
       const contentType = response.headers.get('content-type');
       if (contentType && contentType.includes('application/json')) {
         const data = await response.json();
@@ -116,12 +149,12 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
 
   const signIn = async () => {
     try {
-      const authenticate = async() => {
+      const authenticate = async () => {
         try {
           setSpinnerMessage('Connecting...');
 
           // Perform the axios request and wait for the response
-          const response = await axios.post(`${Config.RENDER}/api/auth/verify-token`, {
+          const response = await axios.post(`${Config.LOCAL_HOST}/api/auth/verify-token`, {
             idToken: idTokenResult?.token,
             email: email,
             socketId: socket.id,
@@ -131,6 +164,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
           setSpinnerMessage('Connection established...');
           setUserData(response.data);
           setIsInsideLab(response.data.playerData.is_active);
+          getToken(userData.playerData._id, userData.playerData.email);
 
           // Fetch ingredients and curses in sequence
           setSpinnerMessage('Fetching Ingredients...');
@@ -188,37 +222,37 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
       // Sign-in the user with the credential
       const signInWithCredential = await auth().signInWithCredential(
         googleCredential,
-    );
-    setSpinnerMessage('Checking email domain...');
-          // **Check if email domain contains 'aeg' after '@'**
-          const emailDomain = email?.split('@')[1];
-          console.log('checking email');
-          if (emailDomain) {
-            if (!emailDomain.includes('aeg')) {
-              Alert.alert(
-                'Access Denied',
-                'Sorry, but you do not belong to the organization to use this application.'
-              );
-              setLoading(false);
-              // Sign out to clear any session data
-              await GoogleSignin.signOut();
-              await auth().signOut();
-              return;
-            }
-          }
-    console.log('SIGN IN WITH CREDENTIAL');
-    console.log("Is the user new?:", signInWithCredential.additionalUserInfo.isNewUser ? "Yes" : "No");
-    console.log("User email:", signInWithCredential.additionalUserInfo.profile.email);
-    console.log("User name:", signInWithCredential.additionalUserInfo.profile.name);
-    setSpinnerMessage('Verifying credentials...');
-    //Get the token from the current User
-    const idTokenResult = await auth().currentUser?.getIdTokenResult();
-    //FCM token
-    const token = await messaging().getToken();
-    console.log('socket: ' + socket.id);
-    await authenticate();
+      );
+      setSpinnerMessage('Checking email domain...');
+      // **Check if email domain contains 'aeg' after '@'**
+      const emailDomain = email?.split('@')[1];
+      console.log('checking email');
+      if (emailDomain) {
+        if (!emailDomain.includes('aeg')) {
+          Alert.alert(
+            'Access Denied',
+            'Sorry, but you do not belong to the organization to use this application.'
+          );
+          setLoading(false);
+          // Sign out to clear any session data
+          await GoogleSignin.signOut();
+          await auth().signOut();
+          return;
+        }
+      }
+      console.log('SIGN IN WITH CREDENTIAL');
+      console.log("Is the user new?:", signInWithCredential.additionalUserInfo.isNewUser ? "Yes" : "No");
+      console.log("User email:", signInWithCredential.additionalUserInfo.profile.email);
+      console.log("User name:", signInWithCredential.additionalUserInfo.profile.name);
+      setSpinnerMessage('Verifying credentials...');
+      //Get the token from the current User
+      const idTokenResult = await auth().currentUser?.getIdTokenResult();
+      //FCM token
+      const token = await messaging().getToken();
+      console.log('socket: ' + socket.id);
+      await authenticate();
 
-    } catch (error:any) {
+    } catch (error: any) {
       console.log('Error: ', error.response.data);
       setLoading(false); // Detener el loading
     } finally {
@@ -263,9 +297,9 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
       style={styles.background}
       resizeMode="cover"
     >
-    {loading && <Spinner message={spinnerMessage} />}
-    <TouchableOpacity style={styles.container} onPress={signIn} disabled={loading} />
-  </ImageBackground>
+      {loading && <Spinner message={spinnerMessage} />}
+      <TouchableOpacity style={styles.container} onPress={signIn} disabled={loading} />
+    </ImageBackground>
   );
 };
 
@@ -298,3 +332,5 @@ const styles = StyleSheet.create({
 });
 
 export default GoogleSignInComponent;
+
+

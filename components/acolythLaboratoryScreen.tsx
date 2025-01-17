@@ -85,7 +85,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
     const updateIsInside = async () => {
       try {
-        await fetch(`${Config.RENDER}/api/players/isInside`, {
+        await fetch(`${Config.LOCAL_HOST}/api/players/isInside`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -121,13 +121,11 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
     const removeIngredients = (ingredients:any, player:any) => {
       // Ensure player and inventory are valid
-            
       // Create a map of ingredient counts from the used ingredients array
       const ingredientsToRemove = ingredients.reduce((acc:any, ingredient:any) => {
           acc[ingredient._id] = (acc[ingredient._id] || 0) + 1; // Count each ingredient by its `_id`
           return acc;
       }, {});
-  
       // Iterate through player's ingredients and update the inventory
       player.inventory.ingredients = player.inventory.ingredients.reduce((updatedInventory:any, ingredient:any) => {
           if (ingredientsToRemove[ingredient._id]) {
@@ -171,7 +169,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
       userData.playerData.inventory.ingredients = removeIngredients(potionIngredients,userData.playerData)
       // Update the player in the database
       console.log('Updating player data in the database...');
-      const response = await axios.put(`${Config.RENDER}/api/players/update`, userData.playerData);
+      const response = await axios.put(`${Config.LOCAL_HOST}/api/players/update`, userData.playerData);
 
       console.log('Player data successfully updated in the database.');
       setPotionCreated(true);

@@ -101,7 +101,7 @@ const handleApplyLocalChanges = (changes: { diseases: string[]; ethaziumCursed: 
 
     const addUsers = async () => {
       try {
-        const response = await fetch(`${Config.RENDER}/api/players/mortimer`);
+        const response = await fetch(`${Config.LOCAL_HOST}/api/players/mortimer`);
         const data: User[] = await response.json();
 
         const updatedUsers = data.map((user) => {
