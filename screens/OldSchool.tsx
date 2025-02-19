@@ -31,7 +31,7 @@ const SchoolScreen: React.FC = () => {
     navigation.navigate('LaboratoryMortimer');
   };
   const goToHallOfSages = () => {
-    sendLocation('School', userData.playerData.email);
+    sendLocation('HallOfSages', userData.playerData.email);
     navigation.navigate('HallOfSages');
   };
   const goToMap = () => {
@@ -43,7 +43,7 @@ const SchoolScreen: React.FC = () => {
     navigation.navigate('QRScanner');
   };
   const goToDungeon = () => {
-    sendLocation('', userData.playerData.email);
+    sendLocation('Dungeon', userData.playerData.email);
     navigation.navigate('Dungeon');
   };
 

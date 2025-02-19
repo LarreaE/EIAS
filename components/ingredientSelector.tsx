@@ -71,7 +71,7 @@ console.log(users);
 
     const addUsers = async () => {
       try {
-        const response = await fetch(`${Config.RENDER}/api/players/mortimer`);
+        const response = await fetch(`${Config.LOCAL_HOST}/api/players/mortimer`);
         const data: User[] = await response.json();
         setUsers(data);
       } catch (error) {
@@ -91,7 +91,7 @@ console.log(users);
     console.log(`Applying curse: ${curseName} to acolyte: ${acolyteNickName}`);
 
     try {
-      const response = await fetch(`${Config.RENDER}/api/players/applyCurse/${acolyteNickName}`, {
+      const response = await fetch(`${Config.LOCAL_HOST}/api/players/applyCurse/${acolyteNickName}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -31,7 +31,7 @@ const TheHollowOfStages: React.FC = () => {
           >
             <View style={styles.titleContainer}>
                 <View style={styles.titleBackground} />
-                <MedievalText style={styles.title}>The Hollow Of Stages</MedievalText>
+                <MedievalText style={styles.title}>The Hollow Of The Losts</MedievalText>
             </View>
             <MapButton
                 onPress={goToMap}

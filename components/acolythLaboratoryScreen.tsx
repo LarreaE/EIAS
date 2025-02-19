@@ -85,7 +85,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
 
     const updateIsInside = async () => {
       try {
-        await fetch(`${Config.RENDER}/api/players/isInside`, {
+        await fetch(`${Config.LOCAL_HOST}/api/players/isInside`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -171,7 +171,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
       userData.playerData.inventory.ingredients = removeIngredients(potionIngredients,userData.playerData)
       // Update the player in the database
       console.log('Updating player data in the database...');
-      const response = await axios.put(`${Config.RENDER}/api/players/update`, userData.playerData);
+      const response = await axios.put(`${Config.LOCAL_HOST}/api/players/update`, userData.playerData);
 
       console.log('Player data successfully updated in the database.');
       setPotionCreated(true);

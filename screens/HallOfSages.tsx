@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList, StackNavigationProp } from '../types/types.ts';
 import {
   AngeloDelivered,
+  requestArtifacts,
   restoreObjects,
   searchValidated,
   sendAnimationMortimer,
@@ -22,8 +23,9 @@ import FadeInArtefacts from '../components/Animations/FadeInArtefacts.tsx';
 import Config from 'react-native-config';
 import Spinner from '../components/Spinner.tsx';
 import ValidateAngeloModal from '../components/ValidateAngeloModal.tsx';
-import { clearAngeloDelivery, listenToAngeloDelivery } from '../sockets/listenEvents.tsx';
+import { clearAngeloDelivery, listenToAngeloDelivery, listenToArtifactsUpdates } from '../sockets/listenEvents.tsx';
 import AngeloValidationResultModal from '../components/AngeloValidationResultModal.tsx';
+import { trace } from 'console';
 
 type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'HallOfSages'>;
 const { width, height } = Dimensions.get('window');
@@ -47,6 +49,7 @@ const HallOfSages: React.FC = () => {
   const [isAnimatingFade, setIsAnimatingFade] = useState(false);
   const [spinner, setSpinner] = useState(false);
   const [mortimerInside, setMortimerInside] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Estado para AngeloValidationResultModal
   const [angeloResultVisible, setAngeloResultVisible] = useState(false);
@@ -73,20 +76,38 @@ const HallOfSages: React.FC = () => {
   }, [userData.playerData.role]);
 
   useEffect(() => {
+    requestArtifacts();
+    listenToArtifactsUpdates();
+  
+    socket.on('receive_artifacts', (artifacts) => {
+      if (artifacts.length === 4) {
+        console.log('artifacts set');
+        setArtifacts(artifacts);
+      }
+      console.log('Artifacts received:', artifacts);
+      setIsLoading(false);
+    });
+  
+    return () => {
+      socket.off('receive_artifacts');
+    };
+  },);
+
+  useEffect(() => {
     sendIsInHall(currentUser.email, true);
   }, []);
 
-// Ejemplo de uso en un efecto o en una función
-const handleMortimerInside = (users) => {
-  for (let i = 0; i < users.length; i++) {
-    console.log(users[i].role);
-    if (users[i].role === 'MORTIMER') {
-      setMortimerInside(true);
-      console.log('Mortimer is inside');
-      return; // Interrumpe el bucle en cuanto lo encontramos
+  // Ejemplo de uso en un efecto o en una función
+  const handleMortimerInside = (users) => {
+    for (let i = 0; i < users.length; i++) {
+      console.log(users[i].role);
+      if (users[i].role === 'MORTIMER') {
+        setMortimerInside(true);
+        console.log('Mortimer is inside');
+        return; // Interrumpe el bucle en cuanto lo encontramos
+      }
     }
-  }
-};
+  };
   useEffect(() => {
     const handleUsersInHall = (users: User[]) => {
       console.log('Datos recibidos en send_users_in_hall:');
@@ -96,7 +117,7 @@ const handleMortimerInside = (users) => {
 
       console.log('Mortimer status:' + mortimerInside);
       console.log(userData.playerData.angeloReduced);
-      
+
     };
 
     socket.on('send_users_in_hall', handleUsersInHall);
@@ -148,7 +169,7 @@ const handleMortimerInside = (users) => {
     setTimeout(() => {
       setIsAnimatingMortimer(false);
       setIsAnimatingFade(true);
-    }, 10000); 
+    }, 10000);
   };
 
   // Función que se ejecuta cuando se valida la búsqueda
@@ -212,7 +233,7 @@ const handleMortimerInside = (users) => {
     console.log('validation  not ok');
     setSpinner(false);
     ToastAndroid.show('Validation refused', ToastAndroid.SHORT);
-    restoreObjects();  
+    restoreObjects();
     setArtifacts([]);
   };
 
@@ -234,9 +255,9 @@ const handleMortimerInside = (users) => {
     if (filteredUsers.length === 1) {
       return (
         <View key={filteredUsers[0]._id} style={styles.avatarContainer}>
-          <AcolythCardInHall 
-            nickname={filteredUsers[0].nickname} 
-            avatar={filteredUsers[0].avatar} 
+          <AcolythCardInHall
+            nickname={filteredUsers[0].nickname}
+            avatar={filteredUsers[0].avatar}
           />
         </View>
       );
@@ -315,62 +336,64 @@ const handleMortimerInside = (users) => {
         <MedievalText style={styles.title}>Ancestral</MedievalText>
         <MedievalText style={styles.title}>Hall of Sages</MedievalText>
       </View>
+{/* 
+      {artifacts.length === 4 && filteredUsers.length >= 1 &&
+        userData.playerData.ArtifactsValidated === false &&
+        userData.playerData.role === 'ACOLYTE' &&
+        mortimerInside === true && (
+          <View style={styles.bellButton}>
+            <MapButton
+              onPress={sendHallNotificationToMortimer}
+              iconImage={require('../assets/bell_icon.png')}
+            />
+          </View>
+        )} */}
 
-      {artifacts.length === 4 && filteredUsers.length >= 3 && 
-       userData.playerData.ArtifactsValidated === false && 
-       userData.playerData.role === 'ACOLYTE' && 
-       mortimerInside === false && (
-        <View style={styles.bellButton}>
-          <MapButton
-            onPress={sendHallNotificationToMortimer}
-            iconImage={require('../assets/bell_icon.png')}
-          />
-        </View>
-      )}
+      {artifacts.length === 4 && filteredUsers.length >= 1 &&
+        userData.playerData.ArtifactsValidated === false &&
+        userData.playerData.role === 'ACOLYTE' && 
+        mortimerInside === false && (
+          <View style={styles.bellButton}>
+            <MapButton
+              onPress={sendHallNotificationToMortimer}
+              iconImage={require('../assets/bell_icon.png')}
+            />
+          </View>
+        )}
 
       <View style={styles.circleContainer}>{renderUsersInCircle()}</View>
       {/* Botón para dar artefactos a Mortimer (ya existente) */}
-      {artifacts.length === 4 && filteredUsers.length >= 3 &&
-       userData.playerData.ArtifactsValidated === false &&
-       userData.playerData.role === 'ACOLYTE' && mortimerInside === true && (
-        <TouchableOpacity onPress={giveArtifactsToMortimer} style={styles.artifactsButton}>
-          <MedievalText style={styles.buttonText}>Give Artifacts to Mortimer</MedievalText>
-        </TouchableOpacity>
-      )}
-
-      {artifacts.length === 4 && filteredUsers.length >= 3 &&
-       userData.playerData.ArtifactsValidated === false &&
-       userData.playerData.role === 'ACOLYTE' && mortimerInside === false && (
-        <View style={styles.bellButton}>
-          <MapButton
-            onPress={sendHallNotificationToMortimer}
-            iconImage={require('../assets/bell_icon.png')}
-          />
-        </View>
-      )}
+      {artifacts.length === 4 && filteredUsers.length >= 1 &&
+        userData.playerData.ArtifactsValidated === false &&
+        userData.playerData.role === 'ACOLYTE' &&
+        mortimerInside === true && (
+          <TouchableOpacity onPress={giveArtifactsToMortimer} style={styles.artifactsButton}>
+            <MedievalText style={styles.buttonText}>Give Artifacts to Mortimer</MedievalText>
+          </TouchableOpacity>
+        )}
 
       {/* NUEVO: Botón para llamar a Angelo (si está reducido pero no está presente) */}
       {userData.playerData.angeloReduced === true &&
-       userData.playerData.role === 'ACOLYTE' &&
-       filteredUsers.length >= 1 &&
-       !mortimerInside && (
-        <View style={styles.bellButton}>
-          <MapButton
-            onPress={sendHallNotificationToMortimer}
-            iconImage={require('../assets/bell_icon.png')}
-          />
-        </View>
-      )}
+        userData.playerData.role === 'ACOLYTE' &&
+        filteredUsers.length >= 1 &&
+        mortimerInside === false && (
+          <View style={styles.bellButton}>
+            <MapButton
+              onPress={sendHallNotificationToMortimer}
+              iconImage={require('../assets/bell_icon.png')}
+            />
+          </View>
+        )}
 
       {/* NUEVO: Botón para entregar a Angelo a Mortimer (si ambos dentro y AngeloReduced = true) */}
       {userData.playerData.angeloReduced === true &&
-       userData.playerData.role === 'ACOLYTE' &&
-       !isAngeloDelivered &&
-       mortimerInside && (
-        <TouchableOpacity onPress={deliverAngeloToMortimer} style={styles.artifactsButton}>
-          <MedievalText style={styles.buttonText}>Deliver Angelo to Mortimer</MedievalText>
-        </TouchableOpacity>
-      )}
+        userData.playerData.role === 'ACOLYTE' &&
+        isAngeloDelivered === false &&
+        mortimerInside === true && (
+          <TouchableOpacity onPress={deliverAngeloToMortimer} style={styles.artifactsButton}>
+            <MedievalText style={styles.buttonText}>Deliver Angelo to Mortimer</MedievalText>
+          </TouchableOpacity>
+        )}
 
       <MapButton
         onPress={goToMap}
@@ -387,15 +410,15 @@ const handleMortimerInside = (users) => {
         />
       )}
       {userData.playerData.role === 'MORTIMER' &&
-       <ValidateAngeloModal
-       />}
-       {userData.playerData.role === 'ACOLYTE' &&
-          <AngeloValidationResultModal
+        <ValidateAngeloModal
+        />}
+      {userData.playerData.role === 'ACOLYTE' &&
+        <AngeloValidationResultModal
           visible={angeloResultVisible}
           isSuccess={angeloIsSuccess}
           onClose={() => setAngeloResultVisible(false)}
-          />
-        }
+        />
+      }
 
 
     </ImageBackground>
