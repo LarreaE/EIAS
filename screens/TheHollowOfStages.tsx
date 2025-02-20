@@ -63,24 +63,66 @@ const TheHollowOfStages: React.FC = () => {
       );
 
       case 'ACOLYTE':
-      return (
-        <GestureHandlerRootView style={styles.container}>
-          <ImageBackground
-            source={require('../assets/hollow_of_the_losts.webp')}  // Ruta de la imagen de fondo
-            style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
-            resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
-          >
+      if (userData.playerData.isbetrayer === true) {
+        return (
+          <GestureHandlerRootView style={styles.container}>
+            <ImageBackground
+              source={require('../assets/hollow_of_the_losts.webp')}  // Ruta de la imagen de fondo
+              style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
+              resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+            >
 
-            <View style={styles.buttonMap}>
-              <MapButton
-                title="Map"
-                onPress={goToMap}
-                iconImage={require('../assets/map_icon.webp')}
-              />
-            </View>
-          </ImageBackground>
-        </GestureHandlerRootView>
-      );
+              {userData.playerData.role != 'ISTVAN' && (
+                <View style={styles.buttonLaboratory}>
+                  <MapButton
+                      title="Laboratory"
+                      onPress={goToLaboratory}
+                      iconImage={require('../assets/laboratory_icon.webp')}
+                  />
+                </View>
+              )}
+
+              {userData.playerData.role === 'ISTVAN' && (
+                <View style={styles.buttonLaboratory}>
+                  <MapButton
+                    title="Laboratory"
+                    onPress={goToQRScanner}
+                    iconImage={require('../assets/QR_icon.webp')}
+                  />
+                </View>
+              )}
+
+              <View style={styles.buttonMap}>
+                <MapButton
+                  title="Map"
+                  onPress={goToMap}
+                  iconImage={require('../assets/map_icon.webp')}
+                />
+              </View>
+            </ImageBackground>
+          </GestureHandlerRootView>
+        );
+      } else {
+        // Render ACOLYTE case if isBetrayer is false
+        return (
+          <GestureHandlerRootView style={styles.container}>
+            <ImageBackground
+              source={require('../assets/hollow_of_the_losts.webp')}  // Ruta de la imagen de fondo
+              style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
+              resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+            >
+
+              <View style={styles.buttonMap}>
+                <MapButton
+                  title="Map"
+                  onPress={goToMap}
+                  iconImage={require('../assets/map_icon.webp')}
+                />
+              </View>
+            </ImageBackground>
+          </GestureHandlerRootView>
+        );
+      }
 
     default:
 
