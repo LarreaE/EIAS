@@ -110,7 +110,7 @@ const BattleModal: React.FC<BattleModalProps> = ({ visible, onClose }) => {
         <View style={styles.container}>
           <MedievalText style={styles.title}>Contain Angelo!</MedievalText>
           <Image
-            source={require('../assets/angelo.png')}
+            source={require('../assets/angelo.webp')}
             style={styles.angeloImage}
             resizeMode="contain"
           />

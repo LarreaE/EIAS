@@ -46,7 +46,7 @@ const TheHollowOfStages: React.FC = () => {
       return (
         <GestureHandlerRootView style={styles.container}>
           <ImageBackground
-            source={require('../assets/hollow_of_the_losts.png')}  // Ruta de la imagen de fondo
+            source={require('../assets/hollow_of_the_losts.webp')}  // Ruta de la imagen de fondo
             style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
             resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
           >
@@ -55,7 +55,7 @@ const TheHollowOfStages: React.FC = () => {
               <MapButton
                 title="Map"
                 onPress={goToMap}
-                iconImage={require('../assets/map_icon.png')}
+                iconImage={require('../assets/map_icon.webp')}
               />
             </View>
           </ImageBackground>
@@ -66,7 +66,7 @@ const TheHollowOfStages: React.FC = () => {
       return (
         <GestureHandlerRootView style={styles.container}>
           <ImageBackground
-            source={require('../assets/hollow_of_the_losts.png')}  // Ruta de la imagen de fondo
+            source={require('../assets/hollow_of_the_losts.webp')}  // Ruta de la imagen de fondo
             style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
             resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
           >
@@ -75,7 +75,7 @@ const TheHollowOfStages: React.FC = () => {
               <MapButton
                 title="Map"
                 onPress={goToMap}
-                iconImage={require('../assets/map_icon.png')}
+                iconImage={require('../assets/map_icon.webp')}
               />
             </View>
           </ImageBackground>
@@ -87,7 +87,7 @@ const TheHollowOfStages: React.FC = () => {
       return (
         <GestureHandlerRootView style={styles.container}>
           <ImageBackground
-            source={require('../assets/hollow_of_the_losts.png')}  // Ruta de la imagen de fondo
+            source={require('../assets/hollow_of_the_losts.webp')}  // Ruta de la imagen de fondo
             style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
             resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
           >
@@ -98,7 +98,7 @@ const TheHollowOfStages: React.FC = () => {
                 <MapButton
                     title="Laboratory"
                     onPress={goToLaboratory}
-                    iconImage={require('../assets/laboratory_icon.png')}
+                    iconImage={require('../assets/laboratory_icon.webp')}
                 />
               </View>
             )}
@@ -108,7 +108,7 @@ const TheHollowOfStages: React.FC = () => {
                 <MapButton
                   title="Laboratory"
                   onPress={goToQRScanner}
-                  iconImage={require('../assets/QR_icon.png')}
+                  iconImage={require('../assets/QR_icon.webp')}
                 />
               </View>
             )}
@@ -117,7 +117,7 @@ const TheHollowOfStages: React.FC = () => {
               <MapButton
                 title="Map"
                 onPress={goToMap}
-                iconImage={require('../assets/map_icon.png')}
+                iconImage={require('../assets/map_icon.webp')}
               />
             </View>
           </ImageBackground>

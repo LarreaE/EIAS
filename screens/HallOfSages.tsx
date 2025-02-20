@@ -91,7 +91,7 @@ const HallOfSages: React.FC = () => {
     return () => {
       socket.off('receive_artifacts');
     };
-  },);
+  },[]);
 
   useEffect(() => {
     sendIsInHall(currentUser.email, true);
@@ -327,7 +327,7 @@ const HallOfSages: React.FC = () => {
 
   return (
     <ImageBackground
-      source={require('../assets/obituary.png')}
+      source={require('../assets/obituary.webp')}
       style={styles.background}
       resizeMode="cover"
     >
@@ -344,7 +344,7 @@ const HallOfSages: React.FC = () => {
           <View style={styles.bellButton}>
             <MapButton
               onPress={sendHallNotificationToMortimer}
-              iconImage={require('../assets/bell_icon.png')}
+              iconImage={require('../assets/bell_icon.webp')}
             />
           </View>
         )} */}
@@ -356,7 +356,7 @@ const HallOfSages: React.FC = () => {
           <View style={styles.bellButton}>
             <MapButton
               onPress={sendHallNotificationToMortimer}
-              iconImage={require('../assets/bell_icon.png')}
+              iconImage={require('../assets/bell_icon.webp')}
             />
           </View>
         )}
@@ -380,7 +380,7 @@ const HallOfSages: React.FC = () => {
           <View style={styles.bellButton}>
             <MapButton
               onPress={sendHallNotificationToMortimer}
-              iconImage={require('../assets/bell_icon.png')}
+              iconImage={require('../assets/bell_icon.webp')}
             />
           </View>
         )}
@@ -397,7 +397,7 @@ const HallOfSages: React.FC = () => {
 
       <MapButton
         onPress={goToMap}
-        iconImage={require('../assets/school_icon.png')}
+        iconImage={require('../assets/school_icon.webp')}
       />
 
       {isAnimating && <AnimatedCircles />}

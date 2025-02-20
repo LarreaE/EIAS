@@ -12,7 +12,7 @@ const QRGenerator = (data: any) => {
       <View style={styles.medievalFrame}>
         {/* Marco completo */}
         <Image
-          source={require('../assets/medieval-border.png')} // Imagen del marco completo
+          source={require('../assets/medieval-border.webp')} // Imagen del marco completo
           style={styles.frameImage}
         />
         {/* Contenedor del QR */}

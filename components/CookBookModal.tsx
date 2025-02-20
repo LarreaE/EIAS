@@ -27,7 +27,7 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
             onRequestClose={() => setVisible(false)}
         >
             <ImageBackground
-                source={require('../assets/runa.png')}
+                source={require('../assets/runa.webp')}
                 style={styles.background}
                 resizeMode="cover"
             >
@@ -92,7 +92,7 @@ const CookBookModal: React.FC<Props> = ({ visible, setVisible, curses }) => {
                     }}>
                        <View style={styles.buttonContent}>
                             <Image
-                            source={require('../assets/boton.png')} // Ruta al archivo de imagen
+                            source={require('../assets/boton.webp')} // Ruta al archivo de imagen
                             style={styles.buttonImage} // Estilo para la imagen del botón
                             resizeMode="contain" // Ajusta cómo se muestra la imagen
                             />

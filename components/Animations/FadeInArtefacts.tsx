@@ -68,25 +68,25 @@ const FadeInArtefacts: React.FC<FadeInArtefactsProps> = ({ onValidateSearch, onR
       <View style={styles.images}>
           <Animated.Image
             key={`image-1`}
-            source={require(`../../assets/artefact1.png`)} // Reemplaza con tus rutas
+            source={require(`../../assets/artefact1.webp`)} // Reemplaza con tus rutas
             style={animatedImageStyle(positions[0], 0)}
             resizeMode="contain"
           />
           <Animated.Image
           key={`image-2`}
-          source={require(`../../assets/artefact2.png`)} // Reemplaza con tus rutas
+          source={require(`../../assets/artefact2.webp`)} // Reemplaza con tus rutas
           style={animatedImageStyle(positions[1], 1)}
           resizeMode="contain"
           />
           <Animated.Image
           key={`image-3`}
-          source={require(`../../assets/artefact3.png`)} // Reemplaza con tus rutas
+          source={require(`../../assets/artefact3.webp`)} // Reemplaza con tus rutas
           style={animatedImageStyle(positions[2], 2)}
           resizeMode="contain"
         />
         <Animated.Image
         key={`image-4`}
-        source={require(`../../assets/artefact4.png`)} // Reemplaza con tus rutas
+        source={require(`../../assets/artefact4.webp`)} // Reemplaza con tus rutas
         style={animatedImageStyle(positions[3], 3)}
         resizeMode="contain"
         />

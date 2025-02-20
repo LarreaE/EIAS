@@ -145,7 +145,7 @@ useEffect(() => {
         {userData.playerData.is_inside_tower ? (
           // inside the tower
           <ImageBackground
-          source={require('../assets/parchment.png')}
+          source={require('../assets/parchment.webp')}
           style={styles.background}
           resizeMode="cover"
         >
@@ -166,7 +166,7 @@ useEffect(() => {
 
             <TouchableOpacity style={styles.touchableContainer} onPress={decrypt}>
               <ImageBackground
-              source={require('../assets/boton.png')}  // Path to the button image
+              source={require('../assets/boton.webp')}  // Path to the button image
               style={styles.buttonImage}  // Styles for the image inside the button
               resizeMode="contain"        // Adjust the image to fit inside the button
               >
@@ -180,7 +180,7 @@ useEffect(() => {
         ) : (
           // outside the tower
           <ImageBackground
-        source={require('../assets/tower_door.png')}  // Ruta de la imagen de fondo
+        source={require('../assets/tower_door.webp')}  // Ruta de la imagen de fondo
         style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
         resizeMode="cover"
       >
@@ -190,7 +190,7 @@ useEffect(() => {
       </View>
       <MapButton
               onPress={goToMap}
-              iconImage={require('../assets/map_icon.png')}
+              iconImage={require('../assets/map_icon.webp')}
             />
           </ImageBackground>
         )}

@@ -140,7 +140,7 @@ const QRScanner: React.FC<{ onQRCodeScanned: (value: string | undefined) => void
       {/* Añadir el botón de mapa */}
       <MapButton
         onPress={goToMap}
-        iconImage={require('../assets/school_icon.png')}
+        iconImage={require('../assets/school_icon.webp')}
       />
     </View>
   );

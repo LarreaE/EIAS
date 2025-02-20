@@ -58,7 +58,7 @@ const SchoolScreen: React.FC = () => {
       return (
         <GestureHandlerRootView style={styles.container}>
           <ImageBackground
-            source={require('../assets/school.png')}  // Ruta de la imagen de fondo
+            source={require('../assets/school.webp')}  // Ruta de la imagen de fondo
             style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
             resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
           >
@@ -67,7 +67,7 @@ const SchoolScreen: React.FC = () => {
               <MapButton
                 title="HallOfSages"
                 onPress={goToHallOfSages}
-                iconImage={require('../assets/obituary_icon.png')}
+                iconImage={require('../assets/obituary_icon.webp')}
                 isGlowing={isHallInNeedOfMortimer}
               />
             </View>
@@ -76,7 +76,7 @@ const SchoolScreen: React.FC = () => {
               <MapButton
                 title="Laboratory"
                 onPress={goToLaboratoryMortimer}
-                iconImage={require('../assets/laboratory_icon.png')}
+                iconImage={require('../assets/laboratory_icon.webp')}
               />
             </View>
 
@@ -84,7 +84,7 @@ const SchoolScreen: React.FC = () => {
               <MapButton
                 title="Map"
                 onPress={goToMap}
-                iconImage={require('../assets/map_icon.png')}
+                iconImage={require('../assets/map_icon.webp')}
               />
             </View>
 
@@ -92,7 +92,7 @@ const SchoolScreen: React.FC = () => {
               <MapButton
                 title="Dungeon"
                 onPress={goToDungeon}
-                iconImage={require('../assets/OSD-icon.png')}
+                iconImage={require('../assets/OSD-icon.webp')}
               />
             </View>
 
@@ -105,7 +105,7 @@ const SchoolScreen: React.FC = () => {
       return (
         <GestureHandlerRootView style={styles.container}>
           <ImageBackground
-            source={require('../assets/school.png')}  // Ruta de la imagen de fondo
+            source={require('../assets/school.webp')}  // Ruta de la imagen de fondo
             style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
             resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
           >
@@ -116,7 +116,7 @@ const SchoolScreen: React.FC = () => {
                 <MapButton
                     title="Laboratory"
                     onPress={goToLaboratory}
-                    iconImage={require('../assets/laboratory_icon.png')}
+                    iconImage={require('../assets/laboratory_icon.webp')}
                 />
               </View>
             )}
@@ -126,7 +126,7 @@ const SchoolScreen: React.FC = () => {
                 <MapButton
                   title="Hall Of Sages"
                   onPress={goToHallOfSages}
-                  iconImage={require('../assets/obituary_icon.png')}
+                  iconImage={require('../assets/obituary_icon.webp')}
                 />
               </View>
             )}
@@ -136,7 +136,7 @@ const SchoolScreen: React.FC = () => {
                 <MapButton
                   title="Laboratory"
                   onPress={goToQRScanner}
-                  iconImage={require('../assets/QR_icon.png')}
+                  iconImage={require('../assets/QR_icon.webp')}
                 />
               </View>
             )}
@@ -145,14 +145,14 @@ const SchoolScreen: React.FC = () => {
               <MapButton
                 title="Map"
                 onPress={goToMap}
-                iconImage={require('../assets/map_icon.png')}
+                iconImage={require('../assets/map_icon.webp')}
               />
             </View>
             <View style={styles.buttonDungeon}>
               <MapButton
                 title="Dungeon"
                 onPress={goToDungeon}
-                iconImage={require('../assets/OSD-icon.png')}
+                iconImage={require('../assets/OSD-icon.webp')}
               />
             </View>
 

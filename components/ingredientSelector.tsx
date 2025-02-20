@@ -2,7 +2,7 @@ import React, { useState, useRef, useContext, useEffect } from 'react';
 import { Animated, TouchableOpacity, Image, StyleSheet, Dimensions, View, ImageBackground, Modal, Vibration, ToastAndroid } from 'react-native';
 import { UserContext, UserContextType } from '../context/UserContext';
 import { Ingredients } from '../interfaces/Ingredients';
-import createPotionButton from '../assets/boton.png';
+import createPotionButton from '../assets/boton.webp';
 import SelectedIngredientsDisplay from './selectedIngredientsDisplay';
 import MedievalText from './MedievalText';
 import { stringifyEffect } from '../helper/Funtions';
@@ -186,7 +186,7 @@ console.log(users);
           ]}
         >
           <ImageBackground
-            source={require('../assets/runa.png')}
+            source={require('../assets/runa.webp')}
             style={[
               styles.gradientBackground,
               selectedCount > 0 && styles.selectedItem,

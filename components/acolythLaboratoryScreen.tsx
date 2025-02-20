@@ -248,7 +248,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
     <View style={styles.container}>
       {isInsideLab || userData.playerData.role === 'VILLAIN' || userData.playerData.isbetrayer  ? (
         <ImageBackground
-          source={require('../assets/laboratory.png')}
+          source={require('../assets/laboratory.webp')}
           style={styles.background}
           resizeMode="cover"
         >
@@ -264,7 +264,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             style={styles.qrButton}
             >
             <ImageBackground
-              source={require('../assets/QR_icon.png')}
+              source={require('../assets/QR_icon.webp')}
               style={styles.openButton}
               resizeMode="cover"
             />
@@ -276,7 +276,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             style={styles.qrButton}
             >
             <ImageBackground
-              source={require('../assets/school_icon.png')}
+              source={require('../assets/school_icon.webp')}
               style={styles.openButton}
               resizeMode="cover"
             />
@@ -287,7 +287,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             onPress={() => setCookBookModalVisible(true)}
           >
             <ImageBackground
-              source={require('../assets/informacion.png')}
+              source={require('../assets/informacion.webp')}
               style={styles.filterImage}
             />
           </TouchableOpacity>
@@ -297,7 +297,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             onPress={() => setFilterModalVisible(true)}
           >
             <ImageBackground
-              source={require('../assets/filter_icon.png')}
+              source={require('../assets/filter_icon.webp')}
               style={styles.filterImage}
             />
           </TouchableOpacity>
@@ -321,7 +321,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
                   onPress={() => setModalVisible(false)}
                 >
                   <Image
-                    source={require('../assets/boton.png')}
+                    source={require('../assets/boton.webp')}
                     style={styles.buttonImage}
                     resizeMode="contain"
                   />
@@ -414,7 +414,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
             >
               <View style={styles.buttonContent}>
                 <Image
-                  source={require('../assets/boton.png')}
+                  source={require('../assets/boton.webp')}
                   style={styles.potionbuttonImage}
                   resizeMode="contain"
                 />
@@ -436,7 +436,7 @@ const AcolythLaboratoryScreen: React.FC<Props> = (UserData: any) => {
           <View style={styles.buttonMap}>
           <MapButton
             onPress={goToMap}
-            iconImage={require('../assets/school_icon.png')}
+            iconImage={require('../assets/school_icon.webp')}
           />
         </View>
         </>

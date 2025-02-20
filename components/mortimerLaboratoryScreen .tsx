@@ -130,7 +130,7 @@ const handleApplyLocalChanges = (changes: { diseases: string[]; ethaziumCursed: 
 
   return (
     <ImageBackground
-      source={require('../assets/laboratory.png')}
+      source={require('../assets/laboratory.webp')}
       style={styles.background}
       resizeMode="cover"
     >
@@ -144,7 +144,7 @@ const handleApplyLocalChanges = (changes: { diseases: string[]; ethaziumCursed: 
           onPress={() => setInfoModalVisible(true)}
         >
           <Image
-            source={require('../assets/info_icon.png')}
+            source={require('../assets/info_icon.webp')}
             style={styles.infoIcon}
           />
         </TouchableOpacity>
@@ -169,7 +169,7 @@ const handleApplyLocalChanges = (changes: { diseases: string[]; ethaziumCursed: 
 
       <MapButton
         onPress={goToMap}
-        iconImage={require('../assets/school_icon.png')}
+        iconImage={require('../assets/school_icon.webp')}
       />
 
       {/* Modal explicando los iconos con sus badges */}

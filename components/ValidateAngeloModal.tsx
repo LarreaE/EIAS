@@ -67,7 +67,7 @@ const ValidateAngeloModal: React.FC<ValidateAngeloModalProps> = () => {
           
           {/* Imagen de Angelo */}
           <Image 
-            source={require('../assets/angelo.png')}  // tu imagen
+            source={require('../assets/angelo.webp')}  // tu imagen
             style={styles.angeloImage}
             resizeMode="contain"
           />

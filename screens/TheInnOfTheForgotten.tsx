@@ -154,7 +154,7 @@ const TheInnOfTheForgotten: React.FC = () => {
   return (
     <>
       <ImageBackground
-        source={require('../assets/TIFTF.png')}
+        source={require('../assets/TIFTF.webp')}
         style={styles.background}
         resizeMode="cover"
       >
@@ -193,7 +193,7 @@ const TheInnOfTheForgotten: React.FC = () => {
         {/* Botón para ir al mapa */}
         <MapButton
           onPress={goToMap}
-          iconImage={require('../assets/map_icon.png')}
+          iconImage={require('../assets/map_icon.webp')}
         />
 
         {/* Mensaje de fallo animado */}

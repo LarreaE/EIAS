@@ -20,7 +20,7 @@ const ScrollModal: React.FC<Props> = ({ visible, setVisible }) => {
             onRequestClose={() => setVisible(false)}
         >
             <ImageBackground
-                source={require('../assets/scroll.png')}
+                source={require('../assets/scroll.webp')}
                 style={styles.background}
                 resizeMode="cover"
             >

@@ -27,7 +27,7 @@ const EquipmentScreen: React.FC<Props> = ({ user }) => {
 
     return (
       <ImageBackground
-      source={require('../assets/profile.png')}
+      source={require('../assets/profile.webp')}
       style={styles.background}
       resizeMode="cover"
     >

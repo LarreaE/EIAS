@@ -259,7 +259,7 @@ const GoogleSignInComponent: React.FC<Props> = ({ setIsLoged }) => {
 
   return (
     <ImageBackground
-      source={require('../assets/home_door.png')}
+      source={require('../assets/home_door.webp')}
       style={styles.background}
       resizeMode="cover"
     >

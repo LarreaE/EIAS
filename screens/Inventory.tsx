@@ -27,7 +27,7 @@ const Inventory: React.FC<Props> = ({user}) => {
     slots.length -= newInventory.length;
     return (
 <ImageBackground
-      source={require('../assets/profile.png')}
+      source={require('../assets/profile.webp')}
       style={styles.background}
       resizeMode="cover"
     >

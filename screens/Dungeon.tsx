@@ -33,7 +33,7 @@ const Dungeon: React.FC = () => {
 
   return (
     <ImageBackground
-      source={require('../assets/dungeon.png')}
+      source={require('../assets/dungeon.webp')}
       style={styles.background}
       resizeMode="cover"
     >
@@ -45,7 +45,7 @@ const Dungeon: React.FC = () => {
       {/* Si AngeloDelivered es true, mostramos su imagen en la mazmorra */}
       {isAngeloDelivered && (
         <Image
-          source={require('../assets/angelo_dungeon.png')}
+          source={require('../assets/angelo_dungeon.webp')}
           style={styles.angeloDungeon}
           resizeMode="contain"
         />
@@ -53,7 +53,7 @@ const Dungeon: React.FC = () => {
 
       <MapButton
         onPress={goToSchool}
-        iconImage={require('../assets/map_icon.png')}
+        iconImage={require('../assets/map_icon.webp')}
       />
     </ImageBackground>
   );

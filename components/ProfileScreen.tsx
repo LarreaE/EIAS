@@ -86,7 +86,7 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLogged }) => {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require('../assets/settings_background_04.png')}
+        source={require('../assets/settings_background_04.webp')}
         style={styles.background}
         resizeMode="cover"
       >
@@ -131,7 +131,7 @@ const ProfileScreen: React.FC<Props> = ({ user, setIsLogged }) => {
 
         <TouchableOpacity onPress={signOut} style={styles.signOutButton}>
           <ImageBackground
-            source={require('../assets/boton.png')}
+            source={require('../assets/boton.webp')}
             style={styles.buttonImage}
             resizeMode="contain"
           >

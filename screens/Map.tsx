@@ -19,8 +19,8 @@ const MapScreen: React.FC = () => {
   const { userData, isHallInNeedOfMortimer } = context;
 
   const backgroundSource = userData.playerData.isbetrayer
-  ? require('../assets/map-betrayer.png')
-  : require('../assets/map.png');
+  ? require('../assets/map-betrayer.webp')
+  : require('../assets/map.webp');
 
   // Animación de los pájaros
   const birdPosition = useRef(new Animated.Value(width + 50)).current; // Inicia fuera de la pantalla por la derecha
@@ -97,7 +97,7 @@ const MapScreen: React.FC = () => {
       return (
 <GestureHandlerRootView style={styles.container}>
   <ImageBackground
-    source={require('../assets/map.png')}
+    source={require('../assets/map.webp')}
     style={styles.background}
     resizeMode="cover"
   >
@@ -118,21 +118,21 @@ const MapScreen: React.FC = () => {
       <MapButton
         title="Tower"
         onPress={goToTowerMortimer}
-        iconImage={require('../assets/tower_icon.png')}
+        iconImage={require('../assets/tower_icon.webp')}
       />
     </View>
     <View style={[styles.buttonMap]}>
       <MapButton
         title="Swamp"
         onPress={goToSwamp}
-        iconImage={require('../assets/swamp_icon.png')}
+        iconImage={require('../assets/swamp_icon.webp')}
       />
     </View>
     <View style={[styles.buttonSchool]}>
       <MapButton
         title="School"
         onPress={goToSchool}
-        iconImage={require('../assets/school_icon.png')}
+        iconImage={require('../assets/school_icon.webp')}
         isGlowing={isHallInNeedOfMortimer}
       />
     </View>
@@ -141,7 +141,7 @@ const MapScreen: React.FC = () => {
         <MapButton
           title="Obituary"
           onPress={goToObituaryDoor}
-          iconImage={require('../assets/obituary_door_icon.png')}
+          iconImage={require('../assets/obituary_door_icon.webp')}
         />
       </View>
     )}
@@ -161,7 +161,7 @@ const MapScreen: React.FC = () => {
                 <MapButton
                   title="Tower"
                   onPress={goToTower}
-                  iconImage={require('../assets/tower_icon.png')}
+                  iconImage={require('../assets/tower_icon.webp')}
                 />
               </View>
             )}
@@ -169,14 +169,14 @@ const MapScreen: React.FC = () => {
               <MapButton
                 title="School"
                 onPress={goToSchool}
-                iconImage={require('../assets/school_icon.png')}
+                iconImage={require('../assets/school_icon.webp')}
               />
             </View>
             <View style={styles.buttonMap}>
               <MapButton
                 title="Swamp"
                 onPress={goToSwamp}
-                iconImage={require('../assets/swamp_icon.png')}
+                iconImage={require('../assets/swamp_icon.webp')}
               />
             </View>
             {userData.playerData.ArtifactsValidated  === true && (
@@ -184,7 +184,7 @@ const MapScreen: React.FC = () => {
                 <MapButton
                   title="Obituary"
                   onPress={goToObituaryDoor}
-                  iconImage={require('../assets/obituary_door_icon.png')}
+                  iconImage={require('../assets/obituary_door_icon.webp')}
                 />
               </View>
             )}
@@ -193,7 +193,7 @@ const MapScreen: React.FC = () => {
             <MapButton
                 title="School"
                 onPress={goToTHOS}
-                iconImage={require('../assets/THOS-icon.png')}
+                iconImage={require('../assets/THOS-icon.webp')}
               />
             {/* <MapButton
                 title="The hollow of the lost"
@@ -204,14 +204,14 @@ const MapScreen: React.FC = () => {
                     goToTHOS(); // Si no, navega a The Hollow of the Lost
                   }
                 }}
-                iconImage={require('../assets/THOS-icon.png')}
+                iconImage={require('../assets/THOS-icon.webp')}
               /> */}
             </View>
             <View style={styles.buttonMapTIOTF}>
               <MapButton
                 title="The Inn of the Forgotten"
                 onPress={goToTIOTF}
-                iconImage={require('../assets/TIOTF-icon.png')}
+                iconImage={require('../assets/TIOTF-icon.webp')}
               />
             </View>
 

@@ -235,7 +235,7 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
                 tabBarLabel: '',
                 tabBarIcon: ({ focused }) => (
                   <View style={focused ? styles.activeTabBackground : styles.iconContainer}>
-                    <Image source={require('./assets/setings_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                    <Image source={require('./assets/setings_icon.webp')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
                   </View>
                 ),
               }}
@@ -249,7 +249,7 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
                 tabBarLabel: '',
                 tabBarIcon: ({ focused }) => (
                   <View style={focused ? styles.activeTabBackground : styles.iconContainer}>
-                    <Image source={require('./assets/profile_icon.png')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
+                    <Image source={require('./assets/profile_icon.webp')} style={focused ? [styles.icon, styles.activeIcon] : styles.icon} />
                   </View>
                 ),
               }}
@@ -271,7 +271,7 @@ function AppContent({ navigationRef }: { navigationRef: any }) {
                       />
                     )}
                     <Image
-                      source={require('./assets/map_icon.png')}
+                      source={require('./assets/map_icon.webp')}
                       style={focused ? [styles.icon, styles.activeIcon] : styles.icon}
                     />
                   </View>

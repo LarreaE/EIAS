@@ -39,7 +39,7 @@ const AcolythScreen: React.FC<Props> = ({ user }) => {
           options={{
             tabBarLabel: '',
             tabBarIcon: () => (
-              <Image source={require('../assets/equipments_icon.png')} style={styles.icon} />
+              <Image source={require('../assets/equipments_icon.webp')} style={styles.icon} />
             ),
           }}
         >
@@ -50,7 +50,7 @@ const AcolythScreen: React.FC<Props> = ({ user }) => {
           options={{
             tabBarLabel: '',
             tabBarIcon: () => (
-              <Image source={require('../assets/stats_icon.png')} style={styles.icon} />
+              <Image source={require('../assets/stats_icon.webp')} style={styles.icon} />
             ),
           }}
         >
@@ -61,7 +61,7 @@ const AcolythScreen: React.FC<Props> = ({ user }) => {
           options={{
             tabBarLabel: '',
             tabBarIcon: () => (
-              <Image source={require('../assets/inventory_icon.png')} style={styles.icon} />
+              <Image source={require('../assets/inventory_icon.webp')} style={styles.icon} />
             ),
           }}
         >

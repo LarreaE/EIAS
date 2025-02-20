@@ -6,7 +6,7 @@ const SplashScreen = (): React.JSX.Element => {
   return (
     <View style={styles.splashContainer}>
       <Image
-        source={require('../assets/EIAS.png')} // Ruta de la imagen
+        source={require('../assets/EIAS.webp')} // Ruta de la imagen
         style={styles.splashImage} // Aplicar estilos a la imagen
         resizeMode="contain" // Ajuste de la imagen
       />

@@ -55,10 +55,10 @@ const Swamp: React.FC = () => {
   const [bagHeight] = useState(new Animated.Value(0));
   const bagMaxHeight = height * 0.2; // Maximum bag height
   const artifactImages = [
-    require('../assets/artefact1.png'),
-    require('../assets/artefact2.png'),
-    require('../assets/artefact3.png'),
-    require('../assets/artefact4.png'),
+    require('../assets/artefact1.webp'),
+    require('../assets/artefact2.webp'),
+    require('../assets/artefact3.webp'),
+    require('../assets/artefact4.webp'),
   ];
 
  // Fetch artifacts from the server

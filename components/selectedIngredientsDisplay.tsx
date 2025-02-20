@@ -34,7 +34,7 @@ const SelectedIngredientsDisplay: React.FC<Props> = ({
                   onPress={() => onDeselection(ingredientId)}
                 >
                   <ImageBackground
-                    source={require('../assets/laboratory_icon.png')}
+                    source={require('../assets/laboratory_icon.webp')}
                     style={styles.background}
                     resizeMode="cover"
                   >

@@ -32,28 +32,28 @@ const MapButton: React.FC<Props> = ({ title, onPress, iconImage, isGlowing }) =>
             source={require('../assets/animations/lightning.gif')}
             style={[styles.gifBetween, { top: -height * 0.06, left: -width * 0.16, transform: [{ rotate: '90deg' }] }]}
           />
-          <Image source={require('../assets/artefact1.png')} style={[styles.artefactStyle, { top: -height * 0.08, left: -width * 0.18 }]} />
+          <Image source={require('../assets/artefact1.webp')} style={[styles.artefactStyle, { top: -height * 0.08, left: -width * 0.18 }]} />
 
           {/* Artefacto superior derecho */}
           <Animated.Image
             source={require('../assets/animations/lightning.gif')}
             style={[styles.gifBetween, { top: -height * 0.06, right: -width * 0.16, transform: [{ rotate: '180deg' }] }]}
           />
-          <Image source={require('../assets/artefact2.png')} style={[styles.artefactStyle, { top: -height * 0.08, right: -width * 0.18 }]} />
+          <Image source={require('../assets/artefact2.webp')} style={[styles.artefactStyle, { top: -height * 0.08, right: -width * 0.18 }]} />
 
           {/* Artefacto inferior izquierdo */}
           <Animated.Image
             source={require('../assets/animations/lightning.gif')}
             style={[styles.gifBetween, { bottom: -height * 0.06, left: -width * 0.16 }]}
           />
-          <Image source={require('../assets/artefact3.png')} style={[styles.artefactStyle, { bottom: -height * 0.08, left: -width * 0.18 }]} />
+          <Image source={require('../assets/artefact3.webp')} style={[styles.artefactStyle, { bottom: -height * 0.08, left: -width * 0.18 }]} />
 
           {/* Artefacto inferior derecho */}
           <Animated.Image
             source={require('../assets/animations/lightning.gif')}
             style={[styles.gifBetween, { bottom: -height * 0.06, right: -width * 0.16, transform: [{ rotate: '270deg' }] }]}
           />
-          <Image source={require('../assets/artefact4.png')} style={[styles.artefactStyle, { bottom: -height * 0.08, right: -width * 0.18 }]} />
+          <Image source={require('../assets/artefact4.webp')} style={[styles.artefactStyle, { bottom: -height * 0.08, right: -width * 0.18 }]} />
         </View>
       ) : null}
 

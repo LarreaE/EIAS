@@ -139,7 +139,7 @@ const MortimerTower: React.FC = () => {
 
   return (
     <ImageBackground
-      source={require('../assets/mortimerTower.png')}
+      source={require('../assets/mortimerTower.webp')}
       style={styles.background}
       resizeMode="cover"
     >
@@ -151,7 +151,7 @@ const MortimerTower: React.FC = () => {
       <View style={styles.circleContainer}>{renderUsersInCircle()}</View>
       <MapButton
         onPress={goToMap}
-        iconImage={require('../assets/map_icon.png')}
+        iconImage={require('../assets/map_icon.webp')}
       />
     </ImageBackground>
   );

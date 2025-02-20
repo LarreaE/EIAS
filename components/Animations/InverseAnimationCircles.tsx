@@ -88,22 +88,22 @@ const InverseAnimatedCircles: React.FC = () => {
 
         {/* Imágenes animadas en lugar de círculos */}
         <Animated.Image
-          source={require('../../assets/artefact1.png')} // Cambia a la ruta de tu imagen
+          source={require('../../assets/artefact1.webp')} // Cambia a la ruta de tu imagen
           style={[styles.image, animatedImageStyle(0, 0)]}
           resizeMode="contain"
         />
         <Animated.Image
-          source={require('../../assets/artefact2.png')} // Cambia a la ruta de tu imagen
+          source={require('../../assets/artefact2.webp')} // Cambia a la ruta de tu imagen
           style={[styles.image, animatedImageStyle(90, 1)]}
           resizeMode="contain"
         />
         <Animated.Image
-          source={require('../../assets/artefact3.png')} // Cambia a la ruta de tu imagen
+          source={require('../../assets/artefact3.webp')} // Cambia a la ruta de tu imagen
           style={[styles.image, animatedImageStyle(180, 2)]}
           resizeMode="contain"
         />
         <Animated.Image
-          source={require('../../assets/artefact4.png')} // Cambia a la ruta de tu imagen
+          source={require('../../assets/artefact4.webp')} // Cambia a la ruta de tu imagen
           style={[styles.image, animatedImageStyle(270, 3)]}
           resizeMode="contain"
         />

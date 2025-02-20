@@ -28,7 +28,7 @@ const ObituaryDoor: React.FC = () => {
     return (
       <>
           <ImageBackground
-          source={require('../assets/obituary2.png')}
+          source={require('../assets/obituary2.webp')}
           style={styles.background}
           resizeMode="cover"
           >
@@ -38,7 +38,7 @@ const ObituaryDoor: React.FC = () => {
             </View>
             <MapButton
                 onPress={goToMap}
-                iconImage={require('../assets/map_icon.png')}
+                iconImage={require('../assets/map_icon.webp')}
             />
           </ImageBackground>
           
