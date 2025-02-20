@@ -432,19 +432,19 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     position: 'absolute',
-    top: 130,
+    top: "0%",
     alignItems: 'center',
   },
   titleBackground: {
-    top: -100,
+    top: "10%",
     position: 'absolute',
     backgroundColor: 'rgba(128, 128, 128, 0.7)',
     width: 220,
-    height: 130,
+    height: 150,
     borderRadius: 10,
   },
   title: {
-    top: -100,
+    top: "0%",
     fontSize: 33,
     paddingHorizontal: 10,
     paddingVertical: 25,

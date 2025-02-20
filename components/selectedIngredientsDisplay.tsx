@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
     borderColor: '#cc9a52',
     padding: 15,
     alignItems: 'center',
+    bottom: "50%",
   },
   ingredientsRow: {
     flexDirection: 'row',

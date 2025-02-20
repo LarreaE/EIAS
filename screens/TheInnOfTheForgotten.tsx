@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   titleBackground: {
-    top: -100,
+    top: "-100%",
     position: 'absolute',
     backgroundColor: 'rgba(128, 128, 128, 0.7)',
     width: 400,
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   title: {
-    top: -95,
+    top: "-110%",
     fontSize: 33,
     paddingHorizontal: 10,
     paddingVertical: 25,

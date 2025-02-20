@@ -1,86 +1,159 @@
-import React, { useContext } from 'react';
-import {  StyleSheet,  ImageBackground, Dimensions, View } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { View, Button, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/types';
-import { UserContext, UserContextType } from '../context/UserContext';
-import { sendLocation } from '../sockets/emitEvents';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ImageBackground } from 'react-native';
 import MapButton from '../components/MapButton';
-import MedievalText from '../components/MedievalText';
-
-type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'THOS'>;
+import { UserContext, UserContextType } from '../context/UserContext';
+import AcolythLaboratoryScreen from '../components/acolythLaboratoryScreen';
+import { sendLocation } from '../sockets/emitEvents';
+import { Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
-const TheHollowOfStages: React.FC = () => {
+type MapScreenNavigationProp = StackNavigationProp<RootStackParamList, 'School'>;
 
-  const context = useContext(UserContext) as UserContextType;
-  const {userData } = context;
+const TheHollowOfStages: React.FC = () => {
   const navigation = useNavigation<MapScreenNavigationProp>();
 
+  const context = useContext(UserContext) as UserContextType;
+
+  const { isInsideLab, userData, isHallInNeedOfMortimer } = context;
+
+  const goToLaboratory = () => {
+    sendLocation('Laboratory', userData.playerData.email);
+    navigation.navigate('LaboratoryAcolyth');
+  };
   const goToMap = () => {
     sendLocation('Map', userData.playerData.email);
     navigation.navigate('Map');
   };
+  const goToQRScanner = () => {
+    sendLocation('', userData.playerData.email);
+    navigation.navigate('QRScanner');
+  };
+
+  if (isInsideLab) {
     return (
-      <>
+      <AcolythLaboratoryScreen UserData={userData} />
+    );
+  }
+
+  switch (userData.playerData.role) {
+    case 'MORTIMER':
+      return (
+        <GestureHandlerRootView style={styles.container}>
           <ImageBackground
-          source={require('../assets/THOS.jpg')}
-          style={styles.background}
-          resizeMode="cover"
+            source={require('../assets/hollow_of_the_losts.png')}  // Ruta de la imagen de fondo
+            style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
+            resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
           >
-            <View style={styles.titleContainer}>
-                <View style={styles.titleBackground} />
-                <MedievalText style={styles.title}>The Hollow Of The Losts</MedievalText>
-            </View>
-            <MapButton
+
+            <View style={styles.buttonMap}>
+              <MapButton
+                title="Map"
                 onPress={goToMap}
                 iconImage={require('../assets/map_icon.png')}
-            />
+              />
+            </View>
           </ImageBackground>
-      </>
-    );
+        </GestureHandlerRootView>
+      );
+
+      case 'ACOLYTE':
+      return (
+        <GestureHandlerRootView style={styles.container}>
+          <ImageBackground
+            source={require('../assets/hollow_of_the_losts.png')}  // Ruta de la imagen de fondo
+            style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
+            resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+          >
+
+            <View style={styles.buttonMap}>
+              <MapButton
+                title="Map"
+                onPress={goToMap}
+                iconImage={require('../assets/map_icon.png')}
+              />
+            </View>
+          </ImageBackground>
+        </GestureHandlerRootView>
+      );
+
+    default:
+
+      return (
+        <GestureHandlerRootView style={styles.container}>
+          <ImageBackground
+            source={require('../assets/hollow_of_the_losts.png')}  // Ruta de la imagen de fondo
+            style={styles.background}  // Aplicar estilos al contenedor de la imagen de fondo
+            resizeMode="cover"         // Ajuste de la imagen (puede ser 'cover', 'contain', etc.)
+          >
+
+            
+            {userData.playerData.role != 'ISTVAN' && (
+              <View style={styles.buttonLaboratory}>
+                <MapButton
+                    title="Laboratory"
+                    onPress={goToLaboratory}
+                    iconImage={require('../assets/laboratory_icon.png')}
+                />
+              </View>
+            )}
+
+            {userData.playerData.role === 'ISTVAN' && (
+              <View style={styles.buttonLaboratory}>
+                <MapButton
+                  title="Laboratory"
+                  onPress={goToQRScanner}
+                  iconImage={require('../assets/QR_icon.png')}
+                />
+              </View>
+            )}
+
+            <View style={styles.buttonMap}>
+              <MapButton
+                title="Map"
+                onPress={goToMap}
+                iconImage={require('../assets/map_icon.png')}
+              />
+            </View>
+          </ImageBackground>
+        </GestureHandlerRootView>
+      );
+  }
 };
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    opacity:0.8,
-    width: width * 0.8,
-    height: height * 0.55,
-    backgroundColor: 'rgba(128, 128, 128, 0.7)',
-    borderRadius: 10,
+    flex: 1,
+    backgroundColor: 'grey',
   },
   background: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flex: 1, // Hace que la imagen de fondo ocupe todo el espacio disponible
+    justifyContent: 'center', // Centra el contenido verticalmente
+    alignItems: 'center',     // Centra el contenido horizontalmente
   },
-  titleContainer: {
+  buttonLaboratory: {
     position: 'absolute',
-    top: 130,
-    alignItems: 'center',
+    bottom: height * 0.37,
+    right: width * 0.5,
+    alignSelf: 'center',
   },
-  titleBackground: {
-    top: -100,
+  buttonMap: {
     position: 'absolute',
-    backgroundColor: 'rgba(128, 128, 128, 0.7)',
-    width: 400,
-    height: 70,
-    borderRadius: 10,
+    bottom: height * 0.0,
+    right: width * 0.485,
+    alignSelf: 'center',
   },
   title: {
-    top: -95,
-    fontSize: 33,
-    paddingHorizontal: 10,
-    paddingVertical: 25,
-    textAlign: 'center',
-    color: 'white'
+    textAlign: 'center',    // Centra el texto horizontalmente
+    fontSize: 16,           // Tamaño de fuente ajustado
+    color: 'white',         // Color de fuente
   },
+
 });
 
 export default TheHollowOfStages;
-
-

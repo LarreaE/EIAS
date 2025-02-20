@@ -186,7 +186,7 @@ console.log(users);
           ]}
         >
           <ImageBackground
-            source={runaBackground}
+            source={require('../assets/runa.png')}
             style={[
               styles.gradientBackground,
               selectedCount > 0 && styles.selectedItem,
@@ -533,7 +533,7 @@ const styles = StyleSheet.create({
     width: 150,
     marginHorizontal: 5,
     height: 200,
-    top: '-20%',
+    top: '20%',
   },
   gradientBackground: {
     flex: 1,

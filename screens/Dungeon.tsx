@@ -33,7 +33,7 @@ const Dungeon: React.FC = () => {
 
   return (
     <ImageBackground
-      source={require('../assets/OSD-bg.png')}
+      source={require('../assets/dungeon.png')}
       style={styles.background}
       resizeMode="cover"
     >
@@ -67,11 +67,11 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     position: 'absolute',
-    top: 130,
+    top: "0%",
     alignItems: 'center',
   },
   titleBackground: {
-    top: -100,
+    top: "10%",
     position: 'absolute',
     backgroundColor: 'rgba(128, 128, 128, 0.7)',
     width: 400,
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   title: {
-    top: -95,
+    top: "5%",
     fontSize: 33,
     paddingHorizontal: 10,
     paddingVertical: 25,
